@@ -60,7 +60,7 @@ namespace SdojWeb
                 foreach (var task in container.GetAllInstances<IRunAtStartup>())
                 {
                     task.Execute();
-                }
+                } 
             }
         }
 
