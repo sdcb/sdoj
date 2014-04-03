@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System.Data.Entity;
+using Microsoft.Owin.Security.DataProtection;
+using System.Web.Mvc;
 
 namespace SdojWeb.Models
 {
@@ -31,14 +33,26 @@ namespace SdojWeb.Models
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(ApplicationDbContext context)
-            : base(new UserStore<ApplicationUser>(context))
+        public ApplicationUserManager(IUserStore<ApplicationUser> store)
+            : base(store)
         {
+            //UserValidator = new UserValidator<ApplicationUser>(this)
+            //{
+            //    AllowOnlyAlphanumericUserNames = true, 
+            //    RequireUniqueEmail = true, 
+            //};
+            //PasswordValidator = new MinimumLengthValidator(6);
+            //if (dataProtectionProvider != null)
+            //{
+            //    PasswordResetTokens = new DataProtectorTokenProvider(dataProtectionProvider.Create("PasswordReset"));
+            //    UserConfirmationTokens = new DataProtectorTokenProvider(dataProtectionProvider.Create("ConfirmUser"));
+            //}
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options)
         {
-            var manager = new ApplicationUserManager(new ApplicationDbContext());
+            var store = DependencyResolver.Current.GetService<IUserStore<ApplicationUser>>();
+            var manager = new ApplicationUserManager(store);
             // Configure the application user manager
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {

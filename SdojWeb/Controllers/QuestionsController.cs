@@ -45,8 +45,7 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index").WithError("没找到 id 为 {0} 的题目。", id);
             }
 
-            var detail = Mapper.Map<QuestionDetailViewModel>(question);
-            return View(detail);
+            return View(question);
         }
 
         // GET: Questions/Create
@@ -84,8 +83,7 @@ namespace SdojWeb.Controllers
             {
                 return HttpNotFound();
             }
-            var detail = Mapper.Map<QuestionDetailViewModel>(question);
-            return View(detail);
+            return View(question);
         }
 
         // POST: Questions/Edit/5
@@ -93,16 +91,15 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionDetailViewModel viewmodel)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
             if (ModelState.IsValid)
             {
-                var question = Mapper.Map<Question>(viewmodel);
                 _dbContext.Entry(question).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(viewmodel);
+            return View(question);
         }
 
         // GET: Questions/Delete/5

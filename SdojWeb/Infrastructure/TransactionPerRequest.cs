@@ -38,13 +38,16 @@ namespace SdojWeb.Infrastructure
         {
             var transaction = _httpContext.Items["_Transaction"] as DbContextTransaction;
 
-            if (_httpContext.Items["_Error"] != null)
+            if (transaction != null)
             {
-                transaction.Rollback();
-            }
-            else
-            {
-                transaction.Commit();
+                if (_httpContext.Items["_Error"] != null)
+                {
+                    transaction.Rollback();
+                }
+                else
+                {
+                    transaction.Commit();
+                }
             }
         }
     }

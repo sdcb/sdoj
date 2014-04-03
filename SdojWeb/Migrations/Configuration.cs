@@ -10,6 +10,7 @@ namespace SdojWeb.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
             ContextKey = "SdojWeb.Models.ApplicationDbContext";
         }
 
