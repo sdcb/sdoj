@@ -1,0 +1,49 @@
+﻿@using Microsoft.Web.Mvc;
+@using SdojWeb.Controllers;
+@model IEnumerable<SdojWeb.Models.QuestionSummaryViewModel>
+
+@{
+    ViewBag.Title = "题目列表";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("创建题目", "Create")
+</p>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MemoryLimitMB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeLimit)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MemoryLimitMB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeLimit)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("详细信息", "Details", new { id=item.Id }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
