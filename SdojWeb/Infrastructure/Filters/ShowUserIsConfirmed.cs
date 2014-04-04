@@ -11,9 +11,6 @@ namespace SdojWeb.Infrastructure.Filters
 {
     public class ShowUserIsConfirmedFilter : ActionFilterAttribute
     {
-        public ApplicationDbContext Context { get; set; }
-
-
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var context = filterContext.HttpContext;

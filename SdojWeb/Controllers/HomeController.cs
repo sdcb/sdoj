@@ -18,6 +18,7 @@ namespace SdojWeb.Controllers
             _dbContext = dbContext;
         }
 
+        [ShowUserIsConfirmedFilter]
         public ActionResult Index()
         {
             return View();
