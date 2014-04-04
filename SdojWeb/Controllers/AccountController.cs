@@ -30,7 +30,7 @@ namespace SdojWeb.Controllers
 
         public AccountController(ApplicationUserManager userManager)
         {
-            UserManager = userManager;
+            _userManager = userManager;
         }
 
         public ApplicationUserManager UserManager 

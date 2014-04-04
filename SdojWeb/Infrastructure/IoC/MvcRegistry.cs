@@ -12,6 +12,7 @@ using System.Web.Routing;
 using Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Mvc;
 
 namespace SdojWeb.Infrastructure.IoC
 {
@@ -29,7 +30,7 @@ namespace SdojWeb.Infrastructure.IoC
             For<HttpServerUtilityBase>()
                 .Use(() => new HttpServerUtilityWrapper(HttpContext.Current.Server));
             For<IUserStore<ApplicationUser>>()
-                .Use(() => new UserStore<ApplicationUser>());
+                .Use(() => new UserStore<ApplicationUser>(DependencyResolver.Current.GetService<ApplicationDbContext>()));
             For<ApplicationUserManager>()
                 .Use(() => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
         }
