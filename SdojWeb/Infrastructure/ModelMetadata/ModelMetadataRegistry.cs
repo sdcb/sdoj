@@ -1,11 +1,23 @@
-﻿using System;
+﻿using StructureMap.Configuration.DSL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace SdojWeb.Infrastructure.ModelMetadata
 {
-    public class ModelMetadataRegistry 
+    public class ModelMetadataRegistry : Registry
     {
+        public ModelMetadataRegistry()
+        {
+            For<ModelMetadataProvider>().Use<ExtensibleModelMetadataProvider>();
+
+            Scan(scan =>
+            {
+                scan.TheCallingAssembly();
+                scan.AddAllTypesOf<IModelMetadataFilter>(); 
+            });
+        }
     }
 }

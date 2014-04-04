@@ -11,6 +11,7 @@ using System.Web.Routing;
 using StructureMap.TypeRules;
 using SdojWeb.Infrastructure.IoC;
 using SdojWeb.Infrastructure.Tasks;
+using SdojWeb.Infrastructure.ModelMetadata;
 
 namespace SdojWeb
 {
@@ -48,6 +49,7 @@ namespace SdojWeb
                 cfg.AddRegistry(new ActionFilterRegistry(
                     () => Container ?? ObjectFactory.Container));
                 cfg.AddRegistry(new TaskRegistry());
+                cfg.AddRegistry(new ModelMetadataRegistry());
             });
 
             using (var container = ObjectFactory.Container.GetNestedContainer())

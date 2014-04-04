@@ -206,6 +206,7 @@
     <Compile Include="Infrastructure\Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\Alerts\AlertExtensions.cs" />
     <Compile Include="Infrastructure\CurrentUser.cs" />
+    <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
     <Compile Include="Infrastructure\ICurrentUser.cs" />
     <Compile Include="Infrastructure\IoC\ActionFilterRegistry.cs" />
     <Compile Include="Infrastructure\IoC\ControllerConvention.cs" />
@@ -218,6 +219,9 @@
     <Compile Include="Infrastructure\Mapping\IHaveCustomMapping.cs" />
     <Compile Include="Infrastructure\Mapping\IMapFrom.cs" />
     <Compile Include="Infrastructure\ModelMetadata\ExtensibleModelMetadataProvider.cs" />
+    <Compile Include="Infrastructure\ModelMetadata\Filters\ReadOnlyTemplateSelectorFilter.cs" />
+    <Compile Include="Infrastructure\ModelMetadata\Filters\TextAreaByNameFilter.cs" />
+    <Compile Include="Infrastructure\ModelMetadata\Filters\WatermarkConventionFilter.cs" />
     <Compile Include="Infrastructure\ModelMetadata\IModelMetadataFilter.cs" />
     <Compile Include="Infrastructure\ModelMetadata\ModelMetadataRegistry.cs" />
     <Compile Include="Infrastructure\IoC\StructureMapDependencyResolver.cs" />
@@ -298,6 +302,13 @@
     <Content Include="Views\Question\Details.cshtml" />
     <Content Include="Views\Question\Edit.cshtml" />
     <Content Include="Views\Question\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ReadOnly.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Object.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

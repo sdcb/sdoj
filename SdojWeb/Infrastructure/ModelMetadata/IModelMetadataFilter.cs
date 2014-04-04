@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SdojWeb.Infrastructure.ModelMetadata
 {
-    interface IModelMetadataFilter
+    public interface IModelMetadataFilter
     {
         void TransformMetadata(System.Web.Mvc.ModelMetadata metadata,
             IEnumerable<Attribute> attributes);
