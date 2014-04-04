@@ -6,40 +6,32 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace SdojWeb.Models
 {
     public class Question
     {
+        [HiddenInput]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(80, ErrorMessage="{0} 不能超过 {1} 个字符。")]
-        [Display(Name = "标题")]
-        public string Title { get; set; }
+        [Display(Name = "标题"), Required, MaxLength(30)]
+        public string Name { get; set; }
 
-        [Required]
-        [DataType(DataType.MultilineText)]
-        [MaxLength(4000, ErrorMessage = "{0} 不能超过 {1} 个字符。")]
-        [Display(Name = "描述")]
+        [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "示例输入")]
-        [DataType(DataType.MultilineText)]
-        [MaxLength(4000, ErrorMessage = "{0} 不能超过 {1} 个字符。")]
+        [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }
 
-        [Required]
-        [Display(Name = "示例输出")]
-        [DataType(DataType.MultilineText)]
-        [MaxLength(4000, ErrorMessage = "{0} 不能超过 {1} 个字符。")]
+        [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
-        [Display(Name = "内存限制")]
-        public decimal MemoryLimitMB { get; set; }
+        [Display(Name = "内存限制"), DefaultValue(64)]
+        public double MemoryLimitMB { get; set; }
 
-        [Display(Name = "时间限制")]
-        public long TimeLimit { get; set; }
+        [Display(Name = "时间限制"), DefaultValue(1000)]
+        public int TimeLimit { get; set; }
     }
 
     public class QuestionSummaryViewModel : IMapFrom<Question>
@@ -47,13 +39,12 @@ namespace SdojWeb.Models
         public int Id { get; set; }
 
         [Display(Name = "标题")]
-        public string Title { get; set; }
+        public string Name { get; set; }
 
-        [Display(Name = "内存限制(MB)")]
-        [DisplayFormat(DataFormatString = "{0:F2}")]
-        public decimal MemoryLimitMB { get; set; }
+        [Display(Name = "内存限制(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
+        public double MemoryLimitMB { get; set; }
 
         [Display(Name = "时间限制(ms)")]
-        public long TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
     }
 }

@@ -59,7 +59,7 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Title,Description,SampleInput,SampleOutput,MemoryLimit,TimeLimit")] Question question)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimit,TimeLimit")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
             if (ModelState.IsValid)
             {
