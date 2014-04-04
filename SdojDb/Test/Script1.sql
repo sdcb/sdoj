@@ -1,0 +1,1 @@
+﻿SELECT * FROM Problem WHERE FREETEXT(Description, N'T');
