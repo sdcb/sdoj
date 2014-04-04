@@ -16,6 +16,7 @@ using Microsoft.Web.Mvc;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure;
 using System.Security.Principal;
+using SdojWeb.Infrastructure.Filters;
 
 namespace SdojWeb.Controllers
 {
@@ -262,6 +263,7 @@ namespace SdojWeb.Controllers
 
         //
         // GET: /Account/Manage
+        [ShowUserIsConfirmedFilter]
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
