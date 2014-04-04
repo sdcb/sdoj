@@ -36,17 +36,6 @@ namespace SdojWeb.Models
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
-            //UserValidator = new UserValidator<ApplicationUser>(this)
-            //{
-            //    AllowOnlyAlphanumericUserNames = true, 
-            //    RequireUniqueEmail = true, 
-            //};
-            //PasswordValidator = new MinimumLengthValidator(6);
-            //if (dataProtectionProvider != null)
-            //{
-            //    PasswordResetTokens = new DataProtectorTokenProvider(dataProtectionProvider.Create("PasswordReset"));
-            //    UserConfirmationTokens = new DataProtectorTokenProvider(dataProtectionProvider.Create("ConfirmUser"));
-            //}
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options)
