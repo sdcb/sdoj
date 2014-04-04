@@ -31,7 +31,6 @@ namespace SdojWeb.Infrastructure.IoC
             For<IUserStore<ApplicationUser>>()
                 .Use(() => new UserStore<ApplicationUser>());
             For<ApplicationUserManager>()
-                .LifecycleIs(new HttpSessionLifecycle())
                 .Use(() => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
         }
     }
