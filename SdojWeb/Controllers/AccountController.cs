@@ -144,6 +144,33 @@ namespace SdojWeb.Controllers
             }
         }
 
+        // GET: /Account/ReSendConfirmEmail
+        public ActionResult ReSendConfirmEmail()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/ReSendConfirmEmail
+        [HttpPost]
+        public async Task<ActionResult> ReSendConfirmEmail(string userId)
+        {
+            var user = DependencyResolver.Current.GetService<ICurrentUser>().User;
+            
+            if (user.IsConfirmed)
+            {
+                return this.RedirectToAction<HomeController>(x => x.Index())
+                    .WithInfo("您的用户已经通过邮件验证，不需要再次验证。");
+            }
+
+            var code = await UserManager.GetConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
+
+            return this.RedirectToAction<HomeController>(x => x.Index())
+                .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
+        }
+
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
