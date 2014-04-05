@@ -28,7 +28,7 @@ namespace SdojWeb.Models
         public string SampleOutput { get; set; }
 
         [Display(Name = "内存限制(MB)"), DefaultValue(64)]
-        public double MemoryLimitMB { get; set; }
+        public float MemoryLimitMB { get; set; }
 
         [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
         public int TimeLimit { get; set; }
@@ -42,7 +42,7 @@ namespace SdojWeb.Models
         public string Name { get; set; }
 
         [Display(Name = "内存限制(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
-        public double MemoryLimitMB { get; set; }
+        public float MemoryLimitMB { get; set; }
 
         [Display(Name = "时间限制(ms)")]
         public int TimeLimit { get; set; }

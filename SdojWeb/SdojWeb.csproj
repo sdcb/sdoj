@@ -310,6 +310,7 @@
     <Content Include="Views\Shared\EditorTemplates\Object.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Double.cshtml" />
     <Content Include="Views\Account\ReSendConfirmEmail.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Single.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
