@@ -27,10 +27,10 @@ namespace SdojWeb.Models
         [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
-        [Display(Name = "内存限制"), DefaultValue(64)]
+        [Display(Name = "内存限制(MB)"), DefaultValue(64)]
         public double MemoryLimitMB { get; set; }
 
-        [Display(Name = "时间限制"), DefaultValue(1000)]
+        [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
         public int TimeLimit { get; set; }
     }
 
