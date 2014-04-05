@@ -59,7 +59,7 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimit,TimeLimit")] Question question)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(question);
+            return View(question).WithError("ModelState构造失败");
         }
 
         // GET: Questions/Edit/5
