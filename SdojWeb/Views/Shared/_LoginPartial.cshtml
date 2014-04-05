@@ -18,13 +18,14 @@
                     hasKey = true;
                     confirmed = (bool)TempData["Confirmed"];
                 }
-                var verifyText = confirmed ? "" : "<a style='color:red'>(未验证)</a>";
             }
             @Html.ActionLink("你好 " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "管理" })
         </li>
         @if (hasKey && !confirmed)
         {
-            <li>@Html.Raw(@verifyText)</li>
+        <li class="text-danger">
+            @Html.ActionLink("(未验证)", "ReSendConfirmEmail", "Account")
+        </li>
         }
         <li><a href="javascript:document.getElementById('logoutForm').submit()">注销</a></li>
     </ul>

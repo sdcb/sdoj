@@ -144,7 +144,9 @@ namespace SdojWeb.Controllers
             }
         }
 
+        //
         // GET: /Account/ReSendConfirmEmail
+        [ShowUserIsConfirmedFilter]
         public ActionResult ReSendConfirmEmail()
         {
             return View();
@@ -152,7 +154,7 @@ namespace SdojWeb.Controllers
 
         //
         // POST: /Account/ReSendConfirmEmail
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReSendConfirmEmail(string userId)
         {
             var user = DependencyResolver.Current.GetService<ICurrentUser>().User;
