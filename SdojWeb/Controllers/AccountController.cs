@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -108,7 +109,8 @@ namespace SdojWeb.Controllers
                     // 发送包含此链接的电子邮件
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
+                    await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                        "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
 
                     return this.RedirectToAction<HomeController>(x => x.Index())
                         .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
@@ -168,7 +170,9 @@ namespace SdojWeb.Controllers
 
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
+            await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的账号");
+            
 
             return this.RedirectToAction<HomeController>(x => x.Index())
                 .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
@@ -202,9 +206,11 @@ namespace SdojWeb.Controllers
                 // 发送包含此链接的电子邮件
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
+                //await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
+                await UserManager.SendEmailAsync(user.Id, "重置密码",
+                    "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来重置你的密码");
                 
-                return this.RedirectToAction<AccountController>(x => x.ForgotPasswordConfirmation());
+                return this.RedirectToAction(x => x.ForgotPasswordConfirmation());
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
@@ -461,7 +467,8 @@ namespace SdojWeb.Controllers
                         // 发送包含此链接的电子邮件
                         string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
+                        await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                            "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
                         
                         return RedirectToLocal(returnUrl);
                     }
@@ -533,32 +540,6 @@ namespace SdojWeb.Controllers
                 return user.PasswordHash != null;
             }
             return false;
-        }
-
-        private async Task SendEmail(string mailto, string callbackUrl, string subject, string message)
-        {
-            // 有关发送邮件的信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-            var mailfrom = "sdcb@live.cn";
-            var password = "***REMOVED***";
-            var body = string.Format(
-                "{0} <br/> <a href='{1}'>{1}</a>",
-                message,
-                callbackUrl);
-
-            var mail = new MailMessage(mailfrom, mailto)
-            {
-                Subject = subject, 
-                Body = body, 
-                IsBodyHtml = true, 
-            };
-
-            var client = new SmtpClient("smtp.live.com", 587)
-            {
-                Credentials = new NetworkCredential(mailfrom, password), 
-                EnableSsl = true, 
-            };
-
-            await client.SendMailAsync(mail);
         }
 
         public enum ManageMessageId

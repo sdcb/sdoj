@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -60,6 +62,7 @@ namespace SdojWeb.Models
                 Subject = "安全代码", 
                 BodyFormat = "你的安全代码为: {0}"
             });
+            manager.EmailService = new EmailService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
@@ -67,6 +70,30 @@ namespace SdojWeb.Models
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+    }
+
+    public class EmailService : IIdentityMessageService
+    {
+        public async Task SendAsync(IdentityMessage message)
+        {
+            const string mailfrom = "sdcb@live.cn";
+            const string password = "***REMOVED***";
+
+            var mail = new MailMessage(mailfrom, message.Destination)
+            {
+                Subject = message.Subject,
+                Body = message.Body,
+                IsBodyHtml = true,
+            };
+
+            var client = new SmtpClient("smtp.live.com", 587)
+            {
+                Credentials = new NetworkCredential(mailfrom, password),
+                EnableSsl = true,
+            };
+
+            await client.SendMailAsync(mail);
         }
     }
 }
