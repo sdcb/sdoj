@@ -1,4 +1,5 @@
-﻿using SdojWeb.Models;
+﻿using Microsoft.AspNet.Identity.Owin;
+using SdojWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SdojWeb.Infrastructure.Filters
             var userid = context.User.Identity.GetUserId();
             var manager = context.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-            var confirmed = manager.IsConfirmed(userid);
+            var confirmed = manager.IsEmailConfirmed(userid);
             filterContext.Controller.TempData["Confirmed"] = confirmed;
 
             base.OnActionExecuted(filterContext);

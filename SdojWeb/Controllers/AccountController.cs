@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Owin;
 using SdojWeb.Models;
@@ -105,7 +106,7 @@ namespace SdojWeb.Controllers
 
                     // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
                     // 发送包含此链接的电子邮件
-                    string code = await UserManager.GetConfirmationTokenAsync(user.Id);
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
 
@@ -132,7 +133,7 @@ namespace SdojWeb.Controllers
                 return View("Error");
             }
 
-            IdentityResult result = await UserManager.ConfirmUserAsync(userId, code);
+            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
             if (result.Succeeded)
             {
                 return View("ConfirmUser");
@@ -159,13 +160,13 @@ namespace SdojWeb.Controllers
         {
             var user = DependencyResolver.Current.GetService<ICurrentUser>().User;
             
-            if (user.IsConfirmed)
+            if (user.EmailConfirmed)
             {
                 return this.RedirectToAction<HomeController>(x => x.Index())
                     .WithInfo("您的用户已经通过邮件验证，不需要再次验证。");
             }
 
-            var code = await UserManager.GetConfirmationTokenAsync(user.Id);
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
             await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
 
@@ -191,7 +192,7 @@ namespace SdojWeb.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsConfirmedAsync(user.Id)))
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     ModelState.AddModelError("", "用户不存在或未确认。");
                     return View();
@@ -199,7 +200,7 @@ namespace SdojWeb.Controllers
 
                 // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
                 // 发送包含此链接的电子邮件
-                string code = await UserManager.GetPasswordResetTokenAsync(user.Id);
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
                 
@@ -458,7 +459,7 @@ namespace SdojWeb.Controllers
                         
                         // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
                         // 发送包含此链接的电子邮件
-                        string code = await UserManager.GetConfirmationTokenAsync(user.Id);
+                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         await SendEmail(user.Email, callbackUrl, "确认你的帐户", "请单击此链接确认你的帐户");
                         

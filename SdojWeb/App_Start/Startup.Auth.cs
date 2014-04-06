@@ -15,15 +15,9 @@ namespace SdojWeb
         // 有关配置身份验证的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            // 配置 UserManager
-            app.UseUserManagerFactory(new IdentityFactoryOptions<ApplicationUserManager>()
-            {
-                DataProtectionProvider = app.GetDataProtectionProvider(),
-                Provider = new IdentityFactoryProvider<ApplicationUserManager>()
-                {
-                    OnCreate = ApplicationUserManager.Create
-                }
-            });
+            // 将数据库上下文和用户管理器配置为每个请求使用单个实例
+            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
             // 使应用程序可以使用 Cookie 来存储已登录用户的信息
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -53,7 +47,7 @@ namespace SdojWeb
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication();
         }
     }
 }

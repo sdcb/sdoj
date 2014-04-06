@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Security.DataProtection;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using SdojWeb.Models;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;

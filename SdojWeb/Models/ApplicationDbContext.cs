@@ -18,5 +18,10 @@ namespace SdojWeb.Models
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Solution> Solutions { get; set; }
+
+        public static ApplicationDbContext Create()
+        {
+            return new ApplicationDbContext();
+        }
     }
 }
