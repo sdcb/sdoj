@@ -63,14 +63,7 @@ namespace SdojWeb.Controllers
                 var question = Mapper.Map<Solution>(model);
                 
                 _dbContext.Solutions.Add(question);
-                try
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
