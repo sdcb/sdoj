@@ -105,8 +105,6 @@ namespace SdojWeb.Controllers
                 {
                     await SignInAsync(user, isPersistent: false);
 
-                    // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-                    // 发送包含此链接的电子邮件
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "确认你的账户",
@@ -202,8 +200,6 @@ namespace SdojWeb.Controllers
                     return View();
                 }
 
-                // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-                // 发送包含此链接的电子邮件
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 //await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
@@ -255,7 +251,7 @@ namespace SdojWeb.Controllers
                 IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
                 if (result.Succeeded)
                 {
-                    return this.RedirectToAction<AccountController>(x => x.ResetPasswordConfirmation());
+                    return this.RedirectToAction(x => x.ResetPasswordConfirmation());
                 }
                 else
                 {
@@ -463,8 +459,6 @@ namespace SdojWeb.Controllers
                     {
                         await SignInAsync(user, isPersistent: false);
                         
-                        // 有关如何启用帐户确认和密码重置的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=320771
-                        // 发送包含此链接的电子邮件
                         string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         await UserManager.SendEmailAsync(user.Id, "确认你的账户",
