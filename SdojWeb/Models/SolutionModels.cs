@@ -32,7 +32,7 @@ namespace SdojWeb.Models
         [Display(Name = "状态")]
         public SolutionStatus Status { get; set; }
 
-        [Display(Name = "提交时间")]
+        [Display(Name = "提交时间"), Column(TypeName = "datetime2")]
         public DateTime SubmitTime { get; set; }
     }
 
