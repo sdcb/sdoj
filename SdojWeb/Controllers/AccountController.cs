@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Owin;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
-using System.Net.Mail;
-using System.Net;
 using Microsoft.Web.Mvc;
 using SdojWeb.Infrastructure.Alerts;
-using SdojWeb.Infrastructure;
-using System.Security.Principal;
 using SdojWeb.Infrastructure.Filters;
 
 namespace SdojWeb.Controllers

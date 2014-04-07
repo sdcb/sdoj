@@ -1,12 +1,8 @@
-﻿using SdojWeb.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Web;
+﻿using System.Security.Principal;
 using Microsoft.AspNet.Identity;
+using SdojWeb.Models;
 
-namespace SdojWeb.Infrastructure
+namespace SdojWeb.Infrastructure.Identity
 {
     public class CurrentUser : ICurrentUser
     {

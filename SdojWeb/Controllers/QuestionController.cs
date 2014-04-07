@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
 using AutoMapper.QueryableExtensions;
@@ -49,7 +50,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Create
-        [Authorize(Roles = "admin")]
+        [IdentityAuthorize(Roles = "admin")]
         public ActionResult Create()
         {
             return View();
@@ -58,7 +59,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, Authorize(Roles = "admin")]
+        [HttpPost, IdentityAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
@@ -73,7 +74,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Edit/5
-        [Authorize(Roles = "admin")]
+        [IdentityAuthorize(Roles = "admin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,7 +92,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, Authorize(Roles = "admin")]
+        [HttpPost, IdentityAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
@@ -105,7 +106,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Delete/5
-        [Authorize(Roles = "admin")]
+        [IdentityAuthorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,7 +122,7 @@ namespace SdojWeb.Controllers
         }
 
         // POST: Questions/Delete/5
-        [HttpPost, ActionName("Delete"), Authorize(Roles = "admin")]
+        [HttpPost, ActionName("Delete"), IdentityAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {

@@ -32,7 +32,7 @@ namespace SdojWeb.Infrastructure.Alerts
             return new AlertDecoratorResult(result, "alert-info", text);
         }
 
-        public static ActionResult WIthWarning(this ActionResult result, string message, params object[] args)
+        public static ActionResult WithWarning(this ActionResult result, string message, params object[] args)
         {
             var text = string.Format(message, args);
             return new AlertDecoratorResult(result, "alert-warning", text);
