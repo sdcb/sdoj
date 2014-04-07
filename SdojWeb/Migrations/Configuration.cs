@@ -21,20 +21,20 @@ namespace SdojWeb.Migrations
             ContextKey = "SdojWeb.Models.ApplicationDbContext";
         }
 
-        protected override async void Seed(SdojWeb.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             var userStore = new UserStore<ApplicationUser>(context);
             var roleStore = new RoleStore<IdentityRole>(context);
             var userManager = new ApplicationUserManager(userStore);
             var roleManager = new RoleManager<IdentityRole>(roleStore);
 
-            await userManager.CreateAsync(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
-            await userManager.CreateAsync(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-            await roleManager.CreateAsync(new IdentityRole("admin"));
-            await userManager.CreateAsync(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
+            roleManager.Create(new IdentityRole("admin"));
+            userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
 
-            var user = await userManager.FindByNameAsync("flysha");
-            await userManager.AddToRoleAsync(user.Id, "admin");
+            var user = userManager.FindByName("flysha");
+            userManager.AddToRole(user.Id, "admin");
         }
     }
 }
