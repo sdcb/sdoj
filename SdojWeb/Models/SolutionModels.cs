@@ -105,7 +105,7 @@ namespace SdojWeb.Models
         [Display(Name = "内存使用(MB)")]
         public float UsingMemoryMb { get; set; }
 
-        [Display(Name = "耗时")]
+        [Display(Name = "耗时(ms)")]
         public int RunTime { get; set; }
 
         [Display(Name = "提交时间")]

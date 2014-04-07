@@ -32,6 +32,7 @@
 </div>
 
 <p>
+    @Html.ActionLink("解答", "Create", "Solution", new {id=Model.Id}, null) |
     @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("返回列表", "Index")
 </p>
