@@ -89,16 +89,18 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser(model.Email);
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInAsync(user, isPersistent: false);
+                    var t1 = SignInAsync(user, isPersistent: false);
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                    var t2 = UserManager.SendEmailAsync(user.Id, "确认你的账户",
                         "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
+
+                    Task.WaitAll(t1, t2);
 
                     return this.RedirectToAction<HomeController>(x => x.Index())
                         .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
@@ -440,7 +442,7 @@ namespace SdojWeb.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser(model.Email);
                 IdentityResult result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

@@ -3,20 +3,29 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using System.Data.Entity;
 using Microsoft.Owin;
-using Microsoft.Owin.Security.DataProtection;
-using System.Web.Mvc;
 
 namespace SdojWeb.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     [DisplayColumn("UserName")]
-    public class ApplicationUser : IdentityUser
+    public sealed class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+        }
+
+        public ApplicationUser(string email)
+        {
+            Email = email;
+            UserName = email.SubstringUpToFirst('@');
+
+        }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -40,6 +49,7 @@ namespace SdojWeb.Models
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
+                
                 RequireUniqueEmail = true
             };
             // 配置密码的验证逻辑
@@ -53,10 +63,6 @@ namespace SdojWeb.Models
             };
             // 注册双重身份验证提供程序。此应用程序使用手机和电子邮件作为接收用于验证用户的一个步骤
             // 你可以编写自己的提供程序并在此插入
-            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "你的安全码为: {0}"
-            });
             manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
             {
                 Subject = "安全代码", 

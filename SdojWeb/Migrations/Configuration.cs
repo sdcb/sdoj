@@ -1,3 +1,10 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin;
+using SdojWeb.Models;
+
 namespace SdojWeb.Migrations
 {
     using System;
@@ -14,20 +21,20 @@ namespace SdojWeb.Migrations
             ContextKey = "SdojWeb.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(SdojWeb.Models.ApplicationDbContext context)
+        protected override async void Seed(SdojWeb.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            var userStore = new UserStore<ApplicationUser>(context);
+            var roleStore = new RoleStore<IdentityRole>(context);
+            var userManager = new ApplicationUserManager(userStore);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            await userManager.CreateAsync(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
+            await userManager.CreateAsync(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
+            await roleManager.CreateAsync(new IdentityRole("admin"));
+            await userManager.CreateAsync(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+
+            var user = await userManager.FindByNameAsync("flysha");
+            await userManager.AddToRoleAsync(user.Id, "admin");
         }
     }
 }
