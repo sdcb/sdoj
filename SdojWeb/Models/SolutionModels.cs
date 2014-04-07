@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
 {
-    public class Solution
+    public class Solution : IHaveCustomMapping
     {
         public int Id { get; set; }
 
@@ -26,14 +25,26 @@ namespace SdojWeb.Models
 
         public Languages Language { get; set; }
 
-        [Display(Name = "代码"), Required]
+        [Required]
         public string Source { get; set; }
 
-        [Display(Name = "状态")]
         public SolutionStatus Status { get; set; }
+
+        [Required]
+        public float UsingMemoryMb { get; set; }
+
+        [Required]
+        public int RunTime { get; set; }
 
         [Display(Name = "提交时间"), Column(TypeName = "datetime2")]
         public DateTime SubmitTime { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<Solution, SolutionSummaryViewModel>()
+                .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
+                .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
+        }
     }
 
     public class SolutionCreateModel : IHaveCustomMapping
@@ -55,6 +66,37 @@ namespace SdojWeb.Models
                 .ForMember(dest => dest.Status, source => source.MapFrom(x => SolutionStatus.Queuing))
                 .ForMember(dest => dest.QuestionId, source => source.MapFrom(x => x.QuestionId));
         }
+    }
+
+    public class SolutionSummaryViewModel
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "用户名")]
+        public string CreateUserName { get; set; }
+
+        [Display(Name = "题目名")]
+        public string QuestionName { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [Display(Name = "语言")]
+        public Languages Language { get; set; }
+
+        [Display(Name = "代码长度")]
+        public int SourceLength { get; set; }
+
+        [Display(Name = "状态")]
+        public SolutionStatus Status { get; set; }
+
+        [Display(Name = "内存使用(MB)")]
+        public float UsingMemoryMb { get; set; }
+
+        [Display(Name = "耗时")]
+        public int RunTime { get; set; }
+
+        [Display(Name = "提交时间")]
+        public DateTime SubmitTime { get; set; }
     }
 
     public enum SolutionStatus

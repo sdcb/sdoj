@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SdojWeb.Models.Solution>
+﻿@model IEnumerable<SdojWeb.Models.SolutionSummaryViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -12,16 +12,25 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CreateUser.UserName)
+            @Html.DisplayNameFor(model => model.CreateUserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Language)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Source)
+            @Html.DisplayNameFor(model => model.SourceLength)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RunTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UsingMemoryMb)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.SubmitTime)
@@ -32,16 +41,25 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.CreateUser.UserName)
+            @Html.DisplayFor(modelItem => item.CreateUserName)
+        </td>
+        <td>
+            @Html.ActionLink(item.QuestionName, "Details", "Question", new {id=item.QuestionId}, null)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Language)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Source)
+            @Html.DisplayFor(modelItem => item.SourceLength)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RunTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UsingMemoryMb)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.SubmitTime)

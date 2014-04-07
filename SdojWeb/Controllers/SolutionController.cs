@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Models;
 
@@ -25,7 +26,8 @@ namespace SdojWeb.Controllers
         // GET: Solution
         public async Task<ActionResult> Index()
         {
-            return View(await _dbContext.Solutions.ToListAsync());
+            var model = _dbContext.Solutions.Project().To<SolutionSummaryViewModel>();
+            return View(await model.ToListAsync());
         }
 
         // GET: Solution/Details/5
