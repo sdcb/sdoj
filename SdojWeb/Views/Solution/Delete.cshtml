@@ -1,64 +1,46 @@
-﻿@model SdojWeb.Models.Solution
+﻿@model SdojWeb.Models.SolutionDeleteModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "删除解答";
 }
 
-<h2>Delete</h2>
+<h2>@ViewBag.Title</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>你确定要删除该解答吗？</h3>
 <div>
-    <h4>Solution</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUserId)
+            @Html.DisplayNameFor(model => model.Id)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUserId)
+            @Html.DisplayFor(model => model.Id)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Language)
+            @Html.DisplayNameFor(model => model.QuestionName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Language)
+            @Html.ActionLink(Model.QuestionName, "Details", "Question", new {id=Model.QuestionId}, null)
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Source)
         </dt>
 
-        <dd>
+        <dd class="well">
             @Html.DisplayFor(model => model.Source)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SubmitTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SubmitTime)
-        </dd>
-
     </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="删除" class="btn btn-default" /> |
+            @Html.ActionLink("返回列表", "Index")
         </div>
     }
 </div>

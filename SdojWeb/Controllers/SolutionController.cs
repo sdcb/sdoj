@@ -26,7 +26,7 @@ namespace SdojWeb.Controllers
         // GET: Solution
         public async Task<ActionResult> Index()
         {
-            var model = _dbContext.Solutions.Project().To<SolutionSummaryViewModel>();
+            var model = _dbContext.Solutions.Project().To<SolutionSummaryModel>();
             return View(await model.ToListAsync());
         }
 
@@ -72,38 +72,6 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-        // GET: Solution/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Solution solution = await _dbContext.Solutions.FindAsync(id);
-            if (solution == null)
-            {
-                return HttpNotFound();
-            }
-            return View(solution);
-        }
-
-        // POST: Solution/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(
-            [Bind(Include = "Id,ApplicationUserId,Language,Source,Status,SubmitTime")] Solution solution)
-        {
-            if (ModelState.IsValid)
-            {
-                _dbContext.Entry(solution).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(solution);
-        }
-
         // GET: Solution/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
@@ -111,7 +79,8 @@ namespace SdojWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Solution solution = await _dbContext.Solutions.FindAsync(id);
+            var solutions = _dbContext.Solutions.Project().To<SolutionDeleteModel>();
+            var solution = await solutions.FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
             {
                 return HttpNotFound();

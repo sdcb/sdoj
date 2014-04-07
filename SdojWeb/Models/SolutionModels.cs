@@ -41,7 +41,7 @@ namespace SdojWeb.Models
 
         public void CreateMappings(IConfiguration configuration)
         {
-            configuration.CreateMap<Solution, SolutionSummaryViewModel>()
+            configuration.CreateMap<Solution, SolutionSummaryModel>()
                 .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
         }
@@ -68,7 +68,20 @@ namespace SdojWeb.Models
         }
     }
 
-    public class SolutionSummaryViewModel
+    public class SolutionDeleteModel : IMapFrom<Solution>
+    {
+        public int Id { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [Display(Name = "题目")]
+        public string QuestionName { get; set; }
+
+        [Display(Name = "源代码")]
+        public string Source { get; set; }
+    }
+
+    public class SolutionSummaryModel
     {
         public int Id { get; set; }
 
