@@ -68,6 +68,22 @@ namespace SdojWeb.Models
         }
     }
 
+    public class SolutionDetailModel : IMapFrom<Solution>
+    {
+        public int Id { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [Display(Name = "题目")]
+        public string QuestionName { get; set; }
+
+        [Display(Name = "语言")]
+        public Languages Language { get; set; }
+
+        [Display(Name = "源代码")]
+        public string Source { get; set; }
+    }
+
     public class SolutionDeleteModel : IMapFrom<Solution>
     {
         public int Id { get; set; }

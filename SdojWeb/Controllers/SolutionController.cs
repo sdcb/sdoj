@@ -28,6 +28,9 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Index()
         {
             var model = _dbContext.Solutions.Project().To<SolutionSummaryModel>();
+            {
+                var test = _dbContext.Solutions.Select(x => x.Source.Length).First();
+            }
             return View(await model.ToListAsync());
         }
 
@@ -39,7 +42,8 @@ namespace SdojWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Solution solution = await _dbContext.Solutions.FindAsync(id);
+            var solution = await _dbContext.Solutions.Project().To<SolutionDetailModel>()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
             {
                 return HttpNotFound();
