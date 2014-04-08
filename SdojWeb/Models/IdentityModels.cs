@@ -22,8 +22,7 @@ namespace SdojWeb.Models
         public ApplicationUser(string email)
         {
             Email = email;
-            UserName = email.SubstringUpToFirst('@');
-
+            UserName = email;
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

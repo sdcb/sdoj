@@ -33,7 +33,7 @@ namespace SdojWeb.Migrations
             roleManager.Create(new IdentityRole("admin"));
             userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
 
-            var user = userManager.FindByName("flysha");
+            var user = userManager.FindByName("flysha@live.com");
             userManager.AddToRole(user.Id, "admin");
         }
     }
