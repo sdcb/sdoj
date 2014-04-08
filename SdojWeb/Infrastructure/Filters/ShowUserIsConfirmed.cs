@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,15 @@ namespace SdojWeb.Infrastructure.Filters
 {
     public class ShowUserIsConfirmedFilter : ActionFilterAttribute
     {
+        public ICurrentUser CurrentUser { get; set; }
+
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var context = filterContext.HttpContext;
             var logined = context.User.Identity.IsAuthenticated;
             if (!logined) return;
 
-            var userid = context.User.Identity.GetUserId();
-            var manager = context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-            var confirmed = manager.IsEmailConfirmed(userid);
+            var confirmed = CurrentUser.User.EmailConfirmed;
             filterContext.Controller.TempData["Confirmed"] = confirmed;
 
             base.OnActionExecuted(filterContext);
