@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Web;
-using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using SdojWeb.Infrastructure.Alerts;
 
@@ -22,7 +18,9 @@ namespace SdojWeb.Infrastructure.Identity
         {
             if (EmailAuthorize)
             {
-                if (!httpContext.User.Identity.IsAuthenticated)
+                var currentUser = DependencyResolver.Current.GetService<ICurrentUser>();
+                var user = currentUser.User;
+                if (user == null || !currentUser.User.EmailConfirmed)
                 {
                     return false;
                 }
