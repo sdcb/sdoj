@@ -43,6 +43,7 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<Solution, SolutionSummaryModel>()
                 .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
+                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => x.CreateUser.Id))
                 .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
         }
     }
@@ -87,6 +88,8 @@ namespace SdojWeb.Models
 
         [Display(Name = "用户名")]
         public string CreateUserName { get; set; }
+
+        public string CreateUserId { get; set; }
 
         [Display(Name = "题目名")]
         public string QuestionName { get; set; }
