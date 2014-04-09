@@ -50,7 +50,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Create
-        [IdentityAuthorize(Roles = "admin")]
+        [SdojAuthorize(Roles = "admin")]
         public ActionResult Create()
         {
             return View();
@@ -59,7 +59,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, IdentityAuthorize(Roles = "admin")]
+        [HttpPost, SdojAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
@@ -74,7 +74,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Edit/5
-        [IdentityAuthorize(Roles = "admin")]
+        [SdojAuthorize(Roles = "admin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,7 +92,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, IdentityAuthorize(Roles = "admin")]
+        [HttpPost, SdojAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
         {
@@ -106,7 +106,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Delete/5
-        [IdentityAuthorize(Roles = "admin")]
+        [SdojAuthorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,7 +122,7 @@ namespace SdojWeb.Controllers
         }
 
         // POST: Questions/Delete/5
-        [HttpPost, ActionName("Delete"), IdentityAuthorize(Roles = "admin")]
+        [HttpPost, ActionName("Delete"), SdojAuthorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {

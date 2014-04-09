@@ -43,7 +43,6 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<Solution, SolutionSummaryModel>()
                 .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
-                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => x.CreateUser.Id))
                 .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
         }
     }
@@ -72,6 +71,8 @@ namespace SdojWeb.Models
     public class SolutionDeleteModel : IMapFrom<Solution>
     {
         public int Id { get; set; }
+
+        public string CreateUserId { get; set; }
 
         public int QuestionId { get; set; }
 

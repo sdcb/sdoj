@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
+using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
@@ -32,7 +33,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution/Details/5
-        [IdentityAuthorize]
+        [SdojAuthorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,7 +50,7 @@ namespace SdojWeb.Controllers
 
         //
         // GET: Solution/Create/id
-        [IdentityAuthorize]
+        [SdojAuthorize]
         public ActionResult Create(int? id)
         {
             var solutionCreateModel = new SolutionCreateModel {QuestionId = id??0};
@@ -59,7 +60,7 @@ namespace SdojWeb.Controllers
         // POST: Solution/Create/id
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, IdentityAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, SdojAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(
             [Bind(Include = "QuestionId,Language,Source")] SolutionCreateModel model)
         {
@@ -76,7 +77,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution/Delete/5
-        [IdentityAuthorize(Roles = "admin")]
+        [SdojAuthorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -89,11 +90,16 @@ namespace SdojWeb.Controllers
             {
                 return HttpNotFound();
             }
+            if (User.IsUserOrAdmin(solution.CreateUserId))
+            {
+                return RedirectToAction("Index")
+                    .WithWarning("只能删除自己提交的解答。");
+            }
             return View(solution);
         }
 
         // POST: Solution/Delete/5
-        [HttpPost, ActionName("Delete"), IdentityAuthorize(Roles = "admin")]
+        [HttpPost, ActionName("Delete"), SdojAuthorize()]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
