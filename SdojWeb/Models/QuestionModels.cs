@@ -1,4 +1,5 @@
-﻿using SdojWeb.Infrastructure.Mapping;
+﻿using Microsoft.Web.Mvc.Controls;
+using SdojWeb.Infrastructure.Mapping;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +30,7 @@ namespace SdojWeb.Models
         [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
         public int TimeLimit { get; set; }
 
-        [Display(Name = "创建时间")]
+        [Display(Name = "创建时间"), HiddenInput]
         public DateTime CreateTime { get; set; }
     }
 
