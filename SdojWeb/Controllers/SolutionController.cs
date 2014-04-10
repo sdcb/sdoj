@@ -94,7 +94,7 @@ namespace SdojWeb.Controllers
             {
                 return HttpNotFound();
             }
-            if (User.IsUserOrAdmin(solution.CreateUserId))
+            if (!User.IsUserOrAdmin(solution.CreateUserId))
             {
                 return RedirectToAction("Index")
                     .WithWarning("只能删除自己提交的解答。");
@@ -108,6 +108,12 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Solution solution = await _dbContext.Solutions.FindAsync(id);
+            if (!User.IsUserOrAdmin(solution.CreateUserId))
+            {
+                return RedirectToAction("Index")
+                    .WithWarning("只能删除自己提交的解答。");
+            }
+
             _dbContext.Solutions.Remove(solution);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index");
