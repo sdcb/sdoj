@@ -5,11 +5,11 @@ using SdojWeb.Infrastructure.Alerts;
 
 namespace SdojWeb.Infrastructure.Identity
 {
-    public class IdentityAuthorizeAttribute : AuthorizeAttribute
+    public class SdojAuthorizeAttribute : AuthorizeAttribute
     {
         public bool EmailAuthorize { get; set; }
 
-        public IdentityAuthorizeAttribute() 
+        public SdojAuthorizeAttribute() 
         {
             EmailAuthorize = true;
         }

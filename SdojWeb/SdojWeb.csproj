@@ -215,7 +215,8 @@
     <Compile Include="Infrastructure\Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\Alerts\AlertExtensions.cs" />
     <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
-    <Compile Include="Infrastructure\Identity\IdentityAuthorizeAttribute.cs" />
+    <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
+    <Compile Include="Infrastructure\Identity\UserExtension.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
     <Compile Include="Infrastructure\Identity\ICurrentUser.cs" />
     <Compile Include="Infrastructure\IoC\ActionFilterRegistry.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\QuestionData.cs" />
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

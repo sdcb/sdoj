@@ -88,6 +88,8 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
+        public string CreateUserId { get; set; }
+
         public int QuestionId { get; set; }
 
         [Display(Name = "题目")]
@@ -103,6 +105,8 @@ namespace SdojWeb.Models
 
         [Display(Name = "用户名")]
         public string CreateUserName { get; set; }
+
+        public string CreateUserId { get; set; }
 
         [Display(Name = "题目名")]
         public string QuestionName { get; set; }
