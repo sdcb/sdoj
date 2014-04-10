@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SdojWeb.Models
 {
@@ -15,5 +17,8 @@ namespace SdojWeb.Models
 
         [Required]
         public string Output { get; set; }
+
+        [Required]
+        public DateTime UpdateTime { get; set; }
     }
 }

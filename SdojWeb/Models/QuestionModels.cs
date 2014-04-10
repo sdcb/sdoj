@@ -1,11 +1,7 @@
 ﻿using SdojWeb.Infrastructure.Mapping;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SdojWeb.Models
@@ -32,6 +28,9 @@ namespace SdojWeb.Models
 
         [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
         public int TimeLimit { get; set; }
+
+        [Display(Name = "创建时间")]
+        public DateTime CreateTime { get; set; }
     }
 
     public class QuestionSummaryViewModel : IMapFrom<Question>
@@ -42,9 +41,12 @@ namespace SdojWeb.Models
         public string Name { get; set; }
 
         [Display(Name = "内存限制(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
-        public float MemoryLimitMB { get; set; }
+        public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)")]
         public int TimeLimit { get; set; }
+
+        [Display(Name = "创建时间")]
+        public DateTime CreateTime { get; set; }
     }
 }

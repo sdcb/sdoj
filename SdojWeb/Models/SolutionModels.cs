@@ -36,7 +36,7 @@ namespace SdojWeb.Models
         [Required]
         public int RunTime { get; set; }
 
-        [Display(Name = "提交时间"), Column(TypeName = "datetime2")]
+        [Display(Name = "提交时间")]
         public DateTime SubmitTime { get; set; }
 
         public void CreateMappings(IConfiguration configuration)

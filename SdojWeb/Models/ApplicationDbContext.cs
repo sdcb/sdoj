@@ -15,6 +15,12 @@ namespace SdojWeb.Models
         {
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Properties<DateTime>().Configure(x => x.HasColumnType("datetime2"));
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Solution> Solutions { get; set; }
