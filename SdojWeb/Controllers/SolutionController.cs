@@ -103,7 +103,7 @@ namespace SdojWeb.Controllers
         }
 
         // POST: Solution/Delete/5
-        [HttpPost, ActionName("Delete"), SdojAuthorize()]
+        [HttpPost, ActionName("Delete"), SdojAuthorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {

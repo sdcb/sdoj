@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
 using AutoMapper.QueryableExtensions;
-using SdojWeb.Infrastructure;
-using AutoMapper;
 
 namespace SdojWeb.Controllers
 {
@@ -99,6 +93,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                question.CreateTime = DateTime.Now;
                 _dbContext.Entry(question).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
