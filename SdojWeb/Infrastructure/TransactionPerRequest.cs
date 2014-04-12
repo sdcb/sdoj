@@ -1,10 +1,7 @@
 ﻿using SdojWeb.Infrastructure.Tasks;
 using SdojWeb.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Linq;
 using System.Web;
 
 namespace SdojWeb.Infrastructure

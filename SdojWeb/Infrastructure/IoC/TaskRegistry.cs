@@ -1,9 +1,5 @@
 ﻿using SdojWeb.Infrastructure.Tasks;
 using StructureMap.Configuration.DSL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace SdojWeb.Infrastructure.IoC
 {

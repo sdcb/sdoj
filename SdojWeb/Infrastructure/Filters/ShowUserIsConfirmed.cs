@@ -1,13 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
-using SdojWeb.Infrastructure.Identity;
-using SdojWeb.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using SdojWeb.Infrastructure.Identity;
 using System.Web.Mvc;
-using Owin;
-using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Infrastructure.Filters
 {

@@ -1,16 +1,10 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security.DataProtection;
 using SdojWeb.Models;
 using StructureMap.Configuration.DSL;
-using StructureMap.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Web.Mvc;

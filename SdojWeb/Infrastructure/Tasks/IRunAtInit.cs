@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace SdojWeb.Infrastructure.Tasks
+﻿namespace SdojWeb.Infrastructure.Tasks
 {
     public interface IRunAtInit
     {
