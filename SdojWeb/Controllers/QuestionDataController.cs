@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper.QueryableExtensions;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Models;
 
@@ -16,15 +17,18 @@ namespace SdojWeb.Controllers
             _db = db;
         }
 
-        // GET: /QuestionData/Details/id
-        public async Task<ActionResult> Details(int? id)
+        // GET: /QuestionData/ListForQuestion/id
+        public async Task<ActionResult> ListForQuestion(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction("Index", "Question").WithInfo("没找到给定的题目。");
             }
-            var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id).ToArrayAsync();
+            var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
+                .Project().To<QuestionDataSummaryModel>()
+                .ToArrayAsync();
 
+            ViewBag.QuestionId = id;
             if (questionDatas.Length == 0)
             {
                 return View(questionDatas).WithInfo("该题目目前没有任何测试数据。");
