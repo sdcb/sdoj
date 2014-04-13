@@ -248,7 +248,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\QuestionData.cs" />
+    <Compile Include="Models\QuestionDataModel.cs" />
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
