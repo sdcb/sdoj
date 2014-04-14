@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using SdojWeb.Infrastructure.Alerts;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
@@ -35,6 +37,32 @@ namespace SdojWeb.Controllers
             }
 
             return View(questionDatas);
+        }
+
+        public ActionResult CreateForQuestion(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index", "Question");
+            }
+            var model = new QuestionDataCreateModel {QuestionId = id.Value};
+            return View(model);
+        }
+
+        [SdojAuthorize, HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateForQuestion(int? id, QuestionDataCreateModel model)
+        {
+            if (ModelState.IsValid && id != null)
+            {
+                var questionData = Mapper.Map<QuestionData>(model);
+
+                _db.QuestionDatas.Add(questionData);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("ListForQuestion", new {id = model.QuestionId})
+                    .WithInfo("已成功创建该测试数据。");
+            }
+            
+            return View(model);
         }
     }
 }

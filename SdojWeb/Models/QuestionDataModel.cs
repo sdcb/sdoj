@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
@@ -39,5 +41,23 @@ namespace SdojWeb.Models
 
         [Display(Name = "编辑日期")]
         public DateTime UpdateTime { get; set; }
+    }
+
+    public class QuestionDataCreateModel : IHaveCustomMapping
+    {
+        [Display(Name = "题目ID"), ReadOnly(true), Editable(false)]
+        public int QuestionId { get; set; }
+
+        [Display(Name = "输入数据"), DataType(DataType.MultilineText)]
+        public string Input { get; set; }
+
+        [Display(Name = "输出数据"), DataType(DataType.MultilineText), Required]
+        public string Output { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<QuestionDataCreateModel, QuestionData>()
+                .ForMember(dest => dest.UpdateTime, source => source.UseValue(DateTime.Now));
+        }
     }
 }

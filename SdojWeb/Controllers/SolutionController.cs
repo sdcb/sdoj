@@ -65,6 +65,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var question = Mapper.Map<Solution>(model);
                 
                 _dbContext.Solutions.Add(question);
