@@ -6,17 +6,21 @@
         var time = Model.Value;
         var now = DateTime.Now;
         var diff = now - time;
-        if (diff.TotalSeconds < 60)
+        if (diff.TotalSeconds < 0)
+        {
+            @ViewData.TemplateInfo.FormattedModelValue
+        }
+        else if (diff.TotalSeconds < 60)
         {
             @String.Format("{0:F0}秒前", diff.TotalSeconds);
         }
         else if (diff.TotalMinutes < 60)
         {
-            @String.Format("{0:F1}分钟前", diff.TotalMinutes);
+            @String.Format("{0:F0}分钟前", diff.TotalMinutes);
         }
         else if (diff.TotalHours < 24)
         {
-            @String.Format("{0:F1}小时前", diff.TotalHours);
+            @String.Format("{0:F0}小时前", diff.TotalHours);
         }
         else if (time.Year == now.Year)
         {

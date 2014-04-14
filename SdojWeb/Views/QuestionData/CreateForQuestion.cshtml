@@ -1,4 +1,4 @@
-﻿@model SdojWeb.Models.QuestionDataCreateModel
+﻿@model SdojWeb.Models.QuestionDataEditModel
 
 @{
     ViewBag.Title = "创建测试数据";
@@ -14,7 +14,6 @@
         <hr/>
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
         @Html.EditorForModel()
-        @Html.HiddenFor(x=>x.QuestionId)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="创建" class="btn btn-default"/>
