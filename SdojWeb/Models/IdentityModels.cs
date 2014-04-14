@@ -47,7 +47,6 @@ namespace SdojWeb.Models
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                
                 RequireUniqueEmail = true
             };
             // 配置密码的验证逻辑
