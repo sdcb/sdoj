@@ -69,12 +69,9 @@
             @Html.DisplayFor(modelItem => item.SubmitTime)
         </td>
         <td>
-            @if (User.IsUserOrAdmin(item.CreateUserId))
-            {
-                @Html.ActionLink("源代码", "Details", new { id = item.Id })
-                @Html.Raw(" | ")
-                @Html.ActionLink("删除", "Delete", new { id = item.Id })
-            }
+            @Html.ActionLink("源代码", "Details", new { id = item.Id })
+            @Html.Raw(" | ")
+            @Html.ActionLink("删除", "Delete", new { id = item.Id })
         </td>
     </tr>
 }

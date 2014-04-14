@@ -23,10 +23,9 @@ namespace SdojWeb.Controllers
         // GET: Solution
         public async Task<ActionResult> Index()
         {
-            var model = _dbContext.Solutions.Project().To<SolutionSummaryModel>();
-            {
-                var test = _dbContext.Solutions.Select(x => x.Source.Length).First();
-            }
+            var model = _dbContext.Solutions
+                .OrderByDescending(x => x.SubmitTime)
+                .Project().To<SolutionSummaryModel>();
             return View(await model.ToListAsync());
         }
 

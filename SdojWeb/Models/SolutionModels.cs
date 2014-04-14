@@ -34,7 +34,7 @@ namespace SdojWeb.Models
         [Required]
         public int RunTime { get; set; }
 
-        [Display(Name = "提交时间")]
+        [Display(Name = "提交时间"), DisplayFormat(DataFormatString = "yyyy/mm/dd")]
         public DateTime SubmitTime { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
