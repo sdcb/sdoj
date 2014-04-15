@@ -97,9 +97,6 @@ namespace SdojWeb.Controllers
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    if (model.Email.ToLower() == "flysha@live.com")
-                        await AddUserToAdmin(model.Email);
-
                     await SignInAsync(user, isPersistent: false);
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -507,16 +504,6 @@ namespace SdojWeb.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }
-
-        private async Task AddUserToAdmin(string username)
-        {
-            var roleStore = new RoleStore<IdentityRole>(_db);
-            var roleManager = new RoleManager<IdentityRole>(roleStore);
-
-            roleManager.Create(new IdentityRole("admin"));
-            var user = await UserManager.FindByNameAsync(username);
-            await UserManager.AddToRoleAsync(user.Id, "admin");
         }
 
         private async Task SignInAsync(ApplicationUser user, bool isPersistent)
