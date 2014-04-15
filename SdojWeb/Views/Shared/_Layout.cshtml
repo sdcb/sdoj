@@ -35,7 +35,11 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 应用程序 @TempData["PageTime"]</p>
+            <p>
+                &copy; @DateTime.Now.Year - 我的 ASP.NET 应用程序
+                @TempData["PageTime"] 
+                内存占用: @String.Format("{0:F2}MB", GC.GetTotalMemory(false)/1024.0/1024)
+            </p>
         </footer>
     </div>
 
