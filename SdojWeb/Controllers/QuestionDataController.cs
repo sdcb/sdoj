@@ -10,7 +10,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    [SdojAuthorize]
+    [SdojAuthorize(Roles="admin")]
     public class QuestionDataController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -69,11 +69,12 @@ namespace SdojWeb.Controllers
         }
 
         // GET: /QuestionData/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id, int questionId)
         {
             if (id == null)
             {
-                return RedirectToAction("Index", "Question");
+                return RedirectToAction("ListForQuestion", new {id = questionId})
+                    .WithError("id不能为空。");
             }
             var model = await _db.QuestionDatas
                 .Project().To<QuestionDataEditModel>()
@@ -81,7 +82,7 @@ namespace SdojWeb.Controllers
 
             if (model == null)
             {
-                return RedirectToAction("Index", "Question")
+                return RedirectToAction("ListForQuestion", new {id=questionId})
                     .WithInfo("未找到id为{0}的测试数据。", id);
             }
 
