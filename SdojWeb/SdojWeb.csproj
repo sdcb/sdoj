@@ -336,6 +336,7 @@
     <Content Include="Views\Shared\EditorTemplates\Enum.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\QuestionData\Edit.cshtml" />
+    <Content Include="Views\QuestionData\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

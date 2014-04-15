@@ -102,5 +102,44 @@ namespace SdojWeb.Controllers
             }
             return View(model);
         }
+
+        // GET: /QuestionData/Delete/5
+        public async Task<ActionResult> Delete(int? id, int? questionId)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListForQuestion", new {id = questionId});
+            }
+
+            var model = await _db.QuestionDatas
+                .Project().To<QuestionDataEditModel>()
+                .FirstOrDefaultAsync(x => x.Id == id.Value);
+            if (model == null)
+            {
+                return RedirectToAction("ListForQuestion", new { id = questionId })
+                    .WithError("没找到Id为{0}的测试数据。", id);
+            }
+
+            return View(model);
+        }
+
+        // POST: /QuestionData/DeleteConfirmed/5
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id, int questionId)
+        {
+            var model = await _db.QuestionDatas.FindAsync(id);
+            if (model == null)
+            {
+                return RedirectToAction("ListForQuestion", new { id = questionId })
+                    .WithError("没找到Id为{0}的测试数据。", id);
+            }
+
+            _db.Entry(model).State = EntityState.Deleted;
+            var affectedRows = await _db.SaveChangesAsync();
+            // assert affectedRows = 1.
+
+            return RedirectToAction("ListForQuestion", new { id = questionId })
+                .WithSuccess("Id为{0}的测试数据删除成功。", id);
+        }
     }
 }
