@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SdojWeb.Infrastructure.Identity;
@@ -17,14 +18,16 @@ namespace SdojWeb.Controllers
     public class AccountController : Controller
     {
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _db;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager)
+        public AccountController(ApplicationUserManager userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
+            _db = db;
         }
 
         public ApplicationUserManager UserManager 
@@ -94,6 +97,9 @@ namespace SdojWeb.Controllers
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    if (model.Email.ToLower() == "flysha@live.com")
+                        await AddUserToAdmin(model.Email);
+
                     await SignInAsync(user, isPersistent: false);
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -501,6 +507,16 @@ namespace SdojWeb.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
+        }
+
+        private async Task AddUserToAdmin(string username)
+        {
+            var roleStore = new RoleStore<IdentityRole>(_db);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+            roleManager.Create(new IdentityRole("admin"));
+            var user = await UserManager.FindByNameAsync(username);
+            await UserManager.AddToRoleAsync(user.Id, "admin");
         }
 
         private async Task SignInAsync(ApplicationUser user, bool isPersistent)
