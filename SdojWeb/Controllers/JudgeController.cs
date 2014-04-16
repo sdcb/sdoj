@@ -1,27 +1,54 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
     public class JudgeController : ApiController
     {
-        [HttpGet]
-        public int Wait()
+        private readonly ApplicationUserManager _userManager;
+
+        public JudgeController()
         {
-            var before = Environment.TickCount;
-            Event.WaitOne();
-            var after = Environment.TickCount;
-            return after - before;
+            _userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
         }
 
         [HttpGet]
-        public string Set()
+        public async Task Login(string username, string password)
         {
-            Event.Set();
-            return "set ok";
+            var user = await _userManager.FindAsync(username, password);
+            if (user != null)
+            {
+                await SignInAsync(user, false);
+            }
         }
 
-        public static AutoResetEvent Event = new AutoResetEvent(false);
+        [HttpGet]
+        public int Sum(int a, int b)
+        {
+            return a + b;
+        }
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return 
+                    HttpContext.Current.GetOwinContext().Authentication;
+            }
+        }
+
+        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        {
+            AuthenticationManager.SignOut(
+                DefaultAuthenticationTypes.ExternalCookie);
+            AuthenticationManager.SignIn(
+                new AuthenticationProperties() { IsPersistent = isPersistent }, 
+                await user.GenerateUserIdentityAsync(_userManager));
+        }
     }
 }
