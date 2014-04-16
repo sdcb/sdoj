@@ -486,12 +486,27 @@ namespace SdojWeb.Controllers
             return View();
         }
 
+        //
+        // GET: /Account/CreateSystemRoles
+        [AllowAnonymous]
+        public async Task<ActionResult> CreateSystemRoles()
+        {
+            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_db));
+            if (await rm.RoleExistsAsync("admin"))
+            {
+                return Content("角色已存在。");
+            }
+            await rm.CreateAsync(new IdentityRole("admin"));
+            await rm.CreateAsync(new IdentityRole("judger"));
+            return Content("创建成功。");
+        }
+
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
             var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
-            return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
+            return PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
         #region 帮助程序
