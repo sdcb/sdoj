@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -9,16 +8,16 @@ using Microsoft.Owin.Security;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using Microsoft.Web.Mvc;
-using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Filters;
+using SdojWeb.Infrastructure.Alerts;
 
 namespace SdojWeb.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        private ApplicationUserManager _userManager;
-        private ApplicationDbContext _db;
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext _db;
 
         public AccountController()
         {
@@ -35,10 +34,6 @@ namespace SdojWeb.Controllers
             get
             {
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
             }
         }
 
@@ -66,10 +61,7 @@ namespace SdojWeb.Controllers
                     await SignInAsync(user, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
-                else
-                {
-                    ModelState.AddModelError("", "用户名或密码无效。");
-                }
+                ModelState.AddModelError("", "用户名或密码无效。");
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
@@ -107,10 +99,7 @@ namespace SdojWeb.Controllers
                     return this.RedirectToAction<HomeController>(x => x.Index())
                         .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
                 }
-                else
-                {
-                    AddErrors(result);
-                }
+                AddErrors(result);
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
@@ -132,11 +121,8 @@ namespace SdojWeb.Controllers
             {
                 return View("ConfirmUser");
             }
-            else
-            {
-                AddErrors(result);
-                return View();
-            }
+            AddErrors(result);
+            return View();
         }
 
         //
@@ -272,7 +258,7 @@ namespace SdojWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
-            ManageMessageId? message = null;
+            ManageMessageId? message;
             IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
@@ -345,10 +331,7 @@ namespace SdojWeb.Controllers
                     {
                         return this.RedirectToAction(x => Manage(ManageMessageId.SetPasswordSuccess));
                     }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+                    AddErrors(result);
                 }
             }
 
@@ -385,13 +368,10 @@ namespace SdojWeb.Controllers
                 await SignInAsync(user, isPersistent: false);
                 return RedirectToLocal(returnUrl);
             }
-            else
-            {
-                // 如果用户没有帐户，则提示该用户创建帐户
-                ViewBag.ReturnUrl = returnUrl;
-                ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
-            }
+            // 如果用户没有帐户，则提示该用户创建帐户
+            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+            return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
         }
 
         //
@@ -559,10 +539,7 @@ namespace SdojWeb.Controllers
             {
                 return Redirect(returnUrl);
             }
-            else
-            {
-                return this.RedirectToAction<HomeController>(x => x.Index());
-            }
+            return this.RedirectToAction<HomeController>(x => x.Index());
         }
 
         private class ChallengeResult : HttpUnauthorizedResult
@@ -578,9 +555,9 @@ namespace SdojWeb.Controllers
                 UserId = userId;
             }
 
-            public string LoginProvider { get; set; }
-            public string RedirectUri { get; set; }
-            public string UserId { get; set; }
+            private string LoginProvider { get; set; }
+            private string RedirectUri { get; set; }
+            private string UserId { get; set; }
 
             public override void ExecuteResult(ControllerContext context)
             {
