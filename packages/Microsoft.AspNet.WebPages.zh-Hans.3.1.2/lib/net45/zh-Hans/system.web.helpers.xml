@@ -157,7 +157,7 @@
       <returns>由十六进制字符组成的字符串形式的 <paramref name="input" /> 的哈希值。</returns>
       <param name="input">要为其提供哈希值的数据。</param>
       <param name="algorithm">用于生成哈希值的算法。默认值为“sha256”。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="input" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Helpers.Crypto.Hash(System.String,System.String)">
@@ -165,28 +165,28 @@
       <returns>由十六进制字符组成的字符串形式的 <paramref name="input" /> 的哈希值。</returns>
       <param name="input">要为其提供哈希值的数据。</param>
       <param name="algorithm">用于生成哈希值的算法。默认值为“sha256”。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="input" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Helpers.Crypto.HashPassword(System.String)">
       <summary>返回指定密码的 RFC 2898 哈希值。</summary>
       <returns>base-64 编码字符串形式的 <paramref name="password" /> 的哈希值。</returns>
       <param name="password">要为其生成哈希值的密码。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="password" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Helpers.Crypto.SHA1(System.String)">
       <summary>返回指定字符串的 SHA-1 哈希值。</summary>
       <returns>由十六进制字符组成的字符串形式的 <paramref name="input" /> 的 SHA-1 哈希值。</returns>
       <param name="input">要为其提供哈希值的数据。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="input" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Helpers.Crypto.SHA256(System.String)">
       <summary>返回指定字符串的 SHA-256 哈希值。</summary>
       <returns>由十六进制字符组成的字符串形式的 <paramref name="input" /> 的 SHA-256 哈希值。</returns>
       <param name="input">要为其提供哈希值的数据。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="input" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Helpers.Crypto.VerifyHashedPassword(System.String,System.String)">
@@ -194,7 +194,7 @@
       <returns>如果哈希值为密码的加密匹配，则为 true；否则为 false。</returns>
       <param name="hashedPassword">base-64 编码字符串形式的以前计算的 RFC 2898 哈希值。</param>
       <param name="password">要与 <paramref name="hashedPassword" /> 进行加密比较的明文密码。</param>
-      <exception cref="System.ArgumentNullException">
+      <exception cref="T:System.ArgumentNullException">
         <paramref name="hashedPassword" /> 或 <paramref name="password" /> 为 null。</exception>
     </member>
     <member name="T:System.Web.Helpers.DynamicJsonArray">
@@ -590,7 +590,7 @@
       <returns>应用于与该列关联的单元格的 CSS 类特性。</returns>
     </member>
     <member name="T:System.Web.Helpers.WebGridPagerModes">
-      <summary>指定标记，这些标记所描述的方法可用于在 <see cref="T:System.Web.Helpers.WebGrid" /> 实例的页面间进行切换。</summary>
+      <summary>指定标记，这些标记所描述的方法可用于在 <see cref="T:System.Web.Helpers.WebGrid" /> 实例的页面间进行切换。此枚举有一个 <see cref="T:System.FlagsAttribute" /> 特性，通过该特性可使其成员值按位组合。</summary>
     </member>
     <member name="F:System.Web.Helpers.WebGridPagerModes.All">
       <summary>指示已提供在 <see cref="T:System.Web.Helpers.WebGrid" /> 页面间进行切换的所有方法。</summary>
@@ -629,10 +629,18 @@
     <member name="P:System.Web.Helpers.WebGridRow.Item(System.Int32)">
       <summary>返回 <see cref="T:System.Web.Helpers.WebGridRow" /> 实例中指定索引处的值。</summary>
       <returns>指定索引处的值。</returns>
+      <param name="index">该行中要返回的值的从零开始的索引。</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> 小于 0，或大于等于行中值的数量。</exception>
     </member>
     <member name="P:System.Web.Helpers.WebGridRow.Item(System.String)">
       <summary>返回在 <see cref="T:System.Web.Helpers.WebGridRow" /> 实例中具有指定名称的值。</summary>
       <returns>指定值。</returns>
+      <param name="name">该行中要返回的值的名称。</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> 为 Nothing 或空。</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="name" /> 指定不存在的值。</exception>
     </member>
     <member name="M:System.Web.Helpers.WebGridRow.System#Collections#IEnumerable#GetEnumerator">
       <summary>返回一个可用于循环访问集合的枚举器。</summary>
