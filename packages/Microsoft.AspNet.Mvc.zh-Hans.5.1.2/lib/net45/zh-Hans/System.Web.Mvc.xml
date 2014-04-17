@@ -25,15 +25,6 @@
       <exception cref="T:System.ArgumentNullException">
         <paramref name="controllerContext " /> 参数为 null。</exception>
     </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteName">
-      <summary>获取或设置要为此操作生成的路由的名称。</summary>
-    </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteOrder">
-      <summary>获取或设置路由相对于其他路由的顺序。默认顺序为 0。</summary>
-    </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteTemplate">
-      <summary>获取或设置描述要匹配的 URI 模式的路由模板。</summary>
-    </member>
     <member name="P:System.Web.Mvc.AcceptVerbsAttribute.Verbs">
       <summary>获取或设置操作方法将响应的 HTTP 谓词的列表。</summary>
       <returns>操作方法将响应的 HTTP 谓词的列表。</returns>
@@ -360,7 +351,7 @@
       <summary>初始化 <see cref="T:System.Web.Mvc.AllowHtmlAttribute" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.AllowHtmlAttribute.OnMetadataCreated(System.Web.Mvc.ModelMetadata)">
-      <summary>此方法支持 ASP.NET MVC 验证基础结构，它不应直接在您的代码中使用。</summary>
+      <summary>此方法支持 ASP.NET MVC 验证基础结构，它不应直接在你的代码中使用。</summary>
       <param name="metadata">模型元数据。</param>
     </member>
     <member name="T:System.Web.Mvc.AreaRegistration">
@@ -722,7 +713,7 @@
     </member>
     <member name="M:System.Web.Mvc.ByteArrayModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)">
       <summary>使用指定的控制器上下文和绑定上下文来绑定模型。</summary>
-      <returns>绑定的数据对象。</returns>
+      <returns>绑定的数据对象。实现<see cref="M:System.Web.Mvc.IModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)" /></returns>
       <param name="controllerContext">运行控制器的上下文。上下文信息包括控制器、HTTP 内容、请求上下文和路由数据。</param>
       <param name="bindingContext">绑定模型的上下文。上下文包含模型对象、模型名称、模型类型、属性筛选器和值提供程序等信息。</param>
       <exception cref="T:System.ArgumentNullException">
@@ -887,6 +878,10 @@
       <summary>获取模型的编辑格式字符串。如果该值已缓存，则返回已缓存的值；否则，将从模型元数据中检索该值并将该值存储在缓存中。</summary>
       <returns>模型的编辑格式字符串。</returns>
     </member>
+    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.ComputeHasNonDefaultEditFormat">
+      <summary>获取一个值，该值指示模型是否使用了非默认编辑格式。</summary>
+      <returns>一个值，该值指示是否使用了非默认编辑格式。</returns>
+    </member>
     <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.ComputeHideSurroundingHtml">
       <summary>获取一个值，该值指示是否应该使用关联的 HTML 元素呈现模型对象。获取一个值，该值指示是否应该使用关联的 HTML 元素呈现模型对象。如果该值已缓存，则返回已缓存的值；否则，将从模型元数据中检索该值并将该值存储在缓存中。</summary>
       <returns>一个值，该值指示是否应该使用关联的 HTML 元素呈现模型对象。</returns>
@@ -991,6 +986,10 @@
     <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeEditFormatString">
       <summary>此方法是受保护的方法，因此不能直接调用。此方法已设计为可在派生类（例如 <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />）中进行重写。获取或设置模型的编辑格式字符串。</summary>
       <returns>模型的编辑格式字符串。</returns>
+    </member>
+    <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeHasNonDefaultEditFormat">
+      <summary>此方法是受保护的方法，因此不能直接调用。此方法已设计为可在派生类（例如 <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />）中进行重写。</summary>
+      <returns>一个值，该值指示是否使用了非默认编辑格式。</returns>
     </member>
     <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeHideSurroundingHtml">
       <summary>此方法是受保护的方法，因此不能直接调用。此方法已设计为可在派生类（例如 <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />）中进行重写。获取或设置一个已缓存的值，该值指示是否应该使用关联的 HTML 元素呈现模型对象。</summary>
@@ -1120,7 +1119,7 @@
     </member>
     <member name="M:System.Web.Mvc.CancellationTokenModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)">
       <summary>返回默认取消标记。</summary>
-      <returns>默认取消标记。</returns>
+      <returns>默认取消标记。实现<see cref="M:System.Web.Mvc.IModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)" /></returns>
       <param name="controllerContext">控制器上下文。</param>
       <param name="bindingContext">绑定上下文。</param>
     </member>
@@ -1236,7 +1235,7 @@
         <paramref name="context" /> 参数为 null。</exception>
     </member>
     <member name="T:System.Web.Mvc.Controller">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>提供用于响应对 ASP.NET MVC 网站所进行的 HTTP 请求的方法。</summary>
     </member>
     <member name="M:System.Web.Mvc.Controller.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.Controller" /> 类的新实例。</summary>
@@ -1246,21 +1245,21 @@
       <returns>操作调用程序。</returns>
     </member>
     <member name="P:System.Web.Mvc.Controller.AsyncManager">
-      <summary>获取控制器的异步调用程序。</summary>
-      <returns>异步调用程序。</returns>
+      <summary>提供异步操作。</summary>
+      <returns>返回 <see cref="T:System.Web.Mvc.Async.AsyncManager" />。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)">
-      <summary>开始控制器操作的调用。</summary>
-      <returns>操作结果。</returns>
+      <summary>开始执行指定的请求上下文</summary>
+      <returns>返回一个 IAsyncController 实例。</returns>
       <param name="requestContext">请求上下文。</param>
       <param name="callback">异步回调。</param>
-      <param name="state">对象的状态。</param>
+      <param name="state">状态。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.BeginExecuteCore(System.AsyncCallback,System.Object)">
-      <summary>开始控制器上下文中的操作的调用。</summary>
-      <returns>操作结果。</returns>
-      <param name="callback">异步回调。</param>
-      <param name="state">对象的状态。</param>
+      <summary>开始调用当前控制器上下文中的操作。</summary>
+      <returns>返回一个 IAsyncController 实例。</returns>
+      <param name="callback">回调。</param>
+      <param name="state">状态。</param>
     </member>
     <member name="P:System.Web.Mvc.Controller.Binders">
       <summary>获取或设置联编程序。</summary>
@@ -1297,19 +1296,19 @@
       <returns>禁用控制器的异步支持，则为 true；否则为 false。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.Dispose">
-      <summary>释放由 Controller 类的当前实例占用的所有资源。</summary>
+      <summary>释放由 <see cref="T:System.Web.Mvc.Controller" /> 类的当前实例所使用的所有资源。</summary>
     </member>
     <member name="M:System.Web.Mvc.Controller.Dispose(System.Boolean)">
       <summary>释放非托管资源和托管资源（后者为可选项）。</summary>
       <param name="disposing">若为 true，则同时释放托管资源和非托管资源；若为 false，则仅释放非托管资源。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.EndExecute(System.IAsyncResult)">
-      <summary>停止控制器操作的调用。</summary>
-      <param name="asyncResult">操作的异步结果。</param>
+      <summary>结束当前控制器上下文中的操作的调用。</summary>
+      <param name="asyncResult">异步结果。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.EndExecuteCore(System.IAsyncResult)">
-      <summary>停止控制器上下文中的操作的调用。</summary>
-      <param name="asyncResult">操作的异步结果。</param>
+      <summary>结束执行核心。</summary>
+      <param name="asyncResult">异步结果。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.ExecuteCore">
       <summary>调用当前控制器上下文中的操作。</summary>
@@ -1362,12 +1361,14 @@
       <returns>HTTP 上下文。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.HttpNotFound">
-      <summary>返回 HttpNotFoundResult 类的实例。</summary>
-      <returns>HttpNotFoundResult 类的实例。</returns>
+      <summary>返回 <see cref="T:System.Web.Mvc.HttpNotFoundResult" /> 类的实例。</summary>
+      <returns>
+        <see cref="T:System.Web.Mvc.HttpNotFoundResult" /> 类的实例。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.HttpNotFound(System.String)">
-      <summary>返回 HttpNotFoundResult 类的实例。</summary>
-      <returns>HttpNotFoundResult 类的实例。</returns>
+      <summary>返回 <see cref="T:System.Web.Mvc.HttpNotFoundResult" /> 类的实例。</summary>
+      <returns>
+        <see cref="T:System.Web.Mvc.HttpNotFoundResult" /> 类的实例。</returns>
       <param name="statusDescription">状态说明。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Initialize(System.Web.Routing.RequestContext)">
@@ -1375,30 +1376,30 @@
       <param name="requestContext">HTTP 上下文和路由数据。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.JavaScript(System.String)">
-      <summary>创建一个 JavaScriptResult 对象。</summary>
-      <returns>将脚本写入到响应的 JavaScriptResult 对象。</returns>
+      <summary>创建一个 <see cref="T:System.Web.Mvc.JavaScriptResult" /> 对象。</summary>
+      <returns>将脚本写入到响应的 <see cref="T:System.Web.Mvc.JavaScriptResult" /> 对象。</returns>
       <param name="script">要在客户端上运行的 JavaScript 代码</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Json(System.Object)">
-      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 的 JsonResult 对象。</summary>
-      <returns>将指定对象序列化为 JSON 格式的 JSON 结果对象。</returns>
+      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 的 <see cref="T:System.Web.Mvc.JsonResult" /> 对象。</summary>
+      <returns>将指定对象序列化为 JSON 格式的 JSON 结果对象。在执行此方法所准备的结果对象时，ASP.NET MVC 框架会将该对象写入响应。</returns>
       <param name="data">要序列化的 JavaScript 对象图。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Json(System.Object,System.String)">
-      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式的 JsonResult 对象。</summary>
+      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式的 <see cref="T:System.Web.Mvc.JsonResult" /> 对象。</summary>
       <returns>将指定对象序列化为 JSON 格式的 JSON 结果对象。</returns>
       <param name="data">要序列化的 JavaScript 对象图。</param>
       <param name="contentType">内容类型（MIME 类型）。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Json(System.Object,System.String,System.Text.Encoding)">
-      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式的 JsonResult 对象。</summary>
+      <summary>创建一个将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式的 <see cref="T:System.Web.Mvc.JsonResult" /> 对象。</summary>
       <returns>将指定对象序列化为 JSON 格式的 JSON 结果对象。</returns>
       <param name="data">要序列化的 JavaScript 对象图。</param>
       <param name="contentType">内容类型（MIME 类型）。</param>
       <param name="contentEncoding">内容编码。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Json(System.Object,System.String,System.Text.Encoding,System.Web.Mvc.JsonRequestBehavior)">
-      <summary>创建 JsonResult 对象，该对象使用内容类型、内容编码和 JSON 请求行为将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式。</summary>
+      <summary>创建 <see cref="T:System.Web.Mvc.JsonResult" /> 对象，该对象使用内容类型、内容编码和 JSON 请求行为将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式。</summary>
       <returns>将指定对象序列化为 JSON 格式的结果对象。</returns>
       <param name="data">要序列化的 JavaScript 对象图。</param>
       <param name="contentType">内容类型（MIME 类型）。</param>
@@ -1406,7 +1407,7 @@
       <param name="behavior">JSON 请求行为</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.Json(System.Object,System.String,System.Web.Mvc.JsonRequestBehavior)">
-      <summary>创建 JsonResult 对象，该对象使用指定内容类型和 JSON 请求行为将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式。</summary>
+      <summary>创建 <see cref="T:System.Web.Mvc.JsonResult" /> 对象，该对象使用指定内容类型和 JSON 请求行为将指定对象序列化为 JavaScript 对象表示法 (JSON) 格式。</summary>
       <returns>将指定对象序列化为 JSON 格式的结果对象。</returns>
       <param name="data">要序列化的 JavaScript 对象图。</param>
       <param name="contentType">内容类型（MIME 类型）。</param>
@@ -1455,37 +1456,38 @@
       <param name="filterContext">有关当前请求和操作结果的信息。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.PartialView">
-      <summary>创建一个呈现分部视图的 PartialViewResult 对象。</summary>
+      <summary>创建一个呈现分部视图的 <see cref="T:System.Web.Mvc.PartialViewResult" /> 对象。</summary>
       <returns>分部视图结果对象。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.PartialView(System.Object)">
-      <summary>使用指定的模型创建一个呈现分部视图的 PartialViewResult 对象。</summary>
+      <summary>使用指定的模型创建一个呈现分部视图的 <see cref="T:System.Web.Mvc.PartialViewResult" /> 对象。</summary>
       <returns>分部视图结果对象。</returns>
       <param name="model">分部视图呈现的模型</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.PartialView(System.String)">
-      <summary>使用指定的视图名称创建一个呈现分部视图的 PartialViewResult 对象。</summary>
+      <summary>使用指定的视图名称创建一个呈现分部视图的 <see cref="T:System.Web.Mvc.PartialViewResult" /> 对象。</summary>
       <returns>分部视图结果对象。</returns>
       <param name="viewName">为响应呈现的视图的名称。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.PartialView(System.String,System.Object)">
-      <summary>使用指定的视图名称和模型创建一个呈现分部视图的 PartialViewResult 对象。</summary>
+      <summary>使用指定的视图名称和模型创建一个呈现分部视图的 <see cref="T:System.Web.Mvc.PartialViewResult" /> 对象。</summary>
       <returns>分部视图结果对象。</returns>
       <param name="viewName">为响应呈现的视图的名称。</param>
       <param name="model">分部视图呈现的模型</param>
     </member>
     <member name="P:System.Web.Mvc.Controller.Profile">
-      <summary>获取控制器配置文件。</summary>
-      <returns>控制器配置文件。</returns>
+      <summary>获取 HTTP 上下文配置文件。</summary>
+      <returns>HTTP 上下文配置文件。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.Redirect(System.String)">
-      <summary>创建一个重定向到指定的 URL 的 RedirectResult 对象。</summary>
+      <summary>创建一个重定向到指定的 URL 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 对象。</summary>
       <returns>重定向结果对象。</returns>
       <param name="url">要重定向到的 URL。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectPermanent(System.String)">
-      <summary>返回 RedirectResult 类的实例，其 Permanent 属性设置为 true。</summary>
-      <returns>RedirectResult 类的实例，其 Permanent 属性设置为 true。</returns>
+      <summary>返回 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</summary>
+      <returns>
+        <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</returns>
       <param name="url">要重定向到的 URL。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToAction(System.String)">
@@ -1526,39 +1528,39 @@
       <param name="routeValues">路由的参数。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String)">
-      <summary>返回使用指定的操作名称并且 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>使用指定的操作名称、控制器名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</returns>
+      <summary>返回使用指定的操作名称并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>使用指定的操作名称、控制器名称和路由值返回的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</returns>
       <param name="actionName">操作名称。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String,System.Object)">
-      <summary>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>使用指定的操作名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</returns>
+      <summary>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</returns>
       <param name="actionName">操作名称。</param>
       <param name="routeValues">路由值。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String,System.String)">
-      <summary>返回使用指定的操作名称和控制器名称并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>使用指定的操作名称和控制器名称并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</returns>
+      <summary>返回使用指定的操作名称和控制器名称并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>使用指定的操作名称和控制器名称返回的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</returns>
       <param name="actionName">操作名称。</param>
       <param name="controllerName">控制器名称。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String,System.String,System.Object)">
-      <summary>返回指定的操作名称、控制器名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>使用指定的操作名称、控制器名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</returns>
+      <summary>返回使用指定的操作名称、控制器名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>使用指定的操作名称、控制器名称和路由值返回的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</returns>
       <param name="actionName">操作名称。</param>
       <param name="controllerName">控制器名称。</param>
       <param name="routeValues">路由值。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String,System.String,System.Web.Routing.RouteValueDictionary)">
-      <summary>返回指定的操作名称、控制器名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>RedirectResult 类的实例，其 Permanent 属性设置为 true。</returns>
+      <summary>返回使用指定的操作名称、控制器名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>使用指定的操作名称、控制器名称和路由值返回的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例，其 Permanent 属性设置为 true。</returns>
       <param name="actionName">操作名称。</param>
       <param name="controllerName">控制器名称。</param>
       <param name="routeValues">路由值。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.RedirectToActionPermanent(System.String,System.Web.Routing.RouteValueDictionary)">
-      <summary>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 RedirectResult 类的实例。</summary>
-      <returns>使用指定的操作名称和路由值并且其 Permanent 属性设置为 true 的 RedirectResult 类的实例。</returns>
+      <summary>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</summary>
+      <returns>返回使用指定的操作名称和路由值并且 Permanent 属性设置为 true 的 <see cref="T:System.Web.Mvc.RedirectResult" /> 类的实例。</returns>
       <param name="actionName">操作名称。</param>
       <param name="routeValues">路由值。</param>
     </member>
@@ -1626,7 +1628,7 @@
     </member>
     <member name="P:System.Web.Mvc.Controller.RouteData">
       <summary>为当前请求获取路由数据。</summary>
-      <returns>当前请求的路由数据。</returns>
+      <returns>路由数据。</returns>
     </member>
     <member name="P:System.Web.Mvc.Controller.Server">
       <summary>获取提供 Web 请求处理期间使用的方法的 HttpServerUtilityBase 对象。</summary>
@@ -1688,6 +1690,8 @@
       <returns>如果更新已成功，则为 true；否则为 false。</returns>
       <param name="model">要更新的模型实例。</param>
       <typeparam name="TModel">模型对象的类型。</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="model" /> 参数或 ValueProvider 属性为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.Controller.TryUpdateModel``1(``0,System.String)">
       <summary>使用来自控制器的当前值提供程序的值和前缀更新指定的模型实例。</summary>
@@ -1695,6 +1699,8 @@
       <param name="model">要更新的模型实例。</param>
       <param name="prefix">在值提供程序中查找值时要使用的前缀。</param>
       <typeparam name="TModel">模型对象的类型。</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="model" /> 参数或 ValueProvider 属性为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.Controller.TryUpdateModel``1(``0,System.String,System.String[])">
       <summary>使用来自控制器的当前值提供程序的值、前缀和包含的属性更新指定的模型实例。</summary>
@@ -1703,6 +1709,8 @@
       <param name="prefix">在值提供程序中查找值时要使用的前缀。</param>
       <param name="includeProperties">一个要更新的模型的属性列表。</param>
       <typeparam name="TModel">模型对象的类型。</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="model" /> 参数或 ValueProvider 属性为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.Controller.TryUpdateModel``1(``0,System.String,System.String[],System.String[])">
       <summary>使用来自控制器的当前值提供程序的值、前缀、要排除的属性列表和要包含的属性列表更新指定的模型实例。</summary>
@@ -1712,6 +1720,8 @@
       <param name="includeProperties">一个要更新的模型的属性列表。</param>
       <param name="excludeProperties">要从该更新中显式排除的属性列表。即使 includeProperties 参数列表中列出了这些属性，也会将其排除。</param>
       <typeparam name="TModel">模型对象的类型。</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="model" /> 参数或 ValueProvider 属性为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.Controller.TryUpdateModel``1(``0,System.String,System.String[],System.String[],System.Web.Mvc.IValueProvider)">
       <summary>使用来自值提供程序的值、前缀、要排除的属性列表和要包含的属性列表更新指定的模型实例。</summary>
@@ -1860,52 +1870,52 @@
       <param name="prefix">在模型提供程序中查找值时要使用的前缀。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View">
-      <summary>创建一个将视图呈现给响应的 ViewResult 对象。</summary>
-      <returns>将视图呈现给响应的视图结果。</returns>
+      <summary>创建一个将视图呈现给响应的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
+      <returns>将视图呈现给响应的 <see cref="M:System.Web.Mvc.Controller.View" /> 结果。</returns>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.Object)">
-      <summary>使用模型创建一个将视图呈现给响应的 ViewResult 对象。</summary>
+      <summary>使用模型创建一个将视图呈现给响应的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="model">视图呈现的模型。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.String)">
-      <summary>使用视图名称创建一个呈现视图的 ViewResult 对象。</summary>
+      <summary>使用视图名称创建一个呈现视图的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="viewName">为响应呈现的视图的名称。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.String,System.Object)">
-      <summary>创建一个呈现指定的 IView 对象的 ViewResult 对象。</summary>
+      <summary>创建一个呈现指定的 IView 对象的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="viewName">为响应呈现的视图。</param>
       <param name="model">视图呈现的模型。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.String,System.String)">
-      <summary>使用视图名称和母版页名称创建一个将视图呈现给响应的 ViewResult 对象。</summary>
+      <summary>使用视图名称和母版页名称创建一个将视图呈现给响应的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="viewName">为响应呈现的视图的名称。</param>
       <param name="masterName">在呈现视图时要使用的母版页或模板的名称。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.String,System.String,System.Object)">
-      <summary>使用视图名称、母版页名称和模型创建一个呈现视图的 ViewResult 对象。</summary>
+      <summary>使用视图名称、母版页名称和模型创建一个呈现视图的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="viewName">为响应呈现的视图的名称。</param>
       <param name="masterName">在呈现视图时要使用的母版页或模板的名称。</param>
       <param name="model">视图呈现的模型。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.Web.Mvc.IView)">
-      <summary>创建一个呈现指定的 IView 对象的 ViewResult 对象。</summary>
+      <summary>创建一个呈现指定的 IView 对象的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="view">为响应呈现的视图。</param>
     </member>
     <member name="M:System.Web.Mvc.Controller.View(System.Web.Mvc.IView,System.Object)">
-      <summary>创建一个呈现指定的 IView 对象的 ViewResult 对象。</summary>
+      <summary>创建一个呈现指定的 <see cref="T:System.Web.Mvc.IView" /> 对象的 <see cref="T:System.Web.Mvc.ViewResult" /> 对象。</summary>
       <returns>视图结果。</returns>
       <param name="view">为响应呈现的视图。</param>
       <param name="model">视图呈现的模型。</param>
     </member>
     <member name="P:System.Web.Mvc.Controller.ViewEngineCollection">
-      <summary>获取或设置与控制器关联的视图引擎集合。</summary>
-      <returns>与控制器关联的视图引擎集合。</returns>
+      <summary>获取视图引擎集合。</summary>
+      <returns>视图引擎集合。</returns>
     </member>
     <member name="T:System.Web.Mvc.ControllerActionInvoker">
       <summary>表示一个类，该类负责调用控制器的操作方法。</summary>
@@ -2907,7 +2917,7 @@
       <param name="actionDescriptor">操作描述符。</param>
     </member>
     <member name="T:System.Web.Mvc.FilterInfo">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>封装有关可用的操作筛选器的信息。</summary>
     </member>
     <member name="M:System.Web.Mvc.FilterInfo.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.FilterInfo" /> 类的新实例。</summary>
@@ -2937,7 +2947,7 @@
       <returns>结果筛选器。</returns>
     </member>
     <member name="T:System.Web.Mvc.FilterProviderCollection">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>表示应用程序的筛选器提供程序的集合。</summary>
     </member>
     <member name="M:System.Web.Mvc.FilterProviderCollection.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.FilterProviderCollection" /> 类的新实例。</summary>
@@ -3232,18 +3242,21 @@
       <summary>RFC 3339 格式。</summary>
     </member>
     <member name="T:System.Web.Mvc.HtmlHelper">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>表示支持在视图中呈现 HTML 控件。</summary>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.#ctor(System.Web.Mvc.ViewContext,System.Web.Mvc.IViewDataContainer)">
       <summary>使用指定的视图上下文和视图数据容器来初始化 <see cref="T:System.Web.Mvc.HtmlHelper" /> 类的新实例。</summary>
       <param name="viewContext">视图上下文。</param>
       <param name="viewDataContainer">视图数据容器。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <see cref="T:System.Web.Mvc.ViewContext" /> 或 viewDataContainer 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.#ctor(System.Web.Mvc.ViewContext,System.Web.Mvc.IViewDataContainer,System.Web.Routing.RouteCollection)">
       <summary>使用指定的视图上下文、视图数据容器和路由集合来初始化 <see cref="T:System.Web.Mvc.HtmlHelper" /> 类的新实例。</summary>
       <param name="viewContext">视图上下文。</param>
       <param name="viewDataContainer">视图数据容器。</param>
       <param name="routeCollection">路由集合。</param>
+      <exception cref="T:System.ArgumentNullException">一个或多个参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(System.Object)">
       <summary>在指定的 HTML 特性中，将下划线字符 (_) 替换为连字符 (-)。</summary>
@@ -3305,21 +3318,23 @@
       <param name="value">要编码的字符串。</param>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.FormatValue(System.Object,System.String)">
-      <summary>将指定的值转换为字符串。</summary>
-      <returns>字符串形式的转换后的值。</returns>
-      <param name="value">要转换的值。</param>
-      <param name="format">使用的格式。</param>
+      <summary>设置值的格式。</summary>
+      <returns>带格式的值。</returns>
+      <param name="value">值。</param>
+      <param name="format">格式字符串。</param>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.GenerateIdFromName(System.String)">
       <summary>创建一个使用所指定元素名称的 HTML 元素 ID。</summary>
       <returns>HTML 元素的 ID。</returns>
       <param name="name">HTML 元素的名称。</param>
+      <exception cref="T:System.ArgumentNullException">name 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.GenerateIdFromName(System.String,System.String)">
       <summary>使用指定元素名称和用于替换名称中的点的字符串来创建 HTML 元素 ID。</summary>
       <returns>HTML 元素的 ID。</returns>
       <param name="name">HTML 元素的名称。</param>
       <param name="idAttributeDotReplacement">替换 name 参数中的点 (.) 的字符串。</param>
+      <exception cref="T:System.ArgumentNullException">name 参数或 idAttributeDotReplacement 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.GenerateLink(System.Web.Routing.RequestContext,System.Web.Routing.RouteCollection,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Collections.Generic.IDictionary{System.String,System.Object})">
       <summary>生成链接到指定操作方法的 HTML 定位点元素（a 元素），使用户可以指定通信协议、主机名称和 URL 片段。</summary>
@@ -3400,11 +3415,13 @@
       <summary>返回隐藏的 input 元素，该元素用于标识客户端使用的指定的 HTTP 数据传输方法的重写方法。</summary>
       <returns>使用客户端所用 HTTP 数据传输方法的重写方法。</returns>
       <param name="httpMethod">客户端使用的 HTTP 数据传输方法（DELETE、HEAD 或 PUT）。</param>
+      <exception cref="T:System.ArgumentNullException">httpVerb 参数不是“PUT”、“DELETE”或“HEAD”。</exception>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.HttpMethodOverride(System.Web.Mvc.HttpVerbs)">
       <summary>返回隐藏的 input 元素，该元素标识表示客户端使用的 HTTP 数据传输方法的指定谓词的重写方法。</summary>
       <returns>使用表示客户端所用 HTTP 数据传输方法的谓词的重写方法。</returns>
       <param name="httpVerb">表示客户端使用的 HTTP 数据传输方法的谓词。</param>
+      <exception cref="T:System.ArgumentNullException">httpVerb 参数不是“PUT”、“DELETE”或“HEAD”。</exception>
     </member>
     <member name="P:System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement">
       <summary>获取或设置替换元素的 ID 特性中的句号的字符。</summary>
@@ -3447,8 +3464,8 @@
       <summary>用于在输入有效时设置验证摘要样式的 CSS 类的名称。</summary>
     </member>
     <member name="P:System.Web.Mvc.HtmlHelper.ViewBag">
-      <summary>获取动态视图数据字典。</summary>
-      <returns>动态视图数据字典。</returns>
+      <summary>获取视图包。</summary>
+      <returns>视图包。</returns>
     </member>
     <member name="P:System.Web.Mvc.HtmlHelper.ViewContext">
       <summary>获取或设置有关视图的上下文信息。</summary>
@@ -3491,9 +3508,11 @@
     <member name="M:System.Web.Mvc.HttpDeleteAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpDeleteAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpDeleteAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpDeleteAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpDeleteAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法 DELETE 请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpFileCollectionValueProvider">
       <summary>表示要用于来自 HTTP 文件集合的值的值提供程序。</summary>
@@ -3521,9 +3540,11 @@
     <member name="M:System.Web.Mvc.HttpGetAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpGetAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpGetAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpGetAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpGetAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法 GET 请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpHeadAttribute">
       <summary>指定 HTTP 请求必须为 HTTP HEAD 方法。</summary>
@@ -3531,9 +3552,11 @@
     <member name="M:System.Web.Mvc.HttpHeadAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpHeadAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpHeadAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpHeadAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpHeadAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpNotFoundResult">
       <summary>定义一个用于指示未找到所请求资源的对象。</summary>
@@ -3551,9 +3574,11 @@
     <member name="M:System.Web.Mvc.HttpOptionsAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpOptionsAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpOptionsAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpOptionsAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpOptionsAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPatchAttribute">
       <summary>表示一个特性，该特性用于限制操作方法，使得该方法仅处理 HTTP PATCH 请求。</summary>
@@ -3561,9 +3586,11 @@
     <member name="M:System.Web.Mvc.HttpPatchAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpPatchAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPatchAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpPatchAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpPatchAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPostAttribute">
       <summary>表示一个特性，该特性用于限制操作方法，以便该方法仅处理 HTTP POST 请求。</summary>
@@ -3571,9 +3598,11 @@
     <member name="M:System.Web.Mvc.HttpPostAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpPostAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPostAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpPostAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpPostAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法 POST 请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPostedFileBaseModelBinder">
       <summary>将模型绑定到已发布的文件。</summary>
@@ -3583,7 +3612,7 @@
     </member>
     <member name="M:System.Web.Mvc.HttpPostedFileBaseModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)">
       <summary>绑定模型。</summary>
-      <returns>绑定值。</returns>
+      <returns>绑定值。实现<see cref="M:System.Web.Mvc.IModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)" /></returns>
       <param name="controllerContext">控制器上下文。</param>
       <param name="bindingContext">绑定上下文。</param>
       <exception cref="T:System.ArgumentNullException">其中一个参数或两个参数为 null。</exception>
@@ -3594,9 +3623,11 @@
     <member name="M:System.Web.Mvc.HttpPutAttribute.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.HttpPutAttribute" /> 类的新实例。</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPutAttribute.#ctor(System.String)">
-      <summary>初始化 <see cref="T:System.Web.Mvc.HttpPutAttribute" /> 类的新实例。</summary>
-      <param name="routeTemplate">描述要匹配的 URI 模式的路由模板。</param>
+    <member name="M:System.Web.Mvc.HttpPutAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>确定操作方法 PUT 请求对指定的控制器上下文是否有效。</summary>
+      <returns>如果操作方法请求对指定的控制器上下文有效，则为 true；否则为 false。</returns>
+      <param name="controllerContext">控制器上下文。</param>
+      <param name="methodInfo">有关操作方法的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.HttpRequestExtensions">
       <summary>扩展 <see cref="T:System.Web.HttpRequestBase" /> 类，该类包含客户端在 Web 请求中发送的 HTTP 值。</summary>
@@ -3609,21 +3640,6 @@
         <paramref name="request" /> 参数为 null。</exception>
       <exception cref="T:System.NotImplementedException">HTTP 数据传输方法重写未实现。</exception>
     </member>
-    <member name="T:System.Web.Mvc.HttpRouteAttribute">
-      <summary>Represents a route for an action method.</summary>
-    </member>
-    <member name="M:System.Web.Mvc.HttpRouteAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpRouteAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteName">
-      <summary>Gets or sets the name of the route to generate for this action.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteOrder">
-      <summary>Gets or sets the order of the route relative to other routes. The default order is 0.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteTemplate"></member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.Verbs"></member>
     <member name="T:System.Web.Mvc.HttpStatusCodeResult">
       <summary>提供一种用于返回带特定 HTTP 响应状态代码和说明的操作结果的方法。</summary>
     </member>
@@ -3667,27 +3683,6 @@
       <summary>使用状态说明初始化 <see cref="T:System.Web.Mvc.HttpUnauthorizedResult" /> 类的新实例。</summary>
       <param name="statusDescription">状态说明。</param>
     </member>
-    <member name="T:System.Web.Mvc.HttpVerbAttribute">
-      <summary>Defines a base class for specifying that an action supports particular HTTP methods.</summary>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.#ctor(System.Web.Mvc.HttpVerbs)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpVerbAttribute" /> class.</summary>
-      <param name="httpMethods">The HTTP methods the action supports.</param>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.#ctor(System.Web.Mvc.HttpVerbs,System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpVerbAttribute" /> class.</summary>
-      <param name="httpMethods">The HTTP methods the action supports.</param>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)"></member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteName">
-      <summary>Gets or sets the name of the route to generate for this action.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteOrder">
-      <summary>Gets or sets the order of the route relative to other routes. The default order is 0.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteTemplate"></member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.Verbs"></member>
     <member name="T:System.Web.Mvc.HttpVerbs">
       <summary>枚举 HTTP 谓词。</summary>
     </member>
@@ -3777,7 +3772,7 @@
       <summary>获取控制器的会话行为。</summary>
       <returns>控制器的会话行为。</returns>
       <param name="requestContext">请求上下文。</param>
-      <param name="controllerName">您想要获取器其会话行为的控制器的名称。</param>
+      <param name="controllerName">你想要获取器其会话行为的控制器的名称。</param>
     </member>
     <member name="M:System.Web.Mvc.IControllerFactory.ReleaseController(System.Web.Mvc.IController)">
       <summary>释放指定的控制器。</summary>
@@ -4068,9 +4063,35 @@
     </member>
     <member name="M:System.Web.Mvc.LinqBinaryModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)">
       <summary>使用指定的控制器上下文和绑定上下文来绑定模型。</summary>
-      <returns>绑定的数据对象。如果无法绑定模型，此方法将返回 null。</returns>
+      <returns>绑定的数据对象。如果无法绑定模型，此方法将返回 null。实现<see cref="M:System.Web.Mvc.IModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)" />.</returns>
       <param name="controllerContext">运行控制器的上下文。上下文信息包括控制器、HTTP 内容、请求上下文和路由数据。</param>
       <param name="bindingContext">绑定模型的上下文。上下文包含模型对象、模型名称、模型类型、属性筛选器和值提供程序等信息。</param>
+    </member>
+    <member name="T:System.Web.Mvc.MaxLengthAttributeAdapter">
+      <summary>提供 MaxLengthAttribute 特性的适配器。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.MaxLengthAttributeAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,System.ComponentModel.DataAnnotations.MaxLengthAttribute)">
+      <summary>初始化 MaxLengthAttribute 类的新实例。</summary>
+      <param name="metadata">模型元数据。</param>
+      <param name="context">控制器上下文。</param>
+      <param name="attribute">MaxLength 特性。</param>
+    </member>
+    <member name="M:System.Web.Mvc.MaxLengthAttributeAdapter.GetClientValidationRules">
+      <summary>获取用于检查最大长度的客户端验证规则列表。</summary>
+      <returns>用于检查的客户端验证规则列表。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.MinLengthAttributeAdapter">
+      <summary>提供 MinLengthAttribute 特性的适配器。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.MinLengthAttributeAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,System.ComponentModel.DataAnnotations.MinLengthAttribute)">
+      <summary>初始化 MinLenghtAttribute 类的新实例。</summary>
+      <param name="metadata">模型元数据。</param>
+      <param name="context">控制器上下文。</param>
+      <param name="attribute">最小长度特性。</param>
+    </member>
+    <member name="M:System.Web.Mvc.MinLengthAttributeAdapter.GetClientValidationRules">
+      <summary>获取用于检查最小长度的客户端验证规则列表。</summary>
+      <returns>用于检查的客户端验证规则列表。</returns>
     </member>
     <member name="T:System.Web.Mvc.ModelBinderAttribute">
       <summary>表示一个特性，该特性用于将模型类型关联到模型生成器类型。</summary>
@@ -4845,11 +4866,11 @@
     </member>
     <member name="P:System.Web.Mvc.MvcFilter.AllowMultiple">
       <summary>获取一个值，该值指示是否可指定筛选器特性的多个实例。</summary>
-      <returns>如果允许筛选器特性的多个实例，则为 true；否则为 false。</returns>
+      <returns>如果允许筛选器特性的多个实例，则为 true；否则为 false。实现<see cref="P:System.Web.Mvc.IMvcFilter.AllowMultiple" />.</returns>
     </member>
     <member name="P:System.Web.Mvc.MvcFilter.Order">
       <summary>获取一个指示筛选器的应用顺序的值。</summary>
-      <returns>一个指示筛选器的应用顺序的值。</returns>
+      <returns>一个指示筛选器的应用顺序的值。实现<see cref="P:System.Web.Mvc.IMvcFilter.Order" />.</returns>
     </member>
     <member name="T:System.Web.Mvc.MvcHandler">
       <summary>选择将处理 HTTP 请求的控制器。</summary>
@@ -5126,19 +5147,19 @@
       <returns>如果应存储缓存，则为 true；否则为 false。</returns>
     </member>
     <member name="M:System.Web.Mvc.OutputCacheAttribute.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)">
-      <summary>此方法是 <see cref="M:System.Web.Mvc.IActionFilter.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在您的代码中使用。</summary>
+      <summary>此方法是 <see cref="M:System.Web.Mvc.IActionFilter.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在你的代码中使用。</summary>
       <param name="filterContext">筛选器上下文。</param>
     </member>
     <member name="M:System.Web.Mvc.OutputCacheAttribute.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
-      <summary>此方法是 <see cref="M:System.Web.Mvc.IActionFilter.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在您的代码中使用。</summary>
+      <summary>此方法是 <see cref="M:System.Web.Mvc.IActionFilter.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在你的代码中使用。</summary>
       <param name="filterContext">筛选器上下文。</param>
     </member>
     <member name="M:System.Web.Mvc.OutputCacheAttribute.OnException(System.Web.Mvc.ExceptionContext)">
-      <summary>此方法是 <see cref="M:System.Web.Mvc.IExceptionFilter.OnException(System.Web.Mvc.ExceptionContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在您的代码中使用。</summary>
+      <summary>此方法是 <see cref="M:System.Web.Mvc.IExceptionFilter.OnException(System.Web.Mvc.ExceptionContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在你的代码中使用。</summary>
       <param name="filterContext">筛选器上下文。</param>
     </member>
     <member name="M:System.Web.Mvc.OutputCacheAttribute.OnResultExecuted(System.Web.Mvc.ResultExecutedContext)">
-      <summary>此方法是 <see cref="M:System.Web.Mvc.IResultFilter.OnResultExecuted(System.Web.Mvc.ResultExecutedContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在您的代码中使用。</summary>
+      <summary>此方法是 <see cref="M:System.Web.Mvc.IResultFilter.OnResultExecuted(System.Web.Mvc.ResultExecutedContext)" /> 的实现并支持 ASP.NET MVC 基础结构。它不应直接在你的代码中使用。</summary>
       <param name="filterContext">筛选器上下文。</param>
     </member>
     <member name="M:System.Web.Mvc.OutputCacheAttribute.OnResultExecuting(System.Web.Mvc.ResultExecutingContext)">
@@ -5814,45 +5835,61 @@
       <returns>操作结果。</returns>
     </member>
     <member name="T:System.Web.Mvc.RouteAreaAttribute">
-      <summary>Defines the area to set for all the routes defined in this controller.</summary>
+      <summary>定义要为此控制器中定义的所有路由设置的区域。</summary>
     </member>
     <member name="M:System.Web.Mvc.RouteAreaAttribute.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RouteAreaAttribute" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.RouteAreaAttribute" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.RouteAreaAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RouteAreaAttribute" /> class.</summary>
-      <param name="areaName">The name of the area. If the value is null, an attempt will be made to infer the area name from the target controller's namespace.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.RouteAreaAttribute" /> 类的新实例。</summary>
+      <param name="areaName">区域的名称。如果该值为 null，将尝试从目标控制器的命名空间推断区域名称。</param>
     </member>
     <member name="P:System.Web.Mvc.RouteAreaAttribute.AreaName">
-      <summary>Gets the area name to set for all the routes defined in the controller. If the value is null, an attempt will be made to infer the area name from the target controller's namespace.</summary>
-      <returns>The area name to set for all the routes defined in the controller.</returns>
+      <summary>获取要为控制器中定义的所有路由设置的区域名称。如果该值为 null，将尝试从目标控制器的命名空间推断区域名称。</summary>
+      <returns>要为控制器中定义的所有路由设置的区域名称。</returns>
     </member>
     <member name="P:System.Web.Mvc.RouteAreaAttribute.AreaPrefix">
-      <summary>Gets the URL prefix to apply to the routes of this area. Defaults to the area's name.</summary>
-      <returns>The URL prefix to apply to the routes of this area.</returns>
+      <summary>获取要应用到此区域的路由的 URL 前缀。默认为区域的名称。</summary>
+      <returns>要应用到此区域的路由的 URL 前缀。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.RouteAttribute">
+      <summary>放置在某个控制器或操作上，以通过路由直接将它公开。放置在控制器上时，将适用于没有放置任何“System.Web.Mvc.RouteAttribute’s”的操作。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.#ctor">
+      <summary>初始化 <see cref="T:System.Web.Mvc.RouteAttribute" /> 类的新实例。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.#ctor(System.String)">
+      <summary>使用指定的模板初始化 <see cref="T:System.Web.Mvc.RouteAttribute" /> 类的新实例。</summary>
+      <param name="template">要匹配的路由的模式。</param>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Name">
+      <summary>获取或设置路由的名称。</summary>
+      <returns>路由的名称</returns>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Order">
+      <summary>获取路由的应用顺序。</summary>
+      <returns>路由的应用顺序。</returns>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.System#Web#Mvc#Routing#IDirectRouteFactory#CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>创建直接路由项。</summary>
+      <returns>直接路由项。</returns>
+      <param name="context">要用于创建路由的上下文。</param>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Template">
+      <summary>获取路由要匹配的模式。</summary>
+      <returns>要匹配的模式。</returns>
     </member>
     <member name="T:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions">
-      <summary>Provides routing extensions for route collection attribute.</summary>
+      <summary>提供路由集合特性的路由扩展。</summary>
     </member>
     <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection)">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-    </member>
-    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{System.Type})">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-      <param name="controllerTypes">The controller types to scan.</param>
-    </member>
-    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{System.Type},System.Web.Mvc.Routing.IInlineConstraintResolver)">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-      <param name="controllerTypes">The controller types to scan.</param>
-      <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints in route templates.</param>
+      <summary>映射应用程序的特性定义路由。</summary>
+      <param name="routes">路由集合。</param>
     </member>
     <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Web.Mvc.Routing.IInlineConstraintResolver)">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-      <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints in route templates.</param>
+      <summary>映射应用程序的特性定义路由。</summary>
+      <param name="routes">路由集合。</param>
+      <param name="constraintResolver">用于解析路由模板中的内联约束的 <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" />。</param>
     </member>
     <member name="T:System.Web.Mvc.RouteCollectionExtensions">
       <summary>扩展 <see cref="T:System.Web.Routing.RouteCollection" /> 对象以进行 MVC 路由。</summary>
@@ -5971,14 +6008,18 @@
         <paramref name="controllerContext" /> 参数为 null。</exception>
     </member>
     <member name="T:System.Web.Mvc.RoutePrefixAttribute">
-      <summary>Annotates a controller with a route prefix that applies to all actions within the controller.</summary>
+      <summary>使用应用到某个控制器中所有操作的路由前缀来批注该控制器。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RoutePrefixAttribute.#ctor">
+      <summary>初始化 <see cref="T:System.Web.Mvc.RoutePrefixAttribute" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.RoutePrefixAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RoutePrefixAttribute" /> class.</summary>
-      <param name="prefix">The route prefix for the controller.</param>
+      <summary>使用指定的前缀初始化 <see cref="T:System.Web.Mvc.RoutePrefixAttribute" /> 类的新实例。</summary>
+      <param name="prefix">控制器的路由前缀。</param>
     </member>
     <member name="P:System.Web.Mvc.RoutePrefixAttribute.Prefix">
-      <summary>Gets the route prefix.</summary>
+      <summary>获取路由前缀。</summary>
+      <returns>路由前缀。</returns>
     </member>
     <member name="T:System.Web.Mvc.SelectList">
       <summary>表示一个列表，用户可从该列表中选择一个项。</summary>
@@ -6224,7 +6265,10 @@
       <param name="metadata">一个对象，该对象封装用于描述模型的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.UrlHelper">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>包含用于为应用程序内的 ASP.NET MVC 生成 URL 的方法。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.UrlHelper.#ctor">
+      <summary>初始化 <see cref="T:System.Web.Mvc.UrlHelper" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.UrlHelper.#ctor(System.Web.Routing.RequestContext)">
       <summary>使用指定的请求上下文初始化 <see cref="T:System.Web.Mvc.UrlHelper" /> 类的新实例。</summary>
@@ -6234,6 +6278,8 @@
       <summary>通过使用指定的请求上下文和路由集合初始化 <see cref="T:System.Web.Mvc.UrlHelper" /> 类的新实例。</summary>
       <param name="requestContext">一个对象，该对象包含有关当前请求以及与当前请求匹配的路由的信息。</param>
       <param name="routeCollection">路由集合。</param>
+      <exception cref="ArgumentNullException">
+        <paramref name="requestContext" /> 或 <paramref name="routeCollection" /> 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.UrlHelper.Action">
       <summary>生成操作方法的完全限定 URL 的字符串。</summary>
@@ -6416,7 +6462,7 @@
       <summary>包含可选参数的只读值。</summary>
     </member>
     <member name="M:System.Web.Mvc.UrlParameter.ToString">
-      <summary>返回空字符串。此方法支持 ASP.NET MVC 基础结构，它不应直接在您的代码中使用。</summary>
+      <summary>返回空字符串。此方法支持 ASP.NET MVC 基础结构，它不应直接在你的代码中使用。</summary>
       <returns>一个空字符串。</returns>
     </member>
     <member name="T:System.Web.Mvc.ValidatableObjectAdapter">
@@ -6511,7 +6557,7 @@
         <paramref name="item" /> 参数为 null。</exception>
     </member>
     <member name="T:System.Web.Mvc.ValueProviderDictionary">
-      <summary>表示应用程序的值提供程序的字典。</summary>
+      <summary>注意：此 API 现已过时。表示应用程序的值提供程序的字典。</summary>
     </member>
     <member name="M:System.Web.Mvc.ValueProviderDictionary.#ctor(System.Web.Mvc.ControllerContext)">
       <summary>初始化 <see cref="T:System.Web.Mvc.ValueProviderDictionary" /> 类的新实例。</summary>
@@ -6658,7 +6704,7 @@
       <param name="controllerContext">一个对象，该对象封装有关当前 HTTP 请求的信息。</param>
     </member>
     <member name="T:System.Web.Mvc.ValueProviderFactoryCollection">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>表示应用程序的值提供程序工厂的集合。</summary>
     </member>
     <member name="M:System.Web.Mvc.ValueProviderFactoryCollection.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.ValueProviderFactoryCollection" /> 类的新实例。</summary>
@@ -6679,15 +6725,21 @@
       <summary>在指定索引位置插入指定的值提供程序工厂对象。</summary>
       <param name="index">集合的从零开始的索引，将在此索引位置插入值提供程序。</param>
       <param name="item">要插入的值提供程序工厂对象。</param>
+      <exception cref="[ArgumentNullException]">
+        <paramref name="item" /> 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.ValueProviderFactoryCollection.RemoveItem(System.Int32)">
-      <summary>删除集合中指定索引处的元素。</summary>
+      <summary>删除 <see cref="T:System.Collections.ObjectModel.Collection`1" /> 中指定索引处的元素。</summary>
       <param name="index">待删除元素的从零开始的索引。</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="Index" /> 小于零。- 或 -<paramref name="Index" /> 大于或等于<see cref="T:System.Collections.ObjectModel.Collection`1.Count" /></exception>
     </member>
     <member name="M:System.Web.Mvc.ValueProviderFactoryCollection.SetItem(System.Int32,System.Web.Mvc.ValueProviderFactory)">
       <summary>在指定索引位置设置指定的值提供程序工厂对象。</summary>
       <param name="index">集合的从零开始的索引，将在此索引位置插入值提供程序。</param>
       <param name="item">要设置的值提供程序工厂对象。</param>
+      <exception cref="[ArgumentNullException]">
+        <paramref name="item" /> 参数为 null。</exception>
     </member>
     <member name="T:System.Web.Mvc.ValueProviderResult">
       <summary>表示将一个值（如窗体发布或查询字符串中的值）绑定到操作方法参数属性或绑定到该参数本身的结果。</summary>
@@ -6980,7 +7032,7 @@
       <returns>模板要显示的当前值。</returns>
     </member>
     <member name="T:System.Web.Mvc.ViewEngineCollection">
-      <summary>此处的内容将不会更新；请不要在此处添加材料。</summary>
+      <summary>表示对应用程序可用的视图引擎的集合。</summary>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.ViewEngineCollection" /> 类的新实例。</summary>
@@ -6988,15 +7040,21 @@
     <member name="M:System.Web.Mvc.ViewEngineCollection.#ctor(System.Collections.Generic.IList{System.Web.Mvc.IViewEngine})">
       <summary>使用指定的视图引擎列表来初始化 <see cref="T:System.Web.Mvc.ViewEngineCollection" /> 类的新实例。</summary>
       <param name="list">由新的集合包装的列表。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="list" /> 为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.ClearItems">
-      <summary>从集合中移除所有元素。</summary>
+      <summary>从 <see cref="T:System.Collections.ObjectModel.Collection`1" /> 中删除所有元素。</summary>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.FindPartialView(System.Web.Mvc.ControllerContext,System.String)">
       <summary>使用指定的控制器上下文来查找指定的分部视图。</summary>
       <returns>分部视图。</returns>
       <param name="controllerContext">控制器上下文。</param>
       <param name="partialViewName">分部视图的名称。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="controllerContext" /> 参数为 null。</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="partialViewName" /> 参数为 null 或为空。</exception>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.FindView(System.Web.Mvc.ControllerContext,System.String,System.String)">
       <summary>使用指定的控制器上下文和母版视图来查找指定的视图。</summary>
@@ -7004,20 +7062,34 @@
       <param name="controllerContext">控制器上下文。</param>
       <param name="viewName">视图的名称。</param>
       <param name="masterName">母版视图的名称。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="controllerContext" /> 参数为 null。</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="partialViewName" /> 参数为 null 或为空。</exception>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.InsertItem(System.Int32,System.Web.Mvc.IViewEngine)">
       <summary>在集合中的指定索引处插入一个元素。</summary>
       <param name="index">从零开始的索引，应在此索引处插入项。</param>
       <param name="item">要插入的对象。</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> 小于零。- 或 -<paramref name="index" /> 大于集合中的项数。</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="item" /> 参数为 null。</exception>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.RemoveItem(System.Int32)">
-      <summary>删除集合中指定索引处的元素。</summary>
+      <summary>删除 <see cref="T:System.Collections.ObjectModel.Collection`1" /> 中指定索引处的元素。</summary>
       <param name="index">待删除元素的从零开始的索引。</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> 小于零。- 或 -<paramref name="index" /> 大于或等于<see cref="T:System.Collections.ObjectModel.Collection`1.Count" /></exception>
     </member>
     <member name="M:System.Web.Mvc.ViewEngineCollection.SetItem(System.Int32,System.Web.Mvc.IViewEngine)">
       <summary>替换指定索引处的元素。</summary>
       <param name="index">待替换元素的从零开始的索引。</param>
       <param name="item">位于指定索引处的元素的新值。</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> 小于零。- 或 -<paramref name="index" /> 大于集合中的项数。</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="item" /> 参数为 null。</exception>
     </member>
     <member name="T:System.Web.Mvc.ViewEngineResult">
       <summary>表示定位视图引擎的结果。</summary>
@@ -7161,7 +7233,7 @@
       <param name="viewContext">一个对象，它封装呈现视图所需的信息，其中包括控制器上下文、窗体上下文、临时数据和关联视图的视图数据。</param>
     </member>
     <member name="M:System.Web.Mvc.ViewPage.SetTextWriter(System.IO.TextWriter)">
-      <summary>设置用于向响应呈现视图的文本编写器。</summary>
+      <summary>注意：此 API 现已过时。设置用于向响应呈现视图的文本编写器。</summary>
       <param name="textWriter">用于向响应呈现视图的编写器。</param>
     </member>
     <member name="M:System.Web.Mvc.ViewPage.SetViewData(System.Web.Mvc.ViewDataDictionary)">
@@ -7314,7 +7386,10 @@
     <member name="M:System.Web.Mvc.ViewTemplateUserControl`1.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.ViewTemplateUserControl`1" /> 类的新实例。</summary>
     </member>
-    <member name="P:System.Web.Mvc.ViewTemplateUserControl`1.FormattedModelValue"></member>
+    <member name="P:System.Web.Mvc.ViewTemplateUserControl`1.FormattedModelValue">
+      <summary>获取带格式的值。</summary>
+      <returns>带格式的值。</returns>
+    </member>
     <member name="T:System.Web.Mvc.ViewType">
       <summary>表示视图的类型。</summary>
     </member>
@@ -8179,7 +8254,7 @@
     </member>
     <member name="M:System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(System.Web.Mvc.ControllerContext,System.String,System.AsyncCallback,System.Object)">
       <summary>使用指定控制器上下文、操作名称、回调方法和状态来调用异步操作方法。</summary>
-      <returns>一个包含异步操作结果的对象。</returns>
+      <returns>一个包含异步操作结果的对象。实现<see cref="M:System.Web.Mvc.Async.IAsyncActionInvoker.BeginInvokeAction(System.Web.Mvc.ControllerContext,System.String,System.AsyncCallback,System.Object)" /></returns>
       <param name="controllerContext">控制器上下文。</param>
       <param name="actionName">操作的名称。</param>
       <param name="callback">回调方法。</param>
@@ -8530,7 +8605,7 @@
       <returns>任务的唯一 ID。</returns>
     </member>
     <member name="T:System.Web.Mvc.Filters.AuthenticationChallengeContext">
-      <summary>表示身份验证质询操作。</summary>
+      <summary>表示身份验证质询上下文，其中包含用于执行身份验证质询的信息。</summary>
     </member>
     <member name="M:System.Web.Mvc.Filters.AuthenticationChallengeContext.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.Filters.AuthenticationChallengeContext" /> 类的新实例。</summary>
@@ -8542,48 +8617,48 @@
       <param name="result">质询响应。</param>
     </member>
     <member name="P:System.Web.Mvc.Filters.AuthenticationChallengeContext.ActionDescriptor">
-      <summary>获取或设置与质询关联的操作方法。</summary>
-      <returns>与质询相关的操作方法。</returns>
+      <summary>获取或设置操作描述符。</summary>
+      <returns>与质询关联的操作描述符。</returns>
     </member>
     <member name="P:System.Web.Mvc.Filters.AuthenticationChallengeContext.Result">
-      <summary>获取或设置质询响应。</summary>
+      <summary>获取或设置要执行的操作结果。</summary>
       <returns>质询响应。</returns>
     </member>
     <member name="T:System.Web.Mvc.Filters.AuthenticationContext">
-      <summary>表示身份验证事件的上下文。</summary>
+      <summary>表示身份验证上下文，其中包含用于执行身份验证的信息。</summary>
     </member>
     <member name="M:System.Web.Mvc.Filters.AuthenticationContext.#ctor">
       <summary>初始化 <see cref="T:System.Web.Mvc.Filters.AuthenticationContext" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Filters.AuthenticationContext.#ctor(System.Web.Mvc.ControllerContext,System.Web.Mvc.ActionDescriptor,System.Security.Principal.IPrincipal)"></member>
     <member name="P:System.Web.Mvc.Filters.AuthenticationContext.ActionDescriptor">
-      <summary>获取或设置与身份验证关联的操作方法。</summary>
+      <summary>获取或设置操作描述符。</summary>
       <returns>与身份验证相关的操作方法</returns>
     </member>
     <member name="P:System.Web.Mvc.Filters.AuthenticationContext.Principal">
-      <summary>获取或设置身份验证的安全凭据。</summary>
+      <summary>获取或设置当前已进行身份验证的主体。</summary>
       <returns>身份验证的安全凭据。</returns>
     </member>
     <member name="P:System.Web.Mvc.Filters.AuthenticationContext.Result">
-      <summary>获取或设置身份验证结果。</summary>
+      <summary>获取或设置错误结果，该结果指示已尝试身份验证，但失败。</summary>
       <returns>身份验证结果。</returns>
     </member>
     <member name="T:System.Web.Mvc.Filters.IAuthenticationFilter">
-      <summary>表示 Web 身份验证的接口。</summary>
+      <summary>定义一个用于执行身份验证的筛选器。</summary>
     </member>
     <member name="M:System.Web.Mvc.Filters.IAuthenticationFilter.OnAuthentication(System.Web.Mvc.Filters.AuthenticationContext)">
-      <summary>在 Web 身份验证期间发生。</summary>
-      <param name="filterContext">筛选器上下文。</param>
+      <summary>对请求进行身份验证。</summary>
+      <param name="filterContext">用于身份验证的上下文。</param>
     </member>
     <member name="M:System.Web.Mvc.Filters.IAuthenticationFilter.OnAuthenticationChallenge(System.Web.Mvc.Filters.AuthenticationChallengeContext)">
-      <summary>在身份验证质询期间发生。</summary>
-      <param name="filterContext">筛选器上下文。</param>
+      <summary>向当前 <see cref="T:System.Web.Mvc.ActionResult" /> 添加身份验证质询。</summary>
+      <param name="filterContext">用于身份验证质询的上下文。</param>
     </member>
     <member name="T:System.Web.Mvc.Filters.IOverrideFilter">
-      <summary>表示筛选器重写的接口。</summary>
+      <summary>定义一个可重写其他筛选器的筛选器。</summary>
     </member>
     <member name="P:System.Web.Mvc.Filters.IOverrideFilter.FiltersToOverride">
-      <summary>获取要重写的筛选器。</summary>
+      <summary>获取要重写的筛选器的类型。</summary>
       <returns>要重写的筛选器。</returns>
     </member>
     <member name="T:System.Web.Mvc.Html.ChildActionExtensions">
@@ -9063,6 +9138,41 @@
       <param name="templateName">要用于呈现对象的模板的名称。</param>
       <param name="htmlFieldName">一个字符串，可用于消除为具有相同名称的各个属性呈现的 HTML input 元素名称之间的歧义。</param>
       <param name="additionalViewData">一个可包含附加视图数据的匿名对象，这些数据将会合并到为模板创建的 <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> 实例中。</param>
+    </member>
+    <member name="T:System.Web.Mvc.Html.EnumHelper">
+      <summary>提供用于使用枚举值和选择列表的方法。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)">
+      <summary>获取与定义为给定类型的枚举常量对应的 <see cref="T:System.Web.Mvc.SelectListItem" /> 对象列表。</summary>
+      <returns>给定 <paramref name="type" /> 的列表。</returns>
+      <param name="type">要评估的类型。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type,System.Enum)">
+      <summary>获取与定义为给定类型的枚举常量对应的 <see cref="T:System.Web.Mvc.SelectListItem" /> 对象列表。同时确保即使 <paramref name="value" /> 与定义的常量不匹配也会往返，并将返回列表中一个元素的 Selected 属性设置为 true，使之与 <paramref name="value" /> 匹配。</summary>
+      <returns>给定 <paramref name="type" /> 的列表，可能会扩展为包括无法识别的 <paramref name="value" />。</returns>
+      <param name="type">要评估的类型。</param>
+      <param name="value">来自要选择的类型的值。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)">
+      <summary>获取与定义为给定元数据的枚举常量对应的 <see cref="T:System.Web.Mvc.SelectListItem" /> 对象列表。</summary>
+      <returns>给定元数据的列表。</returns>
+      <param name="metadata">要评估的模型元数据。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata,System.Enum)">
+      <summary>获取与定义为给定元数据的枚举常量对应的 <see cref="T:System.Web.Mvc.SelectListItem" /> 对象列表。同时确保即使值与定义的常量不匹配也会往返，并将返回列表中一个元素的 Selected 属性设置为 true，使之与该值匹配。</summary>
+      <returns>给定 <paramref name="metadata" /> 的列表，可能会扩展为包括无法识别的 <paramref name="value" />。</returns>
+      <param name="metadata">要评估的元数据。</param>
+      <param name="value">来自要选择的元数据类型的值。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.IsValidForEnumHelper(System.Type)">
+      <summary>获取一个值，该值指示给定类型或此类型的表达式是否适合在 <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)" /> 和 <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> 调用中使用。</summary>
+      <returns>如果传递给定类型时未引发 <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)" />，且传递此类型的表达式时未引发 <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" />，则返回 true；否则返回 false。</returns>
+      <param name="type">要检查的类型。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.IsValidForEnumHelper(System.Web.Mvc.ModelMetadata)">
+      <summary>获取一个值，该值指示给定元数据或相关表达式是否适合在 <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)" /> 和 <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> 调用中使用。</summary>
+      <returns>如果传递给定 <see cref="T:System.Web.Mvc.ModelMetadata" /> 时返回不引发 <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)" />，且传递相关表达式时不引发 <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" />，则返回 true；否则返回 false。</returns>
+      <param name="metadata">要检查的元数据。</param>
     </member>
     <member name="T:System.Web.Mvc.Html.FormExtensions">
       <summary>表示在应用程序中支持 HTML。</summary>
@@ -10330,6 +10440,61 @@
       <exception cref="T:System.ArgumentNullException">
         <paramref name="expression" /> 参数为 null。</exception>
     </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <param name="htmlAttributes">一个对象，其中包含要为该元素设置的 HTML 特性。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <param name="htmlAttributes">一个对象，其中包含要为该元素设置的 HTML 特性。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <param name="optionLabel">默认空项的文本。此参数可以为 null。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <param name="optionLabel">默认空项的文本。此参数可以为 null。</param>
+      <param name="htmlAttributes">一个对象，其中包含要为该元素设置的 HTML 特性。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>为由指定表达式表示的枚举中的每个值返回对应的 HTML select 元素。</summary>
+      <returns>一个由表达式表示的枚举中的每个值所对应的 HTML select 元素。</returns>
+      <param name="htmlHelper">此方法扩展的 HTML 帮助器实例。</param>
+      <param name="expression">一个表达式，用于标识包含要显示的值的对象。</param>
+      <param name="optionLabel">默认空项的文本。此参数可以为 null。</param>
+      <param name="htmlAttributes">一个对象，其中包含要为该元素设置的 HTML 特性。</param>
+      <typeparam name="TModel">模型的类型。</typeparam>
+      <typeparam name="TEnum">值的类型。</typeparam>
+    </member>
     <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBox(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>通过使用指定的 HTML 帮助器和窗体字段的名称，返回多选 select 元素。</summary>
       <returns>一个 HTML select 元素。</returns>
@@ -10770,322 +10935,480 @@
       <param name="incomingCodeParser">C# 或 Visual Basic 代码分析器。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.DefaultInlineConstraintResolver">
-      <summary>The default implementation of <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" />. Resolves constraints by parsing a constraint key and constraint arguments, using a map to resolve the constraint type, and calling an appropriate constructor for the constraint type.</summary>
+      <summary>
+        <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> 的默认实现。解析约束，方法是分析约束键和约束参数，使用映射解析约束类型，并对约束类型调用相应的构造函数。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.DefaultInlineConstraintResolver.#ctor"></member>
     <member name="P:System.Web.Mvc.Routing.DefaultInlineConstraintResolver.ConstraintMap">
-      <summary>Gets the mutable dictionary that maps constraint keys to a particular constraint type.</summary>
+      <summary>获取可将约束键映射到特定约束类型的可变字典。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.DefaultInlineConstraintResolver.ResolveConstraint(System.String)"></member>
-    <member name="T:System.Web.Mvc.Routing.IDirectRouteInfoProvider">
-      <summary>Provides information for building a <see cref="T:System.Web.Routing.Route" />.</summary>
+    <member name="T:System.Web.Mvc.Routing.DirectRouteFactoryContext">
+      <summary>表示支持创建直接路由的上下文。</summary>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteName">
-      <summary>Gets the name of the route to generate.</summary>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.#ctor(System.String,System.String,System.Collections.Generic.IReadOnlyCollection{System.Web.Mvc.ActionDescriptor},System.Web.Mvc.Routing.IInlineConstraintResolver,System.Boolean)">
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.DirectRouteFactoryContext" /> 类的新实例。</summary>
+      <param name="areaPrefix">区域定义的路由前缀（如果有）。</param>
+      <param name="controllerPrefix">控制器定义的路由前缀（如果有）。</param>
+      <param name="actions">要创建路由的操作描述符。</param>
+      <param name="inlineConstraintResolver">内联约束解析程序。</param>
+      <param name="targetIsAction">一个值，该值指示路由是在操作级别还是控制器级别配置的。</param>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteOrder">
-      <summary>Gets the order of the route relative to other routes.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.Actions">
+      <summary>获取要创建路由的操作描述符。</summary>
+      <returns>要创建路由的操作描述符。</returns>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteTemplate">
-      <summary>Gets the route template describing the URI pattern to match against.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.AreaPrefix">
+      <summary>获取区域定义的路由前缀（如果有）。</summary>
+      <returns>区域定义的路由前缀（如果有）。</returns>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.Verbs">
-      <summary>Gets the set of allowed HTTP methods for that route. If the route allow any method to be used, the value is null.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.ControllerPrefix">
+      <summary>获取控制器定义的路由前缀（如果有）。</summary>
+      <returns>控制器定义的路由前缀（如果有）。</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.CreateBuilder(System.String)">
+      <summary>创建可构建与此上下文匹配的路由的路由生成器。</summary>
+      <returns>可构建与此上下文匹配的路由的路由生成器。</returns>
+      <param name="template">路由模板。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.CreateBuilder(System.String,System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>创建可构建与此上下文匹配的路由的路由生成器。</summary>
+      <returns>可构建与此上下文匹配的路由的路由生成器。</returns>
+      <param name="template">路由模板。</param>
+      <param name="constraintResolver">要使用的内联约束解析程序（如果有），否则为 null。</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.InlineConstraintResolver">
+      <summary>获取内联约束解析程序。</summary>
+      <returns>内联约束解析程序。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.TargetIsAction">
+      <summary>获取一个值，该值指示路由是在操作级别还是控制器级别配置的。</summary>
+      <returns>如果路由是在操作级别配置的，则为 true，如果路由是在控制器级别配置的，则为 false。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IDirectRouteBuilder">
+      <summary>定义用于创建指向操作的直接路由（特性路由）的生成器。</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Actions">
+      <summary>获取要创建路由的操作描述符。</summary>
+      <returns>要创建路由的操作描述符。</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.IDirectRouteBuilder.Build">
+      <summary>根据当前属性值创建路由项。</summary>
+      <returns>创建的路由项。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Constraints">
+      <summary>获取或设置路由约束。</summary>
+      <returns>路由约束。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.DataTokens">
+      <summary>获取或设置路由数据标记。</summary>
+      <returns>路由数据标记。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Defaults">
+      <summary>获取或设置路由默认值。</summary>
+      <returns>路由默认值。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Name">
+      <summary>获取或设置路由名称。</summary>
+      <returns>路由名称，如果未提供任何名称，则为 null。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Order">
+      <summary>获取或设置路由顺序。</summary>
+      <returns>路由顺序。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Precedence">
+      <summary>获取或设置路由优先顺序。</summary>
+      <returns>路由优先顺序。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.TargetIsAction">
+      <summary>获取一个值，该值指示路由是在操作级别还是控制器级别配置的。</summary>
+      <returns>如果路由是在操作级别配置的，则为 true，如果路由是在控制器级别配置的，则为 false。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Template">
+      <summary>获取或设置路由模板。</summary>
+      <returns>路由模板。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IDirectRouteFactory">
+      <summary>定义用于创建直接指向一组操作描述符的路由（特性路由）的工厂。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.IDirectRouteFactory.CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>创建直接路由项。</summary>
+      <returns>直接路由项。</returns>
+      <param name="context">要用于创建路由的上下文。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.IInlineConstraintResolver">
-      <summary>Defines an abstraction for resolving inline constraints as instances of <see cref="T:System.Web.Routing.IRouteConstraint" />.</summary>
+      <summary>定义用于将内联约束解析为 <see cref="T:System.Web.Routing.IRouteConstraint" /> 实例的抽象。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.IInlineConstraintResolver.ResolveConstraint(System.String)">
-      <summary>Resolves the inline constraint.</summary>
-      <returns>The <see cref="T:System.Web.Routing.IRouteConstraint" /> the inline constraint was resolved to.</returns>
-      <param name="inlineConstraint">The inline constraint to resolve.</param>
+      <summary>解析内联约束。</summary>
+      <returns>内联约束已解析成的 <see cref="T:System.Web.Routing.IRouteConstraint" />。</returns>
+      <param name="inlineConstraint">要解析的内联约束。</param>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IRouteInfoProvider">
+      <summary>提供用于构建“System.Web.Routing.Route”的信息。</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRouteInfoProvider.Name">
+      <summary>获取描述要匹配的 URI 模式的路由模板。</summary>
+      <returns>描述要匹配的 URI 模式的路由模板。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRouteInfoProvider.Template">
+      <summary>获取要生成的路由的名称。</summary>
+      <returns>要生成的路由的名称。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IRoutePrefix">
+      <summary>定义路由前缀。</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRoutePrefix.Prefix">
+      <summary>获取路由前缀。</summary>
+      <returns>路由前缀。</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.RouteBuilder">
-      <summary>Builds <see cref="T:System.Web.Routing.Route" /> instances based on route information.</summary>
+      <summary>基于路由信息生成 <see cref="T:System.Web.Routing.Route" /> 实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.RouteBuilder.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.RouteBuilder" /> class using the default inline constraint resolver.</summary>
+      <summary>使用默认的内联约束解析程序初始化 <see cref="T:System.Web.Mvc.Routing.RouteBuilder" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.RouteBuilder.#ctor(System.Web.Mvc.Routing.IInlineConstraintResolver)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.RouteBuilder" /> class.</summary>
-      <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.RouteBuilder" /> 类的新实例。</summary>
+      <param name="constraintResolver">用于解析内联约束的 <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" />。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.RouteBuilder.BuildDirectRoute(System.String,System.Collections.Generic.IEnumerable{System.String},System.String,System.String,System.Reflection.MethodInfo,System.String)">
-      <summary>Builds an <see cref="T:System.Web.Routing.Route" /> for a particular action.</summary>
-      <returns>The generated <see cref="T:System.Web.Routing.Route" />.</returns>
-      <param name="routeTemplate">The tokenized route template for the route.</param>
-      <param name="allowedMethods">The HTTP methods supported by the route. A null value specify that all possible methods are supported.</param>
-      <param name="controllerName">The name of the associated controller.</param>
-      <param name="actionName">The name of the associated action.</param>
-      <param name="targetMethod">The method that the route attribute has been applied on.</param>
+      <summary>为特定的操作生成 <see cref="T:System.Web.Routing.Route" />。</summary>
+      <returns>生成的 <see cref="T:System.Web.Routing.Route" />。</returns>
+      <param name="routeTemplate">路由的标记化路由模板。</param>
+      <param name="allowedMethods">路由支持的 HTTP 方法。null 值指定支持所有可能的方法。</param>
+      <param name="controllerName">关联的控制器的名称。</param>
+      <param name="actionName">关联的操作的名称。</param>
+      <param name="targetMethod">路由特性已应用到的方法。</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteBuilder.BuildDirectRoute(System.String,System.Web.Mvc.ControllerDescriptor)">
+      <summary>为特定的操作生成 <see cref="T:System.Web.Routing.Route" />。</summary>
+      <returns>生成的路由。</returns>
+      <param name="routeTemplate">路由的标记化路由模板。</param>
+      <param name="controllerDescriptor">已应用路由特性的控制器。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.RouteBuilder.BuildDirectRoute(System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteValueDictionary,System.String,System.Reflection.MethodInfo)">
-      <summary>Builds an <see cref="T:System.Web.Routing.Route" />.</summary>
-      <returns>The generated <see cref="T:System.Web.Routing.Route" />.</returns>
-      <param name="defaults">The route defaults.</param>
-      <param name="constraints">The route constraints.</param>
-      <param name="routeTemplate">The detokenized route template.</param>
-      <param name="targetMethod">The method that the route attribute has been applied on.</param>
+      <summary>生成 <see cref="T:System.Web.Routing.Route" />。</summary>
+      <returns>生成的 <see cref="T:System.Web.Routing.Route" />。</returns>
+      <param name="defaults">路由默认值。</param>
+      <param name="constraints">路由约束。</param>
+      <param name="routeTemplate">去标记化的路由模板。</param>
+      <param name="targetMethod">路由特性已应用到的方法。</param>
     </member>
-    <member name="P:System.Web.Mvc.Routing.RouteBuilder.ConstraintResolver"></member>
+    <member name="P:System.Web.Mvc.Routing.RouteBuilder.ConstraintResolver">
+      <summary>获取用于解析内联约束的解析程序。</summary>
+      <returns>用于解析内联约束的解析程序。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.RouteEntry">
+      <summary>表示指定的路由。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteEntry.#ctor(System.String,System.Web.Routing.Route)">
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.RouteEntry" /> 类的新实例。</summary>
+      <param name="name">路由名称。</param>
+      <param name="route">路由。</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteEntry.Name">
+      <summary>获取路由名称。</summary>
+      <returns>如果找到路由名称，则为该路由名称；否则为 null。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteEntry.Route">
+      <summary>获取路由。</summary>
+      <returns>路由。</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.RouteFactoryAttribute">
+      <summary>表示可能包含自定义约束的特性路由。</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteFactoryAttribute.#ctor(System.String)">
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.RouteFactoryAttribute" /> 类的新实例。</summary>
+      <param name="template">路由模板。</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Constraints">
+      <summary>获取路由约束。</summary>
+      <returns>如果找到路由约束，则为该路由约束；否则为 null。</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteFactoryAttribute.CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>创建直接路由项。</summary>
+      <returns>直接路由项。</returns>
+      <param name="context">要用于创建路由的上下文。</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.DataTokens">
+      <summary>获取路由数据标记。</summary>
+      <returns>如果找到路由数据标记，则为该路由数据标记；否则为 null。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Defaults">
+      <summary>获取路由默认值。</summary>
+      <returns>路由默认值（如果有）；否则为 null。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Name">
+      <summary>获取或设置路由名称。</summary>
+      <returns>如果找到路由名称，则为该路由名称；否则为 null。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Order">
+      <summary>获取或设置路由顺序。</summary>
+      <returns>路由顺序。</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Template">
+      <summary>获取路由模板。</summary>
+      <returns>路由模板。</returns>
+    </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.AlphaRouteConstraint">
-      <summary>Constrains a route parameter to contain only lowercase or uppercase letters A through Z in the English alphabet.</summary>
+      <summary>约束某个路由参数，使之仅包含小写或大写英文字母 A 到 Z。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.AlphaRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.AlphaRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.AlphaRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.BoolRouteConstraint">
-      <summary>Constrains a route parameter to represent only Boolean values.</summary>
+      <summary>约束某个路由参数，使之仅代表布尔值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.BoolRouteConstraint.#ctor"></member>
     <member name="M:System.Web.Mvc.Routing.Constraints.BoolRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="T:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint">
-      <summary>Constrains a route by several child constraints.</summary>
+      <summary>按多个子约束来约束路由。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint.#ctor(System.Collections.Generic.IList{System.Web.Routing.IRouteConstraint})">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint" /> class.</summary>
-      <param name="constraints">The child constraints that must match for this constraint to match.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint" /> 类的新实例。</summary>
+      <param name="constraints">该约束匹配时也必须匹配的子约束。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint.Constraints">
-      <summary>Gets the child constraints that must match for this constraint to match.</summary>
-      <returns>The child constraints that must match for this constraint to match.</returns>
+      <summary>获取该约束匹配时也必须匹配的子约束。</summary>
+      <returns>该约束匹配时也必须匹配的子约束。</returns>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.CompoundRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.DateTimeRouteConstraint">
-      <summary>Constrains a route parameter to represent only <see cref="T:System.DateTime" /> values.</summary>
+      <summary>约束某个路由参数，使之仅代表 <see cref="T:System.DateTime" /> 值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DateTimeRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.DateTimeRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.DateTimeRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DateTimeRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.DecimalRouteConstraint">
-      <summary>Constrains a route parameter to represent only decimal values.</summary>
+      <summary>约束某个路由参数，使之仅代表小数值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DecimalRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.DecimalRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.DecimalRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DecimalRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.DoubleRouteConstraint">
-      <summary>Constrains a route parameter to represent only 64-bit floating-point values.</summary>
+      <summary>约束某个路由参数，使之仅代表 64 位浮点值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DoubleRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.DoubleRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.DoubleRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.DoubleRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.FloatRouteConstraint">
-      <summary>Constrains a route parameter to represent only 32-bit floating-point values.</summary>
+      <summary>约束某个路由参数，使之仅代表 32 位浮点值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.FloatRouteConstraint.#ctor"></member>
     <member name="M:System.Web.Mvc.Routing.Constraints.FloatRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="T:System.Web.Mvc.Routing.Constraints.GuidRouteConstraint">
-      <summary>Constrains a route parameter to represent only <see cref="T:System.Guid" /> values.</summary>
+      <summary>约束某个路由参数，使之仅代表 <see cref="T:System.Guid" /> 值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.GuidRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.GuidRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.GuidRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.GuidRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.IntRouteConstraint">
-      <summary>Constrains a route parameter to represent only 32-bit integer values.</summary>
+      <summary>约束某个路由参数，使之仅代表 32 位整数值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.IntRouteConstraint.#ctor"></member>
     <member name="M:System.Web.Mvc.Routing.Constraints.IntRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="T:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint">
-      <summary>Constrains a route parameter to be a string of a given length or within a given range of lengths.</summary>
+      <summary>将路由参数约束为具有给定长度的或者位于给定长度范围内的字符串。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.#ctor(System.Int32)"></member>
     <member name="M:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.#ctor(System.Int32,System.Int32)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint" /> class that constrains a route parameter to be a string of a given length.</summary>
-      <param name="minLength">The minimum length of the route parameter.</param>
-      <param name="maxLength">The maximum length of the route parameter.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint" /> 类的新实例，该类将路由参数约束为具有给定长度的字符串。</summary>
+      <param name="minLength">路由参数的最小长度。</param>
+      <param name="maxLength">路由参数的最大长度。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.Length">
-      <summary>Gets the length of the route parameter, if one is set.</summary>
+      <summary>获取路由参数的长度（如果已设置）。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="P:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.MaxLength">
-      <summary>Gets the maximum length of the route parameter, if one is set.</summary>
+      <summary>获取路由参数的最大长度（如果已设置）。</summary>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.LengthRouteConstraint.MinLength">
-      <summary>Gets the minimum length of the route parameter, if one is set.</summary>
+      <summary>获取路由参数的最小长度（如果已设置）。</summary>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.LongRouteConstraint">
-      <summary>Constrains a route parameter to represent only 64-bit integer values.</summary>
+      <summary>约束某个路由参数，使之仅代表 64 位整数值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.LongRouteConstraint.#ctor">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.LongRouteConstraint" /> class.</summary>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.LongRouteConstraint" /> 类的新实例。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.LongRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.MaxLengthRouteConstraint">
-      <summary>Constrains a route parameter to be a string with a maximum length.</summary>
+      <summary>将路由参数约束为有一个最大长度的字符串。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MaxLengthRouteConstraint.#ctor(System.Int32)"></member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MaxLengthRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="P:System.Web.Mvc.Routing.Constraints.MaxLengthRouteConstraint.MaxLength">
-      <summary>Gets the maximum length of the route parameter.</summary>
+      <summary>获取路由参数的最大长度。</summary>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint">
-      <summary>Constrains a route parameter to be an integer with a maximum value.</summary>
+      <summary>将路由参数约束为有一个最大值的整数。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint.#ctor(System.Int64)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint" /> class.</summary>
-      <param name="max">The maximum value.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint" /> 类的新实例。</summary>
+      <param name="max">最大值。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数的名称。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.MaxRouteConstraint.Max">
-      <summary>Gets the maximum value of the route parameter.</summary>
-      <returns>The maximum value of the route parameter.</returns>
+      <summary>获取路由参数的最大值。</summary>
+      <returns>路由参数的最大值。</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint">
-      <summary>Constrains a route parameter to be a string with a maximum length.</summary>
+      <summary>将路由参数约束为有一个最大长度的字符串。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint.#ctor(System.Int32)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint" /> class.</summary>
-      <param name="minLength">The minimum length.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint" /> 类的新实例。</summary>
+      <param name="minLength">最小长度。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the compare.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">比较的名称。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.MinLengthRouteConstraint.MinLength">
-      <summary>Gets the minimum length of the route parameter.</summary>
-      <returns>The minimum length of the route parameter.</returns>
+      <summary>获取路由参数的最小长度。</summary>
+      <returns>路由参数的最小长度。</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.MinRouteConstraint">
-      <summary>Constrains a route parameter to be a long with a minimum value.</summary>
+      <summary>将路由参数约束为有一个最小值的长型值。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MinRouteConstraint.#ctor(System.Int64)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.MinRouteConstraint" /> class.</summary>
-      <param name="min">The minimum value.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.MinRouteConstraint" /> 类的新实例。</summary>
+      <param name="min">最小值。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.MinRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.MinRouteConstraint.Min">
-      <summary>Gets the minimum value of the route parameter.</summary>
-      <returns>The minimum value of the route parameter.</returns>
+      <summary>获取路由参数的最小值。</summary>
+      <returns>路由参数的最小值。</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint">
-      <summary>Constrains a route by an inner constraint that doesn't fail when an optional parameter is set to its default value.</summary>
+      <summary>根据在可选参数设置为默认值时不会失败的内部约束来约束路由。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint.#ctor(System.Web.Routing.IRouteConstraint)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint" /> class.</summary>
-      <param name="innerConstraint">The inner constraint to match if the parameter is not an optional parameter without a value</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint" /> 类的新实例。</summary>
+      <param name="innerConstraint">当参数不是无值的可选参数时要匹配的内部约束。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint.InnerConstraint">
-      <summary>Gets the inner constraint to match if the parameter is not an optional parameter without a value.</summary>
+      <summary>获取当参数不是无值的可选参数时要匹配的内部约束。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.OptionalRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)"></member>
     <member name="T:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint">
-      <summary>Constraints a route parameter to be an integer within a given range of values.</summary>
+      <summary>将路由参数约束为给定值范围内的某个整数。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint.#ctor(System.Int64,System.Int64)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint" /> class.</summary>
-      <param name="min">The minimum value.</param>
-      <param name="max">The maximum value.</param>
+      <summary>初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint" /> 类的新实例。</summary>
+      <param name="min">最小值。</param>
+      <param name="max">最大值。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint.Max">
-      <summary>Gets the maximum value of the route parameter.</summary>
-      <returns>The maximum value of the route parameter.</returns>
+      <summary>获取路由参数的最大值。</summary>
+      <returns>路由参数的最大值。</returns>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.RangeRouteConstraint.Min">
-      <summary>Gets the minimum value of the route parameter.</summary>
-      <returns>The minimum value of the route parameter.</returns>
+      <summary>获取路由参数的最小值。</summary>
+      <returns>路由参数的最小值。</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint">
-      <summary>Constrains a route parameter to match a regular expression.</summary>
+      <summary>约束某个路由参数以匹配正则表达式。</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint" /> class with the specified pattern.</summary>
-      <param name="pattern">The pattern to match.</param>
+      <summary>使用指定的模式初始化 <see cref="T:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint" /> 类的新实例。</summary>
+      <param name="pattern">要匹配的模式。</param>
     </member>
     <member name="M:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint.Match(System.Web.HttpContextBase,System.Web.Routing.Route,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteDirection)">
-      <summary>Determines whether this instance equals a specified route.</summary>
-      <returns>true if this instance equals a specified route; otherwise, false.</returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="route">The route to compare.</param>
-      <param name="parameterName">The name of the parameter.</param>
-      <param name="values">A list of parameter values.</param>
-      <param name="routeDirection">The route direction.</param>
+      <summary>确定此实例是否等于指定的路由。</summary>
+      <returns>如果此实例等于指定的路由，则为 true；否则为 false。</returns>
+      <param name="httpContext">HTTP 上下文。</param>
+      <param name="route">要比较的路由。</param>
+      <param name="parameterName">参数名。</param>
+      <param name="values">参数值的列表。</param>
+      <param name="routeDirection">路由方向。</param>
     </member>
     <member name="P:System.Web.Mvc.Routing.Constraints.RegexRouteConstraint.Pattern">
-      <summary>Gets the regular expression pattern to match.</summary>
-      <returns>The regular expression pattern to match.</returns>
+      <summary>获取要匹配的正则表达式模式。</summary>
+      <returns>要匹配的正则表达式模式。</returns>
     </member>
   </members>
 </doc>
