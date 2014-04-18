@@ -1,36 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Main">
-      <UniqueIdentifier>{31a807b7-bee5-49a1-bc9f-de7ba5bdbf56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AppConfig">
+    <Filter Include="app_config">
       <UniqueIdentifier>{54293ec2-1d0f-4148-afef-10c8d6b4b8c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="StdAfx">
+    <Filter Include="stdafx">
       <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{31a807b7-bee5-49a1-bc9f-de7ba5bdbf56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>StdAfx</Filter>
+      <Filter>stdafx</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>StdAfx</Filter>
+      <Filter>stdafx</Filter>
     </ClInclude>
     <ClInclude Include="app_config.h">
-      <Filter>AppConfig</Filter>
+      <Filter>app_config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>StdAfx</Filter>
+      <Filter>stdafx</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Main</Filter>
+      <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="app_config.cpp">
-      <Filter>AppConfig</Filter>
+      <Filter>app_config</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
