@@ -7,8 +7,8 @@
     <Filter Include="stdafx">
       <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="main">
-      <UniqueIdentifier>{31a807b7-bee5-49a1-bc9f-de7ba5bdbf56}</UniqueIdentifier>
+    <Filter Include="application">
+      <UniqueIdentifier>{c4a505df-44e9-43dc-80b5-af495098a1ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,16 +21,22 @@
     <ClInclude Include="app_config.h">
       <Filter>app_config</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>stdafx</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="app_config.cpp">
       <Filter>app_config</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
