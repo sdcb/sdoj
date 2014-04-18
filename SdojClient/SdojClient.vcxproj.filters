@@ -4,6 +4,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{31a807b7-bee5-49a1-bc9f-de7ba5bdbf56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AppConfig">
+      <UniqueIdentifier>{54293ec2-1d0f-4148-afef-10c8d6b4b8c5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="StdAfx">
       <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
     </Filter>
@@ -15,6 +18,9 @@
     <ClInclude Include="targetver.h">
       <Filter>StdAfx</Filter>
     </ClInclude>
+    <ClInclude Include="app_config.h">
+      <Filter>AppConfig</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -22,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="app_config.cpp">
+      <Filter>AppConfig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
