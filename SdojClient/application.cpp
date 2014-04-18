@@ -3,5 +3,5 @@
 
 void application::run()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	config.load_from_file("config.xml");
 }

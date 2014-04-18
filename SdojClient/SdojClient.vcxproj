@@ -96,6 +96,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\cpprestsdk.2.0.1\build\native\cpprestsdk.targets" Condition="Exists('..\packages\cpprestsdk.2.0.1\build\native\cpprestsdk.targets')" />
