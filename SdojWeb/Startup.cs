@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using SdojWeb.Controllers;
 
 [assembly: OwinStartupAttribute(typeof(SdojWeb.Startup))]
 namespace SdojWeb
@@ -9,6 +10,7 @@ namespace SdojWeb
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            app.MapSignalR<JudgeConnection>("/SignalR/Judge");
         }
     }
 }
