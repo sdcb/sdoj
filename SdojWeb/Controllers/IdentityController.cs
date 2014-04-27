@@ -9,7 +9,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    //[SdojAuthorize(Roles="admin")]
+    [SdojAuthorize(Roles = "admin")]
     public class IdentityController : Controller
     {
         public ApplicationUserManager UserMgr { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -156,7 +157,12 @@ namespace SdojWeb.Models
     {
         public static int GetIntUserId(this IIdentity identity)
         {
-            return int.Parse(identity.GetUserId());
+            var uid = identity.GetUserId();
+            int intuid;
+
+            return int.TryParse(uid, out intuid) ? 
+                intuid : 
+                0;
         }
     }
 }
