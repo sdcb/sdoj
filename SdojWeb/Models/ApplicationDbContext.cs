@@ -17,6 +17,10 @@ namespace SdojWeb.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Properties<DateTime>().Configure(x => x.HasColumnType("datetime2"));
+            modelBuilder.Entity<Question>()
+                .HasRequired(q => q.CreateUser)
+                .WithMany(u => u.Questions)
+                .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }

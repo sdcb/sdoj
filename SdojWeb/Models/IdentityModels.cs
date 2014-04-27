@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -12,12 +14,14 @@ using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    // You can add profile data for the user by adding more properties to your CreateUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public sealed class ApplicationUser : IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>
     {
         public ApplicationUser()
         {
         }
+
+        public ICollection<Question> Questions { get; set; }
 
         public ApplicationUser(string email)
         {

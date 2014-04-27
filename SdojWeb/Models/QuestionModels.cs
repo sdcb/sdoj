@@ -11,6 +11,11 @@ namespace SdojWeb.Models
         [HiddenInput]
         public int Id { get; set; }
 
+        public int CreateUserId { get; set; }
+
+        public ApplicationUser CreateUser { get; set; }
+
+
         [Display(Name = "标题"), Required, MaxLength(30)]
         public string Name { get; set; }
 
