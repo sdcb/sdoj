@@ -5,12 +5,11 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using SdojWeb.Infrastructure.Alerts;
-using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    [SdojAuthorize(Roles="admin")]
+    [Authorize]
     public class QuestionDataController : Controller
     {
         private readonly ApplicationDbContext _db;
