@@ -1,0 +1,52 @@
+﻿@using Microsoft.Web.Mvc
+@model IEnumerable<SdojWeb.Models.ApplicationRole>
+
+@{
+    ViewBag.Title = "角色管理";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+    </tr>
+    <tr>
+        <td></td>
+        @using (Html.BeginForm("AddRole", "Identity", FormMethod.Post))
+        {
+            <td>
+                @Html.TextBox("name", "", new { @class = "form-control", placeholder = "在此处输入角色名…" })
+            </td>
+            <td>
+                @Html.AntiForgeryToken()
+                @Html.SubmitButton("创建", "创建", new { @class="btn-link" })
+            </td>
+        }
+    </tr>
+    @foreach (var role in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => role.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => role.Name)
+            </td>
+            <td>
+                @using (Html.BeginForm("DeleteRole", "Identity", new {roleId = role.Id}, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="删除" class="btn-link"/>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("用户管理", "Users")

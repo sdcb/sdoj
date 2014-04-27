@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
 
 @{
-    ViewBag.Title = "用户列表";
+    ViewBag.Title = "用户管理";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -21,18 +21,20 @@
     @foreach (var user in Model)
     {
         <tr>
-            <th>
+            <td>
                 @Html.DisplayFor(item => user.Id)
-            </th>
-            <th>
+            </td>
+            <td>
                 @Html.DisplayFor(item => user.UserName)
-            </th>
-            <th>
+            </td>
+            <td>
                 @String.Join(",", user.Roles.Select(x => x.Name))
-            </th>
-            <th>
+            </td>
+            <td>
                 @Html.ActionLink("编辑", "Edit", new {id=user.Id})
-            </th>
+            </td>
         </tr>
     }
 </table>
+
+@Html.ActionLink("角色管理", "Roles")
