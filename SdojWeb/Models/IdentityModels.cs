@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -8,11 +10,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    [DisplayColumn("UserName")]
     public sealed class ApplicationUser : IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>
     {
         public ApplicationUser()
@@ -119,7 +121,12 @@ namespace SdojWeb.Models
         }
     }
 
-    public class ApplicationUserRole : IdentityUserRole<int> { }
+    public class ApplicationUserRole : IdentityUserRole<int>
+    {
+        public ApplicationUser User { get; set; }
+
+        public ApplicationRole Role { get; set; }
+    }
     public class ApplicationUserClaim : IdentityUserClaim<int> { }
     public class ApplicationUserLogin : IdentityUserLogin<int> { }
 

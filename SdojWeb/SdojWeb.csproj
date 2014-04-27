@@ -355,6 +355,7 @@
     <Content Include="Views\QuestionData\Edit.cshtml" />
     <Content Include="Views\QuestionData\Delete.cshtml" />
     <Content Include="Views\Identity\Users.cshtml" />
+    <Content Include="Views\Identity\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

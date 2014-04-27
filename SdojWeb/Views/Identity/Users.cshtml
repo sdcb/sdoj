@@ -1,7 +1,38 @@
-﻿@model dynamic
+﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "用户列表";
 }
 
-<h2>title</h2>
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Roles)
+        </th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <th>
+                @Html.DisplayFor(item => user.Id)
+            </th>
+            <th>
+                @Html.DisplayFor(item => user.UserName)
+            </th>
+            <th>
+                @String.Join(",", user.Roles.Select(x => x.Name))
+            </th>
+            <th>
+                @Html.ActionLink("编辑", "Edit", new {id=user.Id})
+            </th>
+        </tr>
+    }
+</table>
