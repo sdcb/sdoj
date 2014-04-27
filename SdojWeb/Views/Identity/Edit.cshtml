@@ -1,0 +1,57 @@
+﻿@using Microsoft.Web.Mvc
+@using SdojWeb.Models
+@model IEnumerable<SdojWeb.Models.ApplicationRole>
+
+@{
+    var user = ViewBag.User as UserSummaryViewModel;
+    if (user == null)
+    {
+        throw new ArgumentNullException();
+    }
+    ViewBag.Title = string.Format("{0}的角色列表", user.UserName);
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+    </tr>
+    @foreach (var role in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => role.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => role.Name)
+            </td>
+            <td>
+                @if (user.Roles.Any(x => x.Name == role.Name))
+                {
+                    using (Html.BeginForm("DeleteUserRole", "Identity", new { userId = user.Id, roleId = role.Id }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" class="btn-link btn-warning" value="删除" />
+                    }
+                }
+                else
+                {
+                    using(Html.BeginForm("AddUserRole", "Identity", new { userId = user.Id, roleId = role.Id }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" class="btn-link btn-success" value="添加" />
+                    }
+                }
+            </td>
+
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("返回列表", "Users")

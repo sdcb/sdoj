@@ -1,0 +1,36 @@
+﻿@model SdojWeb.Models.Question
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<div class="text-center">
+    <strong>@Html.DisplayNameFor(model => model.MemoryLimitMb):</strong>
+    @Html.DisplayFor(model => model.MemoryLimitMb)
+    <strong>@Html.DisplayNameFor(model => model.TimeLimit):</strong>
+    @Html.DisplayFor(model => model.TimeLimit)
+</div>
+<div>
+    <hr />
+    <h4>@Html.DisplayNameFor(model => model.Description)</h4>
+    <div class="well">
+        @Html.DisplayFor(model => model.Description)
+    </div>
+
+    <h4>@Html.DisplayNameFor(model => model.SampleInput)</h4>
+    <div class="well">
+        @Html.DisplayFor(model => model.SampleInput)
+    </div>
+            
+    <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
+    <div class="well">
+        @Html.DisplayFor(model => model.SampleOutput)
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("解答", "Create", "Solution", new {id=Model.Id}, null) |
+    @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("返回列表", "Index")
+</p>

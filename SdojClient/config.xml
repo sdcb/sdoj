@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <server>http://127.0.0.1</server>
+  <port>80</port>
+  <username>flysha@live.com</username>
+  <password>config</password>
+</config>
