@@ -9,8 +9,6 @@ namespace SdojWeb.Controllers
 {
     public class JudgeConnection : PersistentConnection
     {
-        private Task task = null;
-
         protected override Task OnConnected(IRequest request, string connectionId)
         {
             Task.Run(async () =>

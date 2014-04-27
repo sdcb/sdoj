@@ -4,7 +4,10 @@ using System.Data.Entity;
 
 namespace SdojWeb.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext :
+        IdentityDbContext
+            <ApplicationUser, ApplicationRole, int, ApplicationUserLogin,
+                ApplicationUserRole, ApplicationUserClaim>
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -14,6 +17,7 @@ namespace SdojWeb.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Properties<DateTime>().Configure(x => x.HasColumnType("datetime2"));
+
             base.OnModelCreating(modelBuilder);
         }
 

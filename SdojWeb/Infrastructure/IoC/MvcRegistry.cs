@@ -24,10 +24,10 @@ namespace SdojWeb.Infrastructure.IoC
                 .Use(() => new HttpContextWrapper(HttpContext.Current));
             For<HttpServerUtilityBase>()
                 .Use(() => new HttpServerUtilityWrapper(HttpContext.Current.Server));
-            For<IUserStore<ApplicationUser>>()
-                .Use(() => new UserStore<ApplicationUser>(DependencyResolver.Current.GetService<ApplicationDbContext>()));
             For<ApplicationUserManager>()
                 .Use(() => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
+            For<ApplicationRoleManager>()
+                .Use(() => HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>());
         }
     }
 }

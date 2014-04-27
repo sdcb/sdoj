@@ -19,7 +19,7 @@ namespace SdojWeb.Infrastructure.Identity
 
         public ApplicationUser User
         {
-            get { return _user ?? (_user = _context.Users.Find(_identity.GetUserId())); }
+            get { return _user ?? (_user = _context.Users.Find(_identity.GetIntUserId())); }
         }
     }
 }

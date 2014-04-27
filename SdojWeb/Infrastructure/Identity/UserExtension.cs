@@ -1,14 +1,14 @@
 ﻿using System.Security.Principal;
-using Microsoft.AspNet.Identity;
+using SdojWeb.Models;
 
 namespace SdojWeb.Infrastructure.Identity
 {
     public static class UserExtensions
     {
-        public static bool IsUserOrAdmin(this IPrincipal user, string userId)
+        public static bool IsUserOrAdmin(this IPrincipal user, int userId)
         {
             return 
-                user.Identity.GetUserId() == userId || 
+                user.Identity.GetIntUserId() == userId || 
                 user.IsInRole("admin");
         }
     }

@@ -16,6 +16,7 @@ namespace SdojWeb
             // 将数据库上下文和用户管理器配置为每个请求使用单个实例
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
 
             // 使应用程序可以使用 Cookie 来存储已登录用户的信息
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -24,9 +25,10 @@ namespace SdojWeb
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
                 {
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser, int>(
                         validateInterval: TimeSpan.FromMinutes(20),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                        regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager), 
+                        getUserIdCallback: identity => int.Parse(identity.GetUserId()))
                 }
             });
             // 使用 Cookie 临时存储有关某个用户使用第三方登录提供程序进行登录的信息

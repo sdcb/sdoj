@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using AutoMapper;
-using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
@@ -14,7 +12,7 @@ namespace SdojWeb.Models
 
         public virtual ApplicationUser CreateUser { get; set; }
 
-        public string CreateUserId { get; set; }
+        public int CreateUserId { get; set; }
 
         public virtual Question Question { get; set; }
 
@@ -60,7 +58,7 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<SolutionCreateModel, Solution>()
                 .ForMember(dest => dest.SubmitTime, source => source.MapFrom(x => DateTime.Now))
-                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => HttpContext.Current.User.Identity.GetUserId()))
+                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => HttpContext.Current.User.Identity.GetIntUserId()))
                 .ForMember(dest => dest.Status, source => source.MapFrom(x => SolutionStatus.Queuing))
                 .ForMember(dest => dest.QuestionId, source => source.MapFrom(x => x.QuestionId));
         }
@@ -86,7 +84,7 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
-        public string CreateUserId { get; set; }
+        public int CreateUserId { get; set; }
 
         public int QuestionId { get; set; }
 
@@ -104,7 +102,7 @@ namespace SdojWeb.Models
         [Display(Name = "用户名")]
         public string CreateUserName { get; set; }
 
-        public string CreateUserId { get; set; }
+        public int CreateUserId { get; set; }
 
         [Display(Name = "题目名")]
         public string QuestionName { get; set; }

@@ -17,14 +17,13 @@ namespace SdojWeb.Migrations
 
         protected override void Seed(ApplicationDbContext context)
         {
-            var userStore = new UserStore<ApplicationUser>(context);
-            var roleStore = new RoleStore<IdentityRole>(context);
-            var userManager = new ApplicationUserManager(userStore);
-            var roleManager = new RoleManager<IdentityRole>(roleStore);
+            var roleStore = new RoleStore<ApplicationRole, int, ApplicationUserRole>(context);
+            var userManager = new ApplicationUserManager(new UserStore<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>(context));
+            var roleManager = new RoleManager<ApplicationRole, int>(roleStore);
 
             userManager.Create(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-            roleManager.Create(new IdentityRole("admin"));
+            roleManager.Create(new ApplicationRole("admin"));
             userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
 
             var user = userManager.FindByName("flysha@live.com");

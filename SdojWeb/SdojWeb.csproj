@@ -213,6 +213,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\JudgeConnection.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IdentityViewModel.cs" />
     <Compile Include="Models\QuestionDataModel.cs" />
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />
@@ -352,6 +354,7 @@
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\QuestionData\Edit.cshtml" />
     <Content Include="Views\QuestionData\Delete.cshtml" />
+    <Content Include="Views\Identity\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
