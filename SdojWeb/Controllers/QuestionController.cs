@@ -60,6 +60,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                question.CreateUserId = User.Identity.GetIntUserId();
                 question.CreateTime = DateTime.Now;
                 _dbContext.Questions.Add(question);
                 await _dbContext.SaveChangesAsync();

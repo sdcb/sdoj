@@ -11,8 +11,10 @@ namespace SdojWeb.Models
         [HiddenInput]
         public int Id { get; set; }
 
+        [HiddenInput]
         public int CreateUserId { get; set; }
 
+        [HiddenInput]
         public ApplicationUser CreateUser { get; set; }
 
 
