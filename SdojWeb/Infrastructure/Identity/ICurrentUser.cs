@@ -4,6 +4,6 @@ namespace SdojWeb.Infrastructure.Identity
 {
     public interface ICurrentUser
     {
-        ApplicationUser User { get; }
+        UsefulUserModel User { get; }
     }
 }

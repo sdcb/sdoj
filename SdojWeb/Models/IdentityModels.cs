@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -34,6 +31,15 @@ namespace SdojWeb.Models
             // Add custom user claims here
             return userIdentity;
         }
+    }
+
+    public class UsefulUserModel : IMapFrom<ApplicationUser>
+    {
+        public int Id { get; set; }
+
+        public string Email { get; set; }
+
+        public bool EmailConfirmed { get; set; }
     }
 
     public class ApplicationUserManager : UserManager<ApplicationUser, int>

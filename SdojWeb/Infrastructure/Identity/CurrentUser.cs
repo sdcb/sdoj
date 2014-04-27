@@ -1,4 +1,6 @@
-﻿using System.Security.Principal;
+﻿using System.Linq;
+using System.Security.Principal;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Models;
 
@@ -9,7 +11,7 @@ namespace SdojWeb.Infrastructure.Identity
         private readonly IIdentity _identity;
         private readonly ApplicationDbContext _context;
 
-        private ApplicationUser _user;
+        private UsefulUserModel _user;
 
         public CurrentUser(IIdentity identity, ApplicationDbContext context)
         {
@@ -17,9 +19,19 @@ namespace SdojWeb.Infrastructure.Identity
             _context = context;
         }
 
-        public ApplicationUser User
+        public UsefulUserModel User
         {
-            get { return _user ?? (_user = _context.Users.Find(_identity.GetIntUserId())); }
+            get
+            {
+                var userId = _identity.GetIntUserId();
+                if (_user != null) return _user;
+
+                _user = _context.Users.Where(x => x.Id == userId)
+                    .Project().To<UsefulUserModel>()
+                    .FirstOrDefault();
+
+                return _user;
+            }
         }
     }
 }
