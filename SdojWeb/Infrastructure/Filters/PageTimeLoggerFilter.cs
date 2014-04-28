@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Web;
 using System.Web.Mvc;
+using SdojWeb.Infrastructure.Tasks;
 
 namespace SdojWeb.Infrastructure.Filters
 {
@@ -11,15 +13,8 @@ namespace SdojWeb.Infrastructure.Filters
         {
             _Stopwatch = new Stopwatch();
             _Stopwatch.Start();
+            filterContext.Controller.ViewData["_Stopwatch"] = _Stopwatch;
             base.OnActionExecuting(filterContext);
-        }
-
-        public override void OnResultExecuting(ResultExecutingContext filterContext)
-        {
-            _Stopwatch.Stop();
-            var text = string.Format("页面用时: {0}ms", _Stopwatch.Elapsed.TotalMilliseconds);
-            filterContext.Controller.TempData["PageTime"] = text;
-            base.OnResultExecuting(filterContext);
         }
     }
 }
