@@ -13,7 +13,6 @@ namespace SdojWeb.Infrastructure.IoC
     {
         public void Process(Type type, Registry registry)
         {
-            Debug.WriteLine(type.Name);
             if ((type.CanBeCastTo(typeof(Controller)) || type.CanBeCastTo(typeof(ApiController)))
                 && !type.IsAbstract)
             {
