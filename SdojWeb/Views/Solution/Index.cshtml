@@ -1,5 +1,8 @@
-﻿@using SdojWeb.Infrastructure.Identity
-@model IEnumerable<SdojWeb.Models.SolutionSummaryModel>
+﻿@using Microsoft.Ajax.Utilities
+@using PagedList
+@using PagedList.Mvc
+@using SdojWeb.Models
+@model IEnumerable<SolutionSummaryModel>
 
 @{
     ViewBag.Title = "解答列表";
@@ -75,5 +78,10 @@
         </td>
     </tr>
 }
-
 </table>
+
+<div>
+    @{var pagedList = Model as IPagedList<SolutionSummaryModel>;}
+    第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
+    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))
+</div>

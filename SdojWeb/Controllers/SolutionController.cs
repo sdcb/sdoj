@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
@@ -21,27 +22,30 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution
-        public async Task<ActionResult> Index()
+        public ActionResult Index(int? page)
         {
+            page = page ?? 1;
             var model = _dbContext.Solutions
                 .OrderByDescending(x => x.SubmitTime)
-                .Project().To<SolutionSummaryModel>();
-            return View(await model.ToListAsync());
+                .Project().To<SolutionSummaryModel>()
+                .ToPagedList(page.Value, AppSettings.DefaultPageSize);
+            return View(model);
         }
 
         // GET: Solution/Details/5
         [SdojAuthorize]
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var solution = await _dbContext.Solutions.Project().To<SolutionDetailModel>()
+            var solution = await _dbContext.Solutions
+                .Project().To<SolutionDetailModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index").WithError("未找到id为{0}的解答。", id);
+            }
+            if (!User.IsUserOrAdmin(solution.CreateUserId))
+            {
+                return RedirectToAction("Index").WithInfo("只能查看自己的解答。");
             }
             return View(solution);
         }
