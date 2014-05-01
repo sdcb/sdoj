@@ -22,14 +22,20 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, bool? onlyMe)
         {
             page = page ?? 1;
+            onlyMe = onlyMe ?? false;
             var model = _dbContext.Solutions
                 .OrderByDescending(x => x.SubmitTime)
-                .Project().To<SolutionSummaryModel>()
-                .ToPagedList(page.Value, AppSettings.DefaultPageSize);
-            return View(model);
+                .Project().To<SolutionSummaryModel>();
+            var currentUserId = User.Identity.GetIntUserId();
+            if (onlyMe.Value)
+            {
+                model = model.Where(x => x.CreateUserId == currentUserId);
+            }
+            ViewBag.OnlyMe = onlyMe;
+            return View(model.ToPagedList(page.Value, AppSettings.DefaultPageSize));
         }
 
         // GET: Solution/Details/5

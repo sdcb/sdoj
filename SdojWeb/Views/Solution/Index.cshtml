@@ -10,6 +10,18 @@
 
 <h2>@ViewBag.Title</h2>
 
+@if (User.Identity.IsAuthenticated)
+{
+    if (ViewBag.OnlyMe)
+    {
+        @Html.ActionLink("查看所有解答", "Index", new {onlyme=false})
+    }
+    else
+    {
+        @Html.ActionLink("仅看我的解答", "Index", new {onlyme=true})
+    }
+    
+}
 <table class="table">
     <tr>
         <th>
@@ -83,5 +95,5 @@
 <div>
     @{var pagedList = Model as IPagedList<SolutionSummaryModel>;}
     第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
-    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))
+    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
 </div>
