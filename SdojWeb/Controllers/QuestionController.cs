@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
+using PagedList;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
@@ -21,9 +22,12 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions
-        public async Task<ActionResult> Index()
+        public ActionResult Index(int? page)
         {
-            var models = await _dbContext.Questions.Project().To<QuestionSummaryViewModel>().ToListAsync();
+            page = page ?? 1;
+            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>()
+                .OrderBy(q => q.Id)
+                .ToPagedList(page.Value, AppSettings.DefaultPageSize);
             return View(models);
         }
 

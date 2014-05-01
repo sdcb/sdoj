@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using System.Configuration;
+using StructureMap;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -96,5 +97,17 @@ namespace SdojWeb
         }
 
         public static string RootNamespace { get { return typeof(MvcApplication).Namespace; } }
+    }
+
+    public static class AppSettings
+    {
+        public static int DefaultPageSize
+        {
+            get
+            {
+                var settingString = ConfigurationManager.AppSettings["DefaultPageSize"];
+                return settingString == null ? 20 : int.Parse(settingString);
+            }
+        }
     }
 }

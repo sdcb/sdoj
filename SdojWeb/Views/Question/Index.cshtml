@@ -1,7 +1,11 @@
-﻿@model IEnumerable<SdojWeb.Models.QuestionSummaryViewModel>
+﻿@using PagedList
+@using PagedList.Mvc
+@using SdojWeb.Models
+@model IEnumerable<QuestionSummaryViewModel>
 
 @{
     ViewBag.Title = "题目列表";
+    var pagedList = Model as IPagedList<QuestionSummaryViewModel>;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,6 +17,9 @@
 
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
@@ -30,6 +37,9 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
         <td>
             @Html.ActionLink(item.Name, "Details", new { id = item.Id })
         </td>
@@ -49,5 +59,7 @@
         </td>
     </tr>
 }
-
 </table>
+<br/>
+<p>第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页 </p>
+@Html.PagedListPager(pagedList, page => Url.Action("Index", new {page}))

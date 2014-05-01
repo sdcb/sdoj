@@ -5,9 +5,6 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Web.Mvc;
 
 namespace SdojWeb.Infrastructure.IoC
 {
