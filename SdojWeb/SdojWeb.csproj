@@ -221,7 +221,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\JudgeConnection.cs" />
-    <Compile Include="Controllers\JudgeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\QuestionDataController.cs" />
     <Compile Include="Controllers\SolutionController.cs" />
