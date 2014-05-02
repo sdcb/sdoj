@@ -16,5 +16,6 @@
 #include <cpprest\http_client.h>
 #include <stdint.h>
 #include <windows.h>
+#include "handle.h"
 
 using namespace std;

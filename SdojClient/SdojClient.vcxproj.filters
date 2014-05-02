@@ -4,19 +4,19 @@
     <Filter Include="app_config">
       <UniqueIdentifier>{54293ec2-1d0f-4148-afef-10c8d6b4b8c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="stdafx">
-      <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="application">
       <UniqueIdentifier>{c4a505df-44e9-43dc-80b5-af495098a1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>stdafx</Filter>
+      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>stdafx</Filter>
+      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="app_config.h">
       <Filter>app_config</Filter>
@@ -24,10 +24,19 @@
     <ClInclude Include="application.h">
       <Filter>application</Filter>
     </ClInclude>
+    <ClInclude Include="handle.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="winencrypt.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>stdafx</Filter>
+      <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="app_config.cpp">
       <Filter>app_config</Filter>
