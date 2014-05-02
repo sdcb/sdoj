@@ -113,6 +113,7 @@ task<http_response> sdoj_httpclient::Post(string_t uri, function<void(shared_ptr
 
 	auto requestMessage = http_request(methods::POST);
 	requestMessage.set_request_uri(uri);
+	prepare_headers(requestMessage);
 	requestMessage.set_body(postData);
 
 	auto request = make_shared<HttpRequestWrapper>(requestMessage, [cts]()
