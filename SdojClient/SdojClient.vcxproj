@@ -84,6 +84,7 @@
     <ClInclude Include="app_config.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="handle.h" />
+    <ClInclude Include="sdoj_httpclient.h" />
     <ClInclude Include="signalr\AsyncStreamReader.h" />
     <ClInclude Include="signalr\ChunkBuffer.h" />
     <ClInclude Include="signalr\ConnectingMessageBuffer.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="app_config.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="sdoj_httpclient.cpp" />
     <ClCompile Include="signalr\AsyncStreamReader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

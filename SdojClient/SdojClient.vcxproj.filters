@@ -16,6 +16,9 @@
     <Filter Include="winencrypt">
       <UniqueIdentifier>{e2dca727-1b9f-428c-b3b0-cec79ef8ae3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdoj_httpclient">
+      <UniqueIdentifier>{e33bebb0-b67f-4802-9a49-0386bbb32079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="debug.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="sdoj_httpclient.h">
+      <Filter>sdoj_httpclient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="signalr\ChunkBuffer.cpp">
       <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="sdoj_httpclient.cpp">
+      <Filter>sdoj_httpclient</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
