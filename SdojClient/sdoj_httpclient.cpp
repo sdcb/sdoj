@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "sdoj_httpclient.h"
-#include "app_config.h"
-#include "winencrypt.h"
 #include <boost\algorithm\hex.hpp>
 
 using namespace std;
@@ -14,26 +12,24 @@ using namespace wincrypt;
 
 sdoj_httpclient::sdoj_httpclient(shared_ptr<app_config> appconfig) :config(appconfig)
 {
-	/*auto p = open_provider(BCRYPT_ECDH_P521_ALGORITHM);
-	auto pk = import_key(p, BCRYPT_ECCPUBLIC_BLOB, &config->serverpk[0], (unsigned)config->serverpk.size());
-	wstring fkstr = L"RUNLNkIAAAAAJtrV6IAj27tbSGOpuNCd348bPWjyPBghTk4xeOcwWYl0hH7Y0xCHQm9VXyY9AgnwUpS1XPJnHNHycu7BwWoC06MAPai+3dM8iEm/5d1oFvyY1clRU8KusSNAHT15dogP5HX0ACTd2MO+xxygvmGfMIK+7kXts6WtwFP0H11Hn4jRWw4BTc/QOqAh9j9mDt/yQEaR+uKk0f0lJSerklhLorXLqTg5A2Uk+qxYDYrJTwFAoYQsLjhi7485mLrO5Ur7n5nScBY=";
-	auto fkbytes = utility::conversions::from_base64(fkstr);
-	auto fk = import_key(p, BCRYPT_ECCPRIVATE_BLOB, &fkbytes[0], fkbytes.size());
-	auto pwd = get_agreement(fk, pk);
-	auto pwdstr = utility::conversions::to_base64(pwd);*/
+	// create public key for server recognize.
+	auto p = open_provider(BCRYPT_ECDH_P521_ALGORITHM);
+	auto fk = create_asymmetric_key(p);
+	public_key = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
 
-	auto p = open_provider(BCRYPT_SHA256_ALGORITHM);
-	auto h = create_hash(p);
-	string tobehashed = "y0usCAY+GMGXgOjjOuLWfCi/2yQ=";
-	combine(h, &tobehashed[0], tobehashed.size());
-	int size;
-	get_property(h.get(), BCRYPT_HASH_LENGTH, size);
-	vector<byte> hashed(size, '\0');
-	get_value(h, &hashed[0], size);
+	// import agreemented password from client private key + server public key.
+	auto pk = import_key(p, BCRYPT_ECCPUBLIC_BLOB, &config->serverpk[0], (unsigned)config->serverpk.size());
+	auto pwd = get_agreement(fk, pk);
 	
-	auto something = boost::algorithm::hex(hashed);
-	auto hexstring = string(something.begin(), something.end());
-	exit(0);
+	// convert unknown sized password into 256 bit AES key.
+	auto hashp = open_provider(BCRYPT_SHA256_ALGORITHM);
+	auto hash = create_hash(hashp);
+	combine(hash, &pwd, (unsigned)pwd.size());
+	auto pwd256 = vector<byte>(32);
+	get_value(hash, &pwd256[0], (unsigned)pwd256.size());
+
+	// create aes encryptor and import hashed key.
+	 
 }
 
 sdoj_httpclient::~sdoj_httpclient()

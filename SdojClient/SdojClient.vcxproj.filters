@@ -114,9 +114,6 @@
     <ClInclude Include="signalr\ChunkBuffer.h">
       <Filter>signalr</Filter>
     </ClInclude>
-    <ClInclude Include="winencrypt.h">
-      <Filter>winencrypt</Filter>
-    </ClInclude>
     <ClInclude Include="handle.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="sdoj_httpclient.h">
       <Filter>sdoj_httpclient</Filter>
+    </ClInclude>
+    <ClInclude Include="winencrypt.h">
+      <Filter>winencrypt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="sdoj_httpclient.cpp">
       <Filter>sdoj_httpclient</Filter>
+    </ClCompile>
+    <ClCompile Include="winencrypt.cpp">
+      <Filter>winencrypt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
