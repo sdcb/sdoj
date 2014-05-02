@@ -17,5 +17,6 @@
 #include <stdint.h>
 #include <windows.h>
 #include "handle.h"
+#include "signalr\Connection.h"
 
 using namespace std;

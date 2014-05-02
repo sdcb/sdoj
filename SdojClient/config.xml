@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-  <server>http://127.0.0.1</server>
-  <port>80</port>
+  <server>http://localhost:54130/signalr/judge</server>
   <username>flysha@live.com</username>
   <password>config</password>
   <serverPublicKey>RUNLNUIAAAAAEjBYYkL561cwNz2QN448C/ur/mjmOzAhV5U6LCPUkXQ2PDusxYODCPir/38l7tu/bxODa7hMNSYaT9/eLqbn5yEBgwcMwE+oxp8t3U2wFr+PGrpbckaVfMwiqrsBWltS9j7gHoXV0aNBB5sW8Gezt43ZasdayCRzFqtFSzgEILuheMo=</serverPublicKey>

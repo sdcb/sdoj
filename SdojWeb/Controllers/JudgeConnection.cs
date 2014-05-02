@@ -24,17 +24,17 @@ namespace SdojWeb.Controllers
 
         protected override Task OnConnected(IRequest request, string connectionId)
         {
-            //if (RunOnce.WaitOne(0))
-            //{
-            //    Task.Run(() =>
-            //    {
-            //        while (true)
-            //        {
-            //            Connection.Broadcast(DateTime.Now.ToString("O"));
-            //            Thread.Sleep(1000);
-            //        }
-            //    });
-            //}
+            if (RunOnce.WaitOne(0))
+            {
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        Connection.Broadcast(DateTime.Now.ToString("O"));
+                        Thread.Sleep(500);
+                    }
+                });
+            }
             return Connection.Send(connectionId, "Welcome!");
         }
 

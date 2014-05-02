@@ -3,7 +3,6 @@
 struct app_config
 {
 	wstring server;
-	short port;
 	wstring username;
 	wstring password;
 	vector<byte> serverpk;

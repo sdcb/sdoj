@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SdojWeb", "SdojWeb\SdojWeb.csproj", "{36B88A9D-D8B0-40C4-A171-42DA7C835736}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SdojClient", "SdojClient\SdojClient.vcxproj", "{EE84A7AA-A3A4-4413-8D59-E096F7971685}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36B88A9D-D8B0-40C4-A171-42DA7C835736} = {36B88A9D-D8B0-40C4-A171-42DA7C835736}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
