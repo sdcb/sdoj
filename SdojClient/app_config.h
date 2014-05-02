@@ -7,5 +7,5 @@ struct app_config : public std::enable_shared_from_this<app_config>
 	wstring password;
 	vector<byte> serverpk;
 
-	void load_from_file(string filename);
+	static shared_ptr<app_config> from_file(string filename);
 };
