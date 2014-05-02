@@ -61,13 +61,6 @@ namespace wincrypt
 			   sizeof(T));
 	}
 
-
-
-
-
-
-
-
 	struct hash_traits
 	{
 		using pointer = BCRYPT_ALG_HANDLE;
@@ -110,12 +103,6 @@ namespace wincrypt
 				   void * buffer,
 				   unsigned size) -> void;
 
-
-
-
-
-
-
 	struct key_traits
 	{
 		using pointer = BCRYPT_KEY_HANDLE;
@@ -150,7 +137,8 @@ namespace wincrypt
 					unsigned blobsize)->key;
 
 	auto get_agreement(key const & fk,
-					   key const & pk)->std::vector<UCHAR>;
+					   key const & pk, 
+					   wchar_t const * hash_name = BCRYPT_SHA256_ALGORITHM)->std::vector<UCHAR>;
 
 	auto encrypt(key const & k,
 				 void const * plaintext,
@@ -159,12 +147,54 @@ namespace wincrypt
 				 unsigned ciphertext_size,
 				 unsigned flags) -> unsigned;
 
+	template <typename String, typename Sequence>
+	auto encrypt(key const & k,
+				 String const & plaintext,
+				 Sequence iv,
+				 unsigned flags) -> vector<byte>
+	{
+		auto bytesCopied = ULONG{};
+
+		check(BCryptEncrypt(
+			k.get(),
+			static_cast<PUCHAR>(const_cast<void*>((const void *)&plaintext[0])),
+			static_cast<unsigned>(plaintext.size() * sizeof(String::value_type)),
+			nullptr,
+			static_cast<PUCHAR>(&iv[0]),
+			static_cast<unsigned>(iv.size() * sizeof(Sequence::value_type)),
+			nullptr,
+			0,
+			&bytesCopied,
+			flags));
+
+		auto ciphertext = vector<byte>(bytesCopied);
+
+		check(BCryptEncrypt(
+			k.get(),
+			static_cast<PUCHAR>(const_cast<void*>((const void *)&plaintext[0])),
+			static_cast<unsigned>(plaintext.size() * sizeof(String::value_type)),
+			nullptr,
+			static_cast<PUCHAR>(&iv[0]),
+			static_cast<unsigned>(iv.size() * sizeof(Sequence::value_type)),
+			static_cast<PUCHAR>(&ciphertext[0]),
+			static_cast<unsigned>(ciphertext.size()),
+			&bytesCopied,
+			flags));
+
+		return ciphertext;
+	}
+
 	auto decrypt(key const & k,
 				 void const * ciphertext,
 				 unsigned ciphertext_size,
 				 void * plaintext,
 				 unsigned plaintext_size,
 				 unsigned flags) -> unsigned;
+
+	auto decrypt(key const & k,
+				 vector<byte> const & ciphertext,
+				 vector<byte> & iv,
+				 unsigned flags)->vector<byte>;
 
 	auto create_shared_secret(std::string const & secret)->std::vector<BYTE>;
 

@@ -5,6 +5,7 @@
 using namespace std;
 using namespace pplx;
 using namespace utility;
+using namespace web;
 using namespace web::http;
 using namespace web::http::client;
 using namespace MicrosoftAspNetSignalRClientCpp;
@@ -15,25 +16,41 @@ sdoj_httpclient::sdoj_httpclient(shared_ptr<app_config> appconfig) :config(appco
 	// create public key for server recognize.
 	auto p = open_provider(BCRYPT_ECDH_P521_ALGORITHM);
 	auto fk = create_asymmetric_key(p);
-	public_key = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
+	auto pk_bytes = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
+	public_key = utility::conversions::to_base64(pk_bytes);
 
 	// import agreemented password from client private key + server public key.
 	auto pk = import_key(p, BCRYPT_ECCPUBLIC_BLOB, &config->serverpk[0], (unsigned)config->serverpk.size());
 	auto pwd = get_agreement(fk, pk);
-	
-	// convert unknown sized password into 256 bit AES key.
-	auto hashp = open_provider(BCRYPT_SHA256_ALGORITHM);
-	auto hash = create_hash(hashp);
-	combine(hash, &pwd, (unsigned)pwd.size());
-	auto pwd256 = vector<byte>(32);
-	get_value(hash, &pwd256[0], (unsigned)pwd256.size());
 
 	// create aes encryptor and import hashed key.
-	 
+	auto aesp = open_provider(BCRYPT_AES_ALGORITHM);
+	aes_key = create_key(aesp, &pwd[0], (unsigned)pwd.size());
+
+	// create a random generator.
+	random_provider = open_provider(BCRYPT_RNG_ALGORITHM);
 }
 
 sdoj_httpclient::~sdoj_httpclient()
 {
+}
+
+void sdoj_httpclient::prepare_headers(http_request & request)
+{
+	request.headers()[L"Public-Key"] = public_key;
+
+	vector<byte> iv(16);
+	random(random_provider, &iv[0], (unsigned)iv.size());
+	auto ivstr = utility::conversions::to_base64(iv);
+	request.headers()[L"IV"] = ivstr;
+
+	json::value v;
+	v[L"Email"] = json::value{ config->username };
+	v[L"Password"] = json::value{ config->password };
+	auto plaintext = v.serialize();
+	auto encrypted = encrypt(aes_key, plaintext, iv, BCRYPT_BLOCK_PADDING);
+	auto encrypted_str = utility::conversions::to_base64(encrypted);
+	request.headers()[L"Security-Token"] = encrypted_str;
 }
 
 void sdoj_httpclient::Initialize(string_t uri)
@@ -56,6 +73,7 @@ task<http_response> sdoj_httpclient::Get(string_t uri, function<void(shared_ptr<
 
 	auto requestMessage = http_request(methods::GET);
 	requestMessage.set_request_uri(uri);
+	prepare_headers(requestMessage);
 
 	auto request = make_shared<HttpRequestWrapper>(requestMessage, [cts]()
 	{

@@ -14,6 +14,7 @@
 
 // TODO:  在此处引用程序需要的其他头文件
 #include <cpprest\http_client.h>
+#include <array>
 #include <stdint.h>
 #include <windows.h>
 #include "handle.h"

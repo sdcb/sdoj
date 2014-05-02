@@ -16,8 +16,11 @@ public:
 
 private:
 
+	void prepare_headers(web::http::http_request & request);
+
 	std::unique_ptr<web::http::client::http_client> pClient;
 	shared_ptr<app_config> config;
-	vector<byte> public_key;
+	wstring public_key;
 	wincrypt::key aes_key;
+	wincrypt::provider random_provider;
 };

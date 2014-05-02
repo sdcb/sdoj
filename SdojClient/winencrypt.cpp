@@ -121,7 +121,8 @@ namespace wincrypt
 	}
 
 	auto get_agreement(key const & fk,
-					   key const & pk) -> std::vector<UCHAR>
+					   key const & pk, 
+					   wchar_t const * hash_name) -> std::vector<UCHAR>
 	{
 		BCRYPT_SECRET_HANDLE handle;
 		check(BCryptSecretAgreement(
@@ -130,11 +131,21 @@ namespace wincrypt
 			&handle,
 			0));
 
+		wstring hash_name_string = hash_name;
+
+		BCryptBufferDesc params;
+		params.ulVersion = BCRYPTBUFFER_VERSION;
+		params.cBuffers = 1;
+		params.pBuffers = new BCryptBuffer[params.cBuffers];
+		params.pBuffers[0].cbBuffer = (unsigned)hash_name_string.size()*2+2;
+		params.pBuffers[0].BufferType = KDF_HASH_ALGORITHM;
+		params.pBuffers[0].pvBuffer = &hash_name_string[0];
+
 		ULONG derivedkey_size;
 		check(BCryptDeriveKey(
 			handle,
 			BCRYPT_KDF_HASH,
-			nullptr,
+			&params,
 			nullptr,
 			0,
 			&derivedkey_size,
@@ -144,7 +155,7 @@ namespace wincrypt
 		check(BCryptDeriveKey(
 			handle,
 			BCRYPT_KDF_HASH,
-			nullptr,
+			&params,
 			&value[0],
 			derivedkey_size,
 			&derivedkey_size,
@@ -200,6 +211,42 @@ namespace wincrypt
 			flags));
 
 		return bytesCopied;
+	}
+
+	auto decrypt(key const & k,
+				 vector<byte> const & ciphertext,
+				 vector<byte> & iv,
+				 unsigned flags)->vector<byte>
+	{
+		auto bytesCopied = ULONG{};		
+
+		check(BCryptDecrypt(
+			k.get(),
+			static_cast<PUCHAR>(const_cast<PUCHAR>(&ciphertext[0])),
+			static_cast<unsigned>(ciphertext.size()),
+			nullptr,
+			static_cast<PUCHAR>(const_cast<PUCHAR>(&iv[0])),
+			static_cast<unsigned>(iv.size()),
+			nullptr, 
+			0, 
+			&bytesCopied,
+			flags));
+
+		auto plaintext = vector<byte>(bytesCopied);
+
+		check(BCryptDecrypt(
+			k.get(),
+			static_cast<PUCHAR>(const_cast<PUCHAR>(&ciphertext[0])),
+			static_cast<unsigned>(ciphertext.size()),
+			nullptr,
+			static_cast<PUCHAR>(const_cast<PUCHAR>(&iv[0])),
+			static_cast<unsigned>(iv.size()),
+			static_cast<PUCHAR>(const_cast<PUCHAR>(&plaintext[0])),
+			static_cast<unsigned>(plaintext.size()),
+			&bytesCopied,
+			flags));
+
+		return plaintext;
 	}
 
 	auto create_shared_secret(std::string const & secret) -> std::vector<BYTE>

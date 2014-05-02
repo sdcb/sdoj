@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.ClientServices;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Security;
 using SdojWeb.Models;
 
@@ -40,27 +42,26 @@ namespace SdojWeb.Controllers
 
         protected override bool AuthorizeRequest(IRequest request)
         {
-            var clientPublicKey = request.Headers["PublicKey"];
-            var clientIv = request.Headers["IV"];
+            var clientPublicKey = Convert.FromBase64String(request.Headers["Public-Key"]);
+            var clientIv = Convert.FromBase64String(request.Headers["IV"]);
+            var securityToken = Convert.FromBase64String(request.Headers["Security-Token"]);
 
-            //using (var ecd = new ECDiffieHellmanCng(
-            //    CngKey.Import(Convert.FromBase64String(AppSettings.PrivateKey), CngKeyBlobFormat.EccPrivateBlob)))
-            //{
-            //    var agreement = ecd.DeriveKeyMaterial(
-            //        CngKey.Import(Convert.FromBase64String(clientPublicKey), CngKeyBlobFormat.EccPublicBlob));
-            //    var aes = new AesCryptoServiceProvider();
-            //}
-
-            var username = request.Headers["username"];
-            var password = request.Headers["password"];
-            var user = UserManager.Find(username, password);
-
-            if (user != null)
+            using (var ecd = new ECDiffieHellmanCng(
+                CngKey.Import(Convert.FromBase64String(AppSettings.PrivateKey), CngKeyBlobFormat.EccPrivateBlob)))
             {
-                return true;
+                var agreement = ecd.DeriveKeyMaterial(
+                    ECDiffieHellmanCngPublicKey.FromByteArray(clientPublicKey,
+                    CngKeyBlobFormat.EccPublicBlob));
+                var aes = new AesCryptoServiceProvider();
+                using (var decryptor = aes.CreateDecryptor(agreement, clientIv))
+                {
+                    var plainbytes = decryptor.TransformFinalBlock(securityToken, 0, securityToken.Length);
+                    var plaintext = Encoding.Unicode.GetString(plainbytes);
+                    var loginModel = JsonSerializer.Parse<LoginViewModel>(plaintext);
+                    var user = UserManager.Find(loginModel.Email, loginModel.Password);
+                    return user != null && user.EmailConfirmed;
+                }
             }
-            return false;
-            
         }
 
         protected override Task OnDisconnected(IRequest request, string connectionId)
