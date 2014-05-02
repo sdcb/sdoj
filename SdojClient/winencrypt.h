@@ -210,7 +210,7 @@ namespace wincrypt
 		return fk;
 	}
 
-	auto get_key(key const & fk,
+	auto export_key(key const & fk,
 				 wchar_t const * blobtype) -> std::vector<UCHAR>
 	{
 		ULONG publickey_size;
