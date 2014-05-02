@@ -6,6 +6,7 @@ struct app_config
 	short port;
 	wstring username;
 	wstring password;
+	vector<byte> serverpk;
 
 	void load_from_file(string filename);
 };

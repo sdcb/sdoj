@@ -15,4 +15,6 @@ void app_config::load_from_file(string filename)
 	port = config.get<short>(L"port");
 	username = config.get<wstring>(L"username");
 	password = config.get<wstring>(L"password");
+	auto pk_string = config.get<wstring>(L"serverPublicKey");
+	serverpk = utility::conversions::from_base64(pk_string);
 }

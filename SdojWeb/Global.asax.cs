@@ -106,7 +106,16 @@ namespace SdojWeb
             get
             {
                 var settingString = ConfigurationManager.AppSettings["DefaultPageSize"];
-                return settingString == null ? 20 : int.Parse(settingString);
+                return int.Parse(settingString);
+            }
+        }
+
+        public static string PrivateKey
+        {
+            get
+            {
+                var settingString = ConfigurationManager.AppSettings["PrivateKey"];
+                return settingString;
             }
         }
     }
