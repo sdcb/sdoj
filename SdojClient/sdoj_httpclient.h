@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cpprest\http_client.h>
+#include "app_config.h"
 
 class sdoj_httpclient : public MicrosoftAspNetSignalRClientCpp::IHttpClient
 {
 public:
-	sdoj_httpclient();
+	sdoj_httpclient(shared_ptr<app_config> appconfig);
 	~sdoj_httpclient();
 
 	void Initialize(utility::string_t uri);
@@ -15,4 +15,5 @@ public:
 
 private:
 	std::unique_ptr<web::http::client::http_client> pClient;
+	shared_ptr<app_config> config;
 };

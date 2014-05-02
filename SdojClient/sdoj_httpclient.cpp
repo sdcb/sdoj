@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "sdoj_httpclient.h"
+#include "app_config.h"
+#include "winencrypt.h"
 
 using namespace std;
 using namespace pplx;
@@ -8,7 +10,7 @@ using namespace web::http;
 using namespace web::http::client;
 using namespace MicrosoftAspNetSignalRClientCpp;
 
-sdoj_httpclient::sdoj_httpclient()
+sdoj_httpclient::sdoj_httpclient(shared_ptr<app_config> appconfig) :config(appconfig)
 {
 }
 

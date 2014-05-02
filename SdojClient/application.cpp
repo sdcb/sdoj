@@ -6,7 +6,8 @@ namespace signalr = MicrosoftAspNetSignalRClientCpp;
 
 void application::run()
 {
-	config.load_from_file("config.xml");
-	connection = make_shared<signalr::Connection>(config.server, L"", signalr::All);
-	connection->Start(make_shared<sdoj_httpclient>()).get();
+	config = make_shared<app_config>();
+	config->load_from_file("config.xml");
+	connection = make_shared<signalr::Connection>(config->server, L"", signalr::All);
+	connection->Start(make_shared<sdoj_httpclient>(config)).get();
 }

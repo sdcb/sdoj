@@ -1,6 +1,6 @@
 #pragma once
 
-struct app_config
+struct app_config : public std::enable_shared_from_this<app_config>
 {
 	wstring server;
 	wstring username;

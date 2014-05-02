@@ -3,7 +3,7 @@
 
 struct application
 {
-	app_config config;
+	shared_ptr<app_config> config;
 	shared_ptr<MicrosoftAspNetSignalRClientCpp::Connection> connection;
 
 	void run();
