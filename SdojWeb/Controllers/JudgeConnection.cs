@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -21,30 +22,48 @@ namespace SdojWeb.Controllers
 
         private static readonly AutoResetEvent RunOnce = new AutoResetEvent(true);
 
-        public static ConcurrentDictionary<int, ConcurrentQueue<string>> ConnectedUsers { get; set; }
+        public static ConcurrentDictionary<int, List<string>> ConnectedUsers { get; set; }
 
         protected override Task OnConnected(IRequest request, string connectionId)
         {
             if (RunOnce.WaitOne(0))
             {
-                ConnectedUsers = new ConcurrentDictionary<int, ConcurrentQueue<string>>();
-                //Task.Run(() =>
-                //{
-                //    while (true)
-                //    {
-                //        Connection.Broadcast(DateTime.Now.ToString("O"));
-                //        Thread.Sleep(500);
-                //    }
-                //});
+                ConnectedUsers = new ConcurrentDictionary<int, List<string>>();
             }
-            return Connection.Send(connectionId, "Welcome!");
+            var user = request.Environment["User"] as ApplicationUser;
+            if (user != null)
+            {
+                var bag = ConnectedUsers.GetOrAdd(user.Id, id => new List<string>());
+                bag.Add(connectionId);
+            }
+            return Connection.Send(connectionId, "Hello");
+        }
+
+        protected override Task OnDisconnected(IRequest request, string connectionId)
+        {
+            var user = request.Environment["User"] as ApplicationUser;
+            if (user != null)
+            {
+                var bag = ConnectedUsers.GetOrAdd(user.Id, id => new List<string>());
+                bag.Remove(connectionId);
+            }
+            return base.OnDisconnected(request, connectionId);
+        }
+
+        protected override Task OnReceived(IRequest request, string connectionId, string data)
+        {
+            return Connection.Broadcast(data);
         }
 
         protected override bool AuthorizeRequest(IRequest request)
         {
             var httpMethod = (string)request.Environment["owin.RequestMethod"];
             if (httpMethod == "POST")
-                return false;
+            {
+                // 只允许客户端连接，但禁止客户端发消息；
+                // 因为SignalR消息使用了同步机制，会转发到所有网站实例上。
+                return request.Headers["Private-Key"] == AppSettings.PrivateKey;
+            }
 
             var clientPublicKey = Convert.FromBase64String(request.Headers["Public-Key"]);
             var clientIv = Convert.FromBase64String(request.Headers["IV"]);
@@ -63,20 +82,16 @@ namespace SdojWeb.Controllers
                     var plaintext = Encoding.Unicode.GetString(plainbytes);
                     var loginModel = JsonSerializer.Parse<LoginViewModel>(plaintext);
                     var user = UserManager.Find(loginModel.Email, loginModel.Password);
-                    return user != null && user.EmailConfirmed;
+
+                    if (user != null && user.EmailConfirmed)
+                    {
+                        request.Environment.Add("User", user);
+                        return true;
+                    }
                 }
             }
-        }
 
-        protected override Task OnDisconnected(IRequest request, string connectionId)
-        {
-            return base.OnDisconnected(request, connectionId);
-        }
-
-        protected override Task OnReceived(IRequest request, string connectionId, string data)
-        {
-            return Connection.Broadcast(data);
-            
+            return false;
         }
     }
 }
