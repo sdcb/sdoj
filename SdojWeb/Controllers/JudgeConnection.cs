@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Security.Claims;
+using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.ClientServices;
 using System.Web.Mvc;
-using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Json;
-using Microsoft.Owin.Security;
 using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
@@ -24,24 +21,31 @@ namespace SdojWeb.Controllers
 
         private static readonly AutoResetEvent RunOnce = new AutoResetEvent(true);
 
+        public static ConcurrentDictionary<int, ConcurrentQueue<string>> ConnectedUsers { get; set; }
+
         protected override Task OnConnected(IRequest request, string connectionId)
         {
             if (RunOnce.WaitOne(0))
             {
-                Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        Connection.Broadcast(DateTime.Now.ToString("O"));
-                        Thread.Sleep(500);
-                    }
-                });
+                ConnectedUsers = new ConcurrentDictionary<int, ConcurrentQueue<string>>();
+                //Task.Run(() =>
+                //{
+                //    while (true)
+                //    {
+                //        Connection.Broadcast(DateTime.Now.ToString("O"));
+                //        Thread.Sleep(500);
+                //    }
+                //});
             }
             return Connection.Send(connectionId, "Welcome!");
         }
 
         protected override bool AuthorizeRequest(IRequest request)
         {
+            var httpMethod = (string)request.Environment["owin.RequestMethod"];
+            if (httpMethod == "POST")
+                return false;
+
             var clientPublicKey = Convert.FromBase64String(request.Headers["Public-Key"]);
             var clientIv = Convert.FromBase64String(request.Headers["IV"]);
             var securityToken = Convert.FromBase64String(request.Headers["Security-Token"]);
@@ -72,6 +76,7 @@ namespace SdojWeb.Controllers
         protected override Task OnReceived(IRequest request, string connectionId, string data)
         {
             return Connection.Broadcast(data);
+            
         }
     }
 }

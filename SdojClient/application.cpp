@@ -8,14 +8,10 @@ void application::run()
 {
 	config = app_config::from_file("config.xml");
 	connection = make_shared<signalr::Connection>(config->server);
-	connection->Start(make_shared<sdoj_httpclient>(config)).get();
 	connection->SetReceivedCallback([](wstring s){
 		wcout << s << endl;
 	});
-	while (true)
-	{
-		Sleep(5000);
-		connection->Send(L"Life is good!");
-	}
+	connection->Start(make_shared<sdoj_httpclient>(config)).get();
+	
 	getchar();
 }
