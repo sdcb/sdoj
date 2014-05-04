@@ -133,13 +133,20 @@ namespace wincrypt
 
 		wstring hash_name_string = hash_name;
 
-		BCryptBufferDesc params;
-		params.ulVersion = BCRYPTBUFFER_VERSION;
-		params.cBuffers = 1;
-		params.pBuffers = new BCryptBuffer[params.cBuffers];
-		params.pBuffers[0].cbBuffer = (unsigned)hash_name_string.size()*2+2;
-		params.pBuffers[0].BufferType = KDF_HASH_ALGORITHM;
-		params.pBuffers[0].pvBuffer = &hash_name_string[0];
+		BCryptBuffer bcrypt_buffers[] = 
+		{
+			{ 
+				hash_name_string.size() * 2 + 2, 
+				KDF_HASH_ALGORITHM,  
+				&hash_name_string[0], 
+			}
+		};
+		BCryptBufferDesc params = 
+		{
+			BCRYPTBUFFER_VERSION, 
+			_countof(bcrypt_buffers), 
+			bcrypt_buffers, 
+		};
 
 		ULONG derivedkey_size;
 		check(BCryptDeriveKey(
