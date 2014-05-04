@@ -76,12 +76,13 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var question = Mapper.Map<Solution>(model);
-                _dbContext.Solutions.Add(question);
+                var solution = Mapper.Map<Solution>(model);
+                _dbContext.Solutions.Add(solution);
                 await _dbContext.SaveChangesAsync();
 
                 var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
-                await signalr.Groups.Send(User.Identity.GetUserName(), null);
+                //await signalr.Groups.Send(User.Identity.GetUserName(), solution);
+                await signalr.Connection.Broadcast(solution);
 
                 return RedirectToAction("Index");
             }
