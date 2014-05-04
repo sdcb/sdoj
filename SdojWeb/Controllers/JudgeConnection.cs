@@ -20,21 +20,12 @@ namespace SdojWeb.Controllers
             get { return DependencyResolver.Current.GetService<ApplicationUserManager>(); }
         }
 
-        private static readonly AutoResetEvent RunOnce = new AutoResetEvent(true);
-
-        public static ConcurrentDictionary<int, List<string>> ConnectedUsers { get; set; }
-
         protected override Task OnConnected(IRequest request, string connectionId)
         {
-            if (RunOnce.WaitOne(0))
-            {
-                ConnectedUsers = new ConcurrentDictionary<int, List<string>>();
-            }
             var user = request.Environment["User"] as ApplicationUser;
             if (user != null)
             {
-                var bag = ConnectedUsers.GetOrAdd(user.Id, id => new List<string>());
-                bag.Add(connectionId);
+                Groups.Add(connectionId, user.UserName);
             }
             return Connection.Send(connectionId, "Hello");
         }
@@ -44,8 +35,7 @@ namespace SdojWeb.Controllers
             var user = request.Environment["User"] as ApplicationUser;
             if (user != null)
             {
-                var bag = ConnectedUsers.GetOrAdd(user.Id, id => new List<string>());
-                bag.Remove(connectionId);
+                Groups.Remove(connectionId, user.UserName);
             }
             return base.OnDisconnected(request, connectionId);
         }

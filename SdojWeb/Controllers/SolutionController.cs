@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
 using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
@@ -74,11 +76,13 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                
                 var question = Mapper.Map<Solution>(model);
-                
                 _dbContext.Solutions.Add(question);
                 await _dbContext.SaveChangesAsync();
+
+                var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
+                await signalr.Groups.Send(User.Identity.GetUserName(), null);
+
                 return RedirectToAction("Index");
             }
 
