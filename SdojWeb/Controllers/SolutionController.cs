@@ -81,8 +81,7 @@ namespace SdojWeb.Controllers
                 await _dbContext.SaveChangesAsync();
 
                 var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
-                //await signalr.Groups.Send(User.Identity.GetUserName(), solution);
-                await signalr.Connection.Broadcast(solution);
+                await signalr.Groups.Send(User.Identity.GetUserName(), solution);
 
                 return RedirectToAction("Index");
             }

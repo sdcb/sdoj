@@ -50,9 +50,10 @@ namespace SdojWeb.Controllers
             var httpMethod = (string)request.Environment["owin.RequestMethod"];
             if (httpMethod == "POST")
             {
-                // 只允许客户端连接，但禁止客户端发消息；
-                // 因为SignalR消息使用了同步机制，会转发到所有网站实例上。
-                return request.Headers["Private-Key"] == AppSettings.PrivateKey;
+                // 只允许客户端连接，不允许禁止客户端发消息；
+                // 因为SignalR消息使用了同步机制，会转发到所有网站实例上；
+                // 在此情形中，不需要客户端消息同步，只需要服务端推送同步。
+                return false;
             }
 
             var clientPublicKey = Convert.FromBase64String(request.Headers["Public-Key"]);
