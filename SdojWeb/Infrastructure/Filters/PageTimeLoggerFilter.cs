@@ -7,13 +7,13 @@ namespace SdojWeb.Infrastructure.Filters
 {
     public class PageTimeLoggerFilter : ActionFilterAttribute
     {
-        private Stopwatch _Stopwatch { get; set; }
+        private Stopwatch Stopwatch { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            _Stopwatch = new Stopwatch();
-            _Stopwatch.Start();
-            filterContext.Controller.ViewData["_Stopwatch"] = _Stopwatch;
+            Stopwatch = new Stopwatch();
+            Stopwatch.Start();
+            filterContext.Controller.ViewData["_Stopwatch"] = Stopwatch;
             base.OnActionExecuting(filterContext);
         }
     }
