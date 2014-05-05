@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Web;
 using System.Web.Mvc;
-using SdojWeb.Infrastructure.Tasks;
 
 namespace SdojWeb.Infrastructure.Filters
 {
