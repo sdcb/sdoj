@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
+using AutoMapper;
 using PagedList;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
@@ -60,18 +61,17 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost, SdojAuthorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionCreateModel createModel)
         {
             if (ModelState.IsValid)
             {
-                question.CreateUserId = User.Identity.GetIntUserId();
-                question.CreateTime = DateTime.Now;
+                var question = Mapper.Map<Question>(createModel);
                 _dbContext.Questions.Add(question);
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(question).WithError("ModelState构造失败");
+            return View(createModel).WithError("ModelState构造失败");
         }
 
         // GET: Questions/Edit/5
