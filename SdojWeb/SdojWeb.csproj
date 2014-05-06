@@ -236,6 +236,8 @@
     <Compile Include="Infrastructure\Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\Alerts\AlertExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\LinkExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\LinqExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
     <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />

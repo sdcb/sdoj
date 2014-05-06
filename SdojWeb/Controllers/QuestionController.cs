@@ -7,6 +7,7 @@ using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using PagedList;
+using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
@@ -26,31 +27,9 @@ namespace SdojWeb.Controllers
         // GET: Questions
         public ActionResult Index(int? page, string orderBy, bool? asc)
         {
-            page = page ?? 1;
-            orderBy = orderBy ?? "Id";
-            asc = asc ?? true;
-
             var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>();
-
-            if (orderBy == "Id" && asc.Value)
-            {
-                models = models.OrderBy(x => x.Id);
-            }
-            else if (orderBy == "Id" && !asc.Value)
-            {
-                models = models.OrderByDescending(x => x.Id);
-            }
-            else if (orderBy == "CreateTime" && asc.Value)
-            {
-                models = models.OrderBy(x => x.CreateTime);
-            }
-            else if (orderBy == "CreateTime" && !asc.Value)
-            {
-                models = models.OrderByDescending(x => x.CreateTime);
-            }
-
-            var pagedList = models.ToPagedList(page.Value, AppSettings.DefaultPageSize);
-            return View(pagedList);
+            var orderedPagedList = models.ToSortedPagedList(page, orderBy, asc);
+            return View(orderedPagedList);
         }
 
         // GET: Questions/Details/5
