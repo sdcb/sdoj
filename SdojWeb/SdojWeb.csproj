@@ -235,6 +235,7 @@
     <Compile Include="Infrastructure\Alerts\Alert.cs" />
     <Compile Include="Infrastructure\Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\Alerts\AlertExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\LinkExtensions.cs" />
     <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
@@ -366,6 +367,7 @@
     <Content Include="Views\Identity\Users.cshtml" />
     <Content Include="Views\Identity\Edit.cshtml" />
     <Content Include="Views\Identity\Roles.cshtml" />
+    <Content Include="Views\Question\_List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

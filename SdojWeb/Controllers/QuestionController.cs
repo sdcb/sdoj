@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
@@ -23,13 +24,33 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string orderBy, bool? asc)
         {
             page = page ?? 1;
-            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>()
-                .OrderBy(q => q.Id)
-                .ToPagedList(page.Value, AppSettings.DefaultPageSize);
-            return View(models);
+            orderBy = orderBy ?? "Id";
+            asc = asc ?? true;
+
+            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>();
+
+            if (orderBy == "Id" && asc.Value)
+            {
+                models = models.OrderBy(x => x.Id);
+            }
+            else if (orderBy == "Id" && !asc.Value)
+            {
+                models = models.OrderByDescending(x => x.Id);
+            }
+            else if (orderBy == "CreateTime" && asc.Value)
+            {
+                models = models.OrderBy(x => x.CreateTime);
+            }
+            else if (orderBy == "CreateTime" && !asc.Value)
+            {
+                models = models.OrderByDescending(x => x.CreateTime);
+            }
+
+            var pagedList = models.ToPagedList(page.Value, AppSettings.DefaultPageSize);
+            return View(pagedList);
         }
 
         // GET: Questions/Details/5
@@ -92,7 +113,7 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
             }
-            
+
             return View(question);
         }
 
@@ -132,7 +153,7 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
             }
-            
+
             return View(question);
         }
 
