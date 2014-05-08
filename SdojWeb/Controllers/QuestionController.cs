@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
+using AutoMapper;
 using PagedList;
+using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
@@ -22,13 +25,11 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string orderBy, bool? asc)
         {
-            page = page ?? 1;
-            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>()
-                .OrderBy(q => q.Id)
-                .ToPagedList(page.Value, AppSettings.DefaultPageSize);
-            return View(models);
+            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>();
+            var orderedPagedList = models.ToSortedPagedList(page, orderBy, asc);
+            return View(orderedPagedList);
         }
 
         // GET: Questions/Details/5
@@ -60,18 +61,17 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost, SdojAuthorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionCreateModel createModel)
         {
             if (ModelState.IsValid)
             {
-                question.CreateUserId = User.Identity.GetIntUserId();
-                question.CreateTime = DateTime.Now;
+                var question = Mapper.Map<Question>(createModel);
                 _dbContext.Questions.Add(question);
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(question).WithError("ModelState构造失败");
+            return View(createModel).WithError("ModelState构造失败");
         }
 
         // GET: Questions/Edit/5
@@ -92,7 +92,7 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
             }
-            
+
             return View(question);
         }
 
@@ -132,7 +132,7 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
             }
-            
+
             return View(question);
         }
 
