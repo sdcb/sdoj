@@ -13,6 +13,9 @@ namespace SdojWeb.Models
         [Display(Name="用户名")]
         public string UserName { get; set; }
 
+        [Display(Name = "邮件验证")]
+        public bool EmailConfirmed { get; set; }
+
         [Display(Name="角色")]
         public ICollection<ApplicationRole> Roles { get; set; }
 

@@ -15,6 +15,9 @@
             @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Roles)
         </th>
     </tr>
@@ -26,6 +29,9 @@
             </td>
             <td>
                 @Html.DisplayFor(item => user.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => user.EmailConfirmed)
             </td>
             <td>
                 @String.Join(",", user.Roles.Select(x => x.Name))
