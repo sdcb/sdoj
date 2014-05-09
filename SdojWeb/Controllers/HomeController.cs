@@ -24,6 +24,11 @@ namespace SdojWeb.Controllers
             return Content(Value.ToString());
         }
 
+        public ActionResult Chat()
+        {
+            return View();
+        }
+
         public static int Value { get; set; }
     }
 }

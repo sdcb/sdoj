@@ -16,6 +16,7 @@ namespace SdojWeb
             //var connection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             //GlobalHost.DependencyResolver.UseSqlServer(connection);
             app.MapSignalR<JudgeConnection>("/SignalR/Judge");
+            app.MapSignalR();
         }
     }
 }
