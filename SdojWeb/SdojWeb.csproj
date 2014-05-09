@@ -272,6 +272,7 @@
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
+    <Compile Include="Models\JudgeModel.cs" />
     <Compile Include="Models\QuestionDataModel.cs" />
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />

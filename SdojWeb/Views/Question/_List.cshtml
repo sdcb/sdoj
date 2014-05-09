@@ -8,12 +8,10 @@
 <table class="table">
     <tr>
         <th>
-            
-            @*@Html.ActionLink((asc?"↓":"↑") + Html.DisplayNameFor(model => model.Id), "Index", new { OrderBy="Id", Asc = !asc })*@
             @Html.SortableHeaderFor(model => model.Id, "Index", orderBy, asc)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.SortableHeaderFor(model => model.Name, "Index", orderBy, asc)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.MemoryLimitMb)
@@ -22,7 +20,7 @@
             @Html.DisplayNameFor(model => model.TimeLimit)
         </th>
         <th>
-            @Html.SortableHeaderFor(model => model.CreateTime, "Index", orderBy, asc)
+            @Html.SortableHeaderFor(model => model.UpdateTime, "Index", orderBy, asc)
         </th>
         <th></th>
     </tr>
@@ -43,7 +41,7 @@
                 @Html.DisplayFor(modelItem => item.TimeLimit)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreateTime)
+                @Html.DisplayFor(modelItem => item.UpdateTime)
             </td>
             <td>
                 @Html.ActionLink("测试数据", "ListForQuestion", "QuestionData", new { id = item.Id }, null) |

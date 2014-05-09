@@ -1,12 +1,9 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
-using PagedList;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
@@ -76,12 +73,8 @@ namespace SdojWeb.Controllers
 
         // GET: Questions/Edit/5
         [SdojAuthorize]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var question = await _dbContext.Questions.FindAsync(id);
             if (question == null)
             {
@@ -93,7 +86,8 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
             }
 
-            return View(question);
+            var model = Mapper.Map<QuestionEditModel>(question);
+            return View(model);
         }
 
         // POST: Questions/Edit/5
@@ -101,22 +95,27 @@ namespace SdojWeb.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost, SdojAuthorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] Question question)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionEditModel model)
         {
             if (ModelState.IsValid)
             {
-                var owner = _dbContext.Questions.Where(x => x.Id == question.Id).Select(x => x.CreateUserId).FirstOrDefault();
-                if (!User.IsUserOrAdmin(owner))
+                var secretModel = await _dbContext.Questions.Where(x => x.Id == model.Id)
+                            .Project()
+                            .To<QuestionNotMappedEditModel>()
+                            .FirstOrDefaultAsync();
+                if (!User.IsUserOrAdmin(secretModel.CreateUserId))
                 {
                     return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
                 }
-                question.CreateTime = DateTime.Now;
-                question.CreateUserId = User.Identity.GetIntUserId();
+                var question = new Question();
+                Mapper.Map(model, question);
+                Mapper.Map(secretModel, question);
+
                 _dbContext.Entry(question).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(question);
+            return View(model);
         }
 
         // GET: Questions/Delete/5
