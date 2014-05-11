@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
@@ -44,6 +45,8 @@ namespace SdojWeb.Models
 
         [Display(Name = "更新时间"), HiddenInput, Index]
         public DateTime UpdateTime { get; set; }
+
+        public ICollection<QuestionData> Datas { get; set; }
     }
 
     public class QuestionCreateModel : IHaveCustomMapping
