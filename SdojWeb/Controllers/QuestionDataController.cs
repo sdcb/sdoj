@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using SdojWeb.Infrastructure.Alerts;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
@@ -140,6 +141,13 @@ namespace SdojWeb.Controllers
 
             return RedirectToAction("ListForQuestion", new { id = questionId })
                 .WithSuccess("Id为{0}的测试数据删除成功。", id);
+        }
+
+        // GET: /QuestionData/Fetch?id=1,2,3,4,5
+        [JudgeClientAuthorize]
+        public ActionResult Fetch()
+        {
+            return Content("not implemented.");
         }
     }
 }

@@ -240,6 +240,7 @@
     <Compile Include="Infrastructure\Extensions\LinqExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
     <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
+    <Compile Include="Infrastructure\Identity\JudgeClientAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
