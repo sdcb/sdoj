@@ -19,6 +19,9 @@
     <Filter Include="sdoj_httpclient">
       <UniqueIdentifier>{e33bebb0-b67f-4802-9a49-0386bbb32079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{f11a94a2-5ff2-4671-813e-b1ff11be40e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
