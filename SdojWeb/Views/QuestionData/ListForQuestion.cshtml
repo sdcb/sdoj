@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SdojWeb.Models.QuestionDataSummaryModel>
+
+@{
+    int? questionId = ViewBag.QuestionId;
+    ViewBag.Title = "测试数据";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("新增测试数据", "CreateForQuestion", new {id=questionId})
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InputLength)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OutputLength)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateTime)
+        </th>
+        <th></th>
+    </tr>
+    
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.ActionLink(item.QuestionName, "Details", "Question", new {id = item.QuestionId}, null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InputLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OutputLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateTime)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new {id=item.Id,questionId=item.QuestionId}) |
+                @Html.ActionLink("删除", "Delete", new { id = item.Id, questionId = item.QuestionId })
+            </td>
+        </tr>
+    }
+    
+</table>
+
+@Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null)

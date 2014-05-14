@@ -1,0 +1,53 @@
+﻿@using SdojWeb.Infrastructure.Extensions
+@model IEnumerable<SdojWeb.Models.QuestionSummaryViewModel>  
+@{
+    var orderBy = Request.Params["orderby"] ?? "Id";
+    var asc = Convert.ToBoolean(Request.Params["asc"] ?? "true");
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.SortableHeaderFor(model => model.Id, "Index", orderBy, asc)
+        </th>
+        <th>
+            @Html.SortableHeaderFor(model => model.Name, "Index", orderBy, asc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MemoryLimitMb)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeLimit)
+        </th>
+        <th>
+            @Html.SortableHeaderFor(model => model.UpdateTime, "Index", orderBy, asc)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeLimit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateTime)
+            </td>
+            <td>
+                @Html.ActionLink("测试数据", "ListForQuestion", "QuestionData", new { id = item.Id }, null) |
+                @Html.ActionLink("编辑", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("删除", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>

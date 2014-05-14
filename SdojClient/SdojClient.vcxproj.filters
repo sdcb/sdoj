@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="app_config">
+      <UniqueIdentifier>{54293ec2-1d0f-4148-afef-10c8d6b4b8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application">
+      <UniqueIdentifier>{c4a505df-44e9-43dc-80b5-af495098a1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{a8c82322-d803-43bd-9b4f-76bde6c48a98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="signalr">
+      <UniqueIdentifier>{6276bc04-7c12-4e60-89ab-7b4b0b4fb8b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="winencrypt">
+      <UniqueIdentifier>{e2dca727-1b9f-428c-b3b0-cec79ef8ae3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdoj_httpclient">
+      <UniqueIdentifier>{e33bebb0-b67f-4802-9a49-0386bbb32079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{f11a94a2-5ff2-4671-813e-b1ff11be40e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="app_config.h">
+      <Filter>app_config</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ConnectingMessageBuffer.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\Connection.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ConnectionState.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\DefaultHttpClient.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\EventSourceStreamReader.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ExceptionHelper.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\HeartBeatMonitor.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\HttpBasedTransport.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\HttpRequestWrapper.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\IClientTransport.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\IHttpClient.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\KeepAliveData.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\LongPollingTransport.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\NegotiationResponse.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ServerSentEventsTransport.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\SseEvent.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\StateChange.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\StringHelper.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\TaskAsyncHelper.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ThreadSafeInvoker.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\timer_t.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\TraceLevels.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\TransportAbortHandler.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\TransportHelper.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\TransportInitializationHandler.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\AsyncStreamReader.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="signalr\ChunkBuffer.h">
+      <Filter>signalr</Filter>
+    </ClInclude>
+    <ClInclude Include="handle.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="sdoj_httpclient.h">
+      <Filter>sdoj_httpclient</Filter>
+    </ClInclude>
+    <ClInclude Include="winencrypt.h">
+      <Filter>winencrypt</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="app_config.cpp">
+      <Filter>app_config</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\ConnectingMessageBuffer.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\Connection.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\DefaultHttpClient.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\EventSourceStreamReader.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\ExceptionHelper.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\HeartBeatMonitor.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\HttpBasedTransport.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\HttpRequestWrapper.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\IClientTransport.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\KeepAliveData.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\LongPollingTransport.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\NegotiationResponse.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\ServerSentEventsTransport.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\SseEvent.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\StateChange.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\StringHelper.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\TaskAsyncHelper.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\ThreadSafeInvoker.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\timer_t.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\TransportAbortHandler.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\TransportHelper.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\TransportInitializationHandler.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\AsyncStreamReader.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="signalr\ChunkBuffer.cpp">
+      <Filter>signalr</Filter>
+    </ClCompile>
+    <ClCompile Include="sdoj_httpclient.cpp">
+      <Filter>sdoj_httpclient</Filter>
+    </ClCompile>
+    <ClCompile Include="winencrypt.cpp">
+      <Filter>winencrypt</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml" />
+  </ItemGroup>
+</Project>

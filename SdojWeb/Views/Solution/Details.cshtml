@@ -1,0 +1,40 @@
+﻿@model SdojWeb.Models.SolutionDetailModel
+
+@{
+    ViewBag.Title = "源代码";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>解答</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionName)
+        </dt>
+
+        <dd>
+            @Html.ActionLink(Model.QuestionName, "Details", "Question", new { id = Model.QuestionId }, null)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Language)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Language)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+
+        <dd class="well">
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("解答列表", "Index")
+</p>

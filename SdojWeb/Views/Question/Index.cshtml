@@ -1,0 +1,23 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using SdojWeb.Models
+@model IPagedList<QuestionSummaryViewModel>
+
+@{
+    ViewBag.Title = "题目列表";
+    var orderBy = Request.Params["orderby"] ?? "Id";
+    var asc = Convert.ToBoolean(Request.Params["asc"]??"true");
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("创建题目", "Create")
+</p>
+
+
+@Html.Partial("_List")
+
+<br/>
+<p>第 @Model.PageNumber 页，共 @Model.PageCount 页 </p>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))

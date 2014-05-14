@@ -1,0 +1,46 @@
+﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
+
+@{
+    ViewBag.Title = "用户管理";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Roles)
+        </th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => user.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => user.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => user.EmailConfirmed)
+            </td>
+            <td>
+                @String.Join(",", user.Roles.Select(x => x.Name))
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new {id=user.Id})
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("角色管理", "Roles")

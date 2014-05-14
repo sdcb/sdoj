@@ -1,0 +1,99 @@
+﻿@using Microsoft.Ajax.Utilities
+@using PagedList
+@using PagedList.Mvc
+@using SdojWeb.Models
+@model IEnumerable<SolutionSummaryModel>
+
+@{
+    ViewBag.Title = "解答列表";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (ViewBag.OnlyMe)
+    {
+        @Html.ActionLink("查看所有解答", "Index", new {onlyme=false})
+    }
+    else
+    {
+        @Html.ActionLink("仅看我的解答", "Index", new {onlyme=true})
+    }
+    
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateUserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Language)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceLength)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RunTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UsingMemoryMb)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubmitTime)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateUserName)
+        </td>
+        <td>
+            @Html.ActionLink(item.QuestionName, "Details", "Question", new {id=item.QuestionId}, null)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Language)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SourceLength)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RunTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UsingMemoryMb)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubmitTime)
+        </td>
+        <td>
+            @Html.ActionLink("源代码", "Details", new { id = item.Id })
+            @Html.Raw(" | ")
+            @Html.ActionLink("删除", "Delete", new { id = item.Id })
+        </td>
+    </tr>
+}
+</table>
+
+<div>
+    @{var pagedList = Model as IPagedList<SolutionSummaryModel>;}
+    第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
+    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+</div>
