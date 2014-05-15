@@ -14,7 +14,7 @@ using namespace wincrypt;
 sdoj_httpclient::sdoj_httpclient(shared_ptr<app_config> appconfig) :config(appconfig)
 {
 	// create public key for server recognize.
-	auto p = open_provider(BCRYPT_ECDH_P521_ALGORITHM);
+	auto p = open_provider(BCRYPT_ECDH_P256_ALGORITHM);
 	auto fk = create_asymmetric_key(p);
 	auto pk_bytes = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
 	public_key = utility::conversions::to_base64(pk_bytes);

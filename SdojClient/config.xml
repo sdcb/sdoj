@@ -3,5 +3,5 @@
   <server>http://localhost:54130/signalr/judge</server>
   <username>flysha@live.com</username>
   <password>config</password>
-  <serverPublicKey>RUNLNUIAAAAAEjBYYkL561cwNz2QN448C/ur/mjmOzAhV5U6LCPUkXQ2PDusxYODCPir/38l7tu/bxODa7hMNSYaT9/eLqbn5yEBgwcMwE+oxp8t3U2wFr+PGrpbckaVfMwiqrsBWltS9j7gHoXV0aNBB5sW8Gezt43ZasdayCRzFqtFSzgEILuheMo=</serverPublicKey>
+  <serverPublicKey>RUNLMSAAAAADrSJQehRH8pqzg08f6JLtvYPjBX9VBnsYQ6D2lqfwxODB/TWGpEzdbkGoyD+7WCkt327hHUx53YDyUcxlrB4F</serverPublicKey>
 </config>
