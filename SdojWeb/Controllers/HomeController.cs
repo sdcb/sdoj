@@ -11,24 +11,5 @@ namespace SdojWeb.Controllers
         {
             return View();
         }
-
-        public ActionResult Test()
-        {
-            var pid = Process.GetCurrentProcess().Id;
-            return Content(pid.ToString());
-        }
-
-        public ActionResult Add()
-        {
-            ++Value;
-            return Content(Value.ToString());
-        }
-
-        public ActionResult Chat()
-        {
-            return View();
-        }
-
-        public static int Value { get; set; }
     }
 }
