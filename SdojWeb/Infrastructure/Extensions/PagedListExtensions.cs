@@ -13,8 +13,8 @@ namespace SdojWeb.Infrastructure.Extensions
 
             var orderByString = string.Format("{0} {1}", orderBy, asc.Value ? "asc" : "desc");
             var ordered = models.OrderBy(orderByString);
-            var pagedList = ordered.ToPagedList(page.Value, AppSettings.DefaultPageSize);
-            return pagedList;
+            var sortablePagedList = new SortablePagedList<TModel>(ordered, page.Value, AppSettings.DefaultPageSize);
+            return sortablePagedList;
         }
     }
 }

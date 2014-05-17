@@ -1,8 +1,10 @@
 ﻿@using SdojWeb.Infrastructure.Extensions
-@model IEnumerable<SdojWeb.Models.QuestionSummaryViewModel>  
+@using SdojWeb.Models
+@model IEnumerable<QuestionSummaryViewModel>  
 @{
-    var orderBy = Request.Params["orderby"] ?? "Id";
-    var asc = Convert.ToBoolean(Request.Params["asc"] ?? "true");
+    var sortablePagedList = Model as SortablePagedList<QuestionSummaryViewModel>;
+    var orderBy = sortablePagedList.OrderBy;
+    var asc = sortablePagedList.Asc;
 }
 
 <table class="table">

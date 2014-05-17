@@ -239,6 +239,7 @@
     <Compile Include="Infrastructure\Extensions\LinkExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\LinqExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\SortablePagedList.cs" />
     <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
     <Compile Include="Infrastructure\Identity\JudgeClientAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />

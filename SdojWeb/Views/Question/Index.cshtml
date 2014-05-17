@@ -1,12 +1,14 @@
 ﻿@using PagedList
 @using PagedList.Mvc
+@using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
 @model IPagedList<QuestionSummaryViewModel>
 
 @{
     ViewBag.Title = "题目列表";
-    var orderBy = Request.Params["orderby"] ?? "Id";
-    var asc = Convert.ToBoolean(Request.Params["asc"]??"true");
+    var sortablePagedList = Model as SortablePagedList<QuestionSummaryViewModel>;
+    var orderBy = sortablePagedList.OrderBy;
+    var asc = sortablePagedList.Asc;
 }
 
 <h2>@ViewBag.Title</h2>
