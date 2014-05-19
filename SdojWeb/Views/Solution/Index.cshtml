@@ -1,5 +1,4 @@
-﻿@using Microsoft.Ajax.Utilities
-@using PagedList
+﻿@using PagedList
 @using PagedList.Mvc
 @using SdojWeb.Models
 @model IEnumerable<SolutionSummaryModel>
@@ -84,9 +83,8 @@
             @Html.DisplayFor(modelItem => item.SubmitTime)
         </td>
         <td>
-            @Html.ActionLink("源代码", "Details", new { id = item.Id })
-            @Html.Raw(" | ")
-            @Html.ActionLink("删除", "Delete", new { id = item.Id })
+            <a href="@Url.Action("Details", new {id=item.Id})" title="源代码" class="glyphicon glyphicon-file"></a>
+            <a href="@Url.Action("Delete", new {id=item.Id})" title="删除" class="glyphicon glyphicon-remove text-danger"></a>
         </td>
     </tr>
 }

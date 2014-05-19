@@ -46,9 +46,9 @@
                 @Html.DisplayFor(modelItem => item.UpdateTime)
             </td>
             <td>
-                @Html.ActionLink("测试数据", "ListForQuestion", "QuestionData", new { id = item.Id }, null) |
-                @Html.ActionLink("编辑", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("删除", "Delete", new { id = item.Id })
+                <a href="@Url.Action("Edit", new {id=item.Id})" title="编辑" class="glyphicon glyphicon-pencil"></a>
+                <a href="@Url.Action("ListForQuestion", "QuestionData", new {id=item.Id})" title="测试数据" class="glyphicon glyphicon-file"></a>
+                <a href="@Url.Action("Delete", new {id=item.Id})" title="删除" class="glyphicon glyphicon-remove text-danger"></a>
             </td>
         </tr>
     }

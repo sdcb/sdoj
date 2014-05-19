@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using SdojWeb.Infrastructure.Filters;
 
 namespace SdojWeb.Controllers
