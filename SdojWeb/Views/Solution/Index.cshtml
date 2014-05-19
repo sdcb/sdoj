@@ -11,15 +11,9 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    if (ViewBag.OnlyMe)
-    {
-        @Html.ActionLink("查看所有解答", "Index", new {onlyme=false})
-    }
-    else
-    {
-        @Html.ActionLink("仅看我的解答", "Index", new {onlyme=true})
-    }
-    
+    @(ViewBag.OnlyMe ? 
+        Html.ActionLink("查看所有解答", "Index", new {onlyme = false}) : 
+        Html.ActionLink("仅看我的解答", "Index", new {onlyme = true}))
 }
 <table class="table">
     <tr>
