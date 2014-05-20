@@ -50,7 +50,7 @@ void sdoj_httpclient::Login()
 	auto encrypted = encrypt(aes_key, plaintext, iv, BCRYPT_BLOCK_PADDING);
 	auto encrypted_str = utility::conversions::to_base64(encrypted);
 
-	// 组装HTTP请求。
+	// 组装HTTP请求Body。
 	json::value v;
 	v[L"iv"] = json::value(ivstr);
 	v[L"publicKey"] = json::value(public_key);
@@ -58,16 +58,13 @@ void sdoj_httpclient::Login()
 	http_request request{ methods::POST };
 	request.set_body(v);
 
-	client = make_unique<http_client>(config->login_url);
-	try
-	{
-		auto response = client->request(request).get();
-	}
-	catch (std::exception e)
-	{
-		auto exce = e.what();
-	}
+	// 配置HTTP请求参数。
+	http_client_config configuration = http_client_config();
+	configuration.set_timeout(utility::seconds(30));
+	client = make_unique<http_client>(config->login_url, configuration);
 
+	auto response = client->request(request).get();
+	auto token = response.headers()[L"Security-Token"];
 }
 
 void sdoj_httpclient::prepare_headers(http_request & request)

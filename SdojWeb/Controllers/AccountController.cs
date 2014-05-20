@@ -110,15 +110,17 @@ namespace SdojWeb.Controllers
                                 rng.GetBytes(clientIvBytes);
                             }
                             var userIdBytes = BitConverter.GetBytes(user.Id);
-                            byte[] clientSecurityTokenBytes;
+                            byte[] cipherUserId;
                             using (var encryptor = aes.CreateEncryptor(AppSettings.ClientKey, clientIvBytes))
                             {
-                                clientSecurityTokenBytes = encryptor.TransformFinalBlock(userIdBytes, 0, userIdBytes.Length);
+                                cipherUserId = encryptor.TransformFinalBlock(userIdBytes, 0, userIdBytes.Length);
                             }
+
+                            var clientSecurityTokenBytes = new Byte[clientIvBytes.Length + cipherUserId.Length];
+                            Buffer.BlockCopy(clientIvBytes, 0, clientSecurityTokenBytes, 0, clientIvBytes.Length);
+                            Buffer.BlockCopy(cipherUserId, 0, clientSecurityTokenBytes, clientIvBytes.Length, cipherUserId.Length);
                             var clientSecurityToken = Convert.ToBase64String(clientSecurityTokenBytes);
-                            var clientIv = Convert.ToBase64String(clientIvBytes);
-                            Response.Cookies.Add(new HttpCookie("Client-IV", clientIv));
-                            Response.Cookies.Add(new HttpCookie("Client-Security-Token", clientSecurityToken));
+                            Response.Headers.Add("Security-Token", clientSecurityToken);
                         }
                     }
                 }
