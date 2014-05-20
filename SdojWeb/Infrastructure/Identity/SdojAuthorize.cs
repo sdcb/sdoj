@@ -33,6 +33,11 @@ namespace SdojWeb.Infrastructure.Identity
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
+            if (filterContext.Result is HttpUnauthorizedResult)
+            {
+                return;
+            }
+
             var msgs = new List<string>();
             if (EmailAuthorize)
                 msgs.Add("经过邮件验证");

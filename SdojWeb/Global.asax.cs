@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using StructureMap;
 using System.Web;
 using System.Web.Http;
@@ -110,12 +111,23 @@ namespace SdojWeb
             }
         }
 
-        public static string PrivateKey
+        public static byte[] PrivateKey
         {
             get
             {
                 var settingString = ConfigurationManager.AppSettings["PrivateKey"];
-                return settingString;
+                var bytes = Convert.FromBase64String(settingString);
+                return bytes;
+            }
+        }
+
+        public static byte[] ClientKey
+        {
+            get
+            {
+                var settingString = ConfigurationManager.AppSettings["ClientKey"];
+                var bytes = Convert.FromBase64String(settingString);
+                return bytes;
             }
         }
     }

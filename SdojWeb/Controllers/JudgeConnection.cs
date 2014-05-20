@@ -57,8 +57,7 @@ namespace SdojWeb.Controllers
             var clientIv = Convert.FromBase64String(request.Headers["IV"]);
             var securityToken = Convert.FromBase64String(request.Headers["Security-Token"]);
 
-            using (var ecd = new ECDiffieHellmanCng(
-                CngKey.Import(Convert.FromBase64String(AppSettings.PrivateKey), CngKeyBlobFormat.EccPrivateBlob)))
+            using (var ecd = new ECDiffieHellmanCng(CngKey.Import(AppSettings.PrivateKey, CngKeyBlobFormat.EccPrivateBlob)))
             {
                 var agreement = ecd.DeriveKeyMaterial(
                     ECDiffieHellmanCngPublicKey.FromByteArray(clientPublicKey,

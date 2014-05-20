@@ -1,10 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Security.Authentication;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using Microsoft.Web.Mvc;
@@ -66,6 +75,60 @@ namespace SdojWeb.Controllers
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
             return View(model);
+        }
+
+
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> ClientLogin(string iv, string publicKey, string cipher)
+        {
+            // 验证客户端加密的登录信息是否正确，
+            // 如果正确，则返回加密过的用来通信的Cookie。
+            try
+            {
+                var ivBytes = Convert.FromBase64String(iv);
+                var pkBytes = Convert.FromBase64String(publicKey);
+                var cipherBytes = Convert.FromBase64String(cipher);
+
+                using (var ecd = new ECDiffieHellmanCng(CngKey.Import(AppSettings.PrivateKey, CngKeyBlobFormat.EccPrivateBlob)))
+                {
+                    var agreement = ecd.DeriveKeyMaterial(
+                        ECDiffieHellmanCngPublicKey.FromByteArray(pkBytes,
+                        CngKeyBlobFormat.EccPublicBlob));
+                    var aes = new AesCryptoServiceProvider();
+                    using (var decryptor = aes.CreateDecryptor(agreement, ivBytes))
+                    {
+                        var plainbytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+                        var plaintext = Encoding.Unicode.GetString(plainbytes);
+                        var loginModel = JsonConvert.DeserializeObject<LoginViewModel>(plaintext);
+                        var user = await UserManager.FindAsync(loginModel.Email, loginModel.Password);
+
+                        if (user != null && user.EmailConfirmed)
+                        {
+                            var clientIvBytes = new byte[16];
+                            using (var rng = new RNGCryptoServiceProvider())
+                            {
+                                rng.GetBytes(clientIvBytes);
+                            }
+                            var userIdBytes = BitConverter.GetBytes(user.Id);
+                            byte[] clientSecurityTokenBytes;
+                            using (var encryptor = aes.CreateEncryptor(AppSettings.ClientKey, clientIvBytes))
+                            {
+                                clientSecurityTokenBytes = encryptor.TransformFinalBlock(userIdBytes, 0, userIdBytes.Length);
+                            }
+                            var clientSecurityToken = Convert.ToBase64String(clientSecurityTokenBytes);
+                            var clientIv = Convert.ToBase64String(clientIvBytes);
+                            Response.Cookies.Add(new HttpCookie("Client-IV", clientIv));
+                            Response.Cookies.Add(new HttpCookie("Client-Security-Token", clientSecurityToken));
+                        }
+                    }
+                }
+            }
+// ReSharper disable EmptyGeneralCatchClause
+            catch 
+// ReSharper restore EmptyGeneralCatchClause
+            {
+            }
+            return new EmptyResult();
         }
 
         //
