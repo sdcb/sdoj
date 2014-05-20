@@ -13,34 +13,36 @@ using namespace wincrypt;
 
 sdoj_httpclient::sdoj_httpclient(shared_ptr<app_config> appconfig) :config(appconfig)
 {
-	// create public key for server recognize.
-	auto p = open_provider(BCRYPT_ECDH_P256_ALGORITHM);
-	auto fk = create_asymmetric_key(p);
-	auto pk_bytes = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
-	public_key = utility::conversions::to_base64(pk_bytes);
+	
 
-	// import agreemented password from client private key + server public key.
-	auto pk = import_key(p, BCRYPT_ECCPUBLIC_BLOB, &config->serverpk[0], (unsigned)config->serverpk.size());
-	auto pwd = get_agreement(fk, pk);
-
-	// create aes encryptor and import hashed key.
-	auto aesp = open_provider(BCRYPT_AES_ALGORITHM);
-	aes_key = create_key(aesp, &pwd[0], (unsigned)pwd.size());
-
-	// create a random generator.
-	random_provider = open_provider(BCRYPT_RNG_ALGORITHM);
+	
 }
 
 sdoj_httpclient::~sdoj_httpclient()
 {
 }
 
-void sdoj_httpclient::Login()
+bool sdoj_httpclient::Login()
 {
 	// 产生初始向量。
 	vector<byte> iv(16);
+	// create a random generator.
+	auto random_provider = open_provider(BCRYPT_RNG_ALGORITHM);
 	random(random_provider, &iv[0], (unsigned)iv.size());
 	auto ivstr = utility::conversions::to_base64(iv);
+
+	// 产生AES密钥。
+	// create public key for server recognize.
+	auto p = open_provider(BCRYPT_ECDH_P256_ALGORITHM);
+	auto fk = create_asymmetric_key(p);
+	auto pk_bytes = export_key(fk, BCRYPT_ECCPUBLIC_BLOB);
+	auto public_key = utility::conversions::to_base64(pk_bytes);
+	// import agreemented password from client private key + server public key.
+	auto pk = import_key(p, BCRYPT_ECCPUBLIC_BLOB, &config->serverpk[0], (unsigned)config->serverpk.size());
+	auto pwd = get_agreement(fk, pk);
+	// create aes encryptor and import hashed key.
+	auto aesp = open_provider(BCRYPT_AES_ALGORITHM);
+	auto aes_key = create_key(aesp, &pwd[0], (unsigned)pwd.size());
 
 	// 产生加密文本。
 	json::value cipherv;
@@ -64,25 +66,14 @@ void sdoj_httpclient::Login()
 	client = make_unique<http_client>(config->login_url, configuration);
 
 	auto response = client->request(request).get();
-	auto token = response.headers()[L"Security-Token"];
+	security_token = response.headers()[L"Security-Token"];
+	return 
+		security_token.length() > 0 ? true : false;
 }
 
 void sdoj_httpclient::prepare_headers(http_request & request)
 {
-	request.headers()[L"Public-Key"] = public_key;
-
-	vector<byte> iv(16);
-	random(random_provider, &iv[0], (unsigned)iv.size());
-	auto ivstr = utility::conversions::to_base64(iv);
-	request.headers()[L"IV"] = ivstr;
-
-	json::value v;
-	v[L"Email"] = json::value{ config->username };
-	v[L"Password"] = json::value{ config->password };
-	auto plaintext = v.serialize();
-	auto encrypted = encrypt(aes_key, plaintext, iv, BCRYPT_BLOCK_PADDING);
-	auto encrypted_str = utility::conversions::to_base64(encrypted);
-	request.headers()[L"Security-Token"] = encrypted_str;
+	request.headers()[L"Security-Token"] = security_token;
 }
 
 void sdoj_httpclient::Initialize(string_t uri)

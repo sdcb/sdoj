@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Json;
 using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
@@ -19,20 +16,20 @@ namespace SdojWeb.Controllers
 
         protected override Task OnConnected(IRequest request, string connectionId)
         {
-            var user = request.Environment["User"] as ApplicationUser;
+            var user = request.Environment["UserId"] as int?;
             if (user != null)
             {
-                Groups.Add(connectionId, user.UserName);
+                Groups.Add(connectionId, user.ToString());
             }
             return Connection.Send(connectionId, "Hello");
         }
 
         protected override Task OnDisconnected(IRequest request, string connectionId)
         {
-            var user = request.Environment["User"] as ApplicationUser;
+            var user = request.Environment["UserId"] as int?;
             if (user != null)
             {
-                Groups.Remove(connectionId, user.UserName);
+                Groups.Remove(connectionId, user.ToString());
             }
             return base.OnDisconnected(request, connectionId);
         }
@@ -44,41 +41,22 @@ namespace SdojWeb.Controllers
 
         protected override bool AuthorizeRequest(IRequest request)
         {
-            var httpMethod = (string)request.Environment["owin.RequestMethod"];
-            if (httpMethod == "POST")
+            var cipherString = request.Headers["Security-Token"];
+            var allBytes = Convert.FromBase64String(cipherString);
+            var iv = new byte[16];
+            var cipher = new byte[allBytes.Length - iv.Length];
+            Buffer.BlockCopy(allBytes, 0, iv, 0, iv.Length);
+            Buffer.BlockCopy(allBytes, iv.Length, cipher, 0, cipher.Length);
+            using (var aes = new AesCryptoServiceProvider())
             {
-                // 只允许客户端连接，不允许禁止客户端发消息；
-                // 因为SignalR消息使用了同步机制，会转发到所有网站实例上；
-                // 在此情形中，不需要客户端消息同步，只需要服务端推送同步。
-                return false;
-            }
-
-            var clientPublicKey = Convert.FromBase64String(request.Headers["Public-Key"]);
-            var clientIv = Convert.FromBase64String(request.Headers["IV"]);
-            var securityToken = Convert.FromBase64String(request.Headers["Security-Token"]);
-
-            using (var ecd = new ECDiffieHellmanCng(CngKey.Import(AppSettings.PrivateKey, CngKeyBlobFormat.EccPrivateBlob)))
-            {
-                var agreement = ecd.DeriveKeyMaterial(
-                    ECDiffieHellmanCngPublicKey.FromByteArray(clientPublicKey,
-                    CngKeyBlobFormat.EccPublicBlob));
-                var aes = new AesCryptoServiceProvider();
-                using (var decryptor = aes.CreateDecryptor(agreement, clientIv))
+                using (var decryptor = aes.CreateDecryptor(AppSettings.ClientKey, iv))
                 {
-                    var plainbytes = decryptor.TransformFinalBlock(securityToken, 0, securityToken.Length);
-                    var plaintext = Encoding.Unicode.GetString(plainbytes);
-                    var loginModel = JsonSerializer.Parse<LoginViewModel>(plaintext);
-                    var user = UserManager.Find(loginModel.Email, loginModel.Password);
-
-                    if (user != null && user.EmailConfirmed)
-                    {
-                        request.Environment.Add("User", user);
-                        return true;
-                    }
+                    var plainBytes = decryptor.TransformFinalBlock(cipher, 0, cipher.Length);
+                    var userId = BitConverter.ToInt32(plainBytes, 0);
+                    request.Environment["UserId"] = userId;
+                    return true;
                 }
             }
-
-            return false;
         }
     }
 }

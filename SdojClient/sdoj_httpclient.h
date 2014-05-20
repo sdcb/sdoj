@@ -10,7 +10,7 @@ public:
 	~sdoj_httpclient();
 
 	void Initialize(utility::string_t uri);
-	void Login();
+	bool Login();
 	pplx::task<web::http::http_response> Get(utility::string_t uri, std::function<void(std::shared_ptr<MicrosoftAspNetSignalRClientCpp::HttpRequestWrapper>)> prepareRequest);
 	pplx::task<web::http::http_response> Post(utility::string_t uri, std::function<void(std::shared_ptr<MicrosoftAspNetSignalRClientCpp::HttpRequestWrapper>)> prepareRequest);
 	pplx::task<web::http::http_response> Post(utility::string_t uri, std::function<void(std::shared_ptr<MicrosoftAspNetSignalRClientCpp::HttpRequestWrapper>)> prepareRequest, utility::string_t postData);
@@ -21,7 +21,5 @@ private:
 
 	std::unique_ptr<web::http::client::http_client> client;
 	shared_ptr<app_config> config;
-	wstring public_key;
-	wincrypt::key aes_key;
-	wincrypt::provider random_provider;
+	wstring security_token;
 };
