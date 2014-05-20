@@ -15,6 +15,7 @@ shared_ptr<app_config> app_config::from_file(string filename)
 	obj->server = config.get<wstring>(L"server");
 	obj->username = config.get<wstring>(L"username");
 	obj->password = config.get<wstring>(L"password");
+	obj->login_url = config.get<wstring>(L"loginUrl");
 	auto pk_string = config.get<wstring>(L"serverPublicKey");
 	obj->serverpk = utility::conversions::from_base64(pk_string);
 

@@ -35,6 +35,41 @@ sdoj_httpclient::~sdoj_httpclient()
 {
 }
 
+void sdoj_httpclient::Login()
+{
+	// 产生初始向量。
+	vector<byte> iv(16);
+	random(random_provider, &iv[0], (unsigned)iv.size());
+	auto ivstr = utility::conversions::to_base64(iv);
+
+	// 产生加密文本。
+	json::value cipherv;
+	cipherv[L"Email"] = json::value{ config->username };
+	cipherv[L"Password"] = json::value{ config->password };
+	auto plaintext = cipherv.serialize();
+	auto encrypted = encrypt(aes_key, plaintext, iv, BCRYPT_BLOCK_PADDING);
+	auto encrypted_str = utility::conversions::to_base64(encrypted);
+
+	// 组装HTTP请求。
+	json::value v;
+	v[L"iv"] = json::value(ivstr);
+	v[L"publicKey"] = json::value(public_key);
+	v[L"cipher"] = json::value(encrypted_str);
+	http_request request{ methods::POST };
+	request.set_body(v);
+
+	client = make_unique<http_client>(config->login_url);
+	try
+	{
+		auto response = client->request(request).get();
+	}
+	catch (std::exception e)
+	{
+		auto exce = e.what();
+	}
+
+}
+
 void sdoj_httpclient::prepare_headers(http_request & request)
 {
 	request.headers()[L"Public-Key"] = public_key;
@@ -59,7 +94,7 @@ void sdoj_httpclient::Initialize(string_t uri)
 	http_client_config configuration = http_client_config();
 	configuration.set_timeout(seconds(0));
 
-	pClient = unique_ptr<http_client>(new http_client(uri, configuration));
+	client = unique_ptr<http_client>(new http_client(uri, configuration));
 }
 
 task<http_response> sdoj_httpclient::Get(string_t uri, function<void(shared_ptr<HttpRequestWrapper>)> prepareRequest)
@@ -82,7 +117,7 @@ task<http_response> sdoj_httpclient::Get(string_t uri, function<void(shared_ptr<
 
 	prepareRequest(request);
 	pplx::task_options readTaskOptions(cts->get_token());
-	return pClient->request(requestMessage).then([](http_response response)
+	return client->request(requestMessage).then([](http_response response)
 	{
 		if (is_task_cancellation_requested())
 		{
@@ -91,7 +126,7 @@ task<http_response> sdoj_httpclient::Get(string_t uri, function<void(shared_ptr<
 		// check if the request was successful, temporary
 		if (response.status_code() / 100 != 2)
 		{
-			throw exception("HttpClientException: Get Failed");
+			throw exception("HttclientException: Get Failed");
 		}
 
 		return response;
@@ -123,7 +158,7 @@ task<http_response> sdoj_httpclient::Post(string_t uri, function<void(shared_ptr
 
 	prepareRequest(request);
 	pplx::task_options readTaskOptions(cts->get_token());
-	return pClient->request(requestMessage).then([](http_response response)
+	return client->request(requestMessage).then([](http_response response)
 	{
 		if (is_task_cancellation_requested())
 		{
@@ -132,7 +167,7 @@ task<http_response> sdoj_httpclient::Post(string_t uri, function<void(shared_ptr
 		// check if the request was successful, temporary
 		if (response.status_code() / 100 != 2)
 		{
-			throw exception("HttpClientException: Post Failed");
+			throw exception("HttclientException: Post Failed");
 		}
 
 		return response;

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "application.h"
-#include "sdoj_httpclient.h"
 
 namespace signalr = MicrosoftAspNetSignalRClientCpp;
 
@@ -11,7 +10,9 @@ void application::run()
 	connection->SetReceivedCallback([](wstring s){
 		wcout << s << endl;
 	});
-	connection->Start(make_shared<sdoj_httpclient>(config)).get();
+	httpclient.swap(make_shared<sdoj_httpclient>(config));
+	httpclient->Login();
+	connection->Start(httpclient).get();
 	
 	getchar();
 }
