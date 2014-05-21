@@ -225,4 +225,7 @@
   <ItemGroup>
     <Xml Include="config.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
