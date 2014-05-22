@@ -18,9 +18,10 @@
 
 @section scripts
 {
+    @*<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>*@
+    @Scripts.Render("~/bundles/signalr")
 
-    <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
         $(function () {
             // Declare a proxy to reference the hub.
