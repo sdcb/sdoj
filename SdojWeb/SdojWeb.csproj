@@ -238,16 +238,14 @@
     <Compile Include="Infrastructure\Extensions\LinqExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\SortablePagedList.cs" />
-    <Compile Include="Infrastructure\Identity\CurrentUser.cs" />
+    <Compile Include="Infrastructure\Identity\CustomClaims.cs" />
     <Compile Include="Infrastructure\Identity\JudgeClientAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
-    <Compile Include="Infrastructure\Identity\ICurrentUser.cs" />
     <Compile Include="Infrastructure\IoC\ActionFilterRegistry.cs" />
     <Compile Include="Infrastructure\IoC\ControllerConvention.cs" />
     <Compile Include="Infrastructure\Filters\PageTimeLoggerFilter.cs" />
-    <Compile Include="Infrastructure\Filters\ShowUserIsConfirmed.cs" />
     <Compile Include="Infrastructure\IoC\ControllerRegistry.cs" />
     <Compile Include="Infrastructure\IoC\MvcRegistry.cs" />
     <Compile Include="Infrastructure\IoC\StandardRegistry.cs" />

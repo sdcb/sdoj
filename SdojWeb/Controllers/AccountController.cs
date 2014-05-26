@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using Microsoft.Web.Mvc;
-using SdojWeb.Infrastructure.Filters;
 using SdojWeb.Infrastructure.Alerts;
 
 namespace SdojWeb.Controllers
@@ -187,7 +187,6 @@ namespace SdojWeb.Controllers
 
         //
         // GET: /Account/ReSendConfirmEmail
-        [ShowUserIsConfirmedFilter]
         public ActionResult ReSendConfirmEmail()
         {
             return View();
@@ -198,22 +197,22 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReSendConfirmEmail(string userId)
         {
-            var user = DependencyResolver.Current.GetService<ICurrentUser>().User;
-            
-            if (user.EmailConfirmed)
+            if (User.EmailConfirmed())
             {
                 return this.RedirectToAction<HomeController>(x => x.Index())
                     .WithInfo("您的用户已经通过邮件验证，不需要再次验证。");
             }
 
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+            var userid = User.Identity.GetIntUserId();
+            var email = User.Identity.GetUserName();
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(userid);
+            var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = userid, code = code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(User.Identity.GetIntUserId(), "确认你的账户",
                 "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的账号");
             
 
             return this.RedirectToAction<HomeController>(x => x.Index())
-                .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
+                .WithInfo("已经向你的邮箱" + email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
         }
 
         //
@@ -335,7 +334,6 @@ namespace SdojWeb.Controllers
 
         //
         // GET: /Account/Manage
-        [ShowUserIsConfirmedFilter]
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -565,6 +563,7 @@ namespace SdojWeb.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await user.GenerateUserIdentityAsync(UserManager);
+            identity.AddClaim(new Claim(CustomClaims.EmailConfirmed, user.EmailConfirmed.ToString()));
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
         }
 

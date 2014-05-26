@@ -17,18 +17,13 @@ namespace SdojWeb.Infrastructure.Identity
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             var baseAuthrized = base.AuthorizeCore(httpContext);
+            if (!baseAuthrized) return false;
 
-            if (baseAuthrized && EmailAuthorize)
+            if (EmailAuthorize)
             {
-                var currentUser = DependencyResolver.Current.GetService<ICurrentUser>();
-                var user = currentUser.User;
-                if (user == null || !currentUser.User.EmailConfirmed)
-                {
-                    return false;
-                }
+                return httpContext.User.EmailConfirmed();
             }
-
-            return baseAuthrized;
+            return true;
         }
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
