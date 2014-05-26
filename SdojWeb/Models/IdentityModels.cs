@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
@@ -29,9 +30,11 @@ namespace SdojWeb.Models
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, int> manager)
         {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim(CustomClaims.EmailConfirmed, EmailConfirmed.ToString()));
+
             return userIdentity;
         }
     }

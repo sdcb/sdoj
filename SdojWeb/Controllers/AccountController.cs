@@ -563,8 +563,7 @@ namespace SdojWeb.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await user.GenerateUserIdentityAsync(UserManager);
-            identity.AddClaim(new Claim(CustomClaims.EmailConfirmed, user.EmailConfirmed.ToString()));
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, identity);
         }
 
         private void AddErrors(IdentityResult result)
