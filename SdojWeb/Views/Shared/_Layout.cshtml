@@ -60,9 +60,9 @@
     <script>
         $(function() {
             var chat = $.connection.chatHub;
-            chat.client.pc = function(cpu, avMem, threadCount, memUsage) {
-                $('#pcCpu').text(cpu.toFixed(2));
-                $('#pcAvaiMem').text((avMem / 1024).toFixed(2));
+            chat.client.pc = function(cpu, startTime, threadCount, memUsage) {
+                $('#pcCpuTime').text(cpu);
+                $('#pcRunningTime').text(startTime);
                 $('#pcThreads').text(threadCount);
                 $('#pcMem').text((memUsage / 1024 / 1024).toFixed(2));
             };

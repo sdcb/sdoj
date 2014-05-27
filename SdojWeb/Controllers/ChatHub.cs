@@ -16,13 +16,16 @@ namespace SdojWeb.Controllers
 
             Task.Run(async() =>
             {
-                var cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total", true);
-                var mem = new PerformanceCounter("Memory", "Available KBytes", true);
+                GC.SuppressFinalize(this);
                 var ps = Process.GetCurrentProcess();
                 while (true)
                 {
-                    Clients.All.pc(cpu.NextValue(), mem.NextValue(), ps.Threads.Count, GC.GetTotalMemory(false));
-                    await Task.Delay(800);
+                    Clients.All.pc(
+                        ps.TotalProcessorTime.ToString("g"), 
+                        (DateTime.Now - ps.StartTime).ToString("g"), 
+                        ps.Threads.Count, 
+                        GC.GetTotalMemory(false));
+                    await Task.Delay(1000);
                 }
             });
         }
