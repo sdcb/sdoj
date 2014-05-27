@@ -25,6 +25,7 @@ namespace SdojWeb.Controllers
                             (DateTime.Now - ps.StartTime).ToString(@"hh\:mm\:ss"),
                             ps.Threads.Count,
                             GC.GetTotalMemory(false));
+                        await Task.Delay(1000);
                     }
                 });
             }
