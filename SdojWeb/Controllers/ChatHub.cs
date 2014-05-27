@@ -8,26 +8,27 @@ namespace SdojWeb.Controllers
     public class ChatHub : Hub
     {
         public static bool Started = false;
-
-        public ChatHub()
+        
+        public override Task OnConnected()
         {
-            if (Started) return;
-            Started = true;
-
-            Task.Run(async() =>
+            if (!Started)
             {
-                GC.SuppressFinalize(this);
-                var ps = Process.GetCurrentProcess();
-                while (true)
+                Started = true;
+
+                Task.Run(async () =>
                 {
-                    Clients.All.pc(
-                        ps.TotalProcessorTime.ToString("g"), 
-                        (DateTime.Now - ps.StartTime).ToString("g"), 
-                        ps.Threads.Count, 
-                        GC.GetTotalMemory(false));
-                    await Task.Delay(1000);
-                }
-            });
+                    var ps = Process.GetCurrentProcess();
+                    while (true)
+                    {
+                        Clients.All.pc(
+                            ps.TotalProcessorTime.ToString(@"hh\:mm\:ss"),
+                            (DateTime.Now - ps.StartTime).ToString(@"hh\:mm\:ss"),
+                            ps.Threads.Count,
+                            GC.GetTotalMemory(false));
+                    }
+                });
+            }
+            return base.OnConnected();
         }
 
         public void Send(string name, string message)
