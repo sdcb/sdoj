@@ -46,13 +46,30 @@
                         @String.Format("页面用时:{0:F2}ms", sw.Elapsed.TotalMilliseconds)
                     }
                 }
-                内存占用: @String.Format("{0:F2}MB", GC.GetTotalMemory(false)/1024.0/1024)
+                @*内存占用: @String.Format("{0:F2}MB", GC.GetTotalMemory(false)/1024.0/1024)*@
             </p>
+            @Html.Partial("_PerformanceCounter")
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/signalr")
+    <script src="~/signalr/hubs"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        $(function() {
+            var chat = $.connection.chatHub;
+            chat.client.pc = function(cpu, avMem, threadCount, memUsage) {
+                $('#pcCpu').text(cpu.toFixed(2));
+                $('#pcAvaiMem').text((avMem / 1024).toFixed(2));
+                $('#pcThreads').text(threadCount);
+                $('#pcMem').text((memUsage / 1024 / 1024).toFixed(2));
+            };
+            $.connection.hub.start().done(function () {
+                console.log("启动成功");
+            });
+        });
+    </script>
 </body>
 </html>

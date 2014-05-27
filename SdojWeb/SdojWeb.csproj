@@ -308,7 +308,6 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\signalR-hubs.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -374,6 +373,7 @@
     <Content Include="Views\Identity\Roles.cshtml" />
     <Content Include="Views\Question\_List.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Shared\_PerformanceCounter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
