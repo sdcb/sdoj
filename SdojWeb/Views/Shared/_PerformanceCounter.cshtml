@@ -1,6 +1,14 @@
-﻿<p>
-    运行时间：<strong id="pcRunningTime">0</strong>，
-    内存占用：<strong id="pcMem">0</strong>MB，
-    线程数：<strong id="pcThreads">0</strong>个，
-    CPU时间：<strong id="pcCpuTime">0</strong>。
+﻿@using System.Diagnostics
+@{
+    var ps = Process.GetCurrentProcess();
+    var rt = (DateTime.Now - ps.StartTime).ToString("hh\\:mm\\:ss");
+    var cput = ps.TotalProcessorTime.ToString(@"hh\:mm\:ss");
+    var tc = ps.Threads.Count;
+    var mem = (GC.GetTotalMemory(false)/1024.0/1024).ToString("F2");
+}
+<p>
+    运行时间：<strong id="pcRunningTime">@rt</strong>，
+    内存占用：<strong id="pcMem">@mem</strong>MB，
+    线程数：<strong id="pcThreads">@tc</strong>个，
+    CPU时间：<strong id="pcCpuTime">@cput</strong>。
 </p>
