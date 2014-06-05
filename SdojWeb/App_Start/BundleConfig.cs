@@ -29,7 +29,11 @@ namespace SdojWeb
             bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
                 "~/Scripts/jquery.signalR-{version}.js"));
 
+#if DEBUG
+            BundleTable.EnableOptimizations = false;
+#else
             BundleTable.EnableOptimizations = true;
+#endif
         }
     }
 }

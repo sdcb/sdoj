@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "SignalR MoveShape Demo";
+}
+<style>
+    #shape {
+        width: 100px;
+        height: 100px;
+        background-color: #FF0000;
+        position: fixed;
+    }
+</style>
+
+<div id="shape"></div>
+
+@section scripts
+{
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script>
+        $(function () {
+            var moveShapeHub = $.connection.rectHub,
+                $shape = $("#shape"),
+                shapeModel = {
+                    left: 0,
+                    top: 0
+                };
+            moveShapeHub.client.updateShape = function (model) {
+                shapeModel = model;
+                $shape.css({ left: model.left, top: model.top });
+            };
+            $.connection.hub.start().done(function () {
+                $shape.draggable({
+                    drag: function () {
+                        shapeModel = $shape.offset();
+                        moveShapeHub.server.updateModel(shapeModel);
+                    }
+                });
+            });
+        });
+    </script>
+}
