@@ -29,5 +29,4 @@ namespace SdojWeb.SignalR
         [JsonIgnore]
         public string LastUpdatedBy { get; set; }
     }
-
 }
