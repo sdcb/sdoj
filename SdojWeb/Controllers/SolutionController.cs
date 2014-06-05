@@ -11,6 +11,7 @@ using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
+using SdojWeb.SignalR;
 
 namespace SdojWeb.Controllers
 {

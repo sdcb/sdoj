@@ -238,10 +238,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ChatHub.cs" />
+    <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
-    <Compile Include="Controllers\JudgeConnection.cs" />
+    <Compile Include="SignalR\JudgeConnection.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\QuestionDataController.cs" />
     <Compile Include="Controllers\SolutionController.cs" />
@@ -295,6 +295,7 @@
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalR\PerformanceCounterHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

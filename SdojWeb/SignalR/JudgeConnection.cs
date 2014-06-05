@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.SignalR;
 using SdojWeb.Models;
 
-namespace SdojWeb.Controllers
+namespace SdojWeb.SignalR
 {
     public class JudgeConnection : PersistentConnection
     {

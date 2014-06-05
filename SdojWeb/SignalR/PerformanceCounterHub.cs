@@ -2,13 +2,15 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 
-namespace SdojWeb.Controllers
+namespace SdojWeb.SignalR
 {
-    public class ChatHub : Hub
+    [HubName("pcHub")]
+    public class PerformanceCounterHub : Hub
     {
         public static bool Started = false;
-        
+
         public override Task OnConnected()
         {
             if (!Started)
@@ -30,11 +32,6 @@ namespace SdojWeb.Controllers
                 });
             }
             return base.OnConnected();
-        }
-
-        public void Send(string name, string message)
-        {
-            Clients.All.broadcastMessage(name, message);
         }
     }
 }

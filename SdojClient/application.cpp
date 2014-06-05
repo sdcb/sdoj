@@ -10,9 +10,22 @@ void application::run()
 	connection->SetReceivedCallback([](wstring s){
 		wcout << s << endl;
 	});
+
+	connection->SetReconnectingCallback([]{
+		wcout << "Reconnecting..." << endl;
+	});
+	connection->SetReconnectedCallback([]{
+		wcout << "Reconnected!" << endl;
+	});
+	connection->SetClosedCallback([]{
+		wcout << "Closed" << endl;
+	});
+
 	httpclient.swap(make_shared<sdoj_httpclient>(config));
 	httpclient->Login();
 	connection->Start(httpclient).get();
 	
+	
+
 	getchar();
 }

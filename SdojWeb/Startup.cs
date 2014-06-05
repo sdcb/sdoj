@@ -1,8 +1,6 @@
-﻿using System.Configuration;
-using Microsoft.AspNet.SignalR;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using SdojWeb.Controllers;
+using SdojWeb.SignalR;
 
 [assembly: OwinStartupAttribute(typeof(SdojWeb.Startup))]
 namespace SdojWeb
