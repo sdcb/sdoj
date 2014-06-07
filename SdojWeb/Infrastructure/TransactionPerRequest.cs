@@ -6,7 +6,7 @@ using System.Web;
 
 namespace SdojWeb.Infrastructure
 {
-    public class TransactionPerRequest :
+    public sealed class TransactionPerRequest :
         IRunOnEachRequest, IRunOnError, IRunAfterEachRequest
     {
         private readonly ApplicationDbContext _dbContext;

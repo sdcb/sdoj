@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 
@@ -398,6 +399,7 @@ namespace SdojWeb.Infrastructure.Extensions
         }
     }
 
+    [Serializable]
     public sealed class ParseException : Exception
     {
         private readonly int position;
@@ -416,6 +418,11 @@ namespace SdojWeb.Infrastructure.Extensions
         public override string ToString()
         {
             return string.Format(Res.ParseExceptionFormat, Message, position);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 
