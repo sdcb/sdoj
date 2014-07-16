@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 
 namespace SdojWeb.SignalR
 {
@@ -8,6 +9,12 @@ namespace SdojWeb.SignalR
         {
             var user = Context.User;
             Clients.All.DoWork(text);
+        }
+
+        public override Task OnConnected()
+        {
+            Clients.All.DoWork("welcome");
+            return base.OnConnected();
         }
     }
 }
