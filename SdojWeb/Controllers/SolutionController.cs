@@ -81,11 +81,11 @@ namespace SdojWeb.Controllers
                 _dbContext.Solutions.Add(solution);
                 await _dbContext.SaveChangesAsync();
 
-                var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
+                //var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
                 var judgeModel = await _dbContext.Solutions
                     .Project().To<JudgeModel>()
                     .FirstOrDefaultAsync(x => x.SolutionId == solution.Id);
-                await signalr.Groups.Send(User.Identity.GetUserName(), judgeModel);
+                //await signalr.Groups.Send(User.Identity.GetUserName(), judgeModel);
 
                 return RedirectToAction("Index");
             }
