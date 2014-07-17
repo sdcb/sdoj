@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
 namespace SdojWeb.Migrations
@@ -24,11 +24,17 @@ namespace SdojWeb.Migrations
 
             userManager.Create(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-            roleManager.Create(new ApplicationRole("admin"));
             userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new ApplicationUser("judger@sdcb.in"), "A-Pa5sword-That:Never8eenUsed");
+
+            roleManager.Create(new ApplicationRole(SystemRoles.Admin));
+            roleManager.Create(new ApplicationRole(SystemRoles.Judger));
 
             var user = userManager.FindByName("flysha@live.com");
-            userManager.AddToRole(user.Id, "admin");
+            userManager.AddToRole(user.Id, SystemRoles.Admin);
+
+            user = userManager.FindByName("judger@sdcb.in");
+            userManager.AddToRole(user.Id, SystemRoles.Judger);
         }
     }
 }
