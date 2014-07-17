@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using Microsoft.Web.Mvc;
@@ -77,14 +73,14 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> LoginAsJudger(string username, string password)
         {
             var user = await UserManager.FindAsync(username, password);
-            if (user != null && await UserManager.IsInRoleAsync(user.Id, "Judger"))
+            if (user != null && await UserManager.IsInRoleAsync(user.Id, SystemRoles.Judger))
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
                 var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToStringInvariant()));
                 identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
-                identity.AddClaim(new Claim(ClaimTypes.Role, "Judger"));
+                identity.AddClaim(new Claim(ClaimTypes.Role, SystemRoles.Judger));
 
                 AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
 
