@@ -72,62 +72,6 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-
-        [HttpPost, AllowAnonymous]
-        public async Task<ActionResult> ClientLogin(string iv, string publicKey, string cipher)
-        {
-            // 验证客户端加密的登录信息是否正确，
-            // 如果正确，则返回加密过的用来通信的Cookie。
-            try
-            {
-                var ivBytes = Convert.FromBase64String(iv);
-                var pkBytes = Convert.FromBase64String(publicKey);
-                var cipherBytes = Convert.FromBase64String(cipher);
-
-                using (var ecd = new ECDiffieHellmanCng(CngKey.Import(AppSettings.PrivateKey, CngKeyBlobFormat.EccPrivateBlob)))
-                {
-                    var agreement = ecd.DeriveKeyMaterial(
-                        ECDiffieHellmanCngPublicKey.FromByteArray(pkBytes,
-                        CngKeyBlobFormat.EccPublicBlob));
-                    var aes = new AesCryptoServiceProvider();
-                    using (var decryptor = aes.CreateDecryptor(agreement, ivBytes))
-                    {
-                        var plainbytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-                        var plaintext = Encoding.Unicode.GetString(plainbytes);
-                        var loginModel = JsonConvert.DeserializeObject<LoginViewModel>(plaintext);
-                        var user = await UserManager.FindAsync(loginModel.Email, loginModel.Password);
-
-                        if (user != null && user.EmailConfirmed)
-                        {
-                            var clientIvBytes = new byte[16];
-                            using (var rng = new RNGCryptoServiceProvider())
-                            {
-                                rng.GetBytes(clientIvBytes);
-                            }
-                            var userIdBytes = BitConverter.GetBytes(user.Id);
-                            byte[] cipherUserId;
-                            using (var encryptor = aes.CreateEncryptor(AppSettings.ClientKey, clientIvBytes))
-                            {
-                                cipherUserId = encryptor.TransformFinalBlock(userIdBytes, 0, userIdBytes.Length);
-                            }
-
-                            var clientSecurityTokenBytes = new Byte[clientIvBytes.Length + cipherUserId.Length];
-                            Buffer.BlockCopy(clientIvBytes, 0, clientSecurityTokenBytes, 0, clientIvBytes.Length);
-                            Buffer.BlockCopy(cipherUserId, 0, clientSecurityTokenBytes, clientIvBytes.Length, cipherUserId.Length);
-                            var clientSecurityToken = Convert.ToBase64String(clientSecurityTokenBytes);
-                            Response.Headers.Add("Security-Token", clientSecurityToken);
-                        }
-                    }
-                }
-            }
-// ReSharper disable EmptyGeneralCatchClause
-            catch 
-// ReSharper restore EmptyGeneralCatchClause
-            {
-            }
-            return new EmptyResult();
-        }
-
         //
         // GET: /Account/Register
         [AllowAnonymous]
