@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -70,6 +71,27 @@ namespace SdojWeb.Controllers
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
             return View(model);
+        }
+
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> LoginAsJudger(string username, string password)
+        {
+            var user = await UserManager.FindAsync(username, password);
+            if (user != null && await UserManager.IsInRoleAsync(user.Id, "Judger"))
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+
+                var identity = new ClaimsIdentity("Judge Cookie");
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToStringInvariant()));
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Role, "Judger"));
+
+                AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
+
+                return new EmptyResult();
+            }
+
+            return new HttpUnauthorizedResult();
         }
 
         //
