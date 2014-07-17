@@ -81,7 +81,7 @@ namespace SdojWeb.Controllers
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-                var identity = new ClaimsIdentity("Judge Cookie");
+                var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToStringInvariant()));
                 identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Judger"));
