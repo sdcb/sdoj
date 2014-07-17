@@ -22,8 +22,18 @@ namespace SdojJudger
             else
             {
                 Console.WriteLine("Login failed");
-            }    
+            }
 
+            var hub = connection.CreateHubProxy(AppSettings.HubName);
+            hub.On("DoWork", str => Console.WriteLine(str));
+
+            connection.Start().Wait();
+
+            while (true)
+            {
+                var line = Console.ReadLine();
+                hub.Invoke("Send", line);
+            }
         }
 
         private static bool AuthenticateUser(string user, string password, out Cookie authCookie)
