@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Web.Http;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using System.Web.Mvc;
-using System.Diagnostics;
 
 namespace SdojWeb.Infrastructure.IoC
 {
@@ -13,7 +11,7 @@ namespace SdojWeb.Infrastructure.IoC
     {
         public void Process(Type type, Registry registry)
         {
-            if ((type.CanBeCastTo(typeof(Controller)) || type.CanBeCastTo(typeof(ApiController)))
+            if ((type.CanBeCastTo(typeof(Controller)))
                 && !type.IsAbstract)
             {
                 registry.For(type).LifecycleIs(new UniquePerRequestLifecycle());
