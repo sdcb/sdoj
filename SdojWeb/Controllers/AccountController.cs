@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SdojWeb.Infrastructure.Identity;
@@ -484,21 +483,6 @@ namespace SdojWeb.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
-        }
-
-        //
-        // GET: /Account/CreateSystemRoles
-        [AllowAnonymous]
-        public async Task<ActionResult> CreateSystemRoles()
-        {
-            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_db));
-            if (await rm.RoleExistsAsync("admin"))
-            {
-                return Content("角色已存在。");
-            }
-            await rm.CreateAsync(new IdentityRole("admin"));
-            await rm.CreateAsync(new IdentityRole("judger"));
-            return Content("创建成功。");
         }
 
         [ChildActionOnly]
