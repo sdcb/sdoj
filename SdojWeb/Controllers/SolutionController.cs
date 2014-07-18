@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.SignalR;
 using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
-using SdojWeb.SignalR;
 
 namespace SdojWeb.Controllers
 {
