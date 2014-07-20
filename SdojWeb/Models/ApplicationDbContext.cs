@@ -22,6 +22,11 @@ namespace SdojWeb.Models
                 .WithMany(u => u.Questions)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Question>()
+                .HasRequired(q => q.SampleData)
+                .WithMany(d => d.NoUseQuestions)
+                .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -63,19 +63,17 @@ namespace SdojWeb.Controllers
             if (ModelState.IsValid)
             {
                 var question = Mapper.Map<Question>(createModel);
+                question.SampleData = new QuestionData
+                {
+                    Input = createModel.SampleInput,
+                    Output = createModel.SampleOutput,
+                    QuestionId = question.Id,
+                    UpdateTime = DateTime.Now, 
+                    Question = question, 
+                };
                 _dbContext.Questions.Add(question);
                 await _dbContext.SaveChangesAsync();
 
-                var data = new QuestionData
-                {
-                    Input = createModel.SampleInput, 
-                    Output = createModel.SampleOutput, 
-                    QuestionId = question.Id, 
-                    UpdateTime = DateTime.Now
-                };
-                _dbContext.Entry(data).State = EntityState.Added;
-                await _dbContext.SaveChangesAsync();
-                
                 return RedirectToAction("Index");
             }
 

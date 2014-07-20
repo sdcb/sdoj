@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Web;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
@@ -13,33 +12,31 @@ namespace SdojWeb.Models
 {
     public class Question : IMapFrom<QuestionNotMappedEditModel>
     {
-        [HiddenInput]
         public int Id { get; set; }
 
-        [HiddenInput]
         public int CreateUserId { get; set; }
 
-        [HiddenInput]
         public ApplicationUser CreateUser { get; set; }
-
-
-        [Display(Name = "标题"), Required, MaxLength(30), Index(IsUnique = true)]
+        
+        [Required, MaxLength(30), Index(IsUnique = true)]
         public string Name { get; set; }
 
-        [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        [Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "内存限制(MB)"), DefaultValue(64)]
+        [DefaultValue(64)]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
+        [DefaultValue(1000)]
         public int TimeLimit { get; set; }
 
-        [Display(Name = "创建时间"), HiddenInput]
         public DateTime CreateTime { get; set; }
 
-        [Display(Name = "更新时间"), HiddenInput, Index]
         public DateTime UpdateTime { get; set; }
+
+        public int SampleDataId { get; set; }
+
+        public QuestionData SampleData { get; set; }
 
         public ICollection<QuestionData> Datas { get; set; }
     }
@@ -70,8 +67,8 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
-                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Input))
-                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Output));
+                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
+                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output));
         }
     }
 
@@ -136,9 +133,9 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionEditModel, Question>()
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
             configuration.CreateMap<Question, QuestionEditModel>()
-                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Input))
-                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Output))
-                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Id));
+                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
+                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
+                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId));
         }
     }
 
@@ -147,6 +144,8 @@ namespace SdojWeb.Models
         public int CreateUserId { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public int SampleDataId { get; set; }
     }
 
     public class QuestionSummaryViewModel : IMapFrom<Question>
