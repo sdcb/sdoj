@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
+using System.Threading;
+using Timer = System.Timers.Timer;
 
 namespace SdojWeb.SignalR
 {
@@ -101,6 +104,7 @@ namespace SdojWeb.SignalR
         {
             await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
             Interlocked.Increment(ref ConnectionCount);
+            EnsureDbScanTaskRunning();
         }
 
         public override Task OnDisconnected()
@@ -109,10 +113,44 @@ namespace SdojWeb.SignalR
             return base.OnDisconnected();
         }
 
-        public ApplicationDbContext DbContext
+        public static void EnsureDbScanTaskRunning()
+        {
+            if (DbScanTaskRunning) return;
+
+            var timer = new Timer
+            {
+                AutoReset = true, 
+                Enabled = true, 
+                Interval = DbScanIntervalSeconds, 
+            };
+            timer.Elapsed += DbScan;
+        }
+
+        private static async void DbScan(object sender, ElapsedEventArgs e)
+        {
+            var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
+            var db = DbContext;
+
+            var models = await db.Solutions
+                .Where(x => x.Lock == null || x.Lock.LockEndTime > DateTime.Now)
+                .Project().To<JudgeModel>()
+                .Take(DispatchLimit)
+                .ToArrayAsync();
+
+            foreach (var model in models)
+            {
+                hub.Clients
+                    .Group(model.QuestionCreateUserId.ToStringInvariant())
+                    .Judge(model);
+            }
+        }
+
+        public static ApplicationDbContext DbContext
         {
             get { return DependencyResolver.Current.GetService<ApplicationDbContext>(); }
         }
+
+        public static bool DbScanTaskRunning = false;
 
         public static int ConnectionCount;
 

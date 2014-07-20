@@ -18,6 +18,8 @@ namespace SdojWeb.Models
 
         public long MemoryLimit { get; set; }
 
+        public int QuestionCreateUserId { get; set; }
+
         public List<QuestionDataHashModel> QuestionDatas { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
@@ -26,7 +28,8 @@ namespace SdojWeb.Models
                 .ForMember(source => source.TimeLimit, dest => dest.MapFrom(x => x.Question.TimeLimit))
                 .ForMember(source => source.MemoryLimit, dest => dest.MapFrom(x => (long) (x.Question.MemoryLimitMb*1024*1024)))
                 .ForMember(source => source.SolutionId, dest => dest.MapFrom(x => x.Id))
-                .ForMember(source => source.QuestionDatas, dest => dest.MapFrom(x => x.Question.Datas));
+                .ForMember(source => source.QuestionDatas, dest => dest.MapFrom(x => x.Question.Datas))
+                .ForMember(source => source.QuestionCreateUserId, dest => dest.MapFrom(x => x.Question.CreateUserId));
         }
     }
 }
