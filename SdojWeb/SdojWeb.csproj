@@ -216,7 +216,6 @@
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
-    <Compile Include="SignalR\JudgeConnection.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\QuestionDataController.cs" />
     <Compile Include="Controllers\SolutionController.cs" />
