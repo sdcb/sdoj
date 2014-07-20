@@ -1,19 +1,21 @@
-﻿using SdojWeb.Infrastructure.Tasks;
+﻿using System.Data;
+using SdojWeb.Infrastructure.Tasks;
 using SdojWeb.Models;
-using System.Data;
 using System.Data.Entity;
 using System.Web;
 
 namespace SdojWeb.Infrastructure
 {
     public sealed class TransactionPerRequest :
-        IRunOnEachRequest, IRunOnError, IRunAfterEachRequest
+        IRunOnEachRequest, 
+        IRunOnError, 
+        IRunAfterEachRequest
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly HttpContextBase _httpContext;
 
         public TransactionPerRequest(
-            ApplicationDbContext dbContext, 
+            ApplicationDbContext dbContext,
             HttpContextBase httpContext)
         {
             _dbContext = dbContext;
@@ -22,22 +24,22 @@ namespace SdojWeb.Infrastructure
 
         void IRunOnEachRequest.Execute()
         {
-            _httpContext.Items["_Transaction"] =
+            _httpContext.Items[TransactionKey] =
                 _dbContext.Database.BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
         void IRunOnError.Execute()
         {
-            _httpContext.Items["_Error"] = true;
+            _httpContext.Items[TransactionError] = true;
         }
 
         void IRunAfterEachRequest.Execute()
         {
-            var transaction = _httpContext.Items["_Transaction"] as DbContextTransaction;
+            var transaction = _httpContext.Items[TransactionKey] as DbContextTransaction;
 
             if (transaction != null)
             {
-                if (_httpContext.Items["_Error"] != null)
+                if (_httpContext.Items[TransactionError] != null)
                 {
                     transaction.Rollback();
                 }
@@ -47,5 +49,8 @@ namespace SdojWeb.Infrastructure
                 }
             }
         }
+
+        public const string TransactionKey = "_Transaction";
+        public const string TransactionError = "_Error";
     }
 }

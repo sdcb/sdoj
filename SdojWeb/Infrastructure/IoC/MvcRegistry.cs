@@ -13,6 +13,7 @@ namespace SdojWeb.Infrastructure.IoC
             For<IIdentity>().Use(() => HttpContext.Current.User.Identity);
             For<HttpContextBase>()
                 .Use(() => new HttpContextWrapper(HttpContext.Current));
+            For<ApplicationDbContext>().Use(ApplicationDbContext.Create);
             For<ApplicationUserManager>().Use(() =>
                 HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
             For<ApplicationRoleManager>().Use(() =>
