@@ -26,7 +26,20 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
+        public int QuestionId { get; set; }
+
         public DateTime UpdateTime { get; set; }
+
+        public string Input { get; set; }
+
+        public string Output { get; set; }
+    }
+
+    public class QuestionDataFullModel : IMapFrom<QuestionData>
+    {
+        public int Id { get; set; }
+
+        public int QuestionId { get; set; }
     }
 
     public class QuestionDataSummaryModel : IMapFrom<QuestionData>

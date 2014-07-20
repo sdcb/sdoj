@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
+using Newtonsoft.Json;
 
 namespace SdojJudger
 {
@@ -22,14 +23,10 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 connection.CookieContainer.Add(authCookie);
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
-                //hub.On("DoWork", str => Console.WriteLine(str));
+                hub.On(JudgeAction, m => Console.WriteLine(JsonConvert.SerializeObject(m)));
                 await connection.Start();
 
-                //while (true)
-                //{
-                //    var line = Console.ReadLine();
-                //    await hub.Invoke("Send", line);
-                //}
+                Console.ReadKey();
             }
         }
 
@@ -57,5 +54,7 @@ namespace SdojJudger
                 return response.Cookies[AppSettings.CookieName];
             }
         }
+
+        public const string JudgeAction = "Judge";
     }
 }

@@ -154,10 +154,10 @@ namespace SdojWeb.Models
     public enum Languages
     {
         [Display(Name = "C#")]
-        CSharp,
+        CSharp = 1,
         [Display(Name = "Visual Basic")]
-        VB, 
+        Vb = 2, 
         [Display(Name = "C++")]
-        Cpp, 
+        Cpp = 3, 
     }
 }

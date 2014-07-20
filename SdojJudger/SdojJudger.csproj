@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Models\JudgeModel.cs" />
+    <Compile Include="Models\Languages.cs" />
+    <Compile Include="Models\QuestionDataFullModel.cs" />
+    <Compile Include="Models\QuestionDataHashModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SdojClient.cs" />
