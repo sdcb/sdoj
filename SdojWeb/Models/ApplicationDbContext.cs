@@ -8,7 +8,7 @@ namespace SdojWeb.Models
     public class ApplicationDbContext :
         IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin,ApplicationUserRole, ApplicationUserClaim>
     {
-        private ApplicationDbContext()
+        public ApplicationDbContext()
             : base("DefaultConnection")
         {
         }
@@ -41,7 +41,9 @@ namespace SdojWeb.Models
         {
             var db = new ApplicationDbContext();
 
+#if DEBUG
             db.Database.Log += s => Debug.WriteLine(s);
+#endif
 
             return db;
         }
