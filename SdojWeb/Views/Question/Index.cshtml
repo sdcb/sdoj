@@ -23,3 +23,22 @@
 <br/>
 <p>第 @Model.PageNumber 页，共 @Model.PageCount 页 </p>
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+
+@using (Html.BeginForm("Delete", "Question", FormMethod.Post, new {id="delete-form"}))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id"/>
+}
+
+@section scripts
+{
+    <script>
+        $(".delete-link").click(function() {
+            var id = $(this).data('id');
+            if (confirm('确定要删除此题目吗？')) {
+                $("#delete-form input[name='id']").val(id);
+                $("#delete-form").submit();
+            }
+        });
+    </script>
+}

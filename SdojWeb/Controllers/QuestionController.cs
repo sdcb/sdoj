@@ -141,7 +141,7 @@ namespace SdojWeb.Controllers
 
             _dbContext.Questions.Remove(question);
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index").WithSuccess("删除成功。");
         }
 
         private readonly ApplicationDbContext _dbContext;
