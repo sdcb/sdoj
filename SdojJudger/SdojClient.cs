@@ -22,7 +22,7 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 connection.CookieContainer.Add(authCookie);
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
-                hub.On("DoWork", str => Console.WriteLine(str));
+                //hub.On("DoWork", str => Console.WriteLine(str));
                 await connection.Start();
 
                 //while (true)
