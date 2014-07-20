@@ -18,16 +18,17 @@ namespace SdojWeb.Manager
             DbContext.Questions.Add(question);
             await DbContext.SaveChangesAsync();
             
-            var sampleData = new QuestionData
+            var data = new QuestionData
             {
                 Input = model.SampleInput,
                 Output = model.SampleOutput,
                 QuestionId = question.Id,
                 UpdateTime = DateTime.Now,
             };
+            DbContext.QuestionDatas.Add(data);
             await DbContext.SaveChangesAsync();
 
-            question.SampleDataId = sampleData.Id;
+            question.SampleDataId = data.Id;
             await DbContext.SaveChangesAsync();
         }
 

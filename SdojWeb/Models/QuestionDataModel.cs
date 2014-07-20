@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
@@ -9,7 +8,6 @@ namespace SdojWeb.Models
 {
     public class QuestionData
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public Question Question { get; set; }
