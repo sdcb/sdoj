@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
+using System.Security.Principal;
 using AutoMapper;
+using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using System.Threading.Tasks;
 
@@ -8,9 +11,10 @@ namespace SdojWeb.Manager
 {
     public class QuestionManager
     {
-        public QuestionManager(ApplicationDbContext dbContext)
+        public QuestionManager(ApplicationDbContext dbContext, IPrincipal identity)
         {
             DbContext = dbContext;
+            User = identity;
         }
 
         public async Task Create(QuestionCreateModel model)
@@ -47,6 +51,26 @@ namespace SdojWeb.Manager
             await DbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> IsUserOwnsQuestion(int questionId)
+        {
+            var userId = await DbContext.Questions
+                .Where(x => x.Id == questionId)
+                .Select(x => x.CreateUserId)
+                .FirstOrDefaultAsync();
+
+            return User.IsUserOrAdmin(userId);
+        }
+
+        public async Task<string> GetName(int questionId)
+        {
+            return await DbContext.Questions
+                .Where(x => x.Id == questionId)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
+        }
+
         public readonly ApplicationDbContext DbContext;
+
+        public readonly IPrincipal User;
     }
 }

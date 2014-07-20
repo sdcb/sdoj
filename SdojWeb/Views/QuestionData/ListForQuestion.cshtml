@@ -1,7 +1,9 @@
-﻿@model IEnumerable<SdojWeb.Models.QuestionDataSummaryModel>
+﻿@using SdojWeb.Infrastructure.Identity
+@model IEnumerable<SdojWeb.Models.QuestionDataSummaryModel>
 
 @{
     int questionId = ViewBag.QuestionId;
+    bool owns = ViewBag.IsUserOwnsQuestion;
     ViewBag.Title = "测试数据";
 }
 
@@ -25,7 +27,7 @@
         <th>
             @Html.DisplayNameFor(model => model.UpdateTime)
         </th>
-        <th>操作</th>
+        <th></th>
     </tr>
     
     @foreach (var item in Model)
@@ -41,16 +43,12 @@
                 @Html.DisplayFor(modelItem => item.OutputLength)
             </td>
             <td>
-                @Html.ActionLink(Html.DisplayFor(x => item.UpdateTime).ToString(), "Edit", new { id = item.Id, questionId = item.QuestionId })
+                <a title="编辑此测试数据" href='@Url.Action("Edit", new { id = item.Id, questionId = item.QuestionId })'>
+                    @Html.DisplayFor(x => item.UpdateTime)
+                </a>
             </td>
             <td>
-                @if (item.IsSampleData)
-                {
-                    <text>
-                        测试数据
-                    </text>
-                }
-                else
+                @if (owns && !item.IsSampleData)
                 {
                     <a href="#" data-id="@item.Id" title="删除" class="glyphicon glyphicon-remove text-danger delete-link"></a>
                 }
@@ -60,7 +58,8 @@
     
 </table>
 
-@Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null)
+@Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null) |
+@Html.ActionLink("返回列表", "Index", "Question")
 
 @using (Html.BeginForm("Delete", "QuestionData", FormMethod.Post, new { id = "delete-form" }))
 {

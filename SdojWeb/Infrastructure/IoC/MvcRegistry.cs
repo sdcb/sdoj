@@ -11,6 +11,7 @@ namespace SdojWeb.Infrastructure.IoC
         public MvcRegistry()
         {
             For<IIdentity>().Use(() => HttpContext.Current.User.Identity);
+            For<IPrincipal>().Use(() => HttpContext.Current.User);
             For<HttpContextBase>()
                 .Use(() => new HttpContextWrapper(HttpContext.Current));
             For<ApplicationDbContext>().Use(ApplicationDbContext.Create);

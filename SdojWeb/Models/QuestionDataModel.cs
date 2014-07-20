@@ -74,8 +74,11 @@ namespace SdojWeb.Models
         [HiddenInput]
         public int Id { get; set; }
 
-        [Display(Name = "题目ID"), Editable(false), Required]
+        [HiddenInput, Required]
         public int QuestionId { get; set; }
+
+        [Display(Name = "题目"), Editable(false)]
+        public string QuestionName { get; set; }
 
         [Display(Name = "输入数据"), DataType(DataType.MultilineText)]
         public string Input { get; set; }
@@ -91,7 +94,8 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionDataEditModel, QuestionData>()
                 .ForMember(dest => dest.UpdateTime, source => source.UseValue(DateTime.Now));
             configuration.CreateMap<QuestionData, QuestionDataEditModel>()
-                .ForMember(d => d.CreateUserId, s => s.MapFrom(x => x.Question.CreateUserId));
+                .ForMember(d => d.CreateUserId, s => s.MapFrom(x => x.Question.CreateUserId))
+                .ForMember(d => d.QuestionName, s => s.MapFrom(x => x.Question.Name));
         }
     }
 }
