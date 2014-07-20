@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using AutoMapper;
 using SdojWeb.Models;
 using System.Threading.Tasks;
@@ -44,6 +45,7 @@ namespace SdojWeb.Manager
             question.SampleData.Output = model.SampleOutput;
             question.UpdateTime = DateTime.Now;
 
+            DbContext.Entry(question).State = EntityState.Modified;
             await DbContext.SaveChangesAsync();
         }
     }
