@@ -39,6 +39,8 @@ namespace SdojWeb.Models
         public QuestionData SampleData { get; set; }
 
         public ICollection<QuestionData> Datas { get; set; }
+
+        public ICollection<Solution> Solutions { get; set; }
     }
 
     public class QuestionDetailModel : IHaveCustomMapping
@@ -153,9 +155,9 @@ namespace SdojWeb.Models
         public QuestionData SampleData { get; set; }
     }
 
-    public class QuestionSummaryViewModel : IMapFrom<Question>
+    public class QuestionSummaryViewModel : IHaveCustomMapping
     {
-        [Index]
+        [HiddenInput]
         public int Id { get; set; }
 
         [Display(Name = "标题")]
@@ -169,5 +171,18 @@ namespace SdojWeb.Models
 
         [Display(Name = "更新时间")]
         public DateTime UpdateTime { get; set; }
+
+        [Display(Name = "测试数据"), DisplayFormat(DataFormatString = "{0}个")]
+        public int DataCount { get; set; }
+
+        [Display(Name = "提交数"), DisplayFormat(DataFormatString = "{0}个")]
+        public int SolutionCount { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<Question, QuestionSummaryViewModel>()
+                .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
+                .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count));
+        }
     }
 }

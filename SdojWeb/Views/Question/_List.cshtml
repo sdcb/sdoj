@@ -10,9 +10,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.SortableHeaderFor(model => model.Id, "Index", orderBy, asc)
-        </th>
-        <th>
             @Html.SortableHeaderFor(model => model.Name, "Index", orderBy, asc)
         </th>
         <th>
@@ -22,17 +19,20 @@
             @Html.DisplayNameFor(model => model.TimeLimit)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.DataCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SolutionCount)
+        </th>
+        <th>
             @Html.SortableHeaderFor(model => model.UpdateTime, "Index", orderBy, asc)
         </th>
-        <th></th>
+        <th>操作</th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
             </td>
@@ -43,11 +43,18 @@
                 @Html.DisplayFor(modelItem => item.TimeLimit)
             </td>
             <td>
+                <a href="@Url.Action("ListForQuestion", "QuestionData", new {id=item.Id})">
+                    @Html.DisplayFor(x => item.DataCount)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SolutionCount)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.UpdateTime)
             </td>
             <td>
                 <a href="@Url.Action("Edit", new {id=item.Id})" title="编辑" class="glyphicon glyphicon-pencil"></a>
-                <a href="@Url.Action("ListForQuestion", "QuestionData", new {id=item.Id})" title="测试数据" class="glyphicon glyphicon-file"></a>
                 <a href="#" data-id="@item.Id" title="删除" class="glyphicon glyphicon-remove text-danger delete-link"></a>
             </td>
         </tr>
