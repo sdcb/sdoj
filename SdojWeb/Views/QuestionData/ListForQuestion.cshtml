@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SdojWeb.Models.QuestionDataSummaryModel>
 
 @{
-    int? questionId = ViewBag.QuestionId;
+    int questionId = ViewBag.QuestionId;
     ViewBag.Title = "测试数据";
 }
 
@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    @Html.ActionLink("删除", "Delete", new { id = item.Id, questionId = item.QuestionId })
+                    <a href="#" data-id="@item.Id" title="删除" class="glyphicon glyphicon-remove text-danger delete-link"></a>
                 }
             </td>
         </tr>
@@ -61,3 +61,23 @@
 </table>
 
 @Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null)
+
+@using (Html.BeginForm("Delete", "QuestionData", FormMethod.Post, new { id = "delete-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" />
+    <input type="hidden" name="questionId" value="@questionId" />
+}
+
+@section scripts
+{
+    <script>
+        $(".delete-link").click(function () {
+            var id = $(this).data('id');
+            if (confirm('确定要删除此数据吗？')) {
+                $("#delete-form input[name='id']").val(id);
+                $("#delete-form").submit();
+            }
+        });
+    </script>
+}
