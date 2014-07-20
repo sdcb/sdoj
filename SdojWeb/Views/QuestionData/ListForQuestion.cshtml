@@ -14,9 +14,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.QuestionName)
         </th>
         <th>
@@ -28,15 +25,12 @@
         <th>
             @Html.DisplayNameFor(model => model.UpdateTime)
         </th>
-        <th></th>
+        <th>操作</th>
     </tr>
     
     @foreach (var item in Model)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.ActionLink(item.QuestionName, "Details", "Question", new {id = item.QuestionId}, null)
             </td>
@@ -47,11 +41,19 @@
                 @Html.DisplayFor(modelItem => item.OutputLength)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdateTime)
+                @Html.ActionLink(Html.DisplayFor(x => item.UpdateTime).ToString(), "Edit", new { id = item.Id, questionId = item.QuestionId })
             </td>
             <td>
-                @Html.ActionLink("编辑", "Edit", new {id=item.Id,questionId=item.QuestionId}) |
-                @Html.ActionLink("删除", "Delete", new { id = item.Id, questionId = item.QuestionId })
+                @if (item.IsSampleData)
+                {
+                    <text>
+                        测试数据
+                    </text>
+                }
+                else
+                {
+                    @Html.ActionLink("删除", "Delete", new { id = item.Id, questionId = item.QuestionId })
+                }
             </td>
         </tr>
     }

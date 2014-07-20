@@ -42,7 +42,7 @@ namespace SdojWeb.Models
         public int QuestionId { get; set; }
     }
 
-    public class QuestionDataSummaryModel : IMapFrom<QuestionData>
+    public class QuestionDataSummaryModel : IHaveCustomMapping
     {
         public int Id { get; set; }
 
@@ -59,6 +59,14 @@ namespace SdojWeb.Models
 
         [Display(Name = "编辑日期")]
         public DateTime UpdateTime { get; set; }
+
+        public bool IsSampleData { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<QuestionData, QuestionDataSummaryModel>()
+                .ForMember(d => d.IsSampleData, s => s.MapFrom(x => x.Question.SampleDataId == x.Id));
+        }
     }
 
     public class QuestionDataEditModel : IHaveCustomMapping
