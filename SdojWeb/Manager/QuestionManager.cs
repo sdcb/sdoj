@@ -33,8 +33,6 @@ namespace SdojWeb.Manager
             await DbContext.SaveChangesAsync();
         }
 
-        public readonly ApplicationDbContext DbContext;
-
         public async Task Update(QuestionNotMappedEditModel secretModel, QuestionEditModel model)
         {
             var question = new Question();
@@ -48,5 +46,7 @@ namespace SdojWeb.Manager
             DbContext.Entry(question).State = EntityState.Modified;
             await DbContext.SaveChangesAsync();
         }
+
+        public readonly ApplicationDbContext DbContext;
     }
 }
