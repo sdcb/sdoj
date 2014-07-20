@@ -25,11 +25,11 @@ namespace SdojJudger
                 hub.On("DoWork", str => Console.WriteLine(str));
                 await connection.Start();
 
-                while (true)
-                {
-                    var line = Console.ReadLine();
-                    await hub.Invoke("Send", line);
-                }
+                //while (true)
+                //{
+                //    var line = Console.ReadLine();
+                //    await hub.Invoke("Send", line);
+                //}
             }
         }
 
