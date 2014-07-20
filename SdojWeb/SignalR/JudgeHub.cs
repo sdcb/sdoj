@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using SdojWeb.Infrastructure.Identity;
@@ -51,7 +54,7 @@ namespace SdojWeb.SignalR
 
             var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
 
-            // 已有锁并已被别人占用，直接失败。
+            // 已有锁并已被占用，直接失败。
             if (solutionLock != null && solutionLock.LockEndTime < DateTime.Now)
             {
                 return false;
@@ -64,24 +67,46 @@ namespace SdojWeb.SignalR
                 {
                     SolutionId = solutionId,
                     LockClientId = Context.ConnectionId,
-                    LockEndTime = DateTime.Now.AddSeconds(LockTime)
+                    LockEndTime = DateTime.Now.AddSeconds(SolutionLockingSeconds)
                 };
                 db.SolutionLocks.Add(solutionLock);
             }
             else if (solutionLock.LockEndTime >= DateTime.Now)
             {
                 solutionLock.LockClientId = Context.ConnectionId;
-                solutionLock.LockEndTime = DateTime.Now.AddSeconds(LockTime);
+                solutionLock.LockEndTime = DateTime.Now.AddSeconds(SolutionLockingSeconds);
             }
 
             await db.SaveChangesAsync();
             return true;
         }
 
-        public override Task OnConnected()
+        public async Task<JudgeModel[]> GetAll()
         {
-            Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
-            return base.OnConnected();
+            var userId = Context.User.Identity.GetIntUserId();
+            var db = DbContext;
+
+            var models = await db.Solutions
+                .Where(x => 
+                    x.CreateUserId == userId &&
+                    (x.Lock == null || x.Lock.LockEndTime > DateTime.Now))
+                .Project().To<JudgeModel>()
+                .Take(DispatchLimit)
+                .ToArrayAsync();
+
+            return models;
+        }
+
+        public override async Task OnConnected()
+        {
+            await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
+            Interlocked.Increment(ref ConnectionCount);
+        }
+
+        public override Task OnDisconnected()
+        {
+            Interlocked.Decrement(ref ConnectionCount);
+            return base.OnDisconnected();
         }
 
         public ApplicationDbContext DbContext
@@ -89,6 +114,12 @@ namespace SdojWeb.SignalR
             get { return DependencyResolver.Current.GetService<ApplicationDbContext>(); }
         }
 
-        public const int LockTime = 15;
+        public static int ConnectionCount;
+
+        public const int SolutionLockingSeconds = 15;
+
+        public const int DbScanIntervalSeconds = 30;
+
+        public const int DispatchLimit = 20;
     }
 }
