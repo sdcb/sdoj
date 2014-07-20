@@ -67,13 +67,12 @@ namespace SdojWeb.Controllers
                 .Project().To<QuestionDataEditModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (model == null)
+            if (User.IsUserOrAdmin(model.CreateUserId))
             {
-                return RedirectToAction("ListForQuestion", new {id=questionId}).WithInfo(
-                    string.Format("未找到id为{0}的测试数据。", id));
+                return View(model);
             }
 
-            return View(model);
+            return NonOwnerReturn(model.QuestionId);
         }
 
         // POST: /QuestionData/Edit
@@ -82,11 +81,22 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var questionData = Mapper.Map<QuestionData>(model);
-                _db.Entry(questionData).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
-                return RedirectToAction("ListForQuestion", new {id = model.QuestionId})
-                    .WithInfo("测试数据保存成功。");
+                var userId = await _db.QuestionDatas
+                    .Where(x => x.Id == model.Id)
+                    .Select(x => x.Question.CreateUserId)
+                    .FirstAsync();
+
+                if (User.IsUserOrAdmin(userId))
+                {
+                    var questionData = Mapper.Map<QuestionData>(model);
+                    _db.Entry(questionData).State = EntityState.Modified;
+                    await _db.SaveChangesAsync();
+
+                    return RedirectToAction("ListForQuestion", new { id = model.QuestionId })
+                        .WithInfo("测试数据保存成功。");
+                }
+
+                return NonOwnerReturn(model.QuestionId);
             }
             return View(model);
         }
@@ -122,6 +132,12 @@ namespace SdojWeb.Controllers
 
             return RedirectToAction("ListForQuestion", new { id = questionId }).WithSuccess(
                 string.Format("Id为{0}的测试数据删除成功。", id));
+        }
+
+        private ActionResult NonOwnerReturn(int questionId)
+        {
+            return RedirectToAction("ListForQuestion", new { id = questionId })
+                .WithSuccess("只有创建者才能查看或操作测试数据。");
         }
     }
 }

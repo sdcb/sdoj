@@ -61,9 +61,9 @@ namespace SdojWeb.Models
         public DateTime UpdateTime { get; set; }
     }
 
-    public class QuestionDataEditModel : IHaveCustomMapping, IMapFrom<QuestionData>
+    public class QuestionDataEditModel : IHaveCustomMapping
     {
-        [HiddenInput, Required]
+        [HiddenInput]
         public int Id { get; set; }
 
         [Display(Name = "题目ID"), Editable(false), Required]
@@ -75,10 +75,15 @@ namespace SdojWeb.Models
         [Display(Name = "输出数据"), DataType(DataType.MultilineText), Required]
         public string Output { get; set; }
 
+        [HiddenInput]
+        public int CreateUserId { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionDataEditModel, QuestionData>()
                 .ForMember(dest => dest.UpdateTime, source => source.UseValue(DateTime.Now));
+            configuration.CreateMap<QuestionData, QuestionDataEditModel>()
+                .ForMember(d => d.CreateUserId, s => s.MapFrom(x => x.Question.CreateUserId));
         }
     }
 }
