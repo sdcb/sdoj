@@ -1,7 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
@@ -33,13 +33,11 @@ namespace SdojWeb.Controllers
 
         // GET: Questions/Details/5
         [AllowAnonymous]
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Question question = await _dbContext.Questions.FindAsync(id);
+            var question = await _dbContext.Questions
+                .Project().To<QuestionDetailModel>()
+                .FirstAsync(x => x.Id == id);
 
             if (question == null)
             {
@@ -67,6 +65,17 @@ namespace SdojWeb.Controllers
                 var question = Mapper.Map<Question>(createModel);
                 _dbContext.Questions.Add(question);
                 await _dbContext.SaveChangesAsync();
+
+                var data = new QuestionData
+                {
+                    Input = createModel.SampleInput, 
+                    Output = createModel.SampleOutput, 
+                    QuestionId = question.Id, 
+                    UpdateTime = DateTime.Now
+                };
+                _dbContext.Entry(data).State = EntityState.Added;
+                await _dbContext.SaveChangesAsync();
+                
                 return RedirectToAction("Index");
             }
 
@@ -77,10 +86,6 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var question = await _dbContext.Questions.FindAsync(id);
-            if (question == null)
-            {
-                return RedirectToAction("Index").WithError("没找到该题目。");
-            }
 
             if (!User.IsUserOrAdmin(question.CreateUserId))
             {

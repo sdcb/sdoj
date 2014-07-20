@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
@@ -28,12 +29,6 @@ namespace SdojWeb.Models
         [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleInput { get; set; }
-
-        [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleOutput { get; set; }
-
         [Display(Name = "内存限制(MB)"), DefaultValue(64)]
         public float MemoryLimitMb { get; set; }
 
@@ -47,6 +42,37 @@ namespace SdojWeb.Models
         public DateTime UpdateTime { get; set; }
 
         public ICollection<QuestionData> Datas { get; set; }
+    }
+
+    public class QuestionDetailModel : IHaveCustomMapping
+    {
+        [HiddenInput]
+        public int Id { get; set; }
+
+        [Display(Name = "标题")]
+        public string Name { get; set; }
+
+        [Display(Name = "描述"), DataType(DataType.MultilineText)]
+        public string Description { get; set; }
+
+        [Display(Name = "内存限制(MB)")]
+        public float MemoryLimitMb { get; set; }
+
+        [Display(Name = "时间限制(ms)")]
+        public int TimeLimit { get; set; }
+
+        [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
+        public string SampleInput { get; set; }
+
+        [Display(Name = "输出样例"), DataType(DataType.MultilineText)]
+        public string SampleOutput { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<Question, QuestionDetailModel>()
+                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Input))
+                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Output));
+        }
     }
 
     public class QuestionCreateModel : IHaveCustomMapping
@@ -78,7 +104,7 @@ namespace SdojWeb.Models
         }
     }
 
-    public class QuestionEditModel : IHaveCustomMapping, IMapFrom<Question>
+    public class QuestionEditModel : IHaveCustomMapping
     {
         [Editable(false)]
         public int Id { get; set; }
@@ -89,22 +115,30 @@ namespace SdojWeb.Models
         [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleInput { get; set; }
-
-        [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleOutput { get; set; }
-
         [Display(Name = "内存限制(MB)"), DefaultValue(64)]
         public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
         public int TimeLimit { get; set; }
 
+        [HiddenInput]
+        public int QuestionDataId { get; set; }
+
+        [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
+        public string SampleInput { get; set; }
+
+        [Display(Name = "输出样例"), Required, DataType(DataType.MultilineText)]
+        public string SampleOutput { get; set; }
+
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionEditModel, Question>()
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
+            configuration.CreateMap<Question, QuestionEditModel>()
+                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Input))
+                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Output))
+                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.Datas.FirstOrDefault().Id));
         }
     }
 
