@@ -31,6 +31,8 @@ namespace SdojWeb.Models
 
         public DbSet<QuestionData> QuestionDatas { get; set; }
 
+        public DbSet<SolutionLock> SolutionLocks { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

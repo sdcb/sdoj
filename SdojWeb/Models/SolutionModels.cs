@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
@@ -31,12 +32,27 @@ namespace SdojWeb.Models
 
         public DateTime SubmitTime { get; set; }
 
+        public SolutionLock Lock { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Solution, SolutionSummaryModel>()
                 .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
         }
+    }
+
+    public class SolutionLock
+    {
+        [Key, ForeignKey("Solution")]
+        public int SolutionId { get; set; }
+
+        public Solution Solution { get; set; }
+
+        [Required, MaxLength(40)]
+        public string LockClientId { get; set; }
+
+        public DateTime LockEndTime { get; set; }
     }
 
     public class SolutionCreateModel : IHaveCustomMapping
