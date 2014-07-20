@@ -12,7 +12,6 @@ namespace SdojWeb.Models
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-            Configuration.LazyLoadingEnabled = false;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

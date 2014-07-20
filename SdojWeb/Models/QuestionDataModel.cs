@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using AutoMapper;
@@ -11,9 +10,8 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
-        public virtual Question Question { get; set; }
+        public Question Question { get; set; }
 
-        [Required]
         public int QuestionId { get; set; }
 
         public string Input { get; set; }
@@ -21,7 +19,6 @@ namespace SdojWeb.Models
         [Required]
         public string Output { get; set; }
 
-        [Required]
         public DateTime UpdateTime { get; set; }
     }
 

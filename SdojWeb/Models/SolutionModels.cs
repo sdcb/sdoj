@@ -10,13 +10,12 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
-        public virtual ApplicationUser CreateUser { get; set; }
+        public ApplicationUser CreateUser { get; set; }
 
         public int CreateUserId { get; set; }
 
-        public virtual Question Question { get; set; }
+        public Question Question { get; set; }
 
-        [Required]
         public int QuestionId { get; set; }
 
         public Languages Language { get; set; }
@@ -26,13 +25,10 @@ namespace SdojWeb.Models
 
         public SolutionStatus Status { get; set; }
 
-        [Required]
         public float UsingMemoryMb { get; set; }
 
-        [Required]
         public int RunTime { get; set; }
 
-        [Display(Name = "提交时间"), DisplayFormat(DataFormatString = "yyyy/mm/dd")]
         public DateTime SubmitTime { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
