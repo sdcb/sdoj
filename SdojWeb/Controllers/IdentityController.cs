@@ -43,7 +43,8 @@ namespace SdojWeb.Controllers
                 .FirstOrDefault();
             if (user == null)
             {
-                return RedirectToAction("Users").WithError("未找到id为{0}的用户。", id);
+                return RedirectToAction("Users").WithError(
+                    string.Format("未找到id为{0}的用户。", id));
             }
 
             var roles = RoleMgr.Roles.ToArray();
@@ -59,16 +60,19 @@ namespace SdojWeb.Controllers
             var action = RedirectToAction("Edit", new {id = userid});
             if (role == null)
             {
-                return action.WithError("未找到id为{0}的角色。", roleid);
+                return action.WithError(
+                    string.Format("未找到id为{0}的角色。", roleid));
             }
 
             var result = UserMgr.RemoveFromRole(userid, role.Name);
             if (!result.Succeeded)
             {
-                return action.WithError("角色删除失败，因为{0}", string.Join(",", result.Errors));
+                return action.WithError(
+                    string.Format("角色删除失败，因为{0}", string.Join(",", result.Errors)));
             }
 
-            return action.WithSuccess("角色{0}删除成功。", role.Name);
+            return action.WithSuccess(
+                string.Format("角色{0}删除成功。", role.Name));
         }
 
         // POST: Identity/AddUserRole?userId=3&roleId=4
@@ -79,16 +83,19 @@ namespace SdojWeb.Controllers
             var action = RedirectToAction("Edit", new { id = userid });
             if (role == null)
             {
-                return action.WithError("未找到id为{0}的角色。", roleid);
+                return action.WithError(
+                    string.Format("未找到id为{0}的角色。", roleid));
             }
 
             var result = UserMgr.AddToRole(userid, role.Name);
             if (!result.Succeeded)
             {
-                return action.WithError("角色添加失败，因为{0}", string.Join(",", result.Errors));
+                return action.WithError(
+                    string.Format("角色添加失败，因为{0}", string.Join(",", result.Errors)));
             }
 
-            return action.WithSuccess("角色{0}添加成功。", role.Name);
+            return action.WithSuccess(
+                string.Format("角色{0}添加成功。", role.Name));
         }
     }
 }

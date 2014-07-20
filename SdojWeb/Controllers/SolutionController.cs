@@ -47,7 +47,8 @@ namespace SdojWeb.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
             {
-                return RedirectToAction("Index").WithError("未找到id为{0}的解答。", id);
+                return RedirectToAction("Index").WithError(
+                    string.Format("未找到id为{0}的解答。", id));
             }
             if (!User.IsUserOrAdmin(solution.CreateUserId))
             {

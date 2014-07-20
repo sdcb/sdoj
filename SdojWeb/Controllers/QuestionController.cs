@@ -40,7 +40,8 @@ namespace SdojWeb.Controllers
 
             if (question == null)
             {
-                return RedirectToAction("Index").WithError("没找到 id 为 {0} 的题目。", id);
+                return RedirectToAction("Index").WithError(
+                    string.Format("没找到 id 为 {0} 的题目。", id));
             }
 
             return View(question);

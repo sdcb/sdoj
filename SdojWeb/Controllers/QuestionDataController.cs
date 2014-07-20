@@ -82,8 +82,8 @@ namespace SdojWeb.Controllers
 
             if (model == null)
             {
-                return RedirectToAction("ListForQuestion", new {id=questionId})
-                    .WithInfo("未找到id为{0}的测试数据。", id);
+                return RedirectToAction("ListForQuestion", new {id=questionId}).WithInfo(
+                    string.Format("未找到id为{0}的测试数据。", id));
             }
 
             return View(model);
@@ -117,8 +117,8 @@ namespace SdojWeb.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id.Value);
             if (model == null)
             {
-                return RedirectToAction("ListForQuestion", new { id = questionId })
-                    .WithError("没找到Id为{0}的测试数据。", id);
+                return RedirectToAction("ListForQuestion", new { id = questionId }).WithError(
+                    string.Format("没找到Id为{0}的测试数据。", id));
             }
 
             return View(model);
@@ -131,23 +131,16 @@ namespace SdojWeb.Controllers
             var model = await _db.QuestionDatas.FindAsync(id);
             if (model == null)
             {
-                return RedirectToAction("ListForQuestion", new { id = questionId })
-                    .WithError("没找到Id为{0}的测试数据。", id);
+                return RedirectToAction("ListForQuestion", new { id = questionId }).WithError(
+                    string.Format("没找到Id为{0}的测试数据。", id));
             }
 
             _db.Entry(model).State = EntityState.Deleted;
             var affectedRows = await _db.SaveChangesAsync();
             // assert affectedRows = 1.
 
-            return RedirectToAction("ListForQuestion", new { id = questionId })
-                .WithSuccess("Id为{0}的测试数据删除成功。", id);
-        }
-
-        // GET: /QuestionData/Fetch?id=1,2,3,4,5
-        [JudgeClientAuthorize]
-        public ActionResult Fetch()
-        {
-            return Content("not implemented.");
+            return RedirectToAction("ListForQuestion", new { id = questionId }).WithSuccess(
+                string.Format("Id为{0}的测试数据删除成功。", id));
         }
     }
 }

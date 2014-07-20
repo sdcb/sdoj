@@ -231,7 +231,6 @@
     <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\SortablePagedList.cs" />
     <Compile Include="Infrastructure\Identity\CustomClaims.cs" />
-    <Compile Include="Infrastructure\Identity\JudgeClientAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
