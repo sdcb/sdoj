@@ -12,6 +12,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
+    [SdojAuthorize(EmailConfirmed = true)]
     public class SolutionController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
@@ -22,6 +23,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution
+        [AllowAnonymous]
         public ActionResult Index(int? page, bool? onlyMe)
         {
             page = page ?? 1;
@@ -39,7 +41,6 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution/Details/5
-        [SdojAuthorize]
         public async Task<ActionResult> Details(int id)
         {
             var solution = await _dbContext.Solutions
@@ -59,7 +60,6 @@ namespace SdojWeb.Controllers
 
         //
         // GET: Solution/Create/id
-        [SdojAuthorize]
         public ActionResult Create(int? id)
         {
             var solutionCreateModel = new SolutionCreateModel {QuestionId = id??0};
@@ -69,7 +69,7 @@ namespace SdojWeb.Controllers
         // POST: Solution/Create/id
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, SdojAuthorize, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(
             [Bind(Include = "QuestionId,Language,Source")] SolutionCreateModel model)
         {
@@ -92,7 +92,6 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Solution/Delete/5
-        [SdojAuthorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -114,8 +113,7 @@ namespace SdojWeb.Controllers
         }
 
         // POST: Solution/Delete/5
-        [HttpPost, ActionName("Delete"), SdojAuthorize]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Solution solution = await _dbContext.Solutions.FindAsync(id);

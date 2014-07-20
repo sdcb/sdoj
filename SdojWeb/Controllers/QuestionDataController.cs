@@ -10,7 +10,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    [Authorize]
+    [SdojAuthorize(EmailConfirmed = true)]
     public class QuestionDataController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -21,12 +21,8 @@ namespace SdojWeb.Controllers
         }
 
         // GET: /QuestionData/ListForQuestion/5
-        public async Task<ActionResult> ListForQuestion(int? id)
+        public async Task<ActionResult> ListForQuestion(int id)
         {
-            if (id == null)
-            {
-                return RedirectToAction("Index", "Question").WithInfo("没找到给定的题目。");
-            }
             var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
                 .Project().To<QuestionDataSummaryModel>()
                 .ToArrayAsync();
@@ -41,13 +37,9 @@ namespace SdojWeb.Controllers
         }
 
         // GET: /QuestionData/CreateForQuestion/5
-        public ActionResult CreateForQuestion(int? id)
+        public ActionResult CreateForQuestion(int id)
         {
-            if (id == null)
-            {
-                return RedirectToAction("Index", "Question");
-            }
-            var model = new QuestionDataEditModel {QuestionId = id.Value};
+            var model = new QuestionDataEditModel {QuestionId = id};
             return View(model);
         }
 
@@ -69,16 +61,11 @@ namespace SdojWeb.Controllers
         }
 
         // GET: /QuestionData/Edit/5
-        public async Task<ActionResult> Edit(int? id, int questionId)
+        public async Task<ActionResult> Edit(int id, int questionId)
         {
-            if (id == null)
-            {
-                return RedirectToAction("ListForQuestion", new {id = questionId})
-                    .WithError("id不能为空。");
-            }
             var model = await _db.QuestionDatas
                 .Project().To<QuestionDataEditModel>()
-                .FirstOrDefaultAsync(x => x.Id == id.Value);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (model == null)
             {
@@ -91,7 +78,7 @@ namespace SdojWeb.Controllers
 
         // POST: /QuestionData/Edit
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="Id,QuestionId,Input,Output")] QuestionDataEditModel model)
+        public async Task<ActionResult> Edit(QuestionDataEditModel model)
         {
             if (ModelState.IsValid)
             {
@@ -105,16 +92,11 @@ namespace SdojWeb.Controllers
         }
 
         // GET: /QuestionData/Delete/5
-        public async Task<ActionResult> Delete(int? id, int? questionId)
+        public async Task<ActionResult> Delete(int id, int questionId)
         {
-            if (id == null)
-            {
-                return RedirectToAction("ListForQuestion", new {id = questionId});
-            }
-
             var model = await _db.QuestionDatas
                 .Project().To<QuestionDataEditModel>()
-                .FirstOrDefaultAsync(x => x.Id == id.Value);
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (model == null)
             {
                 return RedirectToAction("ListForQuestion", new { id = questionId }).WithError(
@@ -136,8 +118,7 @@ namespace SdojWeb.Controllers
             }
 
             _db.Entry(model).State = EntityState.Deleted;
-            var affectedRows = await _db.SaveChangesAsync();
-            // assert affectedRows = 1.
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("ListForQuestion", new { id = questionId }).WithSuccess(
                 string.Format("Id为{0}的测试数据删除成功。", id));

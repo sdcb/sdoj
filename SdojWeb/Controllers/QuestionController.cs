@@ -12,6 +12,7 @@ using AutoMapper.QueryableExtensions;
 
 namespace SdojWeb.Controllers
 {
+    [SdojAuthorize(EmailConfirmed = true)]
     public class QuestionController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
@@ -22,6 +23,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions
+        [AllowAnonymous]
         public ActionResult Index(int? page, string orderBy, bool? asc)
         {
             var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>();
@@ -30,6 +32,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Details/5
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,7 +51,6 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Create
-        [SdojAuthorize]
         public ActionResult Create()
         {
             return View();
@@ -57,9 +59,8 @@ namespace SdojWeb.Controllers
         // POST: Questions/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, SdojAuthorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionCreateModel createModel)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +74,6 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Edit/5
-        [SdojAuthorize]
         public async Task<ActionResult> Edit(int id)
         {
             var question = await _dbContext.Questions.FindAsync(id);
@@ -94,9 +94,8 @@ namespace SdojWeb.Controllers
         // POST: Questions/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, SdojAuthorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,SampleInput,SampleOutput,MemoryLimitMB,TimeLimit")] QuestionEditModel model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(QuestionEditModel model)
         {
             if (ModelState.IsValid)
             {
@@ -120,7 +119,6 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Delete/5
-        [SdojAuthorize]
         public async Task<ActionResult> Delete(int id)
         {
             var question = await _dbContext.Questions.FindAsync(id);
@@ -137,8 +135,7 @@ namespace SdojWeb.Controllers
         }
 
         // POST: Questions/Delete/5
-        [HttpPost, ActionName("Delete"), SdojAuthorize]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var question = await _dbContext.Questions.FindAsync(id);

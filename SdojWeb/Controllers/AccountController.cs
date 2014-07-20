@@ -13,7 +13,7 @@ using SdojWeb.Infrastructure.Alerts;
 
 namespace SdojWeb.Controllers
 {
-    [Authorize]
+    [SdojAuthorize(EmailConfirmed = false)]
     public class AccountController : Controller
     {
         private readonly ApplicationUserManager _userManager;

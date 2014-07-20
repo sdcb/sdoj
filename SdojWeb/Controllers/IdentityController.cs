@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
@@ -9,7 +8,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    [SdojAuthorize(Roles = SystemRoles.Admin)]
+    [SdojAuthorize(Roles = SystemRoles.Admin, EmailConfirmed = true)]
     public class IdentityController : Controller
     {
         public ApplicationUserManager UserMgr { get; set; }
