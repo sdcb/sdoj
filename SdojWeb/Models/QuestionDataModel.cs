@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using AutoMapper;
@@ -22,8 +20,6 @@ namespace SdojWeb.Models
         public string Output { get; set; }
 
         public DateTime UpdateTime { get; set; }
-
-        public ICollection<Question> NoUseQuestions { get; set; }
     }
 
     public class QuestionDataHashModel : IMapFrom<QuestionData>

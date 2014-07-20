@@ -20,8 +20,6 @@ namespace SdojWeb.Models
         {
         }
 
-        public ICollection<Question> Questions { get; set; }
-
         public ApplicationUser(string email)
         {
             Email = email;

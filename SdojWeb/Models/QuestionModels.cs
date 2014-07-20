@@ -34,7 +34,7 @@ namespace SdojWeb.Models
 
         public DateTime UpdateTime { get; set; }
 
-        public int SampleDataId { get; set; }
+        public int? SampleDataId { get; set; }
 
         public QuestionData SampleData { get; set; }
 
