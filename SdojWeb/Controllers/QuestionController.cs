@@ -72,15 +72,17 @@ namespace SdojWeb.Controllers
         // GET: Questions/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var question = await _dbContext.Questions.FindAsync(id);
+            var question = await _dbContext
+                .Questions
+                .Project().To<QuestionEditModel>()
+                .FirstAsync(x => x.Id == id);
 
             if (!User.IsUserOrAdmin(question.CreateUserId))
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
             }
 
-            var model = Mapper.Map<QuestionEditModel>(question);
-            return View(model);
+            return View(question);
         }
 
         // POST: Questions/Edit/5
@@ -91,20 +93,17 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var secretModel = await _dbContext.Questions.Where(x => x.Id == model.Id)
-                            .Project()
-                            .To<QuestionNotMappedEditModel>()
-                            .FirstOrDefaultAsync();
+                var secretModel = await _dbContext.Questions
+                    .Where(x => x.Id == model.Id)
+                    .Project().To<QuestionNotMappedEditModel>()
+                    .FirstOrDefaultAsync();
+
                 if (!User.IsUserOrAdmin(secretModel.CreateUserId))
                 {
                     return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
                 }
-                var question = new Question();
-                Mapper.Map(model, question);
-                Mapper.Map(secretModel, question);
 
-                _dbContext.Entry(question).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
+                await _manager.Update(secretModel, model);
                 return RedirectToAction("Index");
             }
             return View(model);

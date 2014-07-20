@@ -33,5 +33,18 @@ namespace SdojWeb.Manager
         }
 
         public readonly ApplicationDbContext DbContext;
+
+        public async Task Update(QuestionNotMappedEditModel secretModel, QuestionEditModel model)
+        {
+            var question = new Question();
+            Mapper.Map(model, question);
+            Mapper.Map(secretModel, question);
+
+            question.SampleData.Input = model.SampleInput;
+            question.SampleData.Output = model.SampleOutput;
+            question.UpdateTime = DateTime.Now;
+
+            await DbContext.SaveChangesAsync();
+        }
     }
 }

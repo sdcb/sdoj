@@ -5,9 +5,7 @@ using System.Data.Entity;
 namespace SdojWeb.Models
 {
     public class ApplicationDbContext :
-        IdentityDbContext
-            <ApplicationUser, ApplicationRole, int, ApplicationUserLogin,
-                ApplicationUserRole, ApplicationUserClaim>
+        IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin,ApplicationUserRole, ApplicationUserClaim>
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -40,7 +38,8 @@ namespace SdojWeb.Models
 
         public static ApplicationDbContext Create()
         {
-            return new ApplicationDbContext();
+            var db = new ApplicationDbContext();
+            return db;
         }
     }
 }

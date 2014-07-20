@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -53,14 +52,11 @@ namespace SdojWeb.Models
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
-            IOwinContext context)
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager =
-                new ApplicationUserManager(
-                    new UserStore
-                        <ApplicationUser, ApplicationRole, int, ApplicationUserLogin,
-                            ApplicationUserRole, ApplicationUserClaim>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(
+                    new UserStore<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>(
+                        context.Get<ApplicationDbContext>()));
             // 配置用户名的验证逻辑
             manager.UserValidator = new UserValidator<ApplicationUser, int>(manager)
             {
@@ -142,7 +138,8 @@ namespace SdojWeb.Models
 
     public class ApplicationRoleManager : RoleManager<ApplicationRole, int>
     {
-        public ApplicationRoleManager(IRoleStore<ApplicationRole, int> store) : base(store)
+        public ApplicationRoleManager(IRoleStore<ApplicationRole, int> store)
+            : base(store)
         {
         }
 
@@ -162,8 +159,8 @@ namespace SdojWeb.Models
             var uid = identity.GetUserId();
             int intuid;
 
-            return int.TryParse(uid, out intuid) ? 
-                intuid : 
+            return int.TryParse(uid, out intuid) ?
+                intuid :
                 0;
         }
     }

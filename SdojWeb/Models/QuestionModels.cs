@@ -119,7 +119,7 @@ namespace SdojWeb.Models
         public int TimeLimit { get; set; }
 
         [HiddenInput]
-        public int QuestionDataId { get; set; }
+        public int? QuestionDataId { get; set; }
 
         [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }
@@ -127,6 +127,8 @@ namespace SdojWeb.Models
         [Display(Name = "输出样例"), Required, DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
+        [HiddenInput]
+        public int CreateUserId { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
         {
@@ -135,7 +137,8 @@ namespace SdojWeb.Models
             configuration.CreateMap<Question, QuestionEditModel>()
                 .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
                 .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
-                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId));
+                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId))
+                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId));
         }
     }
 
@@ -145,7 +148,9 @@ namespace SdojWeb.Models
 
         public DateTime CreateTime { get; set; }
 
-        public int SampleDataId { get; set; }
+        public int? SampleDataId { get; set; }
+
+        public QuestionData SampleData { get; set; }
     }
 
     public class QuestionSummaryViewModel : IMapFrom<Question>
