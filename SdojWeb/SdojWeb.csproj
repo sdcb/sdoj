@@ -213,6 +213,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
+    <Compile Include="Manager\QuestionManager.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
@@ -370,7 +371,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Manager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

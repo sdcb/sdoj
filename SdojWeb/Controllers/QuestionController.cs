@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
+using SdojWeb.Manager;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
 using AutoMapper.QueryableExtensions;
@@ -15,11 +16,10 @@ namespace SdojWeb.Controllers
     [SdojAuthorize(EmailConfirmed = true)]
     public class QuestionController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
-
-        public QuestionController(ApplicationDbContext dbContext)
+        public QuestionController(ApplicationDbContext dbContext, QuestionManager manager)
         {
             _dbContext = dbContext;
+            _manager = manager;
         }
 
         // GET: Questions
@@ -62,18 +62,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var question = Mapper.Map<Question>(createModel);
-                question.SampleData = new QuestionData
-                {
-                    Input = createModel.SampleInput,
-                    Output = createModel.SampleOutput,
-                    QuestionId = question.Id,
-                    UpdateTime = DateTime.Now, 
-                    Question = question, 
-                };
-                _dbContext.Questions.Add(question);
-                await _dbContext.SaveChangesAsync();
-
+                await _manager.Create(createModel);
                 return RedirectToAction("Index");
             }
 
@@ -155,5 +144,9 @@ namespace SdojWeb.Controllers
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        private readonly ApplicationDbContext _dbContext;
+
+        private readonly QuestionManager _manager;
     }
 }
