@@ -25,7 +25,7 @@ namespace SdojWeb.Migrations
             userManager.Create(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new ApplicationUser("judger@sdcb.in"), "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new ApplicationUser("judger@sdcb.in") { EmailConfirmed = true },  "A-Pa5sword-That:Never8eenUsed");
 
             roleManager.Create(new ApplicationRole(SystemRoles.Admin));
             roleManager.Create(new ApplicationRole(SystemRoles.Judger));

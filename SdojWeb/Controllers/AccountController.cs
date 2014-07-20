@@ -148,8 +148,16 @@ namespace SdojWeb.Controllers
 
         //
         // GET: /Account/ReSendConfirmEmail
-        public ActionResult ReSendConfirmEmail()
+        public async Task<ActionResult> ReSendConfirmEmail()
         {
+            var userId = User.Identity.GetIntUserId();
+            var user = _db.Users.Find(userId);
+            if (user.EmailConfirmed)
+            {
+                await SignInAsync(user, false);
+                return RedirectToAction("Index", "Home").WithSuccess("你的帐号已通过验证，不需要重发验证邮件。");
+            }
+
             return View();
         }
 

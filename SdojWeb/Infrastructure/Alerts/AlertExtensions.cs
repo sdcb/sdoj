@@ -17,27 +17,23 @@ namespace SdojWeb.Infrastructure.Alerts
             return (List<Alert>)tempData[Alerts];
         }
 
-        public static ActionResult WithSuccess(this ActionResult result, string format, params object[] args)
+        public static ActionResult WithSuccess(this ActionResult result, string text)
         {
-            var text = string.Format(format, args);
             return new AlertDecoratorResult(result, "alert-success", text);
         }
 
-        public static ActionResult WithInfo(this ActionResult result, string format, params object[] args)
+        public static ActionResult WithInfo(this ActionResult result, string text)
         {
-            var text = string.Format(format, args);
             return new AlertDecoratorResult(result, "alert-info", text);
         }
 
-        public static ActionResult WithWarning(this ActionResult result, string format, params object[] args)
+        public static ActionResult WithWarning(this ActionResult result, string text)
         {
-            var text = string.Format(format, args);
             return new AlertDecoratorResult(result, "alert-warning", text);
         }
 
-        public static ActionResult WithError(this ActionResult result, string format, params object[] args)
+        public static ActionResult WithError(this ActionResult result, string text)
         {
-            var text = string.Format(format, args);
             return new AlertDecoratorResult(result, "alert-danger", text);
         }
     }
