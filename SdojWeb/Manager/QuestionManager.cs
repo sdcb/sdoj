@@ -15,6 +15,7 @@ namespace SdojWeb.Manager
         public async Task Create(QuestionCreateModel model)
         {
             var question = Mapper.Map<Question>(model);
+            DbContext.Questions.Add(question);
             await DbContext.SaveChangesAsync();
             
             var sampleData = new QuestionData
@@ -23,10 +24,11 @@ namespace SdojWeb.Manager
                 Output = model.SampleOutput,
                 QuestionId = question.Id,
                 UpdateTime = DateTime.Now,
-                Question = question,
             };
-            DbContext.Questions.Add(question);
-            
+            await DbContext.SaveChangesAsync();
+
+            question.SampleDataId = sampleData.Id;
+            await DbContext.SaveChangesAsync();
         }
 
         public readonly ApplicationDbContext DbContext;
