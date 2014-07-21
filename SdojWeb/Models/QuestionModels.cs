@@ -163,10 +163,10 @@ namespace SdojWeb.Models
         [Display(Name = "标题")]
         public string Name { get; set; }
 
-        [Display(Name = "内存限制(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
+        [Display(Name = "内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)")]
+        [Display(Name = "时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
         [Display(Name = "更新时间")]
