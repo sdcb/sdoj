@@ -21,7 +21,7 @@ namespace SdojWeb.Models
         [Required, MaxLength(30), Index(IsUnique = true)]
         public string Name { get; set; }
 
-        [Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        [Required, MaxLength(4000)]
         public string Description { get; set; }
 
         public float MemoryLimitMb { get; set; }
