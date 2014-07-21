@@ -32,6 +32,7 @@ namespace SdojWeb.Models
 
         public DateTime UpdateTime { get; set; }
 
+        // 这里必须要为可空，因为存在和QuestionData的循环引用。
         public int? SampleDataId { get; set; }
 
         public QuestionData SampleData { get; set; }
