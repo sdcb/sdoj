@@ -24,10 +24,8 @@ namespace SdojWeb.Models
         [Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [DefaultValue(64)]
         public float MemoryLimitMb { get; set; }
 
-        [DefaultValue(1000)]
         public int TimeLimit { get; set; }
 
         public DateTime CreateTime { get; set; }
