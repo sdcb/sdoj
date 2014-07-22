@@ -114,22 +114,6 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-        // GET: Questions/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            var question = await _dbContext.Questions.FindAsync(id);
-            if (question == null)
-            {
-                return RedirectToAction("Index").WithError("未找到该题目。");
-            }
-            if (!User.IsUserOrAdmin(question.CreateUserId))
-            {
-                return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
-            }
-
-            return View(question);
-        }
-
         // POST: Questions/Delete/5
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
