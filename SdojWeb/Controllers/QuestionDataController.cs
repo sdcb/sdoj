@@ -27,11 +27,6 @@ namespace SdojWeb.Controllers
                 .Project().To<QuestionDataSummaryModel>()
                 .ToArrayAsync();
 
-            if (questionDatas.Length == 0)
-            {
-                return View(questionDatas).WithInfo("该题目目前没有任何测试数据。");
-            }
-
             ViewBag.QuestionId = id;
             ViewBag.IsUserOwnsQuestion = await _questionMgr.IsUserOwnsQuestion(id);
             return View(questionDatas);
