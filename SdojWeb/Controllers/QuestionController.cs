@@ -62,11 +62,18 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _manager.Create(createModel);
-                return RedirectToAction("Index");
+                if (await _manager.ExistName(createModel.Name))
+                {
+                    ModelState.AddModelError("Name", "已有同名的题目。");
+                }
+                else
+                {
+                    await _manager.Create(createModel);
+                    return RedirectToAction("Index");
+                }
             }
 
-            return View(createModel).WithError("ModelState构造失败");
+            return View(createModel);
         }
 
         // GET: Questions/Edit/5

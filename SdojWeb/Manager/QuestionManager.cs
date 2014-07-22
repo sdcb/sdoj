@@ -69,6 +69,12 @@ namespace SdojWeb.Manager
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<bool> ExistName(string name)
+        {
+            return await DbContext.Questions
+                .AnyAsync(x => x.Name == name);
+        }
+
         public readonly ApplicationDbContext DbContext;
 
         public readonly IPrincipal User;
