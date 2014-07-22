@@ -97,6 +97,12 @@ namespace SdojWeb.Models
                 .ForMember(source => source.CreateTime, dest => dest.MapFrom(x => DateTime.Now))
                 .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => HttpContext.Current.User.Identity.GetIntUserId()))
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
+            configuration.CreateMap<QuestionCreateModel, QuestionData>()
+                .ForMember(s => s.Input, d => d.MapFrom(x => x.SampleInput))
+                .ForMember(s => s.Output, d => d.MapFrom(x => x.SampleOutput))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.MemoryLimitMb))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.TimeLimit))
+                .ForMember(s => s.UpdateTime, d => d.MapFrom(x => DateTime.Now));
         }
     }
 

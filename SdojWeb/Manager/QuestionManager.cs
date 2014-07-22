@@ -22,14 +22,9 @@ namespace SdojWeb.Manager
             var question = Mapper.Map<Question>(model);
             DbContext.Questions.Add(question);
             await DbContext.SaveChangesAsync();
-            
-            var data = new QuestionData
-            {
-                Input = model.SampleInput,
-                Output = model.SampleOutput,
-                QuestionId = question.Id,
-                UpdateTime = DateTime.Now,
-            };
+
+            var data = Mapper.Map<QuestionData>(model);
+            data.QuestionId = question.Id;
             DbContext.QuestionDatas.Add(data);
             await DbContext.SaveChangesAsync();
 

@@ -90,6 +90,12 @@ namespace SdojWeb.Models
         [Display(Name = "输出数据"), DataType(DataType.MultilineText), Required]
         public string Output { get; set; }
 
+        [Display(Name = "内存限制(MB)"), Required]
+        public float MemoryLimitMb { get; set; }
+
+        [Display(Name = "时间限制(ms)"), Required]
+        public int TimeLimit { get; set; }
+
         [HiddenInput]
         public int CreateUserId { get; set; }
 
