@@ -7,7 +7,7 @@
 <h2>@ViewBag.Title</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Question", FormMethod.Post, new {id="create-form"})) 
 {
     @Html.AntiForgeryToken()
     
@@ -29,6 +29,23 @@
     @Html.ActionLink("返回列表", "Index")
 </div>
 
+@using (Ajax.BeginForm("CheckName", "Question", new AjaxOptions {OnSuccess = "checkFinished"}, new {id="check-form"}))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="name"/>
+}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryajax")
+    <script>
+        $("form input[name='Name']").focusout(function() {
+            $("#check-form input[name='name']").val($(this).val());
+            $("#check-form").submit();
+        });
+
+        function checkFinished(result) {
+            
+        };
+    </script>
 }
