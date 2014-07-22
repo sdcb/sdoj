@@ -1,9 +1,7 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
