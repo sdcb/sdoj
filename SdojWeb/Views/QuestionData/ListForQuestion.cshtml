@@ -25,6 +25,12 @@
             @Html.DisplayNameFor(model => model.OutputLength)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.MemoryLimitMb)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeLimit)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.UpdateTime)
         </th>
         <th></th>
@@ -41,6 +47,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OutputLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeLimit)
             </td>
             <td>
                 <a title="编辑此测试数据" href='@Url.Action("Edit", new { id = item.Id, questionId = item.QuestionId })'>
