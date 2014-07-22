@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -23,10 +23,6 @@ namespace SdojWeb.Models
 
         [Required, MaxLength(4000)]
         public string Description { get; set; }
-
-        public float MemoryLimitMb { get; set; }
-
-        public int TimeLimit { get; set; }
 
         public DateTime CreateTime { get; set; }
 
@@ -53,10 +49,10 @@ namespace SdojWeb.Models
         [Display(Name = "描述"), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "内存限制(MB)")]
+        [Display(Name = "总内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)")]
+        [Display(Name = "总时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
         [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
@@ -68,14 +64,16 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
-                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
-                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output));
+                .ForMember(s => s.SampleInput, d => d.MapFrom(x => x.SampleData.Input))
+                .ForMember(s => s.SampleOutput, d => d.MapFrom(x => x.SampleData.Output))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
         }
     }
 
     public class QuestionCreateModel : IHaveCustomMapping
     {
-        [Display(Name = "标题"), Required, MaxLength(30)]
+        [Display(Name = "标题"), Required, Remote("CheckName", "Question"), MaxLength(30)]
         public string Name { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
@@ -87,10 +85,10 @@ namespace SdojWeb.Models
         [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
-        [Display(Name = "内存限制(MB)"), DefaultValue(64)]
+        [Display(Name = "内存限制(MB)"), Required]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
+        [Display(Name = "时间限制(ms)"), Required]
         public int TimeLimit { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
@@ -113,10 +111,10 @@ namespace SdojWeb.Models
         [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "内存限制(MB)"), DefaultValue(64)]
+        [Display(Name = "内存限制(MB)"), Editable(false)]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)"), DefaultValue(1000)]
+        [Display(Name = "时间限制(ms)"), Editable(false)]
         public int TimeLimit { get; set; }
 
         [HiddenInput]
@@ -139,7 +137,9 @@ namespace SdojWeb.Models
                 .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
                 .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
                 .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId))
-                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId));
+                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit))); 
         }
     }
 
@@ -181,7 +181,9 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<Question, QuestionSummaryViewModel>()
                 .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
-                .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count));
+                .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
         }
     }
 }

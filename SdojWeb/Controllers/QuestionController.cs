@@ -133,11 +133,10 @@ namespace SdojWeb.Controllers
             return RedirectToAction("Index").WithSuccess("删除成功。");
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> CheckName(string name)
         {
             var exist = await _manager.ExistName(name);
-            return Json(exist);
+            return Json(!exist, JsonRequestBehavior.AllowGet);
         }
 
         private readonly ApplicationDbContext _dbContext;

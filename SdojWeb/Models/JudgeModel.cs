@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
 
@@ -25,11 +26,11 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Solution, JudgeModel>()
-                .ForMember(source => source.TimeLimit, dest => dest.MapFrom(x => x.Question.TimeLimit))
-                .ForMember(source => source.MemoryLimit, dest => dest.MapFrom(x => (long) (x.Question.MemoryLimitMb*1024*1024)))
-                .ForMember(source => source.SolutionId, dest => dest.MapFrom(x => x.Id))
-                .ForMember(source => source.QuestionDatas, dest => dest.MapFrom(x => x.Question.Datas))
-                .ForMember(source => source.QuestionCreateUserId, dest => dest.MapFrom(x => x.Question.CreateUserId));
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Question.Datas.Sum(v => v.TimeLimit)))
+                .ForMember(s => s.MemoryLimit, d => d.MapFrom(x => x.Question.Datas.Max(v => v.MemoryLimitMb)))
+                .ForMember(s => s.SolutionId, d => d.MapFrom(x => x.Id))
+                .ForMember(s => s.QuestionDatas, d => d.MapFrom(x => x.Question.Datas))
+                .ForMember(s => s.QuestionCreateUserId, d => d.MapFrom(x => x.Question.CreateUserId));
         }
     }
 }
