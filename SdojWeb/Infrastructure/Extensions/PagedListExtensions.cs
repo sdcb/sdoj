@@ -9,11 +9,15 @@ namespace SdojWeb.Infrastructure.Extensions
         {
             page = page ?? 1;
             orderBy = orderBy ?? "Id";
-            asc = asc ?? true;
+            asc = asc ?? false;
 
             var orderByString = string.Format("{0} {1}", orderBy, asc.Value ? "asc" : "desc");
             var ordered = models.OrderBy(orderByString);
-            var sortablePagedList = new SortablePagedList<TModel>(ordered, page.Value, AppSettings.DefaultPageSize);
+            var sortablePagedList = new SortablePagedList<TModel>(ordered, page.Value, AppSettings.DefaultPageSize)
+            {
+                OrderBy = orderBy, 
+                Asc = asc.Value
+            };
             return sortablePagedList;
         }
     }
