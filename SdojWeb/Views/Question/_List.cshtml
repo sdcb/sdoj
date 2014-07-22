@@ -27,7 +27,7 @@
         <th>
             @Html.SortableHeaderFor(model => model.UpdateTime, "Index", orderBy, asc)
         </th>
-        <th>操作</th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -51,10 +51,11 @@
                 @Html.DisplayFor(modelItem => item.SolutionCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdateTime)
+                <a href="@Url.Action("Edit", new {id=item.Id})">
+                    @Html.DisplayFor(modelItem => item.UpdateTime)
+                </a>
             </td>
             <td>
-                <a href="@Url.Action("Edit", new {id=item.Id})" title="编辑" class="glyphicon glyphicon-pencil"></a>
                 <a href="#" data-id="@item.Id" title="删除" class="glyphicon glyphicon-remove text-danger delete-link"></a>
             </td>
         </tr>

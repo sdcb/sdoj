@@ -21,19 +21,18 @@ namespace SdojWeb.Models
         [Required, MaxLength(30), Index(IsUnique = true)]
         public string Name { get; set; }
 
-        [Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        [Required, MaxLength(4000)]
         public string Description { get; set; }
 
-        [DefaultValue(64)]
         public float MemoryLimitMb { get; set; }
 
-        [DefaultValue(1000)]
         public int TimeLimit { get; set; }
 
         public DateTime CreateTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
 
+        // 这里必须要为可空，因为存在和QuestionData的循环引用。
         public int? SampleDataId { get; set; }
 
         public QuestionData SampleData { get; set; }
@@ -163,10 +162,10 @@ namespace SdojWeb.Models
         [Display(Name = "标题")]
         public string Name { get; set; }
 
-        [Display(Name = "内存限制(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
+        [Display(Name = "内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
         public float MemoryLimitMb { get; set; }
 
-        [Display(Name = "时间限制(ms)")]
+        [Display(Name = "时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
         [Display(Name = "更新时间")]
