@@ -26,7 +26,7 @@ namespace SdojWeb.Models
         public DateTime UpdateTime { get; set; }
     }
 
-    public class QuestionDataHashModel : IMapFrom<QuestionData>
+    public class QuestionDataFullModel : IMapFrom<QuestionData>
     {
         public int Id { get; set; }
 
@@ -37,9 +37,13 @@ namespace SdojWeb.Models
         public string Input { get; set; }
 
         public string Output { get; set; }
+
+        public float MemoryLimitMb { get; set; }
+
+        public int TimeLimit { get; set; }
     }
 
-    public class QuestionDataFullModel : IMapFrom<QuestionData>
+    public class QuestionDataHashModel : IMapFrom<QuestionData>
     {
         public int Id { get; set; }
 

@@ -13,5 +13,9 @@ namespace SdojJudger.Models
         public string Input { get; set; }
 
         public string Output { get; set; }
+
+        public float MemoryLimitMb { get; set; }
+
+        public int TimeLimit { get; set; }
     }
 }

@@ -180,7 +180,7 @@ namespace SdojWeb.Models
         [Display(Name = "测试数据"), DisplayFormat(DataFormatString = "{0}个")]
         public int DataCount { get; set; }
 
-        [Display(Name = "提交数"), DisplayFormat(DataFormatString = "{0}个")]
+        [Display(Name = "解答数"), DisplayFormat(DataFormatString = "{0}个")]
         public int SolutionCount { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
