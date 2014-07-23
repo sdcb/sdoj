@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@ namespace SdojWeb.Models
 
         public int CreateUserId { get; set; }
 
-        public ApplicationUser CreateUser { get; set; }
+        public User CreateUser { get; set; }
         
         [Required, MaxLength(30), Index(IsUnique = true)]
         public string Name { get; set; }

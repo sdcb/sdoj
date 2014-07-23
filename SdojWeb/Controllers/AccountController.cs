@@ -6,6 +6,7 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using Microsoft.Web.Mvc;
@@ -106,7 +107,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser(model.Email);
+                var user = new User(model.Email);
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -451,7 +452,7 @@ namespace SdojWeb.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser(model.Email);
+                var user = new User(model.Email);
                 IdentityResult result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -513,7 +514,7 @@ namespace SdojWeb.Controllers
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        private async Task SignInAsync(User user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await user.GenerateUserIdentityAsync(UserManager);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Security.Principal;
-using SdojWeb.Models;
+using SdojWeb.Infrastructure.Extensions;
 
 namespace SdojWeb.Infrastructure.Identity
 {

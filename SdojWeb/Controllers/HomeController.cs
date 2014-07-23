@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using SdojWeb.Infrastructure.Filters;
 
 namespace SdojWeb.Controllers
 {

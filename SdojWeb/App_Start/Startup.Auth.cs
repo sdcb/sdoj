@@ -30,7 +30,7 @@ namespace SdojWeb
                 Provider = new CookieAuthenticationProvider
                 {
                     //OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser, int>(
-                    OnValidateIdentity = OnValidateIdentity<ApplicationUserManager, ApplicationUser, int>(
+                    OnValidateIdentity = OnValidateIdentity<ApplicationUserManager, User, int>(
                         validateInterval: TimeSpan.FromMinutes(20),
                         regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager), 
                         getUserIdCallback: identity => int.Parse(identity.GetUserId()))

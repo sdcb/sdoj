@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity;
 
 namespace SdojWeb.Models
 {
-    public class ApplicationDbContext :
-        IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin,ApplicationUserRole, ApplicationUserClaim>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -36,6 +34,14 @@ namespace SdojWeb.Models
         public DbSet<QuestionData> QuestionDatas { get; set; }
 
         public DbSet<SolutionLock> SolutionLocks { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+
+        public DbSet<UserClaim> UserClaims { get; set; }
+
+        public DbSet<UserLogin> UserLogins { get; set; }
 
         public static ApplicationDbContext Create()
         {

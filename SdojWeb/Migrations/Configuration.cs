@@ -1,7 +1,7 @@
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
+using SdojWeb.Models.Identity;
 
 namespace SdojWeb.Migrations
 {
@@ -18,17 +18,17 @@ namespace SdojWeb.Migrations
 
         protected override void Seed(ApplicationDbContext context)
         {
-            var roleStore = new RoleStore<ApplicationRole, int, ApplicationUserRole>(context);
-            var userManager = new ApplicationUserManager(new UserStore<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>(context));
-            var roleManager = new RoleManager<ApplicationRole, int>(roleStore);
+            var roleStore = new RoleStore(context);
+            var userManager = new ApplicationUserManager(new UserStore(context));
+            var roleManager = new RoleManager<Role, int>(roleStore);
 
-            userManager.Create(new ApplicationUser("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new ApplicationUser("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new ApplicationUser("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new ApplicationUser("judger@sdcb.in") { EmailConfirmed = true },  "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User("judger@sdcb.in") { EmailConfirmed = true },  "A-Pa5sword-That:Never8eenUsed");
 
-            roleManager.Create(new ApplicationRole(SystemRoles.Admin));
-            roleManager.Create(new ApplicationRole(SystemRoles.Judger));
+            roleManager.Create(new Role { Name = SystemRoles.Admin });
+            roleManager.Create(new Role { Name = SystemRoles.Judger });
 
             var user = userManager.FindByName("flysha@live.com");
             userManager.AddToRole(user.Id, SystemRoles.Admin);

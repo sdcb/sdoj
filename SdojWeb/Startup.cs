@@ -1,6 +1,5 @@
 ﻿using Microsoft.Owin;
 using Owin;
-using SdojWeb.SignalR;
 
 [assembly: OwinStartupAttribute(typeof(SdojWeb.Startup))]
 namespace SdojWeb
