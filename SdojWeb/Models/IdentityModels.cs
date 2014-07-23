@@ -1,4 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -34,6 +38,103 @@ namespace SdojWeb.Models
 
             return userIdentity;
         }
+    }
+
+    public class User : IUser<int>
+    {
+        public User()
+        {
+// ReSharper disable DoNotCallOverridableMethodsInConstructor
+            UserClaims = new HashSet<UserClaim>();
+            UserLogins = new HashSet<UserLogin>();
+            Questions = new HashSet<Question>();
+            Solutions = new HashSet<Solution>();
+            Roles = new HashSet<Role>();
+// ReSharper restore DoNotCallOverridableMethodsInConstructor
+        }
+
+        public int Id { get; set; }
+
+        [StringLength(256)]
+        public string Email { get; set; }
+
+        public bool EmailConfirmed { get; set; }
+
+        public string PasswordHash { get; set; }
+
+        public string SecurityStamp { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public bool PhoneNumberConfirmed { get; set; }
+
+        public bool TwoFactorEnabled { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? LockoutEndDateUtc { get; set; }
+
+        public bool LockoutEnabled { get; set; }
+
+        public int AccessFailedCount { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string UserName { get; set; }
+
+        public virtual ICollection<UserClaim> UserClaims { get; set; }
+
+        public virtual ICollection<UserLogin> UserLogins { get; set; }
+
+        public virtual ICollection<Question> Questions { get; set; }
+
+        public virtual ICollection<Solution> Solutions { get; set; }
+
+        public virtual ICollection<Role> Roles { get; set; }
+    }
+
+    public class Role : IRole<int>
+    {
+        public Role()
+        {
+// ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            Users = new HashSet<User>();
+        }
+
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string Name { get; set; }
+
+        public virtual ICollection<User> Users { get; set; }
+    }
+
+    public class UserClaim
+    {
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+
+        public string ClaimType { get; set; }
+
+        public string ClaimValue { get; set; }
+
+        public virtual User User { get; set; }
+    }
+
+    public class UserLogin
+    {
+        [Key]
+        public string LoginProvider { get; set; }
+
+        [Key]
+        public string ProviderKey { get; set; }
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int UserId { get; set; }
+
+        public virtual User User { get; set; }
     }
 
     public class UsefulUserModel : IMapFrom<ApplicationUser>
