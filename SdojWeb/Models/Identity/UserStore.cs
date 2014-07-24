@@ -382,7 +382,7 @@ namespace SdojWeb.Models
             }
 
 
-            return Task.FromResult(user.SecurityStamp);
+            return Task.FromResult(user.SecurityStamp.ToString());
         }
 
 
@@ -394,7 +394,7 @@ namespace SdojWeb.Models
             }
 
 
-            user.SecurityStamp = stamp;
+            user.SecurityStamp = new Guid(stamp);
             return Task.FromResult(0);
         }
 
