@@ -14,7 +14,8 @@ namespace SdojWeb.Infrastructure.IoC
             For<IPrincipal>().Use(() => HttpContext.Current.User);
             For<HttpContextBase>()
                 .Use(() => new HttpContextWrapper(HttpContext.Current));
-            For<ApplicationDbContext>().Use(ApplicationDbContext.Create);
+            For<ApplicationDbContext>().Use(() => 
+                ApplicationDbContext.Create());
             For<ApplicationUserManager>().Use(() =>
                 HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
             For<ApplicationRoleManager>().Use(() =>

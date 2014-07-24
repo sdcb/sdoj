@@ -8,7 +8,7 @@ namespace SdojWeb.Infrastructure.IoC
         {
             Scan(scan =>
             {
-                scan.TheCallingAssembly();
+                scan.AssemblyContainingType<MvcApplication>();
                 scan.WithDefaultConventions();
             });
         }

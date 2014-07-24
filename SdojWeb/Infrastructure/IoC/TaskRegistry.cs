@@ -9,9 +9,7 @@ namespace SdojWeb.Infrastructure.IoC
         {
             Scan(scan =>
             {
-                var myNamespace = typeof(MvcApplication).Namespace;
-                scan.AssembliesFromApplicationBaseDirectory(
-                    a => a.FullName.StartsWith(myNamespace));
+                scan.AssemblyContainingType<MvcApplication>();
                 scan.AddAllTypesOf<IRunAtInit>();
                 scan.AddAllTypesOf<IRunAtStartup>();
                 scan.AddAllTypesOf<IRunOnEachRequest>();

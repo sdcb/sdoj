@@ -41,8 +41,6 @@ namespace SdojWeb
                 cfg.AddRegistry(new MvcRegistry());
                 cfg.AddRegistry(new StandardRegistry());
                 cfg.AddRegistry(new ControllerRegistry());
-                cfg.AddRegistry(new ActionFilterRegistry(
-                    () => Container ?? ObjectFactory.Container));
                 cfg.AddRegistry(new TaskRegistry());
                 cfg.AddRegistry(new ModelMetadataRegistry());
             });

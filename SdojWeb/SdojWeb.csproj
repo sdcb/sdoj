@@ -138,9 +138,12 @@
     <Reference Include="PagedList.Mvc">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+    <Reference Include="StructureMap, Version=3.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap.3.0.5.130\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap.3.0.5.130\lib\net40\StructureMap.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -246,7 +249,6 @@
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\LabelConventionFilter.cs" />
-    <Compile Include="Infrastructure\IoC\ActionFilterRegistry.cs" />
     <Compile Include="Infrastructure\IoC\ControllerConvention.cs" />
     <Compile Include="Infrastructure\Filters\PageTimeLoggerFilter.cs" />
     <Compile Include="Infrastructure\IoC\ControllerRegistry.cs" />

@@ -11,7 +11,7 @@ namespace SdojWeb.Infrastructure.ModelMetadata
 
             Scan(scan =>
             {
-                scan.TheCallingAssembly();
+                scan.AssemblyContainingType<MvcApplication>();
                 scan.AddAllTypesOf<IModelMetadataFilter>(); 
             });
         }
