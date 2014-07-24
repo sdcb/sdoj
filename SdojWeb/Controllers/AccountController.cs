@@ -494,6 +494,39 @@ namespace SdojWeb.Controllers
             return PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
+        //
+        // POST: /Account/CheckEmail
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> CheckEmail(string email)
+        {
+            var exist = await DbContext.Users.AnyAsync(x => x.Email == email);
+            return Json(!exist);
+        }
+
+        // 
+        // POST: /Account/CheckUserName
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> CheckUserName(string username)
+        {
+            var exist = await DbContext.Users.AnyAsync(x => x.UserName == username);
+            return Json(!exist);
+        }
+
+        // 
+        // POST: /Account/DeleteMe
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMe()
+        {
+
+            var user = await DbContext.Users.FindAsync(User.Identity.GetIntUserId());
+            DbContext.Entry(user).State = EntityState.Deleted;
+            await DbContext.SaveChangesAsync();
+
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home").WithSuccess(
+                string.Format("用户{0}及其所有关联资料删除成功。", user.UserName));
+        }
+
         #region 帮助程序
         // 用于在添加外部登录名时提供 XSRF 保护
         private const string XsrfKey = "XsrfId";
@@ -576,32 +609,5 @@ namespace SdojWeb.Controllers
             }
         }
         #endregion
-
-        [HttpPost, AllowAnonymous]
-        public async Task<ActionResult> CheckEmail(string email)
-        {
-            var exist = await DbContext.Users.AnyAsync(x => x.Email == email);
-            return Json(!exist);
-        }
-
-        [HttpPost, AllowAnonymous]
-        public async Task<ActionResult> CheckUserName(string username)
-        {
-            var exist = await DbContext.Users.AnyAsync(x => x.UserName == username);
-            return Json(!exist);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMe()
-        {
-
-            var user = await DbContext.Users.FindAsync(User.Identity.GetIntUserId());
-            DbContext.Entry(user).State = EntityState.Deleted;
-            await DbContext.SaveChangesAsync();
-
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home").WithSuccess(
-                string.Format("用户{0}及其所有关联资料删除成功。", user.UserName));
-        }
     }
 }
