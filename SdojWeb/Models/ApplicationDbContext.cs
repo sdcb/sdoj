@@ -17,7 +17,7 @@ namespace SdojWeb.Models
 
             modelBuilder.Entity<Question>()
                 .HasRequired(q => q.CreateUser)
-                .WithMany()
+                .WithMany(u => u.Questions)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Question>()

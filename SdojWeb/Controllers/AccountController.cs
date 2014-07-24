@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -18,25 +17,17 @@ namespace SdojWeb.Controllers
     [SdojAuthorize(EmailConfirmed = false)]
     public class AccountController : Controller
     {
-        private readonly ApplicationUserManager _userManager;
-        private readonly ApplicationDbContext _db;
+        public readonly ApplicationUserManager UserManager;
+        public readonly ApplicationDbContext DbContext;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationDbContext db)
+        public AccountController(ApplicationUserManager userManager, ApplicationDbContext dbContext)
         {
-            _userManager = userManager;
-            _db = db;
-        }
-
-        public ApplicationUserManager UserManager 
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
+            UserManager = userManager;
+            DbContext = dbContext;
         }
 
         //
@@ -153,7 +144,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> ReSendConfirmEmail()
         {
             var userId = User.Identity.GetIntUserId();
-            var user = _db.Users.Find(userId);
+            var user = DbContext.Users.Find(userId);
             if (user.EmailConfirmed)
             {
                 await SignInAsync(user, false);
@@ -589,23 +580,24 @@ namespace SdojWeb.Controllers
         [HttpPost, AllowAnonymous]
         public async Task<ActionResult> CheckEmail(string email)
         {
-            var exist = await _db.Users.AnyAsync(x => x.Email == email);
+            var exist = await DbContext.Users.AnyAsync(x => x.Email == email);
             return Json(!exist);
         }
 
         [HttpPost, AllowAnonymous]
         public async Task<ActionResult> CheckUserName(string username)
         {
-            var exist = await _db.Users.AnyAsync(x => x.UserName == username);
+            var exist = await DbContext.Users.AnyAsync(x => x.UserName == username);
             return Json(!exist);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMe()
         {
-            var user = await _db.Users.FindAsync(User.Identity.GetIntUserId());
-            _db.Entry(user).State = EntityState.Deleted;
-            await _db.SaveChangesAsync();
+
+            var user = await DbContext.Users.FindAsync(User.Identity.GetIntUserId());
+            DbContext.Entry(user).State = EntityState.Deleted;
+            await DbContext.SaveChangesAsync();
 
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home").WithSuccess(
