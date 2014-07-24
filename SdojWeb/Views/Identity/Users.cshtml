@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
+﻿@using SdojWeb.Infrastructure.Extensions
+@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
 
 @{
     ViewBag.Title = "用户管理";
@@ -6,11 +7,8 @@
 
 <h2>@ViewBag.Title</h2>
 
-<table class="table">
+<table class="table" id="user-table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.UserName)
         </th>
@@ -20,15 +18,13 @@
         <th>
             @Html.DisplayNameFor(model => model.Roles)
         </th>
+        <th></th>
     </tr>
     @foreach (var user in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(item => user.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(item => user.UserName)
+                @Html.ActionLink(@user.UserName, "Edit", new { id = user.Id })
             </td>
             <td>
                 @Html.DisplayFor(item => user.EmailConfirmed)
@@ -37,8 +33,27 @@
                 @String.Join(",", user.Roles.Select(x => x.Name))
             </td>
             <td>
-                @Html.ActionLink("编辑", "Edit", new {id=user.Id})
+                @Html.DeleteIcon(user.Id)
             </td>
         </tr>
     }
 </table>
+
+@using (Html.BeginForm("DeleteUser", "Identity", FormMethod.Post, new {id="delete-form"}))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id"/>
+}
+
+@section scripts
+{
+    <script>
+        $("#user-table .delete-link").click(function () {
+            if (confirm("确定要删除该用户吗？\r\n所有与该用户相关联的资料都将删除并不可恢复。")) {
+                var id = $(this).data('id');
+                $("#delete-form input[name='id']").val(id);
+                $("#delete-form").submit();
+            }
+        });
+    </script>
+}

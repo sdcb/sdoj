@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
@@ -11,14 +13,20 @@ namespace SdojWeb.Controllers
     [SdojAuthorize(Roles = SystemRoles.Admin, EmailConfirmed = true)]
     public class IdentityController : Controller
     {
-        public ApplicationUserManager UserMgr { get; set; }
+        public readonly ApplicationUserManager UserMgr;
 
-        public ApplicationRoleManager RoleMgr { get; set; }
+        public readonly ApplicationRoleManager RoleMgr;
 
-        public IdentityController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        public readonly ApplicationDbContext DbContext;
+
+        public IdentityController(
+            ApplicationUserManager userManager,
+            ApplicationRoleManager roleManager, 
+            ApplicationDbContext dbContext)
         {
             UserMgr = userManager;
             RoleMgr = roleManager;
+            DbContext = dbContext;
         }
 
         // GET: Identity
@@ -95,6 +103,17 @@ namespace SdojWeb.Controllers
 
             return action.WithSuccess(
                 string.Format("角色{0}添加成功。", role.Name));
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+            var user = await DbContext.Users.FindAsync(id);
+            DbContext.Entry(user).State = EntityState.Deleted;
+            await DbContext.SaveChangesAsync();
+
+            return RedirectToAction("Users").WithSuccess(
+                string.Format("用户{0}及其所有关联资料删除成功。", user.UserName));
         }
     }
 }
