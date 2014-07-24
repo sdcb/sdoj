@@ -33,7 +33,7 @@ namespace SdojWeb.Models
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
+        [MinLength(3)]
         [Display(Name = "电子邮件")]
         public string Email { get; set; }
 

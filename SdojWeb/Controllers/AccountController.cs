@@ -49,12 +49,17 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindAsync(model.Email, model.Password);
+                var user = await UserManager.FindByNameAsync(model.Email) ??
+                           await UserManager.FindByEmailAsync(model.Email);
+                if (!await UserManager.CheckPasswordAsync(user, model.Password))
+                    user = null;
+
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
+
                 ModelState.AddModelError("", "用户名或密码无效。");
             }
 
