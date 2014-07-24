@@ -116,41 +116,41 @@ namespace SdojWeb.SignalR
 
         public static void EnsureDbScanTaskRunning()
         {
-            if (DbScanTaskRunning) return;
-            DbScanTaskRunning = true;
-
-            var timer = new Timer
+            if (Interlocked.CompareExchange(ref DbScanTaskRunning, 1, 0) == 0)
             {
-                AutoReset = true, 
-                Enabled = true, 
-                Interval = DbScanIntervalSeconds * 1000, 
-            };
-            timer.Elapsed += DbScan;
+                var timer = new Timer
+                {
+                    AutoReset = true,
+                    Enabled = true,
+                    Interval = DbScanIntervalSeconds * 1000,
+                };
+                timer.Elapsed += DbScan;
+            }
         }
 
         private static async void DbScan(object sender, ElapsedEventArgs e)
         {
-            if (InScan) return;
-            InScan = true;
-
-            var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
-            using (var db = ApplicationDbContext.Create())
+            if (Interlocked.CompareExchange(ref InScan, 1, 0) == 0)
             {
-                var models = await db.Solutions
-                .Where(x => x.Lock == null || x.Lock.LockEndTime > DateTime.Now)
-                .Project().To<JudgeModel>()
-                .Take(DispatchLimit)
-                .ToArrayAsync();
-
-                foreach (var model in models)
+                var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
+                using (var db = ApplicationDbContext.Create())
                 {
-                    hub.Clients
-                        .Group(model.QuestionCreateUserId.ToStringInvariant())
-                        .Judge(model);
+                    var models = await db.Solutions
+                    .Where(x => x.Lock == null || x.Lock.LockEndTime > DateTime.Now)
+                    .Project().To<JudgeModel>()
+                    .Take(DispatchLimit)
+                    .ToArrayAsync();
+
+                    foreach (var model in models)
+                    {
+                        hub.Clients
+                            .Group(model.QuestionCreateUserId.ToStringInvariant())
+                            .Judge(model);
+                    }
                 }
             }
 
-            InScan = false;
+            Interlocked.CompareExchange(ref InScan, 0, 1);
         }
 
         public static ApplicationDbContext DbContext
@@ -158,9 +158,9 @@ namespace SdojWeb.SignalR
             get { return DependencyResolver.Current.GetService<ApplicationDbContext>(); }
         }
 
-        public static bool DbScanTaskRunning = false;
+        public static int DbScanTaskRunning = 0;
 
-        public static bool InScan = false;
+        public static int InScan = 0;
 
         public static int ConnectionCount;
 
