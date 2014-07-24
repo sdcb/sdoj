@@ -12,6 +12,9 @@ namespace SdojWeb.Models
         [Display(Name="用户名")]
         public string UserName { get; set; }
 
+        [Display(Name = "电子邮件")]
+        public string Email { get; set; }
+
         [Display(Name = "邮件验证")]
         public bool EmailConfirmed { get; set; }
 

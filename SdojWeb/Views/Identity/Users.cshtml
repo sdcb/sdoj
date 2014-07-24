@@ -13,6 +13,9 @@
             @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.EmailConfirmed)
         </th>
         <th>
@@ -25,6 +28,9 @@
         <tr>
             <td>
                 @Html.ActionLink(@user.UserName, "Edit", new { id = user.Id })
+            </td>
+            <td>
+                @Html.DisplayFor(x => user.Email)
             </td>
             <td>
                 @Html.DisplayFor(item => user.EmailConfirmed)
