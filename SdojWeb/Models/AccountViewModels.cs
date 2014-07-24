@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace SdojWeb.Models
 {
@@ -25,7 +26,7 @@ namespace SdojWeb.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "确认新密码")]
-        [Compare("NewPassword", ErrorMessage = "新密码和确认密码不匹配。")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "新密码和确认密码不匹配。")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -48,11 +49,13 @@ namespace SdojWeb.Models
     public class RegisterViewModel
     {
         [Required, MaxLength(200)]
+        [Remote("CheckEmail", "Account", HttpMethod = "POST")]
         [EmailAddress]
         [Display(Name = "电子邮件")]
         public string Email { get; set; }
 
         [Required, MaxLength(20), MinLength(3)]
+        [Remote("CheckUserName", "Account", HttpMethod = "POST")]
         [Display(Name = "登录名")]
         public string UserName { get; set; }
 
@@ -64,7 +67,7 @@ namespace SdojWeb.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "确认密码")]
-        [Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -83,7 +86,7 @@ namespace SdojWeb.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "确认密码")]
-        [Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

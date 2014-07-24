@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Data.Entity;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -584,5 +585,19 @@ namespace SdojWeb.Controllers
             }
         }
         #endregion
+
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> CheckEmail(string email)
+        {
+            var exist = await _db.Users.AnyAsync(x => x.Email == email);
+            return Json(!exist);
+        }
+
+        [HttpPost, AllowAnonymous]
+        public async Task<ActionResult> CheckUserName(string username)
+        {
+            var exist = await _db.Users.AnyAsync(x => x.UserName == username);
+            return Json(!exist);
+        }
     }
 }
