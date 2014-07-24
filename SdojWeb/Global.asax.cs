@@ -25,6 +25,8 @@ namespace SdojWeb
             }
         }
 
+        public static IContainer StaticContainer { get; set; }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -33,10 +35,11 @@ namespace SdojWeb
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutoMapperConfig.Execute();
 
+            StaticContainer = new Container();
             DependencyResolver.SetResolver(new StructureMapDependencyResolver(
-                () => Container ?? ObjectFactory.Container));
+                () => Container ?? StaticContainer));
 
-            ObjectFactory.Configure(cfg =>
+            StaticContainer.Configure(cfg =>
             {
                 cfg.AddRegistry(new MvcRegistry());
                 cfg.AddRegistry(new StandardRegistry());
@@ -45,7 +48,7 @@ namespace SdojWeb
                 cfg.AddRegistry(new ModelMetadataRegistry());
             });
 
-            using (var container = ObjectFactory.Container.GetNestedContainer())
+            using (var container = StaticContainer.GetNestedContainer())
             {
                 foreach (var task in container.GetAllInstances<IRunAtInit>())
                 {
@@ -61,7 +64,7 @@ namespace SdojWeb
 
         public void Application_BeginRequest()
         {
-            Container = ObjectFactory.Container.GetNestedContainer();
+            Container = StaticContainer.GetNestedContainer();
 
             foreach (var task in Container.GetAllInstances<IRunOnEachRequest>())
             {
