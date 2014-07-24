@@ -52,6 +52,8 @@ namespace SdojWeb.SignalR
             return true;
         }
 
+        // Hub API
+
         public async Task<bool> Lock(int solutionId)
         {
             var db = DbContext;
@@ -101,6 +103,27 @@ namespace SdojWeb.SignalR
             return models;
         }
 
+        public async Task<QuestionDataFullModel[]> GetDatas(int questionId, int[] dataId)
+        {
+            var db = DbContext;
+            var createUserId = await db.Questions
+                .Where(x => x.Id == questionId)
+                .Select(x => x.CreateUserId)
+                .FirstOrDefaultAsync();
+
+            if (createUserId != Context.User.Identity.GetIntUserId())
+                return null;
+
+            var datas = db.QuestionDatas
+                .Where(x => x.QuestionId == questionId && dataId.Contains(x.Id))
+                .Project().To<QuestionDataFullModel>()
+                .ToArray();
+
+            return datas;
+        }
+
+        // Overrides
+
         public override async Task OnConnected()
         {
             await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
@@ -113,6 +136,8 @@ namespace SdojWeb.SignalR
             Interlocked.Decrement(ref ConnectionCount);
             return base.OnDisconnected();
         }
+
+        // DBScan Jobs
 
         public static void EnsureDbScanTaskRunning()
         {
@@ -152,6 +177,8 @@ namespace SdojWeb.SignalR
 
             Interlocked.CompareExchange(ref InScan, 0, 1);
         }
+
+        // Field & Properties
 
         public static ApplicationDbContext DbContext
         {
