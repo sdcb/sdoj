@@ -47,7 +47,7 @@ namespace SdojWeb.Models
     {
         public int Id { get; set; }
 
-        public int QuestionId { get; set; }
+        public DateTime UpdateTime { get; set; }
     }
 
     public class QuestionDataSummaryModel : IHaveCustomMapping
