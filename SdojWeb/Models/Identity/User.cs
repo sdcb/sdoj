@@ -22,20 +22,6 @@ namespace SdojWeb.Models
 // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
-        public User(string email)
-        {
-            Email = email;
-            UserName = email;
-
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            UserClaims = new HashSet<UserClaim>();
-            UserLogins = new HashSet<UserLogin>();
-            Questions = new HashSet<Question>();
-            Solutions = new HashSet<Solution>();
-            Roles = new HashSet<Role>();
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
-        }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(ApplicationUserManager manager)
         {
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);

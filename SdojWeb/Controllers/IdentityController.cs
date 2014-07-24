@@ -109,6 +109,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> DeleteUser(int id)
         {
             var user = await DbContext.Users.FindAsync(id);
+
             DbContext.Entry(user).State = EntityState.Deleted;
             await DbContext.SaveChangesAsync();
 

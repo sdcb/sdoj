@@ -453,8 +453,8 @@ namespace SdojWeb.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new User(model.Email);
-                IdentityResult result = await UserManager.CreateAsync(user);
+                var user = new User{Email = model.Email, UserName = model.Email};
+                var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
@@ -598,6 +598,18 @@ namespace SdojWeb.Controllers
         {
             var exist = await _db.Users.AnyAsync(x => x.UserName == username);
             return Json(!exist);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMe()
+        {
+            var user = await _db.Users.FindAsync(User.Identity.GetIntUserId());
+            _db.Entry(user).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home").WithSuccess(
+                string.Format("用户{0}及其所有关联资料删除成功。", user.UserName));
         }
     }
 }

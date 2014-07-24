@@ -1,9 +1,10 @@
 ﻿@using System.Web.Mvc.Html;
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "管理帐户";
 }
 
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
@@ -16,6 +17,18 @@
         {
             @Html.Partial("_SetPasswordPartial")
         }
+        
+        <h4>删除帐号</h4>
+        <hr />
+        <p>删除帐号可以永久性的删除当前帐号并清空与当前帐号有关的一切资料。</p>
+        @using (Html.BeginForm("DeleteMe", "Account", FormMethod.Post, new {id = "delete-form"}))
+        {
+            @Html.AntiForgeryToken()
+            
+            <div class="form-group">
+                    <input type="submit" value="删除帐号" class="btn btn-default" />
+            </div>
+        }
 
         <section id="externalLogins">
             @Html.Action("RemoveAccountList")
@@ -25,4 +38,11 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $("#delete-form").submit(function(e) {
+            if (!confirm("确实要删除当前帐号吗？\r\n帐号删除后，所有资料都无法恢复。")) {
+                e.preventDefault = true;
+            }
+        });
+    </script>
 }

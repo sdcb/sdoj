@@ -22,19 +22,14 @@ namespace SdojWeb.Migrations
             var userManager = new ApplicationUserManager(new UserStore(context));
             var roleManager = new RoleManager<Role, int>(roleStore);
 
-            userManager.Create(new User("sdflysha@qq.com") {EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User("397482054@qq.com") { EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User("flysha@live.com") { EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User("judger@sdcb.in") { EmailConfirmed = true },  "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User {UserName="sdflysha@qq.com", Email = "sdflysha@qq.com", EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User {UserName = "flysha@live.com", Email = "flysha@live.com", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User {UserName = "397482054@qq.com", Email = "397482054@qq.com", EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
 
             roleManager.Create(new Role { Name = SystemRoles.Admin });
-            roleManager.Create(new Role { Name = SystemRoles.Judger });
 
             var user = userManager.FindByName("flysha@live.com");
             userManager.AddToRole(user.Id, SystemRoles.Admin);
-
-            user = userManager.FindByName("judger@sdcb.in");
-            userManager.AddToRole(user.Id, SystemRoles.Judger);
         }
     }
 }
