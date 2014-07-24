@@ -47,10 +47,14 @@ namespace SdojWeb.Models
 
     public class RegisterViewModel
     {
-        [Required]
+        [Required, MaxLength(200)]
         [EmailAddress]
         [Display(Name = "电子邮件")]
         public string Email { get; set; }
+
+        [Required, MaxLength(20), MinLength(3)]
+        [Display(Name = "登录名")]
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} 必须至少包含 {2} 个字符。", MinimumLength = 6)]

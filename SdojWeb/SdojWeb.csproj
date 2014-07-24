@@ -374,6 +374,8 @@
     <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Shared\_PerformanceCounter.cshtml" />
     <Content Include="Views\Home\Rect.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

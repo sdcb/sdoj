@@ -107,8 +107,8 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User(model.Email);
-                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                var user = new User{UserName = model.UserName, Email = model.Email};
+                var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
