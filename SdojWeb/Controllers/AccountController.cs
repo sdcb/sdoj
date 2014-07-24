@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -517,8 +518,14 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMe()
         {
+            var userId = User.Identity.GetIntUserId();
+            if (await DbContext.Questions.AnyAsync(x => x.CreateUserId == userId))
+            {
+                return RedirectToAction("Manage", "Account").WithError(
+                    "删除失败，因为您有关联的题目，必须手动删除。");
+            }
 
-            var user = await DbContext.Users.FindAsync(User.Identity.GetIntUserId());
+            var user = await DbContext.Users.FindAsync(userId);
             DbContext.Entry(user).State = EntityState.Deleted;
             await DbContext.SaveChangesAsync();
 

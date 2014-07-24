@@ -108,6 +108,12 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteUser(int id)
         {
+            if (await DbContext.Questions.AnyAsync(x => x.CreateUserId == id))
+            {
+                return RedirectToAction("Users").WithError(
+                    "删除失败，因为该用户有关联的题目，必须手动删除。");
+            }
+
             var user = await DbContext.Users.FindAsync(id);
 
             DbContext.Entry(user).State = EntityState.Deleted;
