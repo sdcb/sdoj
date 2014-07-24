@@ -70,8 +70,12 @@ namespace SdojWeb.Controllers
         [HttpPost, AllowAnonymous]
         public async Task<ActionResult> LoginAsJudger(string username, string password)
         {
-            var user = await UserManager.FindAsync(username, password);
-            if (user != null && await UserManager.IsInRoleAsync(user.Id, SystemRoles.Judger))
+            var user = await UserManager.FindByNameAsync(username) ??
+                       await UserManager.FindByEmailAsync(username);
+            if (!await UserManager.CheckPasswordAsync(user, password))
+                user = null;
+
+            if (user != null && user.EmailConfirmed)
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 

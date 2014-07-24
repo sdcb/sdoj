@@ -117,33 +117,40 @@ namespace SdojWeb.SignalR
         public static void EnsureDbScanTaskRunning()
         {
             if (DbScanTaskRunning) return;
+            DbScanTaskRunning = true;
 
             var timer = new Timer
             {
                 AutoReset = true, 
                 Enabled = true, 
-                Interval = DbScanIntervalSeconds, 
+                Interval = DbScanIntervalSeconds * 1000, 
             };
             timer.Elapsed += DbScan;
         }
 
         private static async void DbScan(object sender, ElapsedEventArgs e)
         {
-            var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
-            var db = DbContext;
+            if (InScan) return;
+            InScan = true;
 
-            var models = await db.Solutions
+            var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
+            using (var db = ApplicationDbContext.Create())
+            {
+                var models = await db.Solutions
                 .Where(x => x.Lock == null || x.Lock.LockEndTime > DateTime.Now)
                 .Project().To<JudgeModel>()
                 .Take(DispatchLimit)
                 .ToArrayAsync();
 
-            foreach (var model in models)
-            {
-                hub.Clients
-                    .Group(model.QuestionCreateUserId.ToStringInvariant())
-                    .Judge(model);
+                foreach (var model in models)
+                {
+                    hub.Clients
+                        .Group(model.QuestionCreateUserId.ToStringInvariant())
+                        .Judge(model);
+                }
             }
+
+            InScan = false;
         }
 
         public static ApplicationDbContext DbContext
@@ -153,11 +160,13 @@ namespace SdojWeb.SignalR
 
         public static bool DbScanTaskRunning = false;
 
+        public static bool InScan = false;
+
         public static int ConnectionCount;
 
         public const int SolutionLockingSeconds = 15;
 
-        public const int DbScanIntervalSeconds = 30;
+        public const int DbScanIntervalSeconds = 5;
 
         public const int DispatchLimit = 20;
     }
