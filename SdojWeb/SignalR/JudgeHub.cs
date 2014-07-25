@@ -89,6 +89,7 @@ namespace SdojWeb.SignalR
                     x.Question.CreateUserId == userId &&
                     solutionId.Contains(x.Id) && 
                     (x.Lock == null || x.Lock.LockEndTime > DateTime.Now)) // 没有锁或者锁已过期
+                .OrderBy(x => Guid.NewGuid())
                 .Select(x => new 
                 {
                     Id = x.Id, 
