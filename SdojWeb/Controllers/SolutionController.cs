@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
 using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
+using SdojWeb.SignalR;
 
 namespace SdojWeb.Controllers
 {
@@ -80,11 +83,11 @@ namespace SdojWeb.Controllers
                 _dbContext.Solutions.Add(solution);
                 await _dbContext.SaveChangesAsync();
 
-                //var signalr = GlobalHost.ConnectionManager.GetConnectionContext<JudgeConnection>();
+                var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 var judgeModel = await _dbContext.Solutions
                     .Project().To<JudgeModel>()
                     .FirstOrDefaultAsync(x => x.SolutionId == solution.Id);
-                //await signalr.Groups.Send(User.Identity.GetUserName(), judgeModel);
+                signalr.Clients.Group(User.Identity.GetUserId()).Judge(judgeModel);
 
                 return RedirectToAction("Index");
             }

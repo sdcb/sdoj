@@ -221,7 +221,7 @@ namespace SdojWeb.SignalR
 
         public const double LockTimeFactor = 1.5;
 
-        public const int DbScanIntervalSeconds = 5;
+        public const int DbScanIntervalSeconds = 10;
 
         public const int DispatchLimit = 20;
     }
