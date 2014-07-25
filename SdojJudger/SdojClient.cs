@@ -23,7 +23,7 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 connection.CookieContainer.Add(authCookie);
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
-                hub.On(JudgeAction, m => Console.WriteLine(JsonConvert.SerializeObject(m)));
+                hub.On(AppSettings.HubJudge, m => Console.WriteLine(JsonConvert.SerializeObject(m)));
                 await connection.Start();
 
                 Console.ReadKey();
@@ -54,7 +54,5 @@ namespace SdojJudger
                 return response.Cookies[AppSettings.CookieName];
             }
         }
-
-        public const string JudgeAction = "Judge";
     }
 }

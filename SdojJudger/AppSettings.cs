@@ -27,5 +27,13 @@ namespace SdojJudger
         }
 
         public const string HubName = "JudgeHub";
+
+        public const string HubJudge = "Judge";
+
+        public const string HubLockOne = "LockOne";
+
+        public const string HubUpdate = "Update";
+
+        public const string HubUpdateInLock = "UpdateInLock";
     }
 }
