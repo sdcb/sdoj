@@ -14,8 +14,6 @@ namespace SdojJudger
             get { return ServerUrl + "Account/LoginAsJudger"; }
         }
 
-        public const string HubName = "JudgeHub";
-
         public const string CookieName = ".AspNet.ApplicationCookie";
 
         public static string UserName
@@ -27,5 +25,7 @@ namespace SdojJudger
         {
             get { return ConfigurationManager.AppSettings["password"]; }
         }
+
+        public const string HubName = "JudgeHub";
     }
 }
