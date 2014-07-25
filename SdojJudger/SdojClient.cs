@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
-using Newtonsoft.Json;
+using SdojJudger.Models;
 
 namespace SdojJudger
 {
@@ -23,11 +23,17 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 connection.CookieContainer.Add(authCookie);
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
-                hub.On(AppSettings.HubJudge, m => Console.WriteLine(JsonConvert.SerializeObject(m)));
+                hub.On<ClientJudgeModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
                 Console.ReadKey();
             }
+        }
+
+        private void OnClientJudge(ClientJudgeModel model)
+        {
+            var ps = new JudgeProcess(model);
+            ps.Execute();
         }
 
         private async Task<Cookie> AuthenticateUser(string user, string password)
