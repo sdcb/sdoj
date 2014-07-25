@@ -32,9 +32,6 @@ namespace SdojWeb.Models
         [JsonProperty("a")]
         public int Id { get; set; }
 
-        [JsonProperty("b")]
-        public int QuestionId { get; set; }
-
         [JsonProperty("c")]
         public string Input { get; set; }
 

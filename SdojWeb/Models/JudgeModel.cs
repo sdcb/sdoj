@@ -10,16 +10,13 @@ namespace SdojWeb.Models
         [JsonProperty("a")]
         public int SolutionId { get; set; }
 
-        [JsonProperty("b")]
-        public int QuestionId { get; set; }
-
         [JsonProperty("c")]
         public string Source { get; set; }
 
         [JsonProperty("d")]
         public Languages Language { get; set; }
 
-        [JsonProperty("e")]
+        [JsonIgnore]
         public int QuestionCreateUserId { get; set; }
 
         [JsonProperty("f")]
