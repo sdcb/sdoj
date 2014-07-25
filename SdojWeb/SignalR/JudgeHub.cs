@@ -19,6 +19,33 @@ namespace SdojWeb.SignalR
     [Microsoft.AspNet.SignalR.Authorize(Roles = SystemRoles.Judger)]
     public class JudgeHub : Hub
     {
+        // Hub API
+
+        public async Task<bool> UpdateInLock(int solutionId,
+            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
+        {
+            var db = DbContext;
+            var slock = await db.SolutionLocks.FindAsync(solutionId);
+
+            // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
+            if (slock == null || slock.LockClientId != Context.ConnectionId || slock.LockEndTime > DateTime.Now)
+            {
+                return false;
+            }
+            
+            // 锁住，允许操作。
+            var solution = await db.Solutions.FindAsync(solutionId);
+            solution.Status = statusId;
+            if (runTimeMs != null) solution.RunTime = runTimeMs.Value;
+            if (usingMemoryMb != null) solution.UsingMemoryMb = usingMemoryMb.Value;
+
+            // 保存数据。
+            db.Entry(solution).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> Update(int solutionId,
             SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
         {
@@ -52,39 +79,40 @@ namespace SdojWeb.SignalR
             return true;
         }
 
-        // Hub API
-
-        public async Task<bool> Lock(int solutionId)
+        public async Task<int?> LockOne(int[] solutionId)
         {
             var db = DbContext;
+            var userId = Context.User.Identity.GetIntUserId();
 
-            var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
-
-            // 已有锁并已被占用，直接失败。
-            if (solutionLock != null && solutionLock.LockEndTime < DateTime.Now)
-            {
-                return false;
-            }
-
-            // 没有锁，或者锁已经过期，允许锁定。
-            if (solutionLock == null)
-            {
-                solutionLock = new SolutionLock
+            var solution = await db.Solutions
+                .Where(x =>
+                    x.Question.CreateUserId == userId &&
+                    solutionId.Contains(x.Id) && 
+                    (x.Lock == null || x.Lock.LockEndTime > DateTime.Now)) // 没有锁或者锁已过期
+                .Select(x => new 
                 {
-                    SolutionId = solutionId,
-                    LockClientId = Context.ConnectionId,
-                    LockEndTime = DateTime.Now.AddSeconds(SolutionLockingSeconds)
-                };
-                db.SolutionLocks.Add(solutionLock);
-            }
-            else if (solutionLock.LockEndTime >= DateTime.Now)
-            {
-                solutionLock.LockClientId = Context.ConnectionId;
-                solutionLock.LockEndTime = DateTime.Now.AddSeconds(SolutionLockingSeconds);
-            }
+                    Id = x.Id, 
+                    Lock = x.Lock, 
+                    Time = x.Question.Datas.Sum(d => d.TimeLimit)
+                }).FirstOrDefaultAsync();
+
+            if (solution == null) return null; // 找不到符合条件的解答，返回失败。
+
+            // 锁定的时间，按题目的时间和，乘以一个倍数，再加上额外的传输时间为准。
+            var lockMilliseconds = solution.Time*LockTimeFactor + LockAdditionalSeconds*1000;
+
+            // 添加或者更新锁。
+            var slock = solution.Lock ?? new SolutionLock {SolutionId = solution.Id};
+            slock.LockClientId = Context.ConnectionId;
+            slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
+
+            db.Entry(slock).State = solution.Lock == null
+                ? EntityState.Added
+                : EntityState.Modified;
 
             await db.SaveChangesAsync();
-            return true;
+
+            return slock.SolutionId;
         }
 
         public async Task<JudgeModel[]> GetAll()
@@ -103,21 +131,17 @@ namespace SdojWeb.SignalR
             return models;
         }
 
-        public async Task<QuestionDataFullModel[]> GetDatas(int questionId, int[] dataId)
+        public async Task<QuestionDataFullModel[]> GetDatas(int[] dataId)
         {
             var db = DbContext;
-            var createUserId = await db.Questions
-                .Where(x => x.Id == questionId)
-                .Select(x => x.CreateUserId)
-                .FirstOrDefaultAsync();
+            var userId = Context.User.Identity.GetIntUserId();
 
-            if (createUserId != Context.User.Identity.GetIntUserId())
-                return null;
-
-            var datas = db.QuestionDatas
-                .Where(x => x.QuestionId == questionId && dataId.Contains(x.Id))
+            var datas = await db.QuestionDatas
+                .Where(x => 
+                    x.Question.CreateUserId == userId &&
+                    dataId.Contains(x.Id))
                 .Project().To<QuestionDataFullModel>()
-                .ToArray();
+                .ToArrayAsync();
 
             return datas;
         }
@@ -161,10 +185,12 @@ namespace SdojWeb.SignalR
                 using (var db = ApplicationDbContext.Create())
                 {
                     var models = await db.Solutions
-                    .Where(x => x.Lock == null || x.Lock.LockEndTime > DateTime.Now)
-                    .Project().To<JudgeModel>()
-                    .Take(DispatchLimit)
-                    .ToArrayAsync();
+                        .Where(x => 
+                            x.Lock == null || 
+                            x.Lock.LockEndTime > DateTime.Now)
+                        .Project().To<JudgeModel>()
+                        .Take(DispatchLimit)
+                        .ToArrayAsync();
 
                     foreach (var model in models)
                     {
@@ -191,7 +217,9 @@ namespace SdojWeb.SignalR
 
         public static int ConnectionCount;
 
-        public const int SolutionLockingSeconds = 15;
+        public const double LockAdditionalSeconds = 10.0;
+
+        public const double LockTimeFactor = 1.5;
 
         public const int DbScanIntervalSeconds = 5;
 
