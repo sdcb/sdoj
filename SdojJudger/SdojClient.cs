@@ -23,14 +23,14 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 connection.CookieContainer.Add(authCookie);
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
-                hub.On<ClientJudgeModel>(AppSettings.HubJudge, OnClientJudge);
+                hub.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
                 Console.ReadKey();
             }
         }
 
-        private void OnClientJudge(ClientJudgeModel model)
+        private void OnClientJudge(ClientSolutionPushModel model)
         {
             var ps = new JudgeProcess(model);
             ps.Execute();

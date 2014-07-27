@@ -4,7 +4,7 @@ namespace SdojJudger
 {
     public class JudgeProcess
     {
-        public JudgeProcess(ClientJudgeModel judgeModel)
+        public JudgeProcess(ClientSolutionPushModel judgeModel)
         {
             _judgeModel = judgeModel;
         }
@@ -14,6 +14,6 @@ namespace SdojJudger
             
         }
 
-        private ClientJudgeModel _judgeModel;
+        private ClientSolutionPushModel _judgeModel;
     }
 }

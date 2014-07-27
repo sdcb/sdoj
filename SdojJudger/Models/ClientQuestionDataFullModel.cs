@@ -7,16 +7,16 @@ namespace SdojJudger.Models
         [JsonProperty("a")]
         public int Id { get; set; }
 
-        [JsonProperty("c")]
+        [JsonProperty("b")]
         public string Input { get; set; }
 
-        [JsonProperty("d")]
+        [JsonProperty("c")]
         public string Output { get; set; }
 
-        [JsonProperty("e")]
+        [JsonProperty("d")]
         public float MemoryLimitMb { get; set; }
 
-        [JsonProperty("f")]
+        [JsonProperty("e")]
         public int TimeLimit { get; set; }
     }
 }

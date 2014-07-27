@@ -50,7 +50,8 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="JudgeProcess.cs" />
-    <Compile Include="Models\ClientJudgeModel.cs" />
+    <Compile Include="Models\ClientSolutionFullModel.cs" />
+    <Compile Include="Models\ClientSolutionPushModel.cs" />
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\ClientQuestionDataFullModel.cs" />
     <Compile Include="Models\ClientQuestionDataHashModel.cs" />
