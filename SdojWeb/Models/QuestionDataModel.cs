@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using AutoMapper;
-using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
@@ -24,33 +23,6 @@ namespace SdojWeb.Models
 
         public int TimeLimit { get; set; }
 
-        public DateTime UpdateTime { get; set; }
-    }
-
-    public class QuestionDataFullModel : IMapFrom<QuestionData>
-    {
-        [JsonProperty("a")]
-        public int Id { get; set; }
-
-        [JsonProperty("c")]
-        public string Input { get; set; }
-
-        [JsonProperty("d")]
-        public string Output { get; set; }
-
-        [JsonProperty("e")]
-        public float MemoryLimitMb { get; set; }
-
-        [JsonProperty("f")]
-        public int TimeLimit { get; set; }
-    }
-
-    public class QuestionDataHashModel : IMapFrom<QuestionData>
-    {
-        [JsonProperty("a")]
-        public int Id { get; set; }
-
-        [JsonProperty("b")]
         public DateTime UpdateTime { get; set; }
     }
 

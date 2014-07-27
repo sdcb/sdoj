@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web.Mvc;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
@@ -12,6 +13,7 @@ using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using System.Threading;
+using SdojWeb.Models.JudgePush;
 using Timer = System.Timers.Timer;
 
 namespace SdojWeb.SignalR
@@ -79,7 +81,7 @@ namespace SdojWeb.SignalR
             return true;
         }
 
-        public async Task<int?> LockOne(int[] solutionId)
+        public async Task<SolutionFullModel> Lock(int solutionId)
         {
             var db = DbContext;
             var userId = Context.User.Identity.GetIntUserId();
@@ -87,9 +89,8 @@ namespace SdojWeb.SignalR
             var solution = await db.Solutions
                 .Where(x =>
                     x.Question.CreateUserId == userId &&
-                    solutionId.Contains(x.Id) && 
+                    solutionId == x.Id && 
                     (x.Lock == null || x.Lock.LockEndTime > DateTime.Now)) // 没有锁或者锁已过期
-                .OrderBy(x => Guid.NewGuid())
                 .Select(x => new 
                 {
                     Id = x.Id, 
@@ -113,10 +114,13 @@ namespace SdojWeb.SignalR
 
             await db.SaveChangesAsync();
 
-            return slock.SolutionId;
+            return await db.Solutions
+                .Where(x => x.Id == solutionId)
+                .Project().To<SolutionFullModel>()
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<JudgeModel[]> GetAll()
+        public async Task<SolutionPushModel[]> GetAll()
         {
             var userId = Context.User.Identity.GetIntUserId();
             var db = DbContext;
@@ -125,7 +129,7 @@ namespace SdojWeb.SignalR
                 .Where(x => 
                     x.CreateUserId == userId &&
                     (x.Lock == null || x.Lock.LockEndTime > DateTime.Now))
-                .Project().To<JudgeModel>()
+                .Project().To<SolutionPushModel>()
                 .Take(DispatchLimit)
                 .ToArrayAsync();
 
@@ -189,7 +193,7 @@ namespace SdojWeb.SignalR
                         .Where(x => 
                             x.Lock == null || 
                             x.Lock.LockEndTime > DateTime.Now)
-                        .Project().To<JudgeModel>()
+                        .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
                         .ToArrayAsync();
 

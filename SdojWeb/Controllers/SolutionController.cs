@@ -12,6 +12,7 @@ using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
+using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
 
 namespace SdojWeb.Controllers
@@ -85,7 +86,7 @@ namespace SdojWeb.Controllers
 
                 var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 var judgeModel = await _dbContext.Solutions
-                    .Project().To<JudgeModel>()
+                    .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.SolutionId == solution.Id);
                 signalr.Clients.Group(User.Identity.GetUserId()).Judge(judgeModel);
 

@@ -220,6 +220,9 @@
     <Compile Include="Models\Identity\UserClaim.cs" />
     <Compile Include="Models\Identity\UserLogin.cs" />
     <Compile Include="Models\Identity\UserStore.cs" />
+    <Compile Include="Models\JudgePush\QuestionDataFullModel.cs" />
+    <Compile Include="Models\JudgePush\QuestionDataHashModel.cs" />
+    <Compile Include="Models\JudgePush\SolutionPushModel.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
@@ -267,7 +270,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityViewModel.cs" />
-    <Compile Include="Models\JudgeModel.cs" />
+    <Compile Include="Models\JudgePush\SolutionFullModel.cs" />
     <Compile Include="Models\QuestionDataModel.cs" />
     <Compile Include="Models\QuestionModels.cs" />
     <Compile Include="Models\SolutionModels.cs" />
