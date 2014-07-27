@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Web.Mvc;
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
@@ -18,9 +17,15 @@ using Timer = System.Timers.Timer;
 
 namespace SdojWeb.SignalR
 {
-    [Microsoft.AspNet.SignalR.Authorize(Roles = SystemRoles.Judger)]
+    [Authorize(Roles = SystemRoles.Judger)]
     public class JudgeHub : Hub
     {
+        JudgeHub()
+        {
+            DbContext = new ApplicationDbContext();
+            Transaction = DbContext.Database.BeginTransaction(IsolationLevel.Serializable);
+        }
+
         // Hub API
 
         public async Task<bool> UpdateInLock(int solutionId,
@@ -150,7 +155,7 @@ namespace SdojWeb.SignalR
 
             return datas;
         }
-
+        
         // Overrides
 
         public override async Task OnConnected()
@@ -164,6 +169,13 @@ namespace SdojWeb.SignalR
         {
             Interlocked.Decrement(ref ConnectionCount);
             return base.OnDisconnected();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Transaction.Commit();
+            DbContext.Dispose();
+            base.Dispose(disposing);
         }
 
         // DBScan Jobs
@@ -211,10 +223,9 @@ namespace SdojWeb.SignalR
 
         // Field & Properties
 
-        public static ApplicationDbContext DbContext
-        {
-            get { return DependencyResolver.Current.GetService<ApplicationDbContext>(); }
-        }
+        public readonly ApplicationDbContext DbContext;
+
+        public readonly DbContextTransaction Transaction;
 
         public static int DbScanTaskRunning = 0;
 
