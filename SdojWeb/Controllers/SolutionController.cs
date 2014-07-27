@@ -109,7 +109,7 @@ namespace SdojWeb.Controllers
 
             _dbContext.Solutions.Remove(solution);
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index").WithSuccess("解答删除成功。");
         }
     }
 }
