@@ -5,7 +5,7 @@ namespace SdojJudger.Models
     public class ClientSolutionPushModel 
     {
         [JsonProperty("a")]
-        public int SolutionId { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("b")]
         public Languages Language { get; set; }
