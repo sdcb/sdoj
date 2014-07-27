@@ -8,7 +8,7 @@ namespace SdojWeb.Models.JudgePush
     public class SolutionPushModel : IHaveCustomMapping
     {
         [JsonProperty("a")]
-        public int SolutionId { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("b")]
         public Languages Language { get; set; }

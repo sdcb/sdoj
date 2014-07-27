@@ -87,7 +87,7 @@ namespace SdojWeb.Controllers
                 var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 var judgeModel = await _dbContext.Solutions
                     .Project().To<SolutionPushModel>()
-                    .FirstOrDefaultAsync(x => x.SolutionId == solution.Id);
+                    .FirstOrDefaultAsync(x => x.Id == solution.Id);
                 signalr.Clients.Group(User.Identity.GetUserId()).Judge(judgeModel);
 
                 return RedirectToAction("Index");
