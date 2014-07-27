@@ -28,7 +28,7 @@ namespace SdojWeb.SignalR
             var slock = await db.SolutionLocks.FindAsync(solutionId);
 
             // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
-            if (slock == null || slock.LockClientId != Context.ConnectionId || slock.LockEndTime < DateTime.Now)
+            if (slock == null || slock.LockClientId != Guid.Parse(Context.ConnectionId) || slock.LockEndTime < DateTime.Now)
             {
                 return false;
             }
@@ -56,7 +56,7 @@ namespace SdojWeb.SignalR
             {
                 return false;
             }
-            if (solutionLock.LockClientId != Context.ConnectionId || solutionLock.LockEndTime < DateTime.Now)
+            if (solutionLock.LockClientId != Guid.Parse(Context.ConnectionId) || solutionLock.LockEndTime < DateTime.Now)
             {
                 db.Entry(solutionLock).State = EntityState.Deleted;
                 await db.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace SdojWeb.SignalR
 
             // 添加或者更新锁。
             var slock = solution.Lock ?? new SolutionLock { SolutionId = solution.Id };
-            slock.LockClientId = Context.ConnectionId;
+            slock.LockClientId = Guid.Parse(Context.ConnectionId);
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
             db.Entry(slock).State = solution.Lock == null

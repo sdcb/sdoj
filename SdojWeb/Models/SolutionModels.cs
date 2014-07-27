@@ -50,8 +50,7 @@ namespace SdojWeb.Models
 
         public Solution Solution { get; set; }
 
-        [Required, MaxLength(40)]
-        public string LockClientId { get; set; }
+        public Guid LockClientId { get; set; }
 
         public DateTime LockEndTime { get; set; }
     }
