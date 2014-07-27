@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SdojJudger
 {
@@ -25,6 +27,8 @@ namespace SdojJudger
         {
             get { return ConfigurationManager.AppSettings["password"]; }
         }
+
+        public static readonly Lazy<X509Certificate2> Cert = new Lazy<X509Certificate2>(() => new X509Certificate2(ConfigurationManager.AppSettings["x509cert"]));
 
         public const string HubName = "JudgeHub";
 
