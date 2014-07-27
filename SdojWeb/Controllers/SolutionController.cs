@@ -96,27 +96,6 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-        // GET: Solution/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var solutions = _dbContext.Solutions.Project().To<SolutionDeleteModel>();
-            var solution = await solutions.FirstOrDefaultAsync(x => x.Id == id);
-            if (solution == null)
-            {
-                return HttpNotFound();
-            }
-            if (!User.IsUserOrAdmin(solution.CreateUserId))
-            {
-                return RedirectToAction("Index")
-                    .WithWarning("只能删除自己提交的解答。");
-            }
-            return View(solution);
-        }
-
         // POST: Solution/Delete/5
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)

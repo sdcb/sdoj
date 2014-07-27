@@ -24,6 +24,11 @@ namespace SdojWeb.Models
                 .HasOptional(q => q.SampleData)
                 .WithMany();
 
+            modelBuilder.Entity<Solution>()
+                .HasOptional(s => s.Lock)
+                .WithRequired(l => l.Solution)
+                .WillCascadeOnDelete(true);
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -360,7 +360,6 @@
     <Content Include="Views\Account\ReSendConfirmEmail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Single.cshtml" />
     <Content Include="Views\Solution\Create.cshtml" />
-    <Content Include="Views\Solution\Delete.cshtml" />
     <Content Include="Views\Solution\Details.cshtml" />
     <Content Include="Views\Solution\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Enum.cshtml" />
