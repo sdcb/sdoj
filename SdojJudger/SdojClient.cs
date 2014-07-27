@@ -30,6 +30,7 @@ namespace SdojJudger
                 var hub = connection.CreateHubProxy(AppSettings.HubName);
                 hub.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
+                Console.WriteLine("welcome " + AppSettings.UserName);
 
                 Console.ReadKey();
             }
