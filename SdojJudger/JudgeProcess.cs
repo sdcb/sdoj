@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SdojJudger.Models;
 
@@ -11,7 +12,7 @@ namespace SdojJudger
             _judgeModel = judgeModel;
         }
 
-        public async void Execute()
+        public async Task ExecuteAsync()
         {
             var result = await Program.Client.Lock(_judgeModel.Id);
             Console.WriteLine(JsonConvert.SerializeObject(result));

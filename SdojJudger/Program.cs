@@ -1,11 +1,15 @@
-﻿namespace SdojJudger
+﻿using System;
+
+namespace SdojJudger
 {
     class Program
     {
         static void Main(string[] args)
         {
             Client = new SdojClient();
-            Client.Run().Wait();
+            var task = Client.Run();
+
+            Console.ReadKey();
         }
 
         public static SdojClient Client { get; set; }

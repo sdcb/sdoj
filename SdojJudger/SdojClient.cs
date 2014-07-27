@@ -30,9 +30,14 @@ namespace SdojJudger
                 Server = connection.CreateHubProxy(AppSettings.HubName);
                 Server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
-                Console.WriteLine("welcome " + AppSettings.UserName);
 
-                Console.ReadKey();
+                var all = await GetAll();
+                foreach (var clientSolutionPushModel in all)
+                {
+                    await OnClientJudgeAsync(clientSolutionPushModel);
+                }
+
+                Console.WriteLine("welcome " + AppSettings.UserName);
             }
         }
 
@@ -68,11 +73,18 @@ namespace SdojJudger
             return AppSettings.Cert.Value.Equals(certificate);
         }
 
+        private async Task OnClientJudgeAsync(ClientSolutionPushModel model)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(model));
+            var ps = new JudgeProcess(model);
+            await ps.ExecuteAsync();
+        }
+
         private void OnClientJudge(ClientSolutionPushModel model)
         {
             Console.WriteLine(JsonConvert.SerializeObject(model));
             var ps = new JudgeProcess(model);
-            ps.Execute();
+            var task = ps.ExecuteAsync();
         }
 
         private async Task<Cookie> AuthenticateUser(string user, string password)
