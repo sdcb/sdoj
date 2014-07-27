@@ -4,8 +4,10 @@
     {
         static void Main(string[] args)
         {
-            var client = new SdojClient();
-            client.Run().Wait();
+            Client = new SdojClient();
+            Client.Run().Wait();
         }
+
+        public static SdojClient Client { get; set; }
     }
 }

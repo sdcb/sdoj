@@ -20,35 +20,27 @@ namespace SdojWeb.SignalR
     [Authorize(Roles = SystemRoles.Judger)]
     public class JudgeHub : Hub
     {
-        JudgeHub()
-        {
-            DbContext = new ApplicationDbContext();
-            Transaction = DbContext.Database.BeginTransaction(IsolationLevel.Serializable);
-        }
-
         // Hub API
 
-        public async Task<bool> UpdateInLock(int solutionId,
-            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
+        public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
         {
-            var db = DbContext;
+            var db = GetDbContext();
             var slock = await db.SolutionLocks.FindAsync(solutionId);
 
             // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
-            if (slock == null || slock.LockClientId != Context.ConnectionId || slock.LockEndTime > DateTime.Now)
+            if (slock == null || slock.LockClientId != Context.ConnectionId || slock.LockEndTime < DateTime.Now)
             {
                 return false;
             }
-            
+
             // 锁住，允许操作。
             var solution = await db.Solutions.FindAsync(solutionId);
             solution.Status = statusId;
-            if (runTimeMs != null) solution.RunTime = runTimeMs.Value;
-            if (usingMemoryMb != null) solution.UsingMemoryMb = usingMemoryMb.Value;
 
             // 保存数据。
             db.Entry(solution).State = EntityState.Modified;
             await db.SaveChangesAsync();
+            Commit();
 
             return true;
         }
@@ -56,7 +48,7 @@ namespace SdojWeb.SignalR
         public async Task<bool> Update(int solutionId,
             SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
         {
-            var db = DbContext;
+            var db = GetDbContext();
             var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
 
             // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
@@ -64,7 +56,7 @@ namespace SdojWeb.SignalR
             {
                 return false;
             }
-            if (solutionLock.LockClientId != Context.ConnectionId || solutionLock.LockEndTime > DateTime.Now)
+            if (solutionLock.LockClientId != Context.ConnectionId || solutionLock.LockEndTime < DateTime.Now)
             {
                 db.Entry(solutionLock).State = EntityState.Deleted;
                 await db.SaveChangesAsync();
@@ -82,34 +74,35 @@ namespace SdojWeb.SignalR
             db.Entry(solution).State = EntityState.Modified;
             db.Entry(solutionLock).State = EntityState.Deleted;
             await db.SaveChangesAsync();
+            Commit();
 
             return true;
         }
 
         public async Task<SolutionFullModel> Lock(int solutionId)
         {
-            var db = DbContext;
+            var db = GetDbContext();
             var userId = Context.User.Identity.GetIntUserId();
 
             var solution = await db.Solutions
                 .Where(x =>
                     x.Question.CreateUserId == userId &&
-                    solutionId == x.Id && 
-                    (x.Lock == null || x.Lock.LockEndTime > DateTime.Now)) // 没有锁或者锁已过期
-                .Select(x => new 
+                    solutionId == x.Id &&
+                    (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
+                .Select(x => new
                 {
-                    Id = x.Id, 
-                    Lock = x.Lock, 
+                    Id = x.Id,
+                    Lock = x.Lock,
                     Time = x.Question.Datas.Sum(d => d.TimeLimit)
                 }).FirstOrDefaultAsync();
 
             if (solution == null) return null; // 找不到符合条件的解答，返回失败。
 
             // 锁定的时间，按题目的时间和，乘以一个倍数，再加上额外的传输时间为准。
-            var lockMilliseconds = solution.Time*LockTimeFactor + LockAdditionalSeconds*1000;
+            var lockMilliseconds = solution.Time * LockTimeFactor + LockAdditionalSeconds * 1000;
 
             // 添加或者更新锁。
-            var slock = solution.Lock ?? new SolutionLock {SolutionId = solution.Id};
+            var slock = solution.Lock ?? new SolutionLock { SolutionId = solution.Id };
             slock.LockClientId = Context.ConnectionId;
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
@@ -119,43 +112,48 @@ namespace SdojWeb.SignalR
 
             await db.SaveChangesAsync();
 
-            return await db.Solutions
+            var result = await db.Solutions
                 .Where(x => x.Id == solutionId)
                 .Project().To<SolutionFullModel>()
                 .FirstOrDefaultAsync();
+
+            Commit();
+            return result;
         }
 
         public async Task<SolutionPushModel[]> GetAll()
         {
             var userId = Context.User.Identity.GetIntUserId();
-            var db = DbContext;
+            var db = GetDbContext();
 
             var models = await db.Solutions
-                .Where(x => 
+                .Where(x =>
                     x.CreateUserId == userId &&
-                    (x.Lock == null || x.Lock.LockEndTime > DateTime.Now))
+                    (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
                 .Take(DispatchLimit)
                 .ToArrayAsync();
+            Commit();
 
             return models;
         }
 
         public async Task<QuestionDataFullModel[]> GetDatas(int[] dataId)
         {
-            var db = DbContext;
+            var db = GetDbContext();
             var userId = Context.User.Identity.GetIntUserId();
 
             var datas = await db.QuestionDatas
-                .Where(x => 
+                .Where(x =>
                     x.Question.CreateUserId == userId &&
                     dataId.Contains(x.Id))
                 .Project().To<QuestionDataFullModel>()
                 .ToArrayAsync();
+            Commit();
 
             return datas;
         }
-        
+
         // Overrides
 
         public override async Task OnConnected()
@@ -171,10 +169,27 @@ namespace SdojWeb.SignalR
             return base.OnDisconnected();
         }
 
+        public void Commit()
+        {
+            if (DbLazy.IsValueCreated && !Commited)
+            {
+                Transaction.Commit();
+                Commited = true;
+            }
+        }
+
+        public void Rollback()
+        {
+            if (DbLazy.IsValueCreated && !Commited)
+            {
+                Transaction.Rollback();
+                Commited = true;
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
-            Transaction.Commit();
-            DbContext.Dispose();
+            Rollback();
             base.Dispose(disposing);
         }
 
@@ -202,9 +217,9 @@ namespace SdojWeb.SignalR
                 using (var db = ApplicationDbContext.Create())
                 {
                     var models = await db.Solutions
-                        .Where(x => 
-                            x.Lock == null || 
-                            x.Lock.LockEndTime > DateTime.Now)
+                        .Where(x =>
+                            x.Lock == null ||
+                            x.Lock.LockEndTime < DateTime.Now)
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
                         .ToArrayAsync();
@@ -223,9 +238,28 @@ namespace SdojWeb.SignalR
 
         // Field & Properties
 
-        public readonly ApplicationDbContext DbContext;
+        public ApplicationDbContext GetDbContext()
+        {
+            var firstTimeRunning = !DbLazy.IsValueCreated;
+            var db = DbLazy.Value;
 
-        public readonly DbContextTransaction Transaction;
+            if (firstTimeRunning)
+            {
+                Transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
+            }
+
+            return db;
+        }
+
+        public Lazy<ApplicationDbContext> DbLazy = new Lazy<ApplicationDbContext>(() =>
+        {
+            var db = ApplicationDbContext.Create();
+            return db;
+        });
+
+        public DbContextTransaction Transaction { get; set; }
+
+        public bool Commited { get; set; }
 
         public static int DbScanTaskRunning = 0;
 

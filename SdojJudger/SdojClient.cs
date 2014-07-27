@@ -25,16 +25,43 @@ namespace SdojJudger
             }
             else
             {
-                var connection = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
+                var connection = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
                 connection.CookieContainer.Add(authCookie);
-                var hub = connection.CreateHubProxy(AppSettings.HubName);
-                hub.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
+                Server = connection.CreateHubProxy(AppSettings.HubName);
+                Server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
                 Console.WriteLine("welcome " + AppSettings.UserName);
 
                 Console.ReadKey();
             }
         }
+
+        public async Task<ClientSolutionFullModel> Lock(int solutionId)
+        {
+            return await Server.Invoke<ClientSolutionFullModel>(
+                AppSettings.HubLock, solutionId);
+        }
+
+        public async Task<bool> Update(int solutionId,
+            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
+        {
+            return await Server.Invoke<bool>(AppSettings.HubUpdate,
+                solutionId, statusId, runTimeMs, usingMemoryMb);
+        }
+
+        public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
+        {
+            return await Server.Invoke<bool>(AppSettings.HubUpdateInLock,
+                solutionId, statusId);
+        }
+
+        public async Task<ClientSolutionPushModel[]> GetAll()
+        {
+            return await Server.Invoke<ClientSolutionPushModel[]>(
+                AppSettings.HubGetAll);
+        }
+
+        // Details
 
         private bool ServerCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -72,5 +99,8 @@ namespace SdojJudger
                 return response.Cookies[AppSettings.CookieName];
             }
         }
+
+        // Fields & Properties.
+        private IHubProxy Server { get; set; }
     }
 }

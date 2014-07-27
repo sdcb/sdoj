@@ -55,6 +55,7 @@
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\ClientQuestionDataFullModel.cs" />
     <Compile Include="Models\ClientQuestionDataHashModel.cs" />
+    <Compile Include="Models\SolutionStatus.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SdojClient.cs" />

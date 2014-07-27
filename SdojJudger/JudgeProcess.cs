@@ -1,4 +1,6 @@
-﻿using SdojJudger.Models;
+﻿using System;
+using Newtonsoft.Json;
+using SdojJudger.Models;
 
 namespace SdojJudger
 {
@@ -9,11 +11,12 @@ namespace SdojJudger
             _judgeModel = judgeModel;
         }
 
-        public void Execute()
+        public async void Execute()
         {
-            
+            var result = await Program.Client.Lock(_judgeModel.Id);
+            Console.WriteLine(JsonConvert.SerializeObject(result));
         }
 
-        private ClientSolutionPushModel _judgeModel;
+        private readonly ClientSolutionPushModel _judgeModel;
     }
 }
