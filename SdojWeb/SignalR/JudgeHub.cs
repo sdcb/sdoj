@@ -163,10 +163,10 @@ namespace SdojWeb.SignalR
             EnsureDbScanTaskRunning();
         }
 
-        public override Task OnDisconnected()
+        public override Task OnDisconnected(bool stopCalled)
         {
             Interlocked.Decrement(ref ConnectionCount);
-            return base.OnDisconnected();
+            return base.OnDisconnected(stopCalled);
         }
 
         public void Commit()
