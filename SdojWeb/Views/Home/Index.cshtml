@@ -34,6 +34,9 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/signalr")
+    <script src="~/signalr/hubs"></script>
+
     <script>
         $(function () {
             var chat = $.connection.pcHub;
