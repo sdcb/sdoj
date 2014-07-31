@@ -216,6 +216,7 @@ namespace SdojWeb.SignalR
                 var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 using (var db = ApplicationDbContext.Create())
                 {
+                    var transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
                     var models = await db.Solutions
                         .Where(x =>
                             x.Lock == null ||
@@ -223,6 +224,7 @@ namespace SdojWeb.SignalR
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
                         .ToArrayAsync();
+                    transaction.Commit();
 
                     foreach (var model in models)
                     {
@@ -267,9 +269,9 @@ namespace SdojWeb.SignalR
 
         public static int ConnectionCount;
 
-        public const double LockAdditionalSeconds = 10.0;
+        public const double LockAdditionalSeconds = 30.0;
 
-        public const double LockTimeFactor = 1.5;
+        public const double LockTimeFactor = 5.0;
 
         public const int DbScanIntervalSeconds = 10;
 
