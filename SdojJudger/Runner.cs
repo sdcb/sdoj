@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
@@ -14,9 +12,6 @@ namespace SdojJudger
     {
         public async Task Run()
         {
-            // enable ssl custom cert.
-            ServicePointManager.ServerCertificateValidationCallback = ServerCertificateValidationCallback;
-
             var authCookie = await AuthenticateUser(AppSettings.UserName, AppSettings.Password);
             
             if (authCookie == null)
@@ -48,11 +43,6 @@ namespace SdojJudger
         }
 
         // Details
-
-        private bool ServerCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            return AppSettings.Cert.Value.Equals(certificate);
-        }
 
         private async Task OnClientJudgeAsync(ClientSolutionPushModel model)
         {
