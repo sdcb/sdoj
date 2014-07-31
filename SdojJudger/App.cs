@@ -6,17 +6,12 @@ namespace SdojJudger
     {
         static void Main(string[] args)
         {
-            Client = new Runner();
-            var task = Client.Run();
+            Runner = new Runner();
+            var task = Runner.Run();
 
             Console.ReadKey();
         }
 
-        public static Runner Client { get; set; }
-
-        public static HubClient GetHubClient()
-        {
-            return new HubClient(Client.Server);
-        }
+        public static Runner Runner { get; set; }
     }
 }

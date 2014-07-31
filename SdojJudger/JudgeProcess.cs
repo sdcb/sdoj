@@ -14,7 +14,7 @@ namespace SdojJudger
 
         public async Task ExecuteAsync()
         {
-            var client = App.GetHubClient();
+            var client = App.Runner.GetClient();
             var result = await client.Lock(_judgeModel.Id);
             Console.WriteLine(JsonConvert.SerializeObject(result));
         }

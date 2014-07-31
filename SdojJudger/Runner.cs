@@ -27,11 +27,11 @@ namespace SdojJudger
             {
                 var connection = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
                 connection.CookieContainer.Add(authCookie);
-                Server = connection.CreateHubProxy(AppSettings.HubName);
-                Server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
+                _server = connection.CreateHubProxy(AppSettings.HubName);
+                _server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
-                var client = new HubClient(Server);
+                var client = GetClient();
                 var all = await client.GetAll();
                 foreach (var clientSolutionPushModel in all)
                 {
@@ -40,6 +40,11 @@ namespace SdojJudger
 
                 Console.WriteLine("welcome " + AppSettings.UserName);
             }
+        }
+
+        public HubClient GetClient()
+        {
+            return new HubClient(_server);
         }
 
         // Details
@@ -89,6 +94,6 @@ namespace SdojJudger
         }
 
         // Fields & Properties.
-        public IHubProxy Server { get; private set; }
+        private IHubProxy _server;
     }
 }
