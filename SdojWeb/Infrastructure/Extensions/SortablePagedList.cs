@@ -16,6 +16,6 @@ namespace SdojWeb.Infrastructure.Extensions
 
         public string OrderBy { get; set; }
 
-        public bool Asc { get; set; }
+        public bool? Asc { get; set; }
     }
 }

@@ -11,14 +11,15 @@ namespace SdojWeb.Infrastructure.Extensions
     {
         public static MvcHtmlString SortableHeaderFor<TModel, TValue>(
             this HtmlHelper<IEnumerable<TModel>> html, 
-            Expression<Func<TModel, TValue>> expression, string actionName,  string orderBy, bool asc)
+            Expression<Func<TModel, TValue>> expression, string actionName,  string orderBy, bool? asc)
         {
             var displayName = html.DisplayNameFor(expression).ToString();
             var memberName = ((MemberExpression) expression.Body).Member.Name;
 
             if (orderBy == memberName)
             {
-                displayName = displayName + (asc ? '↓' : '↑');
+                var direction = asc == null ? "" : (asc.Value ? "↓" : "↑");
+                displayName = displayName + direction;
                 asc = !asc;
             }
             else

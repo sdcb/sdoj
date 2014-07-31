@@ -24,9 +24,12 @@ namespace SdojWeb.Controllers
         [AllowAnonymous]
         public ActionResult Index(int? page, string orderBy, bool? asc)
         {
-            var models = _dbContext.Questions.Project().To<QuestionSummaryViewModel>();
-            var orderedPagedList = models.ToSortedPagedList(page, orderBy, asc);
-            return View(orderedPagedList);
+            var query = _dbContext.Questions
+                .OrderByDescending(x => x.Id)
+                .Project().To<QuestionSummaryViewModel>();
+
+            var models = query.ToSortedPagedList(page, orderBy, asc);
+            return View(models);
         }
 
         // GET: Questions/Details/5
