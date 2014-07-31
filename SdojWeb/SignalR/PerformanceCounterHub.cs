@@ -43,6 +43,6 @@ namespace SdojWeb.SignalR
             return base.OnConnected();
         }
 
-        private DateTime _disposeTime;
+        private static DateTime _disposeTime;
     }
 }
