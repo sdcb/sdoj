@@ -10,7 +10,7 @@ using SdojJudger.Models;
 
 namespace SdojJudger
 {
-    public class SdojClient
+    public class Runner
     {
         public async Task Run()
         {
@@ -31,7 +31,8 @@ namespace SdojJudger
                 Server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
-                var all = await GetAll();
+                var client = new HubClient(Server);
+                var all = await client.GetAll();
                 foreach (var clientSolutionPushModel in all)
                 {
                     await OnClientJudgeAsync(clientSolutionPushModel);
@@ -39,31 +40,6 @@ namespace SdojJudger
 
                 Console.WriteLine("welcome " + AppSettings.UserName);
             }
-        }
-
-        public async Task<ClientSolutionFullModel> Lock(int solutionId)
-        {
-            return await Server.Invoke<ClientSolutionFullModel>(
-                AppSettings.HubLock, solutionId);
-        }
-
-        public async Task<bool> Update(int solutionId,
-            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
-        {
-            return await Server.Invoke<bool>(AppSettings.HubUpdate,
-                solutionId, statusId, runTimeMs, usingMemoryMb);
-        }
-
-        public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
-        {
-            return await Server.Invoke<bool>(AppSettings.HubUpdateInLock,
-                solutionId, statusId);
-        }
-
-        public async Task<ClientSolutionPushModel[]> GetAll()
-        {
-            return await Server.Invoke<ClientSolutionPushModel[]>(
-                AppSettings.HubGetAll);
         }
 
         // Details
@@ -113,6 +89,6 @@ namespace SdojJudger
         }
 
         // Fields & Properties.
-        private IHubProxy Server { get; set; }
+        public IHubProxy Server { get; private set; }
     }
 }
