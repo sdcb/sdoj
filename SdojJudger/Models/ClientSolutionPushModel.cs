@@ -12,8 +12,5 @@ namespace SdojJudger.Models
 
         [JsonProperty("c")]
         public float FullMemoryLimitMb { get; set; }
-
-        [JsonIgnore]
-        public int QuestionCreateUserId { get; set; }
     }
 }
