@@ -10,7 +10,7 @@ namespace SdojJudger.Database
         {
         }
 
-        public DbSet<SolutionEntity> SolutionEntities { get; set; }
+        public DbSet<QuestionData> Datas { get; set; }
 
         public static JudgerDbContext Create()
         {

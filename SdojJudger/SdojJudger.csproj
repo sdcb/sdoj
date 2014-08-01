@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
-    <Compile Include="Database\SolutionEntity.cs" />
+    <Compile Include="Database\QuestionData.cs" />
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
     <Compile Include="Migrations\Configuration.cs" />
