@@ -1,4 +1,5 @@
-﻿using SdojJudger.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using SdojJudger.Models;
 
 namespace SdojJudger.Database
 {
@@ -8,6 +9,7 @@ namespace SdojJudger.Database
 
         public Languages Language { get; set; }
 
-        public float FullMemoryLimitMb { get; set; }
+        [Column(TypeName = "ntext")]
+        public string Source { get; set; }
     }
 }

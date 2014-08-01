@@ -72,6 +72,7 @@
     <Compile Include="Database\SolutionEntity.cs" />
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClientSolutionFullModel.cs" />
     <Compile Include="Models\ClientSolutionPushModel.cs" />
     <Compile Include="Models\Languages.cs" />
