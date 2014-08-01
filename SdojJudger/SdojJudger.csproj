@@ -73,11 +73,11 @@
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\ClientSolutionFullModel.cs" />
-    <Compile Include="Models\ClientSolutionPushModel.cs" />
+    <Compile Include="Models\SolutionFullModel.cs" />
+    <Compile Include="Models\SolutionPushModel.cs" />
     <Compile Include="Models\Languages.cs" />
-    <Compile Include="Models\ClientQuestionDataFullModel.cs" />
-    <Compile Include="Models\ClientQuestionDataHashModel.cs" />
+    <Compile Include="Models\QuestionDataFullModel.cs" />
+    <Compile Include="Models\QuestionDataHashModel.cs" />
     <Compile Include="Models\SolutionStatus.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

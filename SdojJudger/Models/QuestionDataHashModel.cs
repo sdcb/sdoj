@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SdojJudger.Models
 {
-    public class ClientQuestionDataHashModel
+    public class QuestionDataHashModel
     {
         [JsonProperty("a")]
         public int Id { get; set; }

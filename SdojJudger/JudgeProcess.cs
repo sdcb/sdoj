@@ -7,7 +7,7 @@ namespace SdojJudger
 {
     public class JudgeProcess
     {
-        public JudgeProcess(ClientSolutionPushModel judgeModel)
+        public JudgeProcess(SolutionPushModel judgeModel)
         {
             _judgeModel = judgeModel;
         }
@@ -19,6 +19,6 @@ namespace SdojJudger
             Console.WriteLine(JsonConvert.SerializeObject(result));
         }
 
-        private readonly ClientSolutionPushModel _judgeModel;
+        private readonly SolutionPushModel _judgeModel;
     }
 }

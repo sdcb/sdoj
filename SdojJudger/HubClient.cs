@@ -11,9 +11,9 @@ namespace SdojJudger
             Server = server;
         }
 
-        public async Task<ClientSolutionFullModel> Lock(int solutionId)
+        public async Task<SolutionFullModel> Lock(int solutionId)
         {
-            return await Server.Invoke<ClientSolutionFullModel>(
+            return await Server.Invoke<SolutionFullModel>(
                 AppSettings.HubLock, solutionId);
         }
 
@@ -30,9 +30,9 @@ namespace SdojJudger
                 solutionId, statusId);
         }
 
-        public async Task<ClientSolutionPushModel[]> GetAll()
+        public async Task<SolutionPushModel[]> GetAll()
         {
-            return await Server.Invoke<ClientSolutionPushModel[]>(
+            return await Server.Invoke<SolutionPushModel[]>(
                 AppSettings.HubGetAll);
         }
 

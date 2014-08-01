@@ -23,7 +23,7 @@ namespace SdojJudger
                 var connection = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
                 connection.CookieContainer.Add(authCookie);
                 _server = connection.CreateHubProxy(AppSettings.HubName);
-                _server.On<ClientSolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
+                _server.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
                 var client = GetClient();
@@ -44,14 +44,14 @@ namespace SdojJudger
 
         // Details
 
-        private async Task OnClientJudgeAsync(ClientSolutionPushModel model)
+        private async Task OnClientJudgeAsync(SolutionPushModel model)
         {
             Console.WriteLine(JsonConvert.SerializeObject(model));
             var ps = new JudgeProcess(model);
             await ps.ExecuteAsync();
         }
 
-        private void OnClientJudge(ClientSolutionPushModel model)
+        private void OnClientJudge(SolutionPushModel model)
         {
             Console.WriteLine(JsonConvert.SerializeObject(model));
             var ps = new JudgeProcess(model);

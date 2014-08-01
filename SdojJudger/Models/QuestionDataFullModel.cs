@@ -2,7 +2,7 @@
 
 namespace SdojJudger.Models
 {
-    public class ClientQuestionDataFullModel
+    public class QuestionDataFullModel
     {
         [JsonProperty("a")]
         public int Id { get; set; }

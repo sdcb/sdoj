@@ -2,7 +2,7 @@
 
 namespace SdojJudger.Models
 {
-    public class ClientSolutionPushModel 
+    public class SolutionPushModel 
     {
         [JsonProperty("a")]
         public int Id { get; set; }
