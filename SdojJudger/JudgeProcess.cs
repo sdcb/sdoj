@@ -88,6 +88,6 @@ namespace SdojJudger
 
         private readonly ILog _log;
 
-        private HubClient _client;
+        private readonly HubClient _client;
     }
 }
