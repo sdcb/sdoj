@@ -145,10 +145,17 @@ namespace SdojWeb.Models
     public enum SolutionStatus
     {
         [Display(Name = "排队中")]
-        Queuing, 
-        Juding, 
-        Accepted, 
-        WrongAnswer, 
+        Queuing,
+        [Display(Name = "编译中")]
+        Juding,
+        [Display(Name = "编译失败")]
+        CompileError,
+        [Display(Name = "通过")]
+        Accepted,
+        [Display(Name = "答案错误")]
+        WrongAnswer,
+        [Display(Name = "运行时错误")]
+        RuntimeError, 
     }
 
     public enum Languages

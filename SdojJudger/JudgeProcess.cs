@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using log4net;
+using Microsoft.CSharp;
+using Microsoft.VisualBasic;
 using SdojJudger.Database;
 using SdojJudger.Models;
 
@@ -10,44 +15,86 @@ namespace SdojJudger
 {
     public class JudgeProcess
     {
-        public JudgeProcess(SolutionPushModel judgeModel)
+        public JudgeProcess(SolutionPushModel spush)
         {
-            _judgeModel = judgeModel;
+            _spush = spush;
             _log = LogManager.GetLogger(typeof (JudgeProcess));
             _client = App.Runner.GetClient();
         }
 
         public async Task ExecuteAsync()
         {
-            var solution = await TryLock();
-            if (solution == null)
-            {
+            await ExecuteInternal();
+            if (Interlocked.CompareExchange(ref _run, 1, 0) != 0)
                 return;
-            }
 
-            await UpdateQuestionData(solution);
+            await ExecuteInternal();
+
+            Interlocked.CompareExchange(ref _run, 0, 1);
         }
 
-        private async Task<SolutionFullModel> TryLock()
+        private async Task ExecuteInternal()
         {
             // 获取并锁定解答的详情。
-            SolutionFullModel solution = await _client.Lock(_judgeModel.Id);
-            if (solution == null)
+            _sfull = await _client.Lock(_spush.Id);
+            if (_sfull == null) return;
+            await UpdateQuestionData();
+
+            if (_spush.Language == Languages.CSharp)
             {
-                _log.Info("Lock solution failed.");
-                return null;
+                var csc = new CSharpCodeProvider();
+                var options = new CompilerParameters { GenerateExecutable = true };
+                var asm = csc.CompileAssemblyFromSource(options, _sfull.Source);
+
+                if (asm.Errors.HasErrors)
+                {
+                    await _client.Update(_spush.Id, SolutionStatus.CompileError, null, null);
+                    return;
+                }
+
+                var db = JudgerDbContext.Create();
+                var dataIds = _sfull.QuestionDatas
+                    .Select(x => x.Id).ToArray();
+                var datas = await db.Datas
+                    .Where(x => dataIds.Contains(x.Id))
+                    .ToArrayAsync();
+
+                foreach (var data in datas)
+                {
+                    var ps = Process.Start(new ProcessStartInfo
+                    {
+                        FileName = asm.PathToAssembly,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                    });
+                    await ps.StandardInput.WriteAsync(data.Input);
+                    var result = await ps.StandardOutput.ReadToEndAsync();
+
+                    if (result != data.Output)
+                    {
+                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, null, null);
+                        return;
+                    }
+                }
+                await _client.Update(_spush.Id, SolutionStatus.Accepted, 768, 34.5f);
             }
-            return solution;
+            else if (_spush.Language == Languages.Vb)
+            {
+                var vbc = new VBCodeProvider();
+                var options = new CompilerParameters();
+                var asm = vbc.CompileAssemblyFromSource(options, _sfull.Source);
+            }
         }
 
-        private async Task UpdateQuestionData(SolutionFullModel solution)
+        private async Task UpdateQuestionData()
         {
             // 与本地数据库对比时间戳。
-            var serverItems = solution.QuestionDatas
+            var serverItems = _sfull.QuestionDatas
                 .OrderBy(x => x.Id)
                 .Select(x => new { x.Id, x.UpdateTime.Ticks })
                 .ToArray();
-            var ids = solution.QuestionDatas.Select(x => x.Id);
+            var ids = _sfull.QuestionDatas.Select(x => x.Id);
 
             var db = JudgerDbContext.Create();
             var dbItems = await db.Datas
@@ -84,10 +131,14 @@ namespace SdojJudger
             }
         }
 
-        private readonly SolutionPushModel _judgeModel;
+        private readonly SolutionPushModel _spush;
+
+        private SolutionFullModel _sfull;
 
         private readonly ILog _log;
 
         private readonly HubClient _client;
+
+        private static int _run;
     }
 }

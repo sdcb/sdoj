@@ -84,29 +84,32 @@ namespace SdojWeb.SignalR
             var db = GetDbContext();
             var userId = Context.User.Identity.GetIntUserId();
 
-            var solution = await db.Solutions
+            var detail = await db.Solutions
                 .Where(x =>
                     x.Question.CreateUserId == userId &&
                     solutionId == x.Id &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
                 .Select(x => new
                 {
-                    Id = x.Id,
                     Lock = x.Lock,
-                    Time = x.Question.Datas.Sum(d => d.TimeLimit)
+                    Time = x.Question.Datas.Sum(d => d.TimeLimit), 
+                    Solution = x
                 }).FirstOrDefaultAsync();
 
-            if (solution == null) return null; // 找不到符合条件的解答，返回失败。
+            if (detail == null) return null; // 找不到符合条件的解答，返回失败。
 
             // 锁定的时间，按题目的时间和，乘以一个倍数，再加上额外的传输时间为准。
-            var lockMilliseconds = solution.Time * LockTimeFactor + LockAdditionalSeconds * 1000;
+            var lockMilliseconds = detail.Time * LockTimeFactor + LockAdditionalSeconds * 1000;
 
             // 添加或者更新锁。
-            var slock = solution.Lock ?? new SolutionLock { SolutionId = solution.Id };
+            var slock = detail.Lock ?? new SolutionLock { SolutionId = detail.Solution.Id };
             slock.LockClientId = Guid.Parse(Context.ConnectionId);
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
-            db.Entry(slock).State = solution.Lock == null
+            detail.Solution.Status = SolutionStatus.Juding;
+            db.Entry(detail.Solution).State = EntityState.Modified;
+
+            db.Entry(slock).State = detail.Lock == null
                 ? EntityState.Added
                 : EntityState.Modified;
 

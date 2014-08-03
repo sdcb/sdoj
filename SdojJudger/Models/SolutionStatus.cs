@@ -4,7 +4,9 @@
     {
         Queuing,
         Juding,
+        CompileError,
         Accepted,
         WrongAnswer,
+        RuntimeError, 
     }
 }
