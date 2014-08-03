@@ -21,13 +21,13 @@ namespace SdojJudger
             }
             else
             {
-                var connection = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
-                connection.CookieContainer.Add(authCookie);
-                _server = connection.CreateHubProxy(AppSettings.HubName);
-                _server.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
-                await connection.Start();
+                _hub = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
+                _hub.CookieContainer.Add(authCookie);
+                _proxy = _hub.CreateHubProxy(AppSettings.HubName);
+                _proxy.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
+                await _hub.Start();
 
-                _log.InfoFormat("welcome " + AppSettings.UserName);
+                _log.InfoFormat("{0} online.", AppSettings.UserName);
 
                 var client = GetClient();
                 var all = await client.GetAll();
@@ -38,9 +38,16 @@ namespace SdojJudger
             }
         }
 
+        public async Task Restart()
+        {
+            _hub.Dispose();
+            _log.Info("Connection stoped.");
+            await Run();
+        }
+
         public HubClient GetClient()
         {
-            return new HubClient(_server);
+            return new HubClient(_proxy);
         }
 
         // Details
@@ -85,7 +92,9 @@ namespace SdojJudger
         }
 
         // Fields & Properties.
-        private IHubProxy _server;
+        private IHubProxy _proxy;
+
+        private HubConnection _hub;
 
         private ILog _log;
     }

@@ -25,6 +25,11 @@ namespace SdojJudger
                     {
                         break;
                     }
+                    if (line == "restart")
+                    {
+                        task = Runner.Restart();
+                        task.Wait();
+                    }
                 }
             }
             catch (Exception e)
