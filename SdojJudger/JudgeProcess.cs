@@ -16,7 +16,6 @@ namespace SdojJudger
         {
             var client = App.Runner.GetClient();
             var result = await client.Lock(_judgeModel.Id);
-            Console.WriteLine(JsonConvert.SerializeObject(result));
         }
 
         private readonly SolutionPushModel _judgeModel;

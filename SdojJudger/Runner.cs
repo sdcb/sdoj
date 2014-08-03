@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using SdojJudger.Models;
@@ -13,10 +14,11 @@ namespace SdojJudger
         public async Task Run()
         {
             var authCookie = await AuthenticateUser(AppSettings.UserName, AppSettings.Password);
+            _log = LogManager.GetLogger(typeof (Runner));
             
             if (authCookie == null)
             {
-                Console.WriteLine("error: login failed for user {0}", AppSettings.UserName);
+                _log.FatalFormat("error: login failed for user {0}", AppSettings.UserName);
             }
             else
             {
@@ -26,14 +28,14 @@ namespace SdojJudger
                 _server.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await connection.Start();
 
+                _log.InfoFormat("welcome " + AppSettings.UserName);
+
                 var client = GetClient();
                 var all = await client.GetAll();
                 foreach (var clientSolutionPushModel in all)
                 {
                     await OnClientJudgeAsync(clientSolutionPushModel);
                 }
-
-                Console.WriteLine("welcome " + AppSettings.UserName);
             }
         }
 
@@ -46,14 +48,14 @@ namespace SdojJudger
 
         private async Task OnClientJudgeAsync(SolutionPushModel model)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(model));
+            _log.Debug(JsonConvert.SerializeObject(model));
             var ps = new JudgeProcess(model);
             await ps.ExecuteAsync();
         }
 
         private void OnClientJudge(SolutionPushModel model)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(model));
+            _log.Debug(JsonConvert.SerializeObject(model));
             var ps = new JudgeProcess(model);
             var task = ps.ExecuteAsync();
         }
@@ -85,5 +87,7 @@ namespace SdojJudger
 
         // Fields & Properties.
         private IHubProxy _server;
+
+        private ILog _log;
     }
 }

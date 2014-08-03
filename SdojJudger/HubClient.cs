@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using log4net;
 using Microsoft.AspNet.SignalR.Client;
+using Newtonsoft.Json;
 using SdojJudger.Models;
 
 namespace SdojJudger
@@ -8,34 +10,53 @@ namespace SdojJudger
     {
         public HubClient(IHubProxy server)
         {
-            Server = server;
+            _server = server;
+            _log = LogManager.GetLogger(typeof (HubClient));
         }
 
         public async Task<SolutionFullModel> Lock(int solutionId)
         {
-            return await Server.Invoke<SolutionFullModel>(
+            var result = await _server.Invoke<SolutionFullModel>(
                 AppSettings.HubLock, solutionId);
+            Log(result);
+            return result;
         }
 
         public async Task<bool> Update(int solutionId,
             SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
         {
-            return await Server.Invoke<bool>(AppSettings.HubUpdate,
+            var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
                 solutionId, statusId, runTimeMs, usingMemoryMb);
+            Log(result);
+            return result;
         }
 
         public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
         {
-            return await Server.Invoke<bool>(AppSettings.HubUpdateInLock,
+            var result = await _server.Invoke<bool>(AppSettings.HubUpdateInLock,
                 solutionId, statusId);
+            Log(result);
+            return result;
         }
 
         public async Task<SolutionPushModel[]> GetAll()
         {
-            return await Server.Invoke<SolutionPushModel[]>(
+            var result = await _server.Invoke<SolutionPushModel[]>(
                 AppSettings.HubGetAll);
+            Log(result);
+            return result;
         }
 
-        private IHubProxy Server { get; set; }
+        private void Log(object o)
+        {
+            if (_log.IsDebugEnabled)
+            {
+                _log.Debug(JsonConvert.SerializeObject(o));
+            }
+        }
+
+        private readonly IHubProxy _server;
+
+        private readonly ILog _log;
     }
 }

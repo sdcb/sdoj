@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using log4net;
 
 namespace SdojJudger.Database
 {
@@ -16,7 +17,8 @@ namespace SdojJudger.Database
         {
             var db = new JudgerDbContext();
 #if DEBUG
-            db.Database.Log += Console.WriteLine;
+            var log = LogManager.GetLogger(typeof (JudgerDbContext));
+            db.Database.Log += log.Debug;
 #endif
             return db;
         }

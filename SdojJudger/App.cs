@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net.Config;
 
 namespace SdojJudger
 {
@@ -6,6 +7,8 @@ namespace SdojJudger
     {
         static void Main(string[] args)
         {
+            XmlConfigurator.Configure();
+
             Runner = new Runner();
             var task = Runner.Run();
 
