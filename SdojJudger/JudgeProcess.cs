@@ -18,22 +18,31 @@ namespace SdojJudger
 
         public async Task ExecuteAsync()
         {
-            await UpdateQuestionData();
-            
+            var solution = await TryLock();
+            if (solution == null)
+            {
+                return;
+            }
+
+            await UpdateQuestionData(solution);
         }
 
-        private async Task UpdateQuestionData()
+        private async Task<SolutionFullModel> TryLock()
         {
             // 获取并锁定解答的详情。
             _client = App.Runner.GetClient();
 
-            var solution = await _client.Lock(_judgeModel.Id);
+            SolutionFullModel solution = await _client.Lock(_judgeModel.Id);
             if (solution == null)
             {
                 _log.Info("Lock solution failed.");
-                return;
+                return null;
             }
+            return solution;
+        }
 
+        private async Task UpdateQuestionData(SolutionFullModel solution)
+        {
             // 与本地数据库对比时间戳。
             var serverItems = solution.QuestionDatas
                 .OrderBy(x => x.Id)
