@@ -269,9 +269,9 @@ namespace SdojWeb.SignalR
 
         public static int ConnectionCount;
 
-        public const double LockAdditionalSeconds = 30.0;
+        public const double LockAdditionalSeconds = 20.0;
 
-        public const double LockTimeFactor = 5.0;
+        public const double LockTimeFactor = 4.0;
 
         public const int DbScanIntervalSeconds = 10;
 
