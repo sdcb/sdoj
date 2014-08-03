@@ -145,17 +145,23 @@ namespace SdojWeb.Models
     public enum SolutionStatus
     {
         [Display(Name = "排队中")]
-        Queuing,
+        Queuing = 0,
         [Display(Name = "编译中")]
-        Juding,
+        Juding = 1,
+        [Display(Name = "已完成")]
+        Completed = 100,
         [Display(Name = "编译失败")]
-        CompileError,
+        CompileError = 101,
         [Display(Name = "通过")]
-        Accepted,
+        Accepted = 102,
         [Display(Name = "答案错误")]
-        WrongAnswer,
+        WrongAnswer = 103,
         [Display(Name = "运行时错误")]
-        RuntimeError, 
+        RuntimeError = 104,
+        [Display(Name = "超时")]
+        TimeLimitExceed = 105,
+        [Display(Name = "超内存")]
+        MemoryLimitExceed = 106, 
     }
 
     public enum Languages

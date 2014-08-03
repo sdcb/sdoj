@@ -132,6 +132,7 @@ namespace SdojWeb.SignalR
             var models = await db.Solutions
                 .Where(x =>
                     x.CreateUserId == userId &&
+                    x.Status < SolutionStatus.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
                 .Take(DispatchLimit)
@@ -222,8 +223,8 @@ namespace SdojWeb.SignalR
                     var transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
                     var models = await db.Solutions
                         .Where(x =>
-                            x.Lock == null ||
-                            x.Lock.LockEndTime < DateTime.Now)
+                            x.Status < SolutionStatus.Completed && 
+                            (x.Lock == null || x.Lock.LockEndTime < DateTime.Now))
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
                         .ToArrayAsync();
