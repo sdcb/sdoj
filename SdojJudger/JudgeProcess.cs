@@ -14,6 +14,7 @@ namespace SdojJudger
         {
             _judgeModel = judgeModel;
             _log = LogManager.GetLogger(typeof (JudgeProcess));
+            _client = App.Runner.GetClient();
         }
 
         public async Task ExecuteAsync()
@@ -30,8 +31,6 @@ namespace SdojJudger
         private async Task<SolutionFullModel> TryLock()
         {
             // 获取并锁定解答的详情。
-            _client = App.Runner.GetClient();
-
             SolutionFullModel solution = await _client.Lock(_judgeModel.Id);
             if (solution == null)
             {
