@@ -37,5 +37,7 @@ namespace SdojJudger
         public const string HubUpdateInLock = "UpdateInLock";
 
         public const string HubGetAll = "GetAll";
+
+        public const string HubGetDatas = "GetDatas";
     }
 }

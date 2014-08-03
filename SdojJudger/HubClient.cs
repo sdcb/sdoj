@@ -40,6 +40,14 @@ namespace SdojJudger
             return result;
         }
 
+        public async Task<QuestionDataFullModel[]> GetDatas(int[] dataId)
+        {
+            var result = await _server.Invoke<QuestionDataFullModel[]>(AppSettings.HubGetDatas, 
+                dataId);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
+            return result;
+        }
+
         public async Task<SolutionPushModel[]> GetAll()
         {
             var result = await _server.Invoke<SolutionPushModel[]>(
