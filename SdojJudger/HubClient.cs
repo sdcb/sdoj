@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using log4net;
+using log4net.Util;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using SdojJudger.Models;
@@ -18,7 +19,7 @@ namespace SdojJudger
         {
             var result = await _server.Invoke<SolutionFullModel>(
                 AppSettings.HubLock, solutionId);
-            Log(result);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
         }
 
@@ -27,7 +28,7 @@ namespace SdojJudger
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
                 solutionId, statusId, runTimeMs, usingMemoryMb);
-            Log(result);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
         }
 
@@ -35,7 +36,7 @@ namespace SdojJudger
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdateInLock,
                 solutionId, statusId);
-            Log(result);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
         }
 
@@ -43,16 +44,8 @@ namespace SdojJudger
         {
             var result = await _server.Invoke<SolutionPushModel[]>(
                 AppSettings.HubGetAll);
-            Log(result);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
-        }
-
-        private void Log(object o)
-        {
-            if (_log.IsDebugEnabled)
-            {
-                _log.Debug(JsonConvert.SerializeObject(o));
-            }
         }
 
         private readonly IHubProxy _server;

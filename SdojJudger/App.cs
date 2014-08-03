@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net;
 using log4net.Config;
 
 namespace SdojJudger
@@ -8,13 +9,36 @@ namespace SdojJudger
         static void Main(string[] args)
         {
             XmlConfigurator.Configure();
+            _log = LogManager.GetLogger(typeof(App));
+            _log.InfoFormat("App started at {0}", DateTime.Now);
 
-            Runner = new Runner();
-            var task = Runner.Run();
+            try
+            {
+                Runner = new Runner();
+                var task = Runner.Run();
+                task.Wait();
 
-            Console.ReadKey();
+                while (true)
+                {
+                    var line = Console.ReadLine();
+                    if (line == "exit")
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Fatal("", e);
+            }
+            finally
+            {
+                _log.InfoFormat("App exited at {0}", DateTime.Now);
+            }
         }
 
         public static Runner Runner { get; set; }
+
+        private static ILog _log;
     }
 }
