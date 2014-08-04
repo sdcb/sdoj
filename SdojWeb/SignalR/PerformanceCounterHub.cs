@@ -14,7 +14,7 @@ namespace SdojWeb.SignalR
 
         public override Task OnConnected()
         {
-            _disposeTime = DateTime.Now.AddSeconds(1.0);
+            _disposeTime = DateTime.Now.AddMinutes(1.0);
 
             if (Interlocked.CompareExchange(ref Started, 1, 0) == 0)
             {
