@@ -46,7 +46,7 @@ namespace SdojWeb.SignalR
         }
 
         public async Task<bool> Update(int solutionId,
-            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
+            SolutionStatus statusId, int runTimeMs, float usingMemoryMb)
         {
             var db = GetDbContext();
             var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
@@ -66,8 +66,8 @@ namespace SdojWeb.SignalR
             // 锁住，允许操作，然后改变状态。
             var solution = await db.Solutions.FindAsync(solutionId);
             solution.Status = statusId;
-            if (runTimeMs != null) solution.RunTime = runTimeMs.Value;
-            if (usingMemoryMb != null) solution.UsingMemoryMb = usingMemoryMb.Value;
+            solution.RunTime = runTimeMs;
+            solution.UsingMemoryMb = usingMemoryMb;
             solution.Lock = null;
 
             // 删除锁，保存数据。

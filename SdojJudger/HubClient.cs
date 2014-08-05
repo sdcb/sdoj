@@ -24,7 +24,7 @@ namespace SdojJudger
         }
 
         public async Task<bool> Update(int solutionId,
-            SolutionStatus statusId, int? runTimeMs, float? usingMemoryMb)
+            SolutionStatus statusId, int runTimeMs, float usingMemoryMb)
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
                 solutionId, statusId, runTimeMs, usingMemoryMb);

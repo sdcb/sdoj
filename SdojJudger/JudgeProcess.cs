@@ -73,7 +73,7 @@ namespace SdojJudger
 
                     if (result != data.Output)
                     {
-                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, null, null);
+                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, 0, 0);
                         return;
                     }
                 }
