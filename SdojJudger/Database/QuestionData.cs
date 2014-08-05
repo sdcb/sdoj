@@ -5,6 +5,7 @@ namespace SdojJudger.Database
 {
     public class QuestionData
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Column(TypeName = "ntext")]

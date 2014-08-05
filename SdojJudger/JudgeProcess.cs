@@ -1,6 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -24,7 +25,6 @@ namespace SdojJudger
 
         public async Task ExecuteAsync()
         {
-            await ExecuteInternal();
             if (Interlocked.CompareExchange(ref _run, 1, 0) != 0)
                 return;
 
@@ -63,12 +63,13 @@ namespace SdojJudger
                 {
                     var ps = Process.Start(new ProcessStartInfo
                     {
+                        UseShellExecute = false, 
                         FileName = asm.PathToAssembly,
                         RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true,
                     });
-                    await ps.StandardInput.WriteAsync(data.Input);
+                    ps.StandardInput.WriteAsync(data.Input);
                     var result = await ps.StandardOutput.ReadToEndAsync();
 
                     if (result != data.Output)
@@ -111,7 +112,7 @@ namespace SdojJudger
             {
                 _log.InfoFormat("Found dirty datas, try get {0} data from server.", except.Length);
                 var hubDatas = await _client.GetDatas(except.Select(x => x.Id).ToArray());
-                datas.AddRange(hubDatas.Select(hubData => new QuestionData
+                var dbDatas = hubDatas.Select(hubData => new QuestionData
                 {
                     Id = hubData.Id,
                     Input = hubData.Input,
@@ -119,8 +120,8 @@ namespace SdojJudger
                     MemoryLimitMb = hubData.MemoryLimitMb,
                     TimeLimit = hubData.TimeLimit,
                     UpdateTicks = serverItems.First(x => x.Id == hubData.Id).Ticks
-                }));
-                db.Datas.AddRange(datas);
+                }).ToArray();
+                db.Datas.AddOrUpdate(dbDatas);
                 await db.SaveChangesAsync();
 
                 _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
