@@ -158,6 +158,15 @@ namespace SdojWeb.SignalR
             return datas;
         }
 
+        internal static void Judge(SolutionPushModel model)
+        {
+            var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
+
+            signalr.Clients
+                .Group(model.QuestionCreateUserId.ToStringInvariant())
+                .Judge(model);
+        }
+
         // Overrides
 
         public override async Task OnConnected()

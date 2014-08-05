@@ -1,12 +1,10 @@
 ﻿using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.SignalR;
+using EntityFramework.Extensions;
 using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Extensions;
@@ -84,11 +82,10 @@ namespace SdojWeb.Controllers
                 _dbContext.Solutions.Add(solution);
                 await _dbContext.SaveChangesAsync();
 
-                var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 var judgeModel = await _dbContext.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == solution.Id);
-                signalr.Clients.Group(User.Identity.GetUserId()).Judge(judgeModel);
+                JudgeHub.Judge(judgeModel);
 
                 return RedirectToAction("Index");
             }
@@ -110,6 +107,23 @@ namespace SdojWeb.Controllers
             _dbContext.Solutions.Remove(solution);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index").WithSuccess("解答删除成功。");
+        }
+
+        // POST: Solution/ReJudge/5
+        [HttpPost, ValidateAntiForgeryToken, SdojAuthorize(Roles = SystemRoles.Admin)]
+        public async Task<ActionResult> ReJudge(int id)
+        {
+            await _dbContext.Solutions
+                .Where(x => x.Id == id)
+                .UpdateAsync(s => new Solution {Status = SolutionStatus.Queuing});
+
+            var judgeModel = await _dbContext.Solutions
+                    .Project().To<SolutionPushModel>()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+            JudgeHub.Judge(judgeModel);
+
+            return RedirectToAction("Details", new {id = id})
+                .WithSuccess("重新评测成功。");
         }
     }
 }
