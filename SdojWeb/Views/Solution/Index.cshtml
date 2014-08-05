@@ -65,7 +65,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.SourceLength)
         </td>
-        <td>
+        <td id="state-@item.Id">
             @Html.DisplayFor(modelItem => item.Status)
         </td>
         <td>
@@ -99,6 +99,9 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/signalr")
+    <script src="~/signalr/hubs"></script>
+
     <script>
         $(".delete-link").click(function() {
             var id = $(this).data('id');
@@ -107,5 +110,11 @@
                 $("#delete-form").submit();
             }
         });
+
+        var shub = $.connection.solutionHub;
+        shub.client.push = function(id, name) {
+            $("#state-" + id).text(name);
+        };
+        $.connection.hub.start();
     </script>
 }

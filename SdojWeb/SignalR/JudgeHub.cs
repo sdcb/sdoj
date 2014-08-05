@@ -42,6 +42,8 @@ namespace SdojWeb.SignalR
             await db.SaveChangesAsync();
             Commit();
 
+            SolutionHub.PushChange(solution.Id, solution.Status.GetDisplayName());
+
             return true;
         }
 
@@ -75,6 +77,8 @@ namespace SdojWeb.SignalR
             db.Entry(solutionLock).State = EntityState.Deleted;
             await db.SaveChangesAsync();
             Commit();
+
+            SolutionHub.PushChange(solution.Id, solution.Status.GetDisplayName());
 
             return true;
         }

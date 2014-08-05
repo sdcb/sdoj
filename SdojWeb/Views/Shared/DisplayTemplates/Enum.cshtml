@@ -1,11 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations
-@model object
-
-@{
-    var field = Model.GetType().GetField(Model.ToString());
-    if (field != null)
-    {
-        var display = ((DisplayAttribute[]) field.GetCustomAttributes(typeof (DisplayAttribute), false)).FirstOrDefault();
-        @(display != null ? display.Name : Model.ToString())
-    }
-}
+﻿@using SdojWeb.Infrastructure.Extensions
+@model Enum
+           
+@Model.GetDisplayName()

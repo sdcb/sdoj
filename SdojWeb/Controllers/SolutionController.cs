@@ -120,6 +120,7 @@ namespace SdojWeb.Controllers
             var judgeModel = await _dbContext.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == id);
+            SolutionHub.PushChange(judgeModel.Id, SolutionStatus.Queuing.GetDisplayName());
             JudgeHub.Judge(judgeModel);
 
             return RedirectToAction("Details", new {id = id})
