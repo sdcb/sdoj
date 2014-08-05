@@ -48,7 +48,7 @@ namespace SdojJudger
 
                 if (asm.Errors.HasErrors)
                 {
-                    await _client.Update(_spush.Id, SolutionStatus.CompileError, null, null);
+                    await _client.Update(_spush.Id, SolutionStatus.CompileError, 0, 0);
                     return;
                 }
 
