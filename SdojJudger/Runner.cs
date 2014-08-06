@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.AspNet.SignalR.Client;
-using Newtonsoft.Json;
 using SdojJudger.Models;
 
 namespace SdojJudger

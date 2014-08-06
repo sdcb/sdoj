@@ -115,7 +115,7 @@ namespace SdojJudger
                 await db.SaveChangesAsync();
 
                 _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
-                if (datas.Count != datas.Capacity)
+                if (datas.Count != except.Length)
                 {
                     _log.Warn("Server returned less data than excepted.");
                 }
