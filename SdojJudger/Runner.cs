@@ -27,13 +27,15 @@ namespace SdojJudger
                 _proxy.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
                 await _hub.Start();
 
+                _judger = new JudgeScheduler();
+
                 _log.InfoFormat("{0} online.", AppSettings.UserName);
 
                 var client = GetClient();
                 var all = await client.GetAll();
                 foreach (var clientSolutionPushModel in all)
                 {
-                    await OnClientJudgeAsync(clientSolutionPushModel);
+                    OnClientJudge(clientSolutionPushModel);
                 }
             }
         }
@@ -41,6 +43,7 @@ namespace SdojJudger
         public async Task Restart()
         {
             _hub.Dispose();
+            _judger.Dispose();
             _log.Info("Connection stoped.");
             await Run();
         }
@@ -51,19 +54,10 @@ namespace SdojJudger
         }
 
         // Details
-
-        private async Task OnClientJudgeAsync(SolutionPushModel model)
-        {
-            _log.Debug(JsonConvert.SerializeObject(model));
-            var ps = new JudgeProcess(model);
-            await ps.ExecuteAsync();
-        }
-
+        
         private void OnClientJudge(SolutionPushModel model)
         {
-            _log.Debug(JsonConvert.SerializeObject(model));
-            var ps = new JudgeProcess(model);
-            var task = ps.ExecuteAsync();
+            _judger.AddOne(model);
         }
 
         private async Task<Cookie> AuthenticateUser(string user, string password)
@@ -92,6 +86,9 @@ namespace SdojJudger
         }
 
         // Fields & Properties.
+
+        private JudgeScheduler _judger;
+
         private IHubProxy _proxy;
 
         private HubConnection _hub;

@@ -69,6 +69,7 @@
     <Compile Include="Database\QuestionData.cs" />
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
+    <Compile Include="JudgeScheduler.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\SolutionFullModel.cs" />
     <Compile Include="Models\SolutionPushModel.cs" />

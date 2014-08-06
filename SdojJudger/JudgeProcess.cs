@@ -25,16 +25,6 @@ namespace SdojJudger
 
         public async Task ExecuteAsync()
         {
-            if (Interlocked.CompareExchange(ref _run, 1, 0) != 0)
-                return;
-
-            await ExecuteInternal();
-
-            Interlocked.CompareExchange(ref _run, 0, 1);
-        }
-
-        private async Task ExecuteInternal()
-        {
             // 获取并锁定解答的详情。
             _sfull = await _client.Lock(_spush.Id);
             if (_sfull == null) return;
@@ -139,7 +129,5 @@ namespace SdojJudger
         private readonly ILog _log;
 
         private readonly HubClient _client;
-
-        private static int _run;
     }
 }

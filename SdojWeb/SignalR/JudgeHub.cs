@@ -136,7 +136,7 @@ namespace SdojWeb.SignalR
 
             var models = await db.Solutions
                 .Where(x =>
-                    x.CreateUserId == userId &&
+                    x.Question.CreateUserId == userId &&
                     x.Status < SolutionStatus.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
@@ -178,7 +178,10 @@ namespace SdojWeb.SignalR
         {
             await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
             Interlocked.Increment(ref ConnectionCount);
-            EnsureDbScanTaskRunning();
+            if (AppSettings.EnableSolutionDbScan)
+            {
+                EnsureDbScanTaskRunning();
+            }
         }
 
         public override Task OnDisconnected(bool stopCalled)

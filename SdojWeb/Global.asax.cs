@@ -110,23 +110,12 @@ namespace SdojWeb
             }
         }
 
-        public static byte[] PrivateKey
+        public static bool EnableSolutionDbScan
         {
             get
             {
-                var settingString = ConfigurationManager.AppSettings["PrivateKey"];
-                var bytes = Convert.FromBase64String(settingString);
-                return bytes;
-            }
-        }
-
-        public static byte[] ClientKey
-        {
-            get
-            {
-                var settingString = ConfigurationManager.AppSettings["ClientKey"];
-                var bytes = Convert.FromBase64String(settingString);
-                return bytes;
+                var settingsString = ConfigurationManager.AppSettings["EnableSolutionDbScan"];
+                return bool.Parse(settingsString);
             }
         }
     }
