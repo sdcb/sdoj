@@ -125,6 +125,7 @@ namespace SdojWeb.SignalR
                 .FirstOrDefaultAsync();
 
             Commit();
+            SolutionHub.PushChange(solutionId, SolutionStatus.Juding.GetDisplayName());
             return result;
         }
 
