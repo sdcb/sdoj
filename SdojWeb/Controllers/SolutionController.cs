@@ -54,7 +54,7 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index").WithError(
                     string.Format("未找到id为{0}的解答。", id));
             }
-            if (!User.IsUserOrAdmin(solution.CreateUserId))
+            if (!User.IsUserOrRole(solution.CreateUserId, SystemRoles.Admin))
             {
                 return RedirectToAction("Index").WithInfo("只能查看自己的解答。");
             }
@@ -98,7 +98,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Solution solution = await _dbContext.Solutions.FindAsync(id);
-            if (!User.IsUserOrAdmin(solution.CreateUserId))
+            if (!User.IsUserOrRole(solution.CreateUserId, SystemRoles.Admin))
             {
                 return RedirectToAction("Index")
                     .WithWarning("只能删除自己提交的解答。");

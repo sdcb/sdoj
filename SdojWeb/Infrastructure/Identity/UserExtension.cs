@@ -7,11 +7,11 @@ namespace SdojWeb.Infrastructure.Identity
 {
     public static class UserExtensions
     {
-        public static bool IsUserOrAdmin(this IPrincipal user, int userId)
+        public static bool IsUserOrRole(this IPrincipal user, int userId, string role)
         {
-            return 
-                user.Identity.GetIntUserId() == userId || 
-                user.IsInRole("admin");
+            return
+                user.Identity.GetIntUserId() == userId ||
+                user.IsInRole(role);
         }
 
         public static bool EmailConfirmed(this IPrincipal user)

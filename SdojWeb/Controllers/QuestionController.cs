@@ -50,6 +50,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Questions/Create
+        [SdojAuthorize(Roles = SystemRoles.Judger)]
         public ActionResult Create()
         {
             return View();
@@ -58,7 +59,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, SdojAuthorize(Roles = SystemRoles.Judger)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
             if (ModelState.IsValid)
@@ -85,7 +86,7 @@ namespace SdojWeb.Controllers
                 .Project().To<QuestionEditModel>()
                 .FirstAsync(x => x.Id == id);
 
-            if (!User.IsUserOrAdmin(question.CreateUserId))
+            if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.Admin))
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
             }
@@ -106,7 +107,7 @@ namespace SdojWeb.Controllers
                     .Project().To<QuestionNotMappedEditModel>()
                     .FirstOrDefaultAsync();
 
-                if (!User.IsUserOrAdmin(secretModel.CreateUserId))
+                if (!User.IsUserOrRole(secretModel.CreateUserId, SystemRoles.Admin))
                 {
                     return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
                 }
@@ -126,7 +127,7 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithError("未找到该题目。");
             }
-            if (!User.IsUserOrAdmin(question.CreateUserId))
+            if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.Admin))
             {
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
             }

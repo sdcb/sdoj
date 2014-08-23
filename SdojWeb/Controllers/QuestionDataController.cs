@@ -76,7 +76,7 @@ namespace SdojWeb.Controllers
                 .Project().To<QuestionDataEditModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (User.IsUserOrAdmin(model.CreateUserId))
+            if (User.IsUserOrRole(model.CreateUserId, SystemRoles.Admin))
             {
                 return View(model);
             }
@@ -95,7 +95,7 @@ namespace SdojWeb.Controllers
                     .Select(x => x.Question.CreateUserId)
                     .FirstAsync();
 
-                if (User.IsUserOrAdmin(userId))
+                if (User.IsUserOrRole(userId, SystemRoles.Admin))
                 {
                     var questionData = Mapper.Map<QuestionData>(model);
                     _db.Entry(questionData).State = EntityState.Modified;
