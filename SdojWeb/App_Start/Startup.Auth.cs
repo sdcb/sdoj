@@ -52,7 +52,9 @@ namespace SdojWeb
             //   appId: "",
             //   appSecret: "");
 
-            app.UseGoogleAuthentication();
+            //app.UseGoogleAuthentication(
+            //    clientId: "",
+            //    clientSecret: "");
         }
 
         /// <summary>
