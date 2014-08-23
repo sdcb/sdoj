@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Compiler\CompilerProvider.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
     <Compile Include="Database\QuestionData.cs" />
     <Compile Include="HubClient.cs" />
