@@ -1,5 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
@@ -18,11 +20,11 @@ namespace SdojWeb.Controllers
     [SdojAuthorize(EmailConfirmed = true)]
     public class SolutionController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext _db;
 
-        public SolutionController(ApplicationDbContext dbContext)
+        public SolutionController(ApplicationDbContext db)
         {
-            _dbContext = dbContext;
+            _db = db;
         }
 
         // GET: Solution
@@ -31,10 +33,11 @@ namespace SdojWeb.Controllers
         {
             page = page ?? 1;
             onlyMe = onlyMe ?? false;
-            var model = _dbContext.Solutions
+            var model = _db.Solutions
                 .OrderByDescending(x => x.SubmitTime)
                 .Project().To<SolutionSummaryModel>();
             var currentUserId = User.Identity.GetIntUserId();
+            
             if (onlyMe.Value)
             {
                 model = model.Where(x => x.CreateUserId == currentUserId);
@@ -46,7 +49,7 @@ namespace SdojWeb.Controllers
         // GET: Solution/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var solution = await _dbContext.Solutions
+            var solution = await _db.Solutions
                 .Project().To<SolutionDetailModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
@@ -54,7 +57,12 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index").WithError(
                     string.Format("未找到id为{0}的解答。", id));
             }
-            if (!User.IsUserOrRole(solution.CreateUserId, SystemRoles.Admin))
+
+            int questionCreatorId = _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => x.Question.CreateUserId)
+                .First();
+            if (!CheckAccess(solution.CreateUserId, questionCreatorId))
             {
                 return RedirectToAction("Index").WithInfo("只能查看自己的解答。");
             }
@@ -73,16 +81,15 @@ namespace SdojWeb.Controllers
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(
-            [Bind(Include = "QuestionId,Language,Source")] SolutionCreateModel model)
+        public async Task<ActionResult> Create(SolutionCreateModel model)
         {
             if (ModelState.IsValid)
             {
                 var solution = Mapper.Map<Solution>(model);
-                _dbContext.Solutions.Add(solution);
-                await _dbContext.SaveChangesAsync();
+                _db.Solutions.Add(solution);
+                await _db.SaveChangesAsync();
 
-                var judgeModel = await _dbContext.Solutions
+                var judgeModel = await _db.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == solution.Id);
                 JudgeHub.Judge(judgeModel);
@@ -97,27 +104,50 @@ namespace SdojWeb.Controllers
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Solution solution = await _dbContext.Solutions.FindAsync(id);
-            if (!User.IsUserOrRole(solution.CreateUserId, SystemRoles.Admin))
+            // check access
+            var acl = await _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    AuthorId = x.CreateUserId, 
+                    QuestionCreatorId = x.Question.CreateUserId
+                })
+                .FirstAsync();
+            if (!CheckAccess(acl.AuthorId, acl.QuestionCreatorId))
             {
                 return RedirectToAction("Index")
                     .WithWarning("只能删除自己提交的解答。");
             }
 
-            _dbContext.Solutions.Remove(solution);
-            await _dbContext.SaveChangesAsync();
+            // update
+            await _db.Solutions.Where(x => x.Id == id).DeleteAsync();
             return RedirectToAction("Index").WithSuccess("解答删除成功。");
         }
 
         // POST: Solution/ReJudge/5
-        [HttpPost, ValidateAntiForgeryToken, SdojAuthorize(Roles = SystemRoles.Admin)]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReJudge(int id)
         {
-            await _dbContext.Solutions
+            // check access.
+            var acl = await _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    AuthorId = x.CreateUserId,
+                    QuestionCreatorId = x.Question.CreateUserId
+                })
+                .FirstAsync();
+            if (!CheckAccess(acl.AuthorId, acl.QuestionCreatorId))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // act.
+            await _db.Solutions
                 .Where(x => x.Id == id)
                 .UpdateAsync(s => new Solution {Status = SolutionStatus.Queuing});
 
-            var judgeModel = await _dbContext.Solutions
+            var judgeModel = await _db.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == id);
             SolutionHub.PushChange(judgeModel.Id, SolutionStatus.Queuing.GetDisplayName());
@@ -125,6 +155,21 @@ namespace SdojWeb.Controllers
 
             return RedirectToAction("Details", new {id = id})
                 .WithSuccess("重新评测成功。");
+        }
+
+        public bool CheckAccess(int authorId, int questionCreatorId)
+        {
+            IPrincipal user = User;
+            IIdentity identity = user.Identity;
+            int userId = identity.GetIntUserId();
+
+            if (userId == authorId ||
+                userId == questionCreatorId ||
+                user.IsInRole(SystemRoles.QuestionAdmin))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

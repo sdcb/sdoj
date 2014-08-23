@@ -53,7 +53,7 @@ namespace SdojWeb.Manager
                 .Select(x => x.CreateUserId)
                 .FirstOrDefaultAsync();
 
-            return User.IsUserOrRole(userId, SystemRoles.Admin);
+            return User.IsUserOrRole(userId, SystemRoles.QuestionAdmin);
         }
 
         public async Task<string> GetName(int questionId)

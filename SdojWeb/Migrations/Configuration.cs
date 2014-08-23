@@ -7,7 +7,7 @@ namespace SdojWeb.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<SdojWeb.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
@@ -22,23 +22,35 @@ namespace SdojWeb.Migrations
             var userManager = new ApplicationUserManager(new UserStore(context));
             var roleManager = new RoleManager<Role, int>(roleStore);
 
-            // 添加预定义用户。
-
-            userManager.Create(new User {UserName="sdflysha@qq.com", Email = "sdflysha@qq.com", EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User {UserName = "flysha@live.com", Email = "flysha@live.com", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User {UserName = "397482054@qq.com", Email = "397482054@qq.com", EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
-
             // 添加预定义角色到用户。
 
-            roleManager.Create(new Role {Name = SystemRoles.Admin});
-            roleManager.Create(new Role {Name = SystemRoles.Judger});
+            roleManager.Create(new Role { Name = SystemRoles.UserAdmin });
+            roleManager.Create(new Role { Name = SystemRoles.QuestionAdmin });
+            roleManager.Create(new Role { Name = SystemRoles.QuestionCreator });
+            roleManager.Create(new Role { Name = SystemRoles.Judger });
 
-            User user;
+            // 添加预定义用户。
 
-            user = userManager.FindByName("flysha@live.com");
-            userManager.AddToRole(user.Id, SystemRoles.Admin);
+            userManager.Create(new User { UserName="qa", Email = "sdoj-question-admin@sdcb.in", EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName = "ua", Email = "sdoj-user-admin@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName = "qc", Email = "sdoj-question-creator@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName = "j", Email = "sdoj-judger@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
 
-            user = userManager.FindByName("sdflysha@qq.com");
+            userManager.Create(new User { UserName = "uc", Email = "sdoj-user-confirmed@sdcb.in", EmailConfirmed =  true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName = "u", Email = "sdoj-user@sdcb.in", EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
+            
+            // 将预定义用户添加到角色
+
+            User user = userManager.FindByName("qa");
+            userManager.AddToRole(user.Id, SystemRoles.QuestionAdmin);
+
+            user = userManager.FindByName("ua");
+            userManager.AddToRole(user.Id, SystemRoles.UserAdmin);
+
+            user = userManager.FindByName("qc");
+            userManager.AddToRole(user.Id, SystemRoles.QuestionCreator);
+
+            user = userManager.FindByName("j");
             userManager.AddToRole(user.Id, SystemRoles.Judger);
         }
     }

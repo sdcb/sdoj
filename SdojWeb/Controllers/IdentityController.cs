@@ -10,7 +10,7 @@ using SdojWeb.Models;
 
 namespace SdojWeb.Controllers
 {
-    [SdojAuthorize(Roles = SystemRoles.Admin, EmailConfirmed = true)]
+    [SdojAuthorize(Roles = SystemRoles.UserAdmin, EmailConfirmed = true)]
     public class IdentityController : Controller
     {
         public readonly ApplicationUserManager UserMgr;

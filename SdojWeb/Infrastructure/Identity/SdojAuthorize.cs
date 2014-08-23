@@ -11,8 +11,10 @@ namespace SdojWeb.Infrastructure.Identity
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            var baseAuthrized = base.AuthorizeCore(httpContext);
-            if (!baseAuthrized) return false;
+            if (!base.AuthorizeCore(httpContext))
+            {
+                return false;
+            }
 
             if (EmailConfirmed)
             {
