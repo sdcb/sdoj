@@ -22,14 +22,24 @@ namespace SdojWeb.Migrations
             var userManager = new ApplicationUserManager(new UserStore(context));
             var roleManager = new RoleManager<Role, int>(roleStore);
 
+            // 添加预定义用户。
+
             userManager.Create(new User {UserName="sdflysha@qq.com", Email = "sdflysha@qq.com", EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new User {UserName = "flysha@live.com", Email = "flysha@live.com", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
             userManager.Create(new User {UserName = "397482054@qq.com", Email = "397482054@qq.com", EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
 
-            roleManager.Create(new Role { Name = SystemRoles.Admin });
+            // 添加预定义角色到用户。
 
-            var user = userManager.FindByName("flysha@live.com");
+            roleManager.Create(new Role {Name = SystemRoles.Admin});
+            roleManager.Create(new Role {Name = SystemRoles.Judger});
+
+            User user;
+
+            user = userManager.FindByName("flysha@live.com");
             userManager.AddToRole(user.Id, SystemRoles.Admin);
+
+            user = userManager.FindByName("sdflysha@qq.com");
+            userManager.AddToRole(user.Id, SystemRoles.Judger);
         }
     }
 }
