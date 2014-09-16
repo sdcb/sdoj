@@ -24,7 +24,7 @@ namespace SdojJudger
         }
 
         public async Task<bool> Update(int solutionId,
-            SolutionStatus statusId, int runTimeMs, float usingMemoryMb)
+            SolutionState statusId, int runTimeMs, float usingMemoryMb)
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
                 solutionId, statusId, runTimeMs, usingMemoryMb);
@@ -32,7 +32,7 @@ namespace SdojJudger
             return result;
         }
 
-        public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
+        public async Task<bool> UpdateInLock(int solutionId, SolutionState statusId)
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdateInLock,
                 solutionId, statusId);

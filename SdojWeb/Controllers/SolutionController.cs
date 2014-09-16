@@ -141,12 +141,12 @@ namespace SdojWeb.Controllers
             // act.
             await _db.Solutions
                 .Where(x => x.Id == id)
-                .UpdateAsync(s => new Solution {Status = SolutionStatus.Queuing});
+                .UpdateAsync(s => new Solution {State = SolutionState.Queuing});
 
             var judgeModel = await _db.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == id);
-            SolutionHub.PushChange(judgeModel.Id, SolutionStatus.Queuing.GetDisplayName());
+            SolutionHub.PushChange(judgeModel.Id, SolutionState.Queuing.GetDisplayName());
             JudgeHub.Judge(judgeModel);
 
             return RedirectToAction("Details", new {id = id})

@@ -2,7 +2,7 @@
 
 namespace SdojJudger.Models
 {
-    public enum SolutionStatus
+    public enum SolutionState
     {
         [Display(Name = "排队中")]
         Queuing = 0,

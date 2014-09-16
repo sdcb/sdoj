@@ -22,7 +22,7 @@ namespace SdojWeb.SignalR
     {
         // Hub API
 
-        public async Task<bool> UpdateInLock(int solutionId, SolutionStatus statusId)
+        public async Task<bool> UpdateInLock(int solutionId, SolutionState stateId)
         {
             var db = GetDbContext();
             var slock = await db.SolutionLocks.FindAsync(solutionId);
@@ -35,20 +35,20 @@ namespace SdojWeb.SignalR
 
             // 锁住，允许操作。
             var solution = await db.Solutions.FindAsync(solutionId);
-            solution.Status = statusId;
+            solution.State = stateId;
 
             // 保存数据。
             db.Entry(solution).State = EntityState.Modified;
             await db.SaveChangesAsync();
             Commit();
 
-            SolutionHub.PushChange(solution.Id, solution.Status.GetDisplayName());
+            SolutionHub.PushChange(solution.Id, solution.State.GetDisplayName());
 
             return true;
         }
 
         public async Task<bool> Update(int solutionId,
-            SolutionStatus statusId, int runTimeMs, float usingMemoryMb)
+            SolutionState stateId, int runTimeMs, float usingMemoryMb)
         {
             var db = GetDbContext();
             var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
@@ -67,7 +67,7 @@ namespace SdojWeb.SignalR
 
             // 锁住，允许操作，然后改变状态。
             var solution = await db.Solutions.FindAsync(solutionId);
-            solution.Status = statusId;
+            solution.State = stateId;
             solution.RunTime = runTimeMs;
             solution.UsingMemoryMb = usingMemoryMb;
             solution.Lock = null;
@@ -78,7 +78,7 @@ namespace SdojWeb.SignalR
             await db.SaveChangesAsync();
             Commit();
 
-            SolutionHub.PushChange(solution.Id, solution.Status.GetDisplayName());
+            SolutionHub.PushChange(solution.Id, solution.State.GetDisplayName());
 
             return true;
         }
@@ -110,7 +110,7 @@ namespace SdojWeb.SignalR
             slock.LockClientId = Guid.Parse(Context.ConnectionId);
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
-            detail.Solution.Status = SolutionStatus.Juding;
+            detail.Solution.State = SolutionState.Juding;
             db.Entry(detail.Solution).State = EntityState.Modified;
 
             db.Entry(slock).State = detail.Lock == null
@@ -125,7 +125,7 @@ namespace SdojWeb.SignalR
                 .FirstOrDefaultAsync();
 
             Commit();
-            SolutionHub.PushChange(solutionId, SolutionStatus.Juding.GetDisplayName());
+            SolutionHub.PushChange(solutionId, SolutionState.Juding.GetDisplayName());
             return result;
         }
 
@@ -137,7 +137,7 @@ namespace SdojWeb.SignalR
             var models = await db.Solutions
                 .Where(x =>
                     //x.Question.CreateUserId == userId &&
-                    x.Status < SolutionStatus.Completed &&
+                    x.State < SolutionState.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
                 .Take(DispatchLimit)
@@ -240,7 +240,7 @@ namespace SdojWeb.SignalR
                     var transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
                     var models = await db.Solutions
                         .Where(x =>
-                            x.Status < SolutionStatus.Completed && 
+                            x.State < SolutionState.Completed && 
                             (x.Lock == null || x.Lock.LockEndTime < DateTime.Now))
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)

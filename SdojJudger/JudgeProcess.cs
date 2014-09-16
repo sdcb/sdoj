@@ -38,7 +38,7 @@ namespace SdojJudger
 
                 if (asm.Errors.HasErrors)
                 {
-                    await _client.Update(_spush.Id, SolutionStatus.CompileError, 0, 0);
+                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
                     return;
                 }
 
@@ -64,11 +64,11 @@ namespace SdojJudger
 
                     if (result != data.Output)
                     {
-                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, 0, 0);
+                        await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
                         return;
                     }
                 }
-                await _client.Update(_spush.Id, SolutionStatus.Accepted, 768, 34.5f);
+                await _client.Update(_spush.Id, SolutionState.Accepted, 768, 34.5f);
             }
             else if (_spush.Language == Languages.Cpp)
             {
@@ -78,7 +78,7 @@ namespace SdojJudger
 
                 if (asm.Errors.HasErrors)
                 {
-                    await _client.Update(_spush.Id, SolutionStatus.CompileError, 0, 0);
+                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
                     return;
                 }
 
@@ -104,11 +104,11 @@ namespace SdojJudger
 
                     if (result != data.Output)
                     {
-                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, 0, 0);
+                        await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
                         return;
                     }
                 }
-                await _client.Update(_spush.Id, SolutionStatus.Accepted, 768, 34.5f);
+                await _client.Update(_spush.Id, SolutionState.Accepted, 768, 34.5f);
             }
             else if (_spush.Language == Languages.Vb)
             {

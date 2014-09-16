@@ -25,7 +25,7 @@ namespace SdojWeb.Models
         [Required]
         public string Source { get; set; }
 
-        public SolutionStatus Status { get; set; }
+        public SolutionState State { get; set; }
 
         public float UsingMemoryMb { get; set; }
 
@@ -71,7 +71,7 @@ namespace SdojWeb.Models
             configuration.CreateMap<SolutionCreateModel, Solution>()
                 .ForMember(dest => dest.SubmitTime, source => source.MapFrom(x => DateTime.Now))
                 .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => HttpContext.Current.User.Identity.GetIntUserId()))
-                .ForMember(dest => dest.Status, source => source.MapFrom(x => SolutionStatus.Queuing))
+                .ForMember(dest => dest.State, source => source.MapFrom(x => SolutionState.Queuing))
                 .ForMember(dest => dest.QuestionId, source => source.MapFrom(x => x.QuestionId));
         }
     }
@@ -132,7 +132,7 @@ namespace SdojWeb.Models
         public int SourceLength { get; set; }
 
         [Display(Name = "状态")]
-        public SolutionStatus Status { get; set; }
+        public SolutionState State { get; set; }
 
         [Display(Name = "内存使用(MB)")]
         public float UsingMemoryMb { get; set; }
@@ -144,7 +144,7 @@ namespace SdojWeb.Models
         public DateTime SubmitTime { get; set; }
     }
 
-    public enum SolutionStatus
+    public enum SolutionState
     {
         [Display(Name = "排队中")]
         Queuing = 0,
