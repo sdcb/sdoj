@@ -50,8 +50,8 @@ namespace SdojWeb.Infrastructure.Identity
             if (filterContext.HttpContext.Request.Url != null)
             {
                 var returnUrl = filterContext.HttpContext.Request.Url.AbsolutePath;
-                var encodedReturnUrl = HttpUtility.UrlEncode(returnUrl);
-                var url = "~/Account/Login?ReturnUrl=" + encodedReturnUrl;
+                var urlHelper = new UrlHelper(filterContext.RequestContext);
+                var url = urlHelper.Action("Login", "Account", new { returnUrl = returnUrl });
                 filterContext.Result = new RedirectResult(url).WithInfo(msg);
             }
             else
