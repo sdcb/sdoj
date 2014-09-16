@@ -168,20 +168,22 @@ namespace SdojWeb.SignalR
             var signalr = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
 
             signalr.Clients
-                .Group(model.QuestionCreateUserId.ToStringInvariant())
+                //.Group(model.QuestionCreateUserId.ToStringInvariant())
+                .All
                 .Judge(model);
         }
 
         // Overrides
 
-        public override async Task OnConnected()
+        public override Task OnConnected()
         {
-            await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
+            //await Groups.Add(Context.ConnectionId, Context.User.Identity.GetUserId());
             Interlocked.Increment(ref ConnectionCount);
             if (AppSettings.EnableSolutionDbScan)
             {
                 EnsureDbScanTaskRunning();
             }
+            return Task.FromResult(0);
         }
 
         public override Task OnDisconnected(bool stopCalled)
@@ -250,7 +252,8 @@ namespace SdojWeb.SignalR
                     foreach (var model in models)
                     {
                         hub.Clients
-                            .Group(model.QuestionCreateUserId.ToStringInvariant())
+                            //.Group(model.QuestionCreateUserId.ToStringInvariant())
+                            .All
                             .Judge(model);
                     }
                 }
