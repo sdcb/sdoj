@@ -70,6 +70,46 @@ namespace SdojJudger
                 }
                 await _client.Update(_spush.Id, SolutionStatus.Accepted, 768, 34.5f);
             }
+            else if (_spush.Language == Languages.Cpp)
+            {
+                var csc = new CSharpCodeProvider();
+                var options = new CompilerParameters { GenerateExecutable = true };
+                var asm = csc.CompileAssemblyFromSource(options, _sfull.Source);
+
+                if (asm.Errors.HasErrors)
+                {
+                    await _client.Update(_spush.Id, SolutionStatus.CompileError, 0, 0);
+                    return;
+                }
+
+                var db = JudgerDbContext.Create();
+                var dataIds = _sfull.QuestionDatas
+                    .Select(x => x.Id).ToArray();
+                var datas = await db.Datas
+                    .Where(x => dataIds.Contains(x.Id))
+                    .ToArrayAsync();
+
+                foreach (var data in datas)
+                {
+                    var ps = Process.Start(new ProcessStartInfo
+                    {
+                        UseShellExecute = false,
+                        FileName = asm.PathToAssembly,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                    });
+                    ps.StandardInput.WriteAsync(data.Input);
+                    var result = await ps.StandardOutput.ReadToEndAsync();
+
+                    if (result != data.Output)
+                    {
+                        await _client.Update(_spush.Id, SolutionStatus.WrongAnswer, 0, 0);
+                        return;
+                    }
+                }
+                await _client.Update(_spush.Id, SolutionStatus.Accepted, 768, 34.5f);
+            }
             else if (_spush.Language == Languages.Vb)
             {
                 var vbc = new VBCodeProvider();

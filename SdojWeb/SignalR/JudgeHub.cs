@@ -90,7 +90,7 @@ namespace SdojWeb.SignalR
 
             var detail = await db.Solutions
                 .Where(x =>
-                    x.Question.CreateUserId == userId &&
+                    //x.Question.CreateUserId == userId &&
                     solutionId == x.Id &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
                 .Select(x => new
@@ -136,7 +136,7 @@ namespace SdojWeb.SignalR
 
             var models = await db.Solutions
                 .Where(x =>
-                    x.Question.CreateUserId == userId &&
+                    //x.Question.CreateUserId == userId &&
                     x.Status < SolutionStatus.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
@@ -154,7 +154,7 @@ namespace SdojWeb.SignalR
 
             var datas = await db.QuestionDatas
                 .Where(x =>
-                    x.Question.CreateUserId == userId &&
+                    //x.Question.CreateUserId == userId &&
                     dataId.Contains(x.Id))
                 .Project().To<QuestionDataFullModel>()
                 .ToArrayAsync();

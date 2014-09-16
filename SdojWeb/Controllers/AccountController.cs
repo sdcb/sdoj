@@ -75,7 +75,7 @@ namespace SdojWeb.Controllers
             if (!await UserManager.CheckPasswordAsync(user, password))
                 user = null;
 
-            if (user != null && user.EmailConfirmed)
+            if (user != null && user.EmailConfirmed && user.Roles.Any(x => x.Name == SystemRoles.Judger))
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
