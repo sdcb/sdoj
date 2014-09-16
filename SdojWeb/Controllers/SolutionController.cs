@@ -58,11 +58,7 @@ namespace SdojWeb.Controllers
                     string.Format("未找到id为{0}的解答。", id));
             }
 
-            int questionCreatorId = _db.Solutions
-                .Where(x => x.Id == id)
-                .Select(x => x.Question.CreateUserId)
-                .First();
-            if (!CheckAccess(solution.CreateUserId, questionCreatorId))
+            if (!CheckAccess(solution.CreateUserId, solution.QuestionCreateUserId))
             {
                 return RedirectToAction("Index").WithInfo("只能查看自己的解答。");
             }

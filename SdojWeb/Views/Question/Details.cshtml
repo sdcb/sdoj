@@ -1,4 +1,5 @@
-﻿@model SdojWeb.Models.QuestionDetailModel
+﻿@using SdojWeb.Infrastructure.Identity
+@model SdojWeb.Models.QuestionDetailModel
 
 @{
     ViewBag.Title = Model.Name;
@@ -31,6 +32,11 @@
 
 <p>
     @Html.ActionLink("解答", "Create", "Solution", new {id=Model.Id}, null) |
-    @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+    @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
+    {
+        <text>
+            @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+        </text>
+    }
     @Html.ActionLink("返回列表", "Index")
 </p>

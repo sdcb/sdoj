@@ -62,6 +62,8 @@ namespace SdojWeb.Models
         [Display(Name = "输出样例"), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
+        public int CreateUserId { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()

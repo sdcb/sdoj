@@ -9,7 +9,7 @@
 <div>
     <hr />
     <p class="pull-right">
-        @if (User.IsInRole(SystemRoles.Admin))
+        @if (User.IsUserOrRole(Model.QuestionCreateUserId, SystemRoles.QuestionAdmin))
         {
             <button class="btn btn-warning" id="rejudge">重新评测</button>
         }
