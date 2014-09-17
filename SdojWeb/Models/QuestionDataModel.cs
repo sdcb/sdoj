@@ -35,8 +35,8 @@ namespace SdojWeb.Models
 
         public int QuestionId { get; set; }
 
-        [Display(Name = "输入字符数")]
-        public int InputLength { get; set; }
+        [Display(Name = "输入字符数"), DisplayFormat(NullDisplayText = "0")]
+        public int? InputLength { get; set; }
 
         [Display(Name = "输出字符数")]
         public int OutputLength { get; set; }
