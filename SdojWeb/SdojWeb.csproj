@@ -235,7 +235,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
-    <Compile Include="Controllers\QuestionDataController.cs" />
     <Compile Include="Controllers\SolutionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -409,12 +408,8 @@
     <Content Include="Views\Solution\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Enum.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
-    <Content Include="Views\QuestionData\ListForQuestion.cshtml" />
-    <Content Include="Views\QuestionData\CreateForQuestion.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Enum.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
-    <Content Include="Views\QuestionData\Edit.cshtml" />
-    <Content Include="Views\QuestionData\Delete.cshtml" />
     <Content Include="Views\Identity\Users.cshtml" />
     <Content Include="Views\Identity\Edit.cshtml" />
     <Content Include="Views\Question\_List.cshtml" />
@@ -424,6 +419,10 @@
     <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
     <Content Include="Views\Shared\_Nav.cshtml" />
+    <Content Include="Views\Question\Data.cshtml" />
+    <Content Include="Views\Question\DataCreate.cshtml" />
+    <Content Include="Views\Question\DataEdit.cshtml" />
+    <Content Include="Views\Question\DataDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

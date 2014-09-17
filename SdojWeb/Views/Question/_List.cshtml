@@ -46,7 +46,7 @@
                     @Html.DisplayFor(modelItem => item.TimeLimit)
                 </td>
                 <td>
-                    <a href="@Url.Action("ListForQuestion", "QuestionData", new {id=item.Id})">
+                    <a href="@Url.Action("Data", new {id=item.Id})">
                         @Html.DisplayFor(x => item.DataCount)
                     </a>
                 </td>

@@ -9,7 +9,7 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("新增测试数据", "CreateForQuestion", new {id=questionId})
+    @Html.ActionLink("新增测试数据", "DataCreate", new {id=questionId})
 </p>
 
 <table class="table">
@@ -54,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.TimeLimit)
             </td>
             <td>
-                <a title="编辑此测试数据" href='@Url.Action("Edit", new { id = item.Id, questionId = item.QuestionId })'>
+                <a title="编辑此测试数据" href='@Url.Action("DataEdit", new { id = item.Id, questionId = item.QuestionId })'>
                     @Html.DisplayFor(x => item.UpdateTime)
                 </a>
             </td>
@@ -72,11 +72,10 @@
 @Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null) |
 @Html.ActionLink("返回列表", "Index", "Question")
 
-@using (Html.BeginForm("Delete", "QuestionData", FormMethod.Post, new { id = "delete-form" }))
+@using (Html.BeginForm("DataDelete", "Question", new {questionId}, FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" />
-    <input type="hidden" name="questionId" value="@questionId" />
 }
 
 @section scripts

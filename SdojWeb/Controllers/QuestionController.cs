@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
@@ -14,9 +15,9 @@ namespace SdojWeb.Controllers
     [SdojAuthorize(EmailConfirmed = true)]
     public class QuestionController : Controller
     {
-        public QuestionController(ApplicationDbContext dbContext, QuestionManager manager)
+        public QuestionController(ApplicationDbContext db, QuestionManager manager)
         {
-            _dbContext = dbContext;
+            _db = db;
             _manager = manager;
         }
 
@@ -24,7 +25,7 @@ namespace SdojWeb.Controllers
         [AllowAnonymous]
         public ActionResult Index(int? page, string orderBy, bool? asc)
         {
-            var query = _dbContext.Questions
+            var query = _db.Questions
                 .OrderByDescending(x => x.Id)
                 .Project().To<QuestionSummaryViewModel>();
 
@@ -36,7 +37,7 @@ namespace SdojWeb.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Details(int id)
         {
-            var question = await _dbContext.Questions
+            var question = await _db.Questions
                 .Project().To<QuestionDetailModel>()
                 .FirstAsync(x => x.Id == id);
 
@@ -81,7 +82,7 @@ namespace SdojWeb.Controllers
         // GET: Questions/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var question = await _dbContext
+            var question = await _db
                 .Questions
                 .Project().To<QuestionEditModel>()
                 .FirstAsync(x => x.Id == id);
@@ -102,7 +103,7 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var secretModel = await _dbContext.Questions
+                var secretModel = await _db.Questions
                     .Where(x => x.Id == model.Id)
                     .Project().To<QuestionNotMappedEditModel>()
                     .FirstOrDefaultAsync();
@@ -122,7 +123,7 @@ namespace SdojWeb.Controllers
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var question = await _dbContext.Questions.FindAsync(id);
+            var question = await _db.Questions.FindAsync(id);
             if (question == null)
             {
                 return RedirectToAction("Index").WithError("未找到该题目。");
@@ -132,8 +133,8 @@ namespace SdojWeb.Controllers
                 return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
             }
 
-            _dbContext.Questions.Remove(question);
-            await _dbContext.SaveChangesAsync();
+            _db.Questions.Remove(question);
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index").WithSuccess("删除成功。");
         }
 
@@ -142,8 +143,128 @@ namespace SdojWeb.Controllers
             var exist = await _manager.ExistName(name);
             return Json(!exist, JsonRequestBehavior.AllowGet);
         }
+        
+        // GET: /Question/5/Data/
+        [Route("Question/{id}/Data")]
+        public async Task<ActionResult> Data(int id)
+        {
+            var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
+                .Project().To<QuestionDataSummaryModel>()
+                .ToArrayAsync();
 
-        private readonly ApplicationDbContext _dbContext;
+            ViewBag.QuestionId = id;
+            ViewBag.IsUserOwnsQuestion = await _manager.IsUserOwnsQuestion(id);
+            return View(questionDatas);
+        }
+
+        // GET: /Question/5/Data/Create
+        [Route("Question/{id}/Data/Create")]
+        public async Task<ActionResult> DataCreate(int id)
+        {
+            if (await _manager.IsUserOwnsQuestion(id))
+            {
+                var model = new QuestionDataEditModel
+                {
+                    QuestionId = id,
+                    QuestionName = await _manager.GetName(id)
+                };
+                return View(model);
+            }
+            return NonOwnerReturn(id);
+        }
+
+        // POST: /Question/5/Data/Create
+        [Route("Question/{id}/Data/Create")]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("DataCreate")]
+        public async Task<ActionResult> DataCreateConfirmed(QuestionDataEditModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _manager.IsUserOwnsQuestion(model.QuestionId))
+                {
+                    var questionData = Mapper.Map<QuestionData>(model);
+
+                    _db.QuestionDatas.Add(questionData);
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction("Data", new { id = model.QuestionId })
+                        .WithInfo("已成功创建该测试数据。");
+                }
+
+                return NonOwnerReturn(model.QuestionId);
+            }
+
+            return View(model);
+        }
+
+        // GET: /Question/5/Data/Edit
+        [Route("Question/{questionId}/Data/{id}/Edit")]
+        public async Task<ActionResult> DataEdit(int id, int questionId)
+        {
+            var model = await _db.QuestionDatas
+                .Project().To<QuestionDataEditModel>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (User.IsUserOrRole(model.CreateUserId, SystemRoles.QuestionAdmin))
+            {
+                return View(model);
+            }
+
+            return NonOwnerReturn(model.QuestionId);
+        }
+
+        // POST: /Question/5/Data/Edit
+        [Route("Question/{questionId}/Data/{id}/Edit")]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("DataEdit")]
+        public async Task<ActionResult> DataEditConfirmed(QuestionDataEditModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = await _db.QuestionDatas
+                    .Where(x => x.Id == model.Id)
+                    .Select(x => x.Question.CreateUserId)
+                    .FirstAsync();
+
+                if (User.IsUserOrRole(userId, SystemRoles.QuestionAdmin))
+                {
+                    var questionData = Mapper.Map<QuestionData>(model);
+                    _db.Entry(questionData).State = EntityState.Modified;
+                    await _db.SaveChangesAsync();
+
+                    return RedirectToAction("Data", new { id = model.QuestionId })
+                        .WithInfo("测试数据保存成功。");
+                }
+
+                return NonOwnerReturn(model.QuestionId);
+            }
+            return View(model);
+        }
+
+        // POST: /Question/5/Data/5/Delete
+        [Route("Question/{questionId}/Data/Delete")]
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DataDelete(int id, int questionId)
+        {
+            if (!await _manager.IsUserOwnsQuestion(questionId))
+            {
+                return NonOwnerReturn(questionId);
+            }
+
+            var model = await _db.QuestionDatas.FindAsync(id);
+            _db.Entry(model).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Data", new { id = questionId })
+                .WithSuccess("测试数据删除成功。");
+        }
+
+        private ActionResult NonOwnerReturn(int questionId)
+        {
+            return RedirectToAction("Data", new { id = questionId })
+                .WithSuccess("只有创建者才能查看或操作测试数据。");
+        }
+
+
+        private readonly ApplicationDbContext _db;
 
         private readonly QuestionManager _manager;
     }
