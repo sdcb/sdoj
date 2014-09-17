@@ -1,5 +1,4 @@
-﻿@using SdojWeb.Infrastructure.Extensions
-@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
+﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
 
 @{
     ViewBag.Title = "用户管理";
@@ -40,7 +39,10 @@
                         @Html.DisplayFor(item => user.EmailConfirmed)
                     </td>
                     <td>
-                        @String.Join(",", user.Roles.Select(x => x.Name))
+                        @foreach (var item in user.Roles)
+                        {
+                            <span class="label label-info">@Html.DisplayFor(x => item.Name)</span>
+                        }
                     </td>
                     <td>
                         <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@user.Id)">
