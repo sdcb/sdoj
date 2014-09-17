@@ -171,6 +171,9 @@ namespace SdojWeb.Models
         [Display(Name = "标题")]
         public string Name { get; set; }
 
+        [Display(Name = "作者")]
+        public string Creator { get; set; }
+
         [Display(Name = "内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
         public float MemoryLimitMb { get; set; }
 
@@ -189,10 +192,11 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionSummaryViewModel>()
+                .ForMember(d => d.Creator, s => s.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
                 .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count))
-                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
+                .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
+                .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
         }
     }
 }

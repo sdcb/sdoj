@@ -8,7 +8,7 @@ using SdojWeb.Infrastructure.Mapping;
 
 namespace SdojWeb.Models
 {
-    public class Solution : IHaveCustomMapping
+    public class Solution
     {
         public int Id { get; set; }
 
@@ -34,13 +34,6 @@ namespace SdojWeb.Models
         public DateTime SubmitTime { get; set; }
 
         public SolutionLock Lock { get; set; }
-
-        public void CreateMappings(IConfiguration configuration)
-        {
-            configuration.CreateMap<Solution, SolutionSummaryModel>()
-                .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
-                .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
-        }
     }
 
     public class SolutionLock
@@ -111,7 +104,7 @@ namespace SdojWeb.Models
         public string Source { get; set; }
     }
 
-    public class SolutionSummaryModel
+    public class SolutionSummaryModel : IHaveCustomMapping
     {
         public int Id { get; set; }
 
@@ -119,6 +112,8 @@ namespace SdojWeb.Models
         public string CreateUserName { get; set; }
 
         public int CreateUserId { get; set; }
+
+        public int QuestionCreateUserId { get; set; }
 
         [Display(Name = "题目名")]
         public string QuestionName { get; set; }
@@ -142,6 +137,13 @@ namespace SdojWeb.Models
 
         [Display(Name = "提交时间")]
         public DateTime SubmitTime { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<Solution, SolutionSummaryModel>()
+                .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))
+                .ForMember(dest => dest.SourceLength, source => source.MapFrom(x => x.Source.Length));
+        }
     }
 
     public enum SolutionState

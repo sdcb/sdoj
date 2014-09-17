@@ -1,11 +1,28 @@
-﻿@using PagedList
+﻿@using System.Security.Principal
+@using PagedList
 @using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
+@using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
 @model IEnumerable<SolutionSummaryModel>
 
 @{
     ViewBag.Title = "解答列表";
+
+    Func<int, int, string> getAccessClass = (int authorId, int questionCreatorId) =>
+    {
+        IPrincipal user = User;
+        IIdentity identity = user.Identity;
+        int userId = identity.GetIntUserId();
+
+        if (userId == authorId ||
+            userId == questionCreatorId ||
+            user.IsInRole(SystemRoles.QuestionAdmin))
+        {
+            return "";
+        }
+        return "disabled";
+    };
 }
 
 <h2>@ViewBag.Title</h2>
@@ -75,19 +92,28 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.SubmitTime)
                     </td>
-                    <td>
-                        <a class="btn btn-primary btn-xs btn-block"
-                           href="@Url.Action("Details", new {id=item.Id})">
-                            <i class="glyphicon glyphicon-file"></i>
-                            源码
-                        </a>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
-                            <i class="glyphicon glyphicon-remove"></i>
-                            删除
-                        </button>
-                    </td>
+                    @if (getAccessClass(item.CreateUserId, item.QuestionCreateUserId) == "")
+                    {
+                        <td>
+                            <a class="btn btn-primary btn-xs btn-block"
+                               href="@Url.Action("Details", new {id = item.Id})">
+                                <i class="glyphicon glyphicon-file"></i>
+                                源码
+                            </a>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-xs btn-block " onclick="deleteMe(@item.Id)">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                删除
+                            </button>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                    
                 </tr>
             }
         </tbody>
