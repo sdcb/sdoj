@@ -7,43 +7,52 @@
 
 <h2>@ViewBag.Title</h2>
 
-<table class="table" id="user-table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailConfirmed)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Roles)
-        </th>
-        <th></th>
-    </tr>
-    @foreach (var user in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(@user.UserName, "Edit", new { id = user.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(x => user.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(item => user.EmailConfirmed)
-            </td>
-            <td>
-                @String.Join(",", user.Roles.Select(x => x.Name))
-            </td>
-            <td>
-                @Html.DeleteIcon(user.Id)
-            </td>
-        </tr>
-    }
-</table>
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped" id="user-table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailConfirmed)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Roles)
+                </th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(@user.UserName, "Edit", new { id = user.Id })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => user.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(item => user.EmailConfirmed)
+                    </td>
+                    <td>
+                        @String.Join(",", user.Roles.Select(x => x.Name))
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@user.Id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            删除
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @using (Html.BeginForm("DeleteUser", "Identity", FormMethod.Post, new {id="delete-form"}))
 {
@@ -54,12 +63,11 @@
 @section scripts
 {
     <script>
-        $("#user-table .delete-link").click(function () {
+        function deleteMe(id) {
             if (confirm("确定要删除该用户吗？\r\n所有与该用户相关联的资料都将删除并不可恢复。")) {
-                var id = $(this).data('id');
                 $("#delete-form input[name='id']").val(id);
                 $("#delete-form").submit();
             }
-        });
+        }
     </script>
 }
