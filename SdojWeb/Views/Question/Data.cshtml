@@ -12,62 +12,70 @@
     @Html.ActionLink("新增测试数据", "DataCreate", new {id=questionId})
 </p>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.QuestionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InputLength)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OutputLength)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MemoryLimitMb)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeLimit)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateTime)
-        </th>
-        <th></th>
-    </tr>
-    
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.QuestionName, "Details", "Question", new {id = item.QuestionId}, null)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InputLength)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OutputLength)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemoryLimitMb)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeLimit)
-            </td>
-            <td>
-                <a title="编辑此测试数据" href='@Url.Action("DataEdit", new { id = item.Id, questionId = item.QuestionId })'>
-                    @Html.DisplayFor(x => item.UpdateTime)
-                </a>
-            </td>
-            <td>
-                @if (owns && !item.IsSampleData)
-                {
-                    <a href="#" data-id="@item.Id" title="删除" class="glyphicon glyphicon-remove text-danger delete-link"></a>
-                }
-            </td>
-        </tr>
-    }
-    
-</table>
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.QuestionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InputLength)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OutputLength)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MemoryLimitMb)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimeLimit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdateTime)
+                </th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.QuestionName, "Details", "Question", new { id = item.QuestionId }, null)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InputLength)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutputLength)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeLimit)
+                    </td>
+                    <td>
+                        <a title="编辑此测试数据" href='@Url.Action("DataEdit", new { id = item.Id, questionId = item.QuestionId })'>
+                            @Html.DisplayFor(x => item.UpdateTime)
+                        </a>
+                    </td>
+                    <td>
+                        @if (owns && !item.IsSampleData)
+                        {
+                            <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                删除
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null) |
 @Html.ActionLink("返回列表", "Index", "Question")
@@ -81,12 +89,11 @@
 @section scripts
 {
     <script>
-        $(".delete-link").click(function () {
-            var id = $(this).data('id');
+        function deleteMe(id) {
             if (confirm('确定要删除此数据吗？')) {
                 $("#delete-form input[name='id']").val(id);
                 $("#delete-form").submit();
             }
-        });
+        }
     </script>
 }
