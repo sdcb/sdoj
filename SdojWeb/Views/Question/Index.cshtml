@@ -33,12 +33,11 @@
 @section scripts
 {
     <script>
-        $(".delete-link").click(function() {
-            var id = $(this).data('id');
+        function deleteMe(id) {
             if (confirm('确定要删除此题目吗？')) {
                 $("#delete-form input[name='id']").val(id);
                 $("#delete-form").submit();
             }
-        });
+        }
     </script>
 }

@@ -150,7 +150,7 @@ namespace SdojWeb.Controllers
             JudgeHub.Judge(judgeModel);
 
             return RedirectToAction("Details", new {id = id})
-                .WithSuccess("重新评测成功。");
+                .WithSuccess("重新评测已开始。");
         }
 
         public bool CheckAccess(int authorId, int questionCreatorId)

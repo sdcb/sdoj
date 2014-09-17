@@ -28,17 +28,5 @@ namespace SdojWeb.Infrastructure.Extensions
             }
             return html.ActionLink(displayName, actionName, new { orderBy = memberName, asc });
         }
-
-        public static IHtmlString DeleteIcon(
-            this HtmlHelper html, 
-            object id, 
-            string displayText = null, 
-            string customClass = null)
-        {
-            var fmtTag = string.Format(
-                "<a href='#' data-id='{0}' title='删除' class='glyphicon glyphicon-remove text-danger delete-link {1}'>{2}</a>",
-                id, customClass, displayText);
-            return html.Raw(fmtTag);
-        }
     }
 }

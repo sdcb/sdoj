@@ -8,12 +8,7 @@
 
 <div>
     <hr />
-    <p class="pull-right">
-        @if (User.IsUserOrRole(Model.QuestionCreateUserId, SystemRoles.QuestionAdmin))
-        {
-            <button class="btn btn-warning" id="rejudge">重新评测</button>
-        }
-    </p>
+    
     <dl class="dl-horizontal">
         <dt>@Html.DisplayNameFor(model => model.QuestionName)</dt>
         <dd>@Html.ActionLink(Model.QuestionName, "Details", "Question", new { id = Model.QuestionId }, null)</dd>
@@ -25,8 +20,14 @@
         <dd><pre class="well">@Html.DisplayFor(model => model.Source)</pre></dd>
     </dl>
 </div>
-<p>
-    @Html.ActionLink("解答列表", "Index")
+<p class="">
+        @if (User.IsUserOrRole(Model.QuestionCreateUserId, SystemRoles.QuestionAdmin))
+        {
+            <button class="btn btn-primary" id="rejudge">
+                <i class="glyphicon glyphicon-repeat"></i>
+                重新评测
+            </button>
+        }
 </p>
 
 @using (Html.BeginForm("ReJudge", "Solution", new { id = Model.Id }, FormMethod.Post, new { id = "rejudge-form" }))
