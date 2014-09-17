@@ -23,15 +23,7 @@
                 @Html.ActionLink("应用程序名称", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("主页", "Index", "Home")</li>
-                    <li>@Html.ActionLink("题目", "Index", "Question")</li>
-                    <li>@Html.ActionLink("解答", "Index", "Solution")</li>
-                    @if (User.IsInRole(SystemRoles.UserAdmin))
-                    {
-                        <li>@Html.ActionLink("用户管理", "Index", "Identity")</li>
-                    }
-                </ul>
+                @Html.Partial("_Nav")
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

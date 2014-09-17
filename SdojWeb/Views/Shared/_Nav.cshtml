@@ -1,0 +1,25 @@
+﻿@using SdojWeb.Infrastructure.Identity
+
+@{
+    var controllerName = (string)Request.RequestContext.RouteData.Values["controller"];
+    var loweredControllerName = controllerName.ToLowerInvariant();
+    Func<string, string> getControllerIsActiveClass = text => text == loweredControllerName ? "active" : "";
+}
+
+<ul class="nav navbar-nav">
+    <li class="@getControllerIsActiveClass("home")">
+        @Html.ActionLink("主页", "Index", "Home")
+    </li>
+    <li class="@getControllerIsActiveClass("question")">
+        @Html.ActionLink("题目", "Index", "Question")
+    </li>
+    <li class="@getControllerIsActiveClass("solution")">
+        @Html.ActionLink("解答", "Index", "Solution")
+    </li>
+    @if (User.IsInRole(SystemRoles.UserAdmin))
+    {
+        <li class="@getControllerIsActiveClass("identity")">
+            @Html.ActionLink("用户管理", "Index", "Identity")
+        </li>
+    }
+</ul>
