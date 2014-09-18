@@ -7,71 +7,74 @@
     var asc = sortablePagedList.Asc;
 }
 
-<table class="table table-bordered table-condensed table-hover table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.SortableHeaderFor(model => model.Name, "Index", orderBy, asc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MemoryLimitMb)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeLimit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SolutionCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateTime)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
             <tr>
-                <td>
-                    @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemoryLimitMb)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeLimit)
-                </td>
-                <td>
-                    <a href="@Url.Action("Data", new {id=item.Id})">
-                        @Html.DisplayFor(x => item.DataCount)
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SolutionCount)
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", new {id=item.Id})">
-                        @Html.DisplayFor(modelItem => item.UpdateTime)
-                    </a>
-                </td>
-                <td>
-                    <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
-                        <i class="glyphicon glyphicon-remove"></i>
-                        删除
-                    </button>
-                </td>
+                <th>
+                    @Html.SortableHeaderFor(model => model.Name, "Index", orderBy, asc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Creator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MemoryLimitMb)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimeLimit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SolutionCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdateTime)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-    
-</table>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Creator)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeLimit)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Data", new {id=item.Id})">
+                            @Html.DisplayFor(x => item.DataCount)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SolutionCount)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new {id=item.Id})">
+                            @Html.DisplayFor(modelItem => item.UpdateTime)
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            删除
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>

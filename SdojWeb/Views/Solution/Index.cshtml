@@ -23,6 +23,8 @@
         }
         return "disabled";
     };
+
+    var pagedList = Model as IPagedList<SolutionSummaryModel>;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -121,10 +123,13 @@
 </div>
 
 
-<div>
-    @{var pagedList = Model as IPagedList<SolutionSummaryModel>;}
-    第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
-    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+<div class="row">
+    <div class="col-xs-6">
+        第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
+    </div>
+    <div class="pull-right">
+        @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+    </div>
 </div>
 
 @using (Html.BeginForm("Delete", "Solution", FormMethod.Post, new {id = "delete-form"}))

@@ -13,16 +13,24 @@
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("创建题目", "Create")
-</p>
-
+<div class="pull-right">
+    <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+        <i class="glyphicon glyphicon-plus"></i>
+        创建题目
+    </a>
+</div>
 
 @Html.Partial("_List")
 
-<br/>
-<p>第 @Model.PageNumber 页，共 @Model.PageCount 页 </p>
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+<div class="row">
+    <div class="col-xs-6">
+        第 @Model.PageNumber 页，共 @Model.PageCount 页
+    </div>
+    <div class="pull-right">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+    </div>
+    
+</div>
 
 @using (Html.BeginForm("Delete", "Question", FormMethod.Post, new {id="delete-form"}))
 {

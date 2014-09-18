@@ -15,3 +15,11 @@ select,
 textarea {
     max-width: 500px;
 }
+
+.pagination {
+    margin: 0;
+}
+
+.pagination-container {
+    margin: 0 15px 0 0;
+}
