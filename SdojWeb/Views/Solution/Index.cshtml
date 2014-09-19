@@ -127,8 +127,10 @@
     <div class="col-xs-6">
         第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
     </div>
-    <div class="pull-right">
-        @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+    <div class="col-xs-6">
+        <div class="pull-right">
+            @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+        </div>
     </div>
 </div>
 

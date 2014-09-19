@@ -26,10 +26,11 @@
     <div class="col-xs-6">
         第 @Model.PageNumber 页，共 @Model.PageCount 页
     </div>
-    <div class="pull-right">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+    <div class="col-xs-6">
+        <div class="pull-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+        </div>
     </div>
-    
 </div>
 
 @using (Html.BeginForm("Delete", "Question", FormMethod.Post, new {id="delete-form"}))
