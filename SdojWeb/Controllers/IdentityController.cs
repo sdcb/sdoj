@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Alerts;
+using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 
@@ -36,9 +37,10 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Identity/Users/
-        public ActionResult Users()
+        public ActionResult Users(int? page, string orderBy, bool? asc)
         {
-            var users = UserMgr.Users.Project().To<UserSummaryViewModel>().ToArray();
+            var users = UserMgr.Users.Project().To<UserSummaryViewModel>()
+                .ToSortedPagedList(page, orderBy, asc);
             return View(users);
         }
 

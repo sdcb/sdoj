@@ -1,7 +1,10 @@
-﻿@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
+﻿@using SdojWeb.Infrastructure.Extensions
+@using SdojWeb.Models
+@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
 
 @{
     ViewBag.Title = "用户管理";
+    var paged = (SortablePagedList<UserSummaryViewModel>) Model;
 }
 
 <h2>@ViewBag.Title</h2>
