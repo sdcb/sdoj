@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AutoMapper;
+using EntityFramework.Extensions;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
 using SdojWeb.Models;
 using SdojWeb.Infrastructure.Alerts;
 using AutoMapper.QueryableExtensions;
+using SdojWeb.Models.JudgePush;
+using SdojWeb.SignalR;
 
 namespace SdojWeb.Controllers
 {
@@ -129,11 +132,11 @@ namespace SdojWeb.Controllers
 
                 if (!User.IsUserOrRole(secretModel.CreateUserId, SystemRoles.QuestionAdmin))
                 {
-                    return RedirectToAction("Index").WithWarning("仅题目创建者才能编辑题目。");
+                    return RedirectToAction("Details").WithWarning("仅题目创建者才能编辑题目。");
                 }
 
                 await _manager.Update(secretModel, model);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details");
             }
             return View(model);
         }
@@ -143,18 +146,15 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var question = await _db.Questions.FindAsync(id);
-            if (question == null)
-            {
-                return RedirectToAction("Index").WithError("未找到该题目。");
-            }
+
             if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))
             {
-                return RedirectToAction("Index").WithWarning("仅题目创建者才能删除题目。");
+                return RedirectToAction("Details").WithWarning("仅题目创建者才能删除题目。");
             }
 
             _db.Questions.Remove(question);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index").WithSuccess("删除成功。");
+            return RedirectToAction("Details").WithSuccess("删除成功。");
         }
 
         public async Task<ActionResult> CheckName(string name)
@@ -280,6 +280,41 @@ namespace SdojWeb.Controllers
         {
             return RedirectToAction("Data", new { id = questionId })
                 .WithSuccess("只有创建者才能查看或操作测试数据。");
+        }
+
+        public async Task<ActionResult> ReJudge(int id)
+        {
+            var creator = await _db.Questions
+                .Where(x => x.Id == id)
+                .Select(x => x.CreateUserId)
+                .FirstAsync();
+
+            if (!User.IsUserOrRole(creator, SystemRoles.QuestionAdmin))
+            {
+                return RedirectToAction("Details", new {id = id})
+                    .WithError("只有创建者才能重新评测该题目。");
+            }
+
+            await _db.Solutions
+                .Where(x => x.QuestionId == id)
+                .Select(x => x.Id)
+                .ForEachAsync(x => SolutionHub.PushChange(x, SolutionState.Queuing, 0, 0.0f));
+
+            await _db.Solutions
+                .Where(x => x.QuestionId == id)
+                .UpdateAsync(x => new Solution{State = SolutionState.Queuing});
+            await _db.SolutionLocks
+                .Where(x => x.Solution.QuestionId == id)
+                .DeleteAsync();
+
+            var solutions = _db.Solutions
+                .Where(x => x.QuestionId == id)
+                .Project().To<SolutionPushModel>();
+
+            await solutions.ForEachAsync(JudgeHub.Judge);
+
+            return RedirectToAction("Details", new {id = id})
+                .WithSuccess("该题目重新评测已经开始。");
         }
 
 

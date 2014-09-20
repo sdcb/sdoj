@@ -197,7 +197,7 @@ namespace SdojWeb.Controllers
             var judgeModel = await _db.Solutions
                     .Project().To<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == id);
-            SolutionHub.PushChange(judgeModel.Id, SolutionState.Queuing.GetDisplayName());
+            SolutionHub.PushChange(judgeModel.Id, SolutionState.Queuing, 0, 0.0f);
             JudgeHub.Judge(judgeModel);
 
             return new EmptyResult();

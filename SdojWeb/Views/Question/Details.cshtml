@@ -41,6 +41,10 @@
             <i class="glyphicon glyphicon-edit"></i>
             编辑
         </a>
+        <button type="button" class="btn btn-warning" onclick="rejudge(@Model.Id)">
+            <i class="glyphicon glyphicon-repeat"></i>
+            重新评测
+        </button>
         <button type="button" class="btn btn-danger" onclick="deleteMe(@Model.Id)">
             <i class="glyphicon glyphicon-remove"></i>
             删除
@@ -55,6 +59,13 @@
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" />
 }
+
+@using (Html.BeginForm("Rejudge", "Question", FormMethod.Post, new { id = "rejudge-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" />
+}
+
 @section scripts
 {
     <script>
@@ -62,6 +73,13 @@
             if (confirm('确定要删除此题目吗？')) {
                 $("#delete-form input[name='id']").val(id);
                 $("#delete-form").submit();
+            }
+        }
+
+        function rejudge(id) {
+            if (confirm('确定要重新评测此题目吗？')) {
+                $("#rejudge-form input[name='id']").val(id);
+                $("#rejudge-form").submit();
             }
         }
     </script>

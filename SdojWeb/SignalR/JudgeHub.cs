@@ -42,7 +42,7 @@ namespace SdojWeb.SignalR
             await db.SaveChangesAsync();
             Commit();
 
-            SolutionHub.PushChange(solution.Id, solution.State.GetDisplayName());
+            SolutionHub.PushChange(solution.Id, solution.State, 0, 0.0f);
 
             return true;
         }
@@ -78,7 +78,7 @@ namespace SdojWeb.SignalR
             await db.SaveChangesAsync();
             Commit();
 
-            SolutionHub.PushChange(solution.Id, solution.State.GetDisplayName());
+            SolutionHub.PushChange(solution.Id, solution.State, runTimeMs, usingMemoryMb);
 
             return true;
         }
@@ -125,7 +125,7 @@ namespace SdojWeb.SignalR
                 .FirstOrDefaultAsync();
 
             Commit();
-            SolutionHub.PushChange(solutionId, SolutionState.Juding.GetDisplayName());
+            SolutionHub.PushChange(solutionId, SolutionState.Juding, 0, 0.0f);
             return result;
         }
 

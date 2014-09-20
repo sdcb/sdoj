@@ -6,7 +6,6 @@
 
 <h2>@ViewBag.Title</h2>
 
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -22,11 +21,20 @@
                 <input type="submit" value="保存" class="btn btn-default" />
             </div>
         </div>
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a class="btn btn-primary" href="@Url.Action("Data", new {id=Model.Id})">
+                    <i class="glyphicon glyphicon-file"></i>
+                    编辑测试数据
+                </a>
+            </div>
+        </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("测试数据", "Data", new {id = Model.Id}, null) |
+    @Html.ActionLink("返回详情", "Details", new {id=Model.Id}) |
     @Html.ActionLink("返回列表", "Index")
 </div>
 

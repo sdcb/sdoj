@@ -105,10 +105,10 @@
                     <td id="state-@item.Id">
                         @Html.DisplayFor(modelItem => item.State)
                     </td>
-                    <td>
+                    <td id="runtime-@item.Id">
                         @Html.DisplayFor(modelItem => item.RunTime)
                     </td>
-                    <td>
+                    <td id="memory-@item.Id">
                         @Html.DisplayFor(modelItem => item.UsingMemoryMb)
                     </td>
                     <td>
@@ -194,8 +194,10 @@
     <script>
 
         var shub = $.connection.solutionHub;
-        shub.client.push = function(id, name) {
+        shub.client.push = function(id, name, runtime, memory) {
             $("#state-" + id).text(name);
+            $("#runtime-" + id).text(runtime);
+            $("#memory-" + id).text(memory);
         };
         $.connection.hub.start();
 
