@@ -29,6 +29,7 @@ namespace SdojJudger
             var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
                 solutionId, statusId, runTimeMs, usingMemoryMb);
             _log.DebugExt(() => JsonConvert.SerializeObject(result));
+            _log.InfoExt(() => string.Format("提交 {0}-{1}, {2}ms,{3}MB", solutionId, statusId, runTimeMs, usingMemoryMb));
             return result;
         }
 

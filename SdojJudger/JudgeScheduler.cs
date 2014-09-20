@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Util;
 using SdojJudger.Models;
 
 namespace SdojJudger
@@ -10,6 +13,7 @@ namespace SdojJudger
         public JudgeScheduler()
         {
             _queue = new BlockingCollection<SolutionPushModel>();
+            _log = LogManager.GetLogger(typeof(JudgeScheduler));
         }
 
         public void AddOne(SolutionPushModel model)
@@ -19,6 +23,11 @@ namespace SdojJudger
                 throw new ArgumentNullException();
             }
 
+            if (_queue.Any(x => x.Id == model.Id))
+            {
+                return;
+            }
+            _log.InfoExt(() => string.Format("接收推送{0}，语言{1}, 最大内存{2}MB", model.Id, model.Language, model.FullMemoryLimitMb));
             _queue.Add(model);
 
             if (_task == null)
@@ -41,6 +50,8 @@ namespace SdojJudger
         private readonly BlockingCollection<SolutionPushModel> _queue;
 
         private Task _task;
+
+        private readonly ILog _log;
 
         public void Dispose()
         {

@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.CSharp;
@@ -59,7 +58,7 @@ namespace SdojJudger
                         RedirectStandardOutput = true,
                         CreateNoWindow = true,
                     });
-                    ps.StandardInput.WriteAsync(data.Input);
+                    var stdinTask = ps.StandardInput.WriteAsync(data.Input);
                     var result = await ps.StandardOutput.ReadToEndAsync();
 
                     if (result != data.Output)
@@ -99,7 +98,7 @@ namespace SdojJudger
                         RedirectStandardOutput = true,
                         CreateNoWindow = true,
                     });
-                    ps.StandardInput.WriteAsync(data.Input);
+                    var stdinTask = ps.StandardInput.WriteAsync(data.Input);
                     var result = await ps.StandardOutput.ReadToEndAsync();
 
                     if (result != data.Output)
