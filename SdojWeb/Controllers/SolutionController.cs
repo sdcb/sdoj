@@ -127,7 +127,7 @@ namespace SdojWeb.Controllers
         // POST: Solution/Create/id
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public async Task<ActionResult> Create(SolutionCreateModel model)
         {
             if (ModelState.IsValid)
