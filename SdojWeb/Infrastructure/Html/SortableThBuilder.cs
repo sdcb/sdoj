@@ -41,7 +41,7 @@ namespace SdojWeb.Infrastructure.Html
             r["orderBy"] = memberName;
             r["asc"] = asc;
 
-            return _html.ActionLink(displayName, _action, new { orderBy = memberName, asc });
+            return _html.ActionLink(displayName, _action, r);
         }
 
         private readonly HtmlHelper _html;
