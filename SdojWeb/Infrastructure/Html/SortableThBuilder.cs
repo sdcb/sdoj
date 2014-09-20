@@ -2,24 +2,28 @@
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using SdojWeb.Infrastructure.Extensions;
 
 namespace SdojWeb.Infrastructure.Html
 {
     public class SortableThBuilder<TModel>
     {
-        public SortableThBuilder(HtmlHelper html, SortablePagedList<TModel> paged, string action)
+        internal SortableThBuilder(HtmlHelper html, SortablePagedList<TModel> paged, string action, RouteValueDictionary route)
         {
             _html = html;
             _orderBy = paged.OrderBy;
             _asc = paged.Asc;
             _action = action;
+            _route = route;
         }
 
-        public MvcHtmlString Build<TValue>(Expression<Func<TModel, TValue>> expression)
+        public MvcHtmlString BuildA<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            var displayName = _html.DisplayName(expression.Name).ToString();
             var memberName = ((MemberExpression)expression.Body).Member.Name;
+            var metadataProvider = DependencyResolver.Current.GetService<ModelMetadataProvider>();
+            var metadata = metadataProvider.GetMetadataForProperty(null, typeof(TModel), memberName);
+            var displayName = metadata.DisplayName;
 
             var asc = _asc;
             if (_orderBy == memberName)
@@ -33,6 +37,10 @@ namespace SdojWeb.Infrastructure.Html
                 asc = true;
             }
 
+            var r = new RouteValueDictionary(_route);
+            r["orderBy"] = memberName;
+            r["asc"] = asc;
+
             return _html.ActionLink(displayName, _action, new { orderBy = memberName, asc });
         }
 
@@ -43,5 +51,7 @@ namespace SdojWeb.Infrastructure.Html
         private readonly bool? _asc;
 
         private readonly string _action;
+
+        private readonly RouteValueDictionary _route;
     }
 }

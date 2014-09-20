@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Alerts;
@@ -37,10 +38,40 @@ namespace SdojWeb.Controllers
         }
 
         // GET: Identity/Users/
-        public ActionResult Users(int? page, string orderBy, bool? asc)
+        public ActionResult Users(string username, string email, bool? confirmed, string role, 
+            int? page, string orderBy, bool? asc)
         {
-            var users = UserMgr.Users.Project().To<UserSummaryViewModel>()
-                .ToSortedPagedList(page, orderBy, asc);
+            var route = new RouteValueDictionary
+            {
+                {"username", username}, 
+                {"email", email}, 
+                {"confirmed", confirmed}, 
+                {"role", role},
+                {"orderBy",orderBy},
+                {"asc",asc}
+            };
+
+            var query = UserMgr.Users
+                .OrderBy(x => x.Id)
+                .Project().To<UserSummaryViewModel>();
+
+            if (!string.IsNullOrWhiteSpace(username))
+                query = query.Where(x => x.UserName == username);
+
+            if (!string.IsNullOrWhiteSpace(email))
+                query = query.Where(x => x.Email == email);
+
+            if (confirmed != null)
+                query = query.Where(x => x.EmailConfirmed == confirmed.Value);
+
+            if (role == "-")
+                query = query.Where(x => !x.Roles.Any());
+            else if (!string.IsNullOrWhiteSpace(role))
+                query = query.Where(x => x.Roles.Any(r => r.Name == role));
+
+            var users = query.ToSortedPagedList(page, orderBy, asc);
+
+            ViewBag.Route = route;
             return View(users);
         }
 
