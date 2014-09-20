@@ -82,7 +82,8 @@
                 <th>
                     @Html.DisplayNameFor(model => model.SubmitTime)
                 </th>
-                <th colspan="2">操作</th>
+                <th>源代码</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -113,28 +114,25 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.SubmitTime)
                     </td>
-                    @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
-                    {
-                        <td>
-                            <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal" 
-                               data-bind="click: loadcode(@item.Id)">
+                    <td>
+                        @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                        {
+                            <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
+                               data-bind="click: loadcode.bind($data, @item.Id)">
                                 <i class="glyphicon glyphicon-file"></i>
                                 源码
                             </a>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-xs btn-block " onclick="deleteMe(@item.Id)">
-                                <i class="glyphicon glyphicon-remove"></i>
-                                删除
+                        }
+                    </td>
+                    <th>
+                        @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                        {
+                            <button class="btn btn-warning btn-block btn-xs" data-bind="click: rejudge.bind($data, @item.Id)">
+                                <i class="glyphicon glyphicon-repeat"></i>
+                                重新评测
                             </button>
-                        </td>
-                    }
-                    else
-                    {
-                        <td></td>
-                        <td></td>
-                    }
-
+                        }
+                    </th>
                 </tr>
             }
         </tbody>
@@ -153,7 +151,13 @@
                 <pre data-bind="text: code"></pre>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button class="btn btn-danger" data-bind="click: deleteMe">
+                    <i class="glyphicon glyphicon-remove"></i>
+                    删除
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
             </div>
         </div>
     </div>
@@ -170,24 +174,24 @@
         </div>
     </div>
 </div>
+
 @using (Html.BeginForm("Delete", "Solution", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" />
 }
+@using (Html.BeginForm("ReJudge", "Solution", FormMethod.Post, new { id = "rejudge-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" />
+}
+
 @section scripts
 {
     @Scripts.Render("~/bundles/signalr")
     <script src="~/signalr/hubs"></script>
     @Scripts.Render("~/bundles/ko")
     <script>
-
-        function deleteMe(id) {
-            if (confirm('确定要删除此解答吗？')) {
-                $("#delete-form input[name='id']").val(id);
-                $("#delete-form").submit();
-            }
-        }
 
         var shub = $.connection.solutionHub;
         shub.client.push = function(id, name) {
@@ -199,12 +203,30 @@
             var self = this;
             self.onlyMe = '@route["onlyMe"]';
             self.code = ko.observable();
-            self.loadcode = function (id) {
+            
+            self.loadcode = function(id) {
                 self.code('加载中...');
+                self.id = null;
                 $.get("@Url.Action("Source")", { id: id }, function(data) {
                     self.code(data);
+                    self.id = id;
                 });
-            }
+            };
+            self.deleteMe = function () {
+                if (confirm('确定要删除此解答吗？')) {
+                    $("#delete-form input[name='id']").val(self.id);
+                    $("#delete-form").submit();
+                }
+            };
+            self.rejudge = function (id) {
+                if (confirm('确定开始重新评测？')) {
+                    var form = $("#rejudge-form");
+                    form.find("input[name='id']").val(id);
+                    var url = form.attr('action');
+                    $.post(url, form.serialize());
+
+                }
+            };
         };
 
         var vm = new ViewModel();

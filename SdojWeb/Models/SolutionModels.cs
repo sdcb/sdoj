@@ -173,7 +173,7 @@ namespace SdojWeb.Models
         [Display(Name = "C#")]
         CSharp = 1,
         [Display(Name = "Visual Basic")]
-        Vb = 0, 
+        Vb = 2, 
         [Display(Name = "C++")]
         Cpp = 3, 
     }
