@@ -31,12 +31,38 @@
 </div>
 
 <p>
-    @Html.ActionLink("解答", "Create", "Solution", new {id=Model.Id}, null) |
+    <a class="btn btn-default" href="@Url.Action("Create", "Solution", new {id=Model.Id})">
+        <i class="glyphicon glyphicon-plus-sign"></i>
+        解答
+    </a>
     @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
     {
-        <text>
-            @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
-        </text>
+        <a class="btn btn-primary" href="@Url.Action("Edit", new {id=Model.Id})">
+            <i class="glyphicon glyphicon-edit"></i>
+            编辑
+        </a>
+        <button type="button" class="btn btn-danger" onclick="deleteMe(@Model.Id)">
+            <i class="glyphicon glyphicon-remove"></i>
+            删除
+        </button>
     }
-    @Html.ActionLink("返回列表", "Index")
 </p>
+
+@Html.ActionLink("返回列表", "Index")
+
+@using (Html.BeginForm("Delete", "Question", FormMethod.Post, new { id = "delete-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" />
+}
+@section scripts
+{
+    <script>
+        function deleteMe(id) {
+            if (confirm('确定要删除此题目吗？')) {
+                $("#delete-form input[name='id']").val(id);
+                $("#delete-form").submit();
+            }
+        }
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿@using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
+@using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
 @model IEnumerable<QuestionSummaryViewModel>
 
@@ -12,14 +13,17 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="clearfix">
-    <div class="form-tools pull-right">
-        <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
-            <i class="glyphicon glyphicon-plus"></i>
-            创建题目
-        </a>
+@if (User.IsInRole(SystemRoles.QuestionAdmin) || User.IsInRole(SystemRoles.QuestionCreator))
+{
+    <div class="clearfix">
+        <div class="form-tools pull-right">
+            <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+                <i class="glyphicon glyphicon-plus"></i>
+                创建题目
+            </a>
+        </div>
     </div>
-</div>
+}
 
 <form class="search-form">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
@@ -58,7 +62,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.UpdateTime)
                 </th>
-                <th></th>
             </tr>
         </thead>
 
@@ -79,28 +82,17 @@
                         @Html.DisplayFor(modelItem => item.TimeLimit)
                     </td>
                     <td>
-                        <a href="@Url.Action("Data", new {id=item.Id})">
-                            @Html.DisplayFor(x => item.DataCount)
-                        </a>
+                        @Html.DisplayFor(x => item.DataCount)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.SolutionCount)
                     </td>
                     <td>
-                        <a href="@Url.Action("Edit", new {id=item.Id})">
-                            @Html.DisplayFor(modelItem => item.UpdateTime)
-                        </a>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
-                            <i class="glyphicon glyphicon-remove"></i>
-                            删除
-                        </button>
+                        @Html.DisplayFor(modelItem => item.UpdateTime)
                     </td>
                 </tr>
             }
         </tbody>
-
     </table>
 
 </div>
@@ -115,21 +107,3 @@
         </div>
     </div>
 </div>
-
-@using (Html.BeginForm("Delete", "Question", FormMethod.Post, new {id="delete-form"}))
-{
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="id"/>
-}
-
-@section scripts
-{
-    <script>
-        function deleteMe(id) {
-            if (confirm('确定要删除此题目吗？')) {
-                $("#delete-form input[name='id']").val(id);
-                $("#delete-form").submit();
-            }
-        }
-    </script>
-}
