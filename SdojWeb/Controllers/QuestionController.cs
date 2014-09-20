@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -23,13 +24,31 @@ namespace SdojWeb.Controllers
 
         // GET: Questions
         [AllowAnonymous]
-        public ActionResult Index(int? page, string orderBy, bool? asc)
+        public ActionResult Index(string name, string creator, 
+            int? page, string orderBy, bool? asc)
         {
+            var route = new RouteValueDictionary
+            {
+                {"name", name},
+                {"creator",creator}
+            };
+
             var query = _db.Questions
                 .OrderByDescending(x => x.Id)
                 .Project().To<QuestionSummaryViewModel>();
 
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                query = query.Where(x => x.Name.StartsWith(name));
+            }
+            if (!string.IsNullOrWhiteSpace(creator))
+            {
+                query = query.Where(x => x.Creator == creator);
+            }
+
             var models = query.ToSortedPagedList(page, orderBy, asc);
+            ViewBag.Route = route;
             return View(models);
         }
 

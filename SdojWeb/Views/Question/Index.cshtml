@@ -1,34 +1,117 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
-@model IPagedList<QuestionSummaryViewModel>
+@model IEnumerable<QuestionSummaryViewModel>
 
 @{
     ViewBag.Title = "题目列表";
-    var sortablePagedList = Model as SortablePagedList<QuestionSummaryViewModel>;
-    var orderBy = sortablePagedList.OrderBy;
-    var asc = sortablePagedList.Asc;
+    var paged = Model as SortablePagedList<QuestionSummaryViewModel>;
+    var route = (RouteValueDictionary) ViewBag.Route;
+    var thb = paged.GetThBuilder(Html, "Index", route);
 }
 
 <h2>@ViewBag.Title</h2>
 
-<div class="pull-right">
-    <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
-        <i class="glyphicon glyphicon-plus"></i>
-        创建题目
-    </a>
+<div class="clearfix">
+    <div class="form-tools pull-right">
+        <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+            <i class="glyphicon glyphicon-plus"></i>
+            创建题目
+        </a>
+    </div>
 </div>
 
-@Html.Partial("_List")
+<form class="search-form">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("name", route["name"], new {@class="form-control input-sm", placeholder="标题..."})
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("creator", route["creator"], new { @class = "form-control input-sm",placeholder="作者..."})
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <button class="btn btn-info btn-sm" type="submit">过滤</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @thb.BuildA(x => x.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Creator)
+                </th>
+                <th>
+                    @thb.BuildA(x => x.MemoryLimitMb)
+                </th>
+                <th>
+                    @thb.BuildA(x => x.TimeLimit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(x => x.DataCount)
+                </th>
+                <th>
+                    @thb.BuildA(x => x.SolutionCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdateTime)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Creator)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeLimit)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Data", new {id=item.Id})">
+                            @Html.DisplayFor(x => item.DataCount)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SolutionCount)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new {id=item.Id})">
+                            @Html.DisplayFor(modelItem => item.UpdateTime)
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            删除
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
 
 <div class="row">
     <div class="col-xs-6">
-        第 @Model.PageNumber 页，共 @Model.PageCount 页
+        第 @paged.PageNumber 页，共 @paged.PageCount 页
     </div>
     <div class="col-xs-6">
         <div class="pull-right">
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, orderBy, asc }))
+            @Html.PagedListPager(paged, page => Url.Action("Index", route.CopySetPaged(page, paged.OrderBy, paged.Asc)))
         </div>
     </div>
 </div>
