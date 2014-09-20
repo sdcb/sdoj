@@ -15,3 +15,14 @@ select,
 textarea {
     max-width: 500px;
 }
+
+.search-form input, 
+.search-form select, 
+.search-form textarea, 
+.search-form button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 10px;
+}

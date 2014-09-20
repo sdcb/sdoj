@@ -2,26 +2,23 @@
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
 @model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
-
 @{
     ViewBag.Title = "用户管理";
-    var paged = (SortablePagedList<UserSummaryViewModel>) Model;
+    var paged = (SortablePagedList<UserSummaryViewModel>)Model;
     var route = (RouteValueDictionary)ViewBag.Route;
     var thb = paged.GetThBuilder(Html, "Users", route);
-    Func<int, RouteValueDictionary> getPagedRoute = p => new RouteValueDictionary(route) {{"page", p}};
+    Func<int, RouteValueDictionary> getPagedRoute = p => new RouteValueDictionary(route) { { "page", p } };
 }
-
 <h2>@ViewBag.Title</h2>
+<form class="search-form" method="GET" action="@Url.Action("Users")">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <input type="text" class="form-control input-sm" name="username" placeholder="用户名..." value="@route["username"]" />
+    </div>
 
-<form class="row" method="GET">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <input type="text" class="form-control input-sm" name="username" placeholder="用户名..." value="@route["username"]"/>
+        <input type="text" class="form-control input-sm" name="email" placeholder="电子邮件..." value="@route["email"]" />
     </div>
-    
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <input type="text" class="form-control input-sm" name="email" placeholder="电子邮件..." value="@route["email"]"/>
-    </div>
-    
+
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <select class="form-control input-sm" name="confirmed" data-bind="value: confirmed">
             <option value="">邮件验证...</option>
@@ -29,7 +26,7 @@
             <option value="False">否</option>
         </select>
     </div>
-    
+
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <select class="form-control input-sm" name="role" data-bind="value: role">
             <option value="">选择角色...</option>
@@ -42,10 +39,11 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-        <button class="btn btn-info btn-xs" type="submit">过滤</button>
+        <div class="input-group">
+            <button class="btn btn-info btn-xs" type="submit">过滤</button>
+        </div>
     </div>
 </form>
-
 <div class="table-responsive">
     <table class="table table-bordered table-condensed table-hover table-striped" id="user-table">
         <thead>
@@ -95,7 +93,6 @@
         </tbody>
     </table>
 </div>
-
 <div class="row">
     <div class="col-xs-6">
         第 @paged.PageNumber 页，共 @paged.PageSize 页
@@ -106,17 +103,14 @@
         </div>
     </div>
 </div>
-
-@using (Html.BeginForm("DeleteUser", "Identity", FormMethod.Post, new {id="delete-form"}))
+@using (Html.BeginForm("DeleteUser", "Identity", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
-    <input type="hidden" name="id"/>
+    <input type="hidden" name="id" />
 }
-
 @section scripts
 {
     @Scripts.Render("~/bundles/ko")
-
     <script>
         function deleteMe(id) {
             if (confirm("确定要删除该用户吗？\r\n所有与该用户相关联的资料都将删除并不可恢复。")) {
@@ -126,7 +120,7 @@
         }
 
         var vm = {
-            confirmed: '@route["confirmed"]', 
+            confirmed: '@route["confirmed"]',
             role: '@route["role"]'
         };
         ko.applyBindings(vm);
