@@ -1,6 +1,4 @@
 ﻿@using System.Security.Principal
-@using System.Web.Razor.Parser
-@using PagedList
 @using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Infrastructure.Identity
@@ -25,7 +23,9 @@
     };
 
     var paged = Model as SortablePagedList<SolutionSummaryModel>;
-    var route = (RouteValueDictionary)ViewBag.Route;
+    var route = (RouteValueDictionary) ViewBag.Route;
+    var thb = paged.GetThBuilder(Html, "Index", route);
+
 }
 <h2>@ViewBag.Title</h2>
 <form class="search-form">
@@ -39,16 +39,16 @@
         </div>
     }
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("username", route["username"], new { @class="form-control input-sm", placeholder="用户名..."})
+        @Html.TextBox("username", route["username"], new {@class = "form-control input-sm", placeholder = "用户名..."})
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("question", route["question"], new { @class = "form-control input-sm", placeholder = "题目名..." })
+        @Html.TextBox("question", route["question"], new {@class = "form-control input-sm", placeholder = "题目名..."})
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.DropDownList("language", EnumHelper.GetSelectList(typeof(Languages), (Enum)route["language"]), "语言...", new { @class = "form-control input-sm" })
+        @Html.EnumDropDownList("language", (Languages?)route["language"], "语言...", new { @class = "form-control input-sm" })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.DropDownList("state", EnumHelper.GetSelectList(typeof(SolutionState), (Enum)route["state"]), "状态...", new {@class="form-control input-sm"})
+        @Html.EnumDropDownList("state", (SolutionState?)route["state"], "状态...", new { @class="form-control input-sm"})
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <button type="submit" class="btn btn-info btn-sm">过滤</button>
@@ -68,16 +68,16 @@
                     @Html.DisplayNameFor(model => model.Language)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SourceLength)
+                    @thb.BuildA(x => x.SourceLength)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.State)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RunTime)
+                    @thb.BuildA(x => x.RunTime)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.UsingMemoryMb)
+                    @thb.BuildA(x => x.UsingMemoryMb)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.SubmitTime)
@@ -93,7 +93,7 @@
                         @Html.DisplayFor(modelItem => item.CreateUserName)
                     </td>
                     <td>
-                        @Html.ActionLink(item.QuestionName, "Details", "Question", new { id = item.QuestionId }, null)
+                        @Html.ActionLink(item.QuestionName, "Details", "Question", new {id = item.QuestionId}, null)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Language)
@@ -147,7 +147,7 @@
     </div>
     <div class="col-xs-6">
         <div class="pull-right">
-            @Html.PagedListPager(paged, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+            @Html.PagedListPager(paged, page => Url.Action("Index", route.CopySetPaged(page, paged.OrderBy, paged.Asc)))
         </div>
     </div>
 </div>
