@@ -3,7 +3,7 @@
     public enum Languages
     {
         CSharp = 1,
-        Vb = 2,
+        Vb = 0,
         Cpp = 3,
     }
 }

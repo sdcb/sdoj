@@ -18,8 +18,10 @@ textarea {
 
 .search-form input, 
 .search-form select, 
-.search-form textarea, 
-.search-form button {
+.search-form textarea{
     border-radius: 0;
+    margin-bottom: 10px;
+}
+.search-form button {
     margin-bottom: 10px;
 }

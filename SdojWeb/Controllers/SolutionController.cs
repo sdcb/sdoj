@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EntityFramework.Extensions;
@@ -29,21 +30,51 @@ namespace SdojWeb.Controllers
 
         // GET: Solution
         [AllowAnonymous]
-        public ActionResult Index(int? page, bool? onlyMe)
+        public ActionResult Index(bool? onlyMe, string question, string username, Languages? language, SolutionState? state, 
+            int? page, string orderBy, bool? asc)
         {
-            page = page ?? 1;
-            onlyMe = onlyMe ?? false;
-            var model = _db.Solutions
+            int currentUserId = User.Identity.GetIntUserId();
+            var route = new RouteValueDictionary
+            {
+                {"onlyMe", onlyMe}, 
+                {"question", question},
+                {"username", username}, 
+                {"language", language}, 
+                {"state", state}, 
+                {"orderBy", orderBy}, 
+                {"asc", asc}
+            };
+
+            var query = _db.Solutions
                 .OrderByDescending(x => x.SubmitTime)
                 .Project().To<SolutionSummaryModel>();
-            var currentUserId = User.Identity.GetIntUserId();
             
-            if (onlyMe.Value)
+            if (onlyMe != null && onlyMe.Value)
             {
-                model = model.Where(x => x.CreateUserId == currentUserId);
+                query = query.Where(x => x.CreateUserId == currentUserId);
             }
+            if (!string.IsNullOrWhiteSpace(question))
+            {
+                query = query.Where(x => x.QuestionName == question);
+            }
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                query = query.Where(x => x.CreateUserName == username);
+            }
+            if (language != null)
+            {
+                query = query.Where(x => x.Language == language.Value);
+            }
+            if (state != null)
+            {
+                query = query.Where(x => x.State == state.Value);
+            }
+
+            var model = query.ToSortedPagedList(page, orderBy, asc);
+
             ViewBag.OnlyMe = onlyMe;
-            return View(model.ToPagedList(page.Value, AppSettings.DefaultPageSize));
+            ViewBag.Route = route;
+            return View(model);
         }
 
         // GET: Solution/Details/5

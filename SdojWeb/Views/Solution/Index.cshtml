@@ -1,15 +1,15 @@
 ﻿@using System.Security.Principal
+@using System.Web.Razor.Parser
 @using PagedList
 @using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
 @model IEnumerable<SolutionSummaryModel>
-
 @{
     ViewBag.Title = "解答列表";
 
-    Func<int, int, string> getAccessClass = (int authorId, int questionCreatorId) =>
+    Func<int, int, bool> checkAccess = (authorId, questionCreatorId) =>
     {
         IPrincipal user = User;
         IIdentity identity = user.Identity;
@@ -19,22 +19,41 @@
             userId == questionCreatorId ||
             user.IsInRole(SystemRoles.QuestionAdmin))
         {
-            return "";
+            return true;
         }
-        return "disabled";
+        return false;
     };
 
-    var pagedList = Model as IPagedList<SolutionSummaryModel>;
+    var paged = Model as SortablePagedList<SolutionSummaryModel>;
+    var route = (RouteValueDictionary)ViewBag.Route;
 }
-
 <h2>@ViewBag.Title</h2>
-
-@if (User.Identity.IsAuthenticated)
-{
-    @(ViewBag.OnlyMe ? 
-        Html.ActionLink("查看所有解答", "Index", new {onlyme = false}) : 
-        Html.ActionLink("仅看我的解答", "Index", new {onlyme = true}))
-}
+<form class="search-form">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select class="form-control input-sm" data-bind="value: onlyMe" name="onlyMe">
+                <option value="">所有解答...</option>
+                <option value="True">仅看我的解答</option>
+            </select>
+        </div>
+    }
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("username", route["username"], new { @class="form-control input-sm", placeholder="用户名..."})
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("question", route["question"], new { @class = "form-control input-sm", placeholder = "题目名..." })
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.DropDownList("language", EnumHelper.GetSelectList(typeof(Languages), (Enum)route["language"]), "语言...", new { @class = "form-control input-sm" })
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.DropDownList("state", EnumHelper.GetSelectList(typeof(SolutionState), (Enum)route["state"]), "状态...", new {@class="form-control input-sm"})
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <button type="submit" class="btn btn-info btn-sm">过滤</button>
+    </div>
+</form>
 <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered table-condensed">
         <thead>
@@ -94,7 +113,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.SubmitTime)
                     </td>
-                    @if (getAccessClass(item.CreateUserId, item.QuestionCreateUserId) == "")
+                    @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
                     {
                         <td>
                             <a class="btn btn-primary btn-xs btn-block"
@@ -115,38 +134,35 @@
                         <td></td>
                         <td></td>
                     }
-                    
+
                 </tr>
             }
         </tbody>
     </table>
 </div>
 
-
 <div class="row">
     <div class="col-xs-6">
-        第 @pagedList.PageNumber 页，共 @pagedList.PageCount 页
+        第 @paged.PageNumber 页，共 @paged.PageCount 页
     </div>
     <div class="col-xs-6">
         <div class="pull-right">
-            @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
+            @Html.PagedListPager(paged, page => Url.Action("Index", new { page, onlyme = ViewBag.OnlyMe }))
         </div>
     </div>
 </div>
-
-@using (Html.BeginForm("Delete", "Solution", FormMethod.Post, new {id = "delete-form"}))
+@using (Html.BeginForm("Delete", "Solution", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
-    <input type="hidden" name="id"/>
+    <input type="hidden" name="id" />
 }
-
 @section scripts
 {
     @Scripts.Render("~/bundles/signalr")
     <script src="~/signalr/hubs"></script>
-
+    @Scripts.Render("~/bundles/ko")
     <script>
-        
+
         function deleteMe(id) {
             if (confirm('确定要删除此解答吗？')) {
                 $("#delete-form input[name='id']").val(id);
@@ -159,5 +175,10 @@
             $("#state-" + id).text(name);
         };
         $.connection.hub.start();
+
+        var vm = {
+            onlyMe: '@route["onlyMe"]'
+        };
+        ko.applyBindings(vm);
     </script>
 }
