@@ -8,7 +8,6 @@ using System.Web.Routing;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EntityFramework.Extensions;
-using PagedList;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -75,6 +74,27 @@ namespace SdojWeb.Controllers
             ViewBag.OnlyMe = onlyMe;
             ViewBag.Route = route;
             return View(model);
+        }
+
+        // GET: Solution/Source/5
+        public async Task<ActionResult> Source(int id)
+        {
+            var model = await _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    QuestionCreateUserId = x.Question.CreateUserId,
+                    AuthorId = x.CreateUserId,
+                    Source = x.Source
+                })
+                .FirstAsync();
+
+            if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
+            {
+                return Content(model.Source);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
         }
 
         // GET: Solution/Details/5

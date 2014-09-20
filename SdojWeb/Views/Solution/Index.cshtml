@@ -116,8 +116,8 @@
                     @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
                     {
                         <td>
-                            <a class="btn btn-primary btn-xs btn-block"
-                               href="@Url.Action("Details", new {id = item.Id})">
+                            <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal" 
+                               data-bind="click: loadcode(@item.Id)">
                                 <i class="glyphicon glyphicon-file"></i>
                                 源码
                             </a>
@@ -140,6 +140,25 @@
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="source-code-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">源代码</h4>
+            </div>
+            <div class="modal-body">
+                <pre data-bind="text: code"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-xs-6">
@@ -176,9 +195,19 @@
         };
         $.connection.hub.start();
 
-        var vm = {
-            onlyMe: '@route["onlyMe"]'
+        function ViewModel() {
+            var self = this;
+            self.onlyMe = '@route["onlyMe"]';
+            self.code = ko.observable();
+            self.loadcode = function (id) {
+                self.code('加载中...');
+                $.get("@Url.Action("Source")", { id: id }, function(data) {
+                    self.code(data);
+                });
+            }
         };
+
+        var vm = new ViewModel();
         ko.applyBindings(vm);
     </script>
 }
