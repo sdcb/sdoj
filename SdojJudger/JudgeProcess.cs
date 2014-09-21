@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using JobManagement;
 using log4net;
 using SdojJudger.Compiler;
 using SdojJudger.Database;
@@ -51,26 +52,34 @@ namespace SdojJudger
 
             var runTime = new TimeSpan();
             float peakMemory = 0;
+
+            var job = new JobObject();
+            job.Limits.ActiveProcessLimit = 2;
+            job.Limits.PerProcessUserTimeLimit = TimeSpan.FromMilliseconds(datas.Sum(x => x.TimeLimit));
+            job.Limits.ProcessMemoryLimit = (IntPtr)((double)_spush.FullMemoryLimitMb*1024*1024);
+
             foreach (var data in datas)
             {
-                var ps = Process.Start(new ProcessStartInfo
+                var pi = new ProcessStartInfo
                 {
                     UseShellExecute = false,
                     FileName = asm.PathToAssembly,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
-                });
+                };
+                var ps = job.CreateProcessSecured(pi);
+
                 var stdinTask = ps.StandardInput.WriteAsync(data.Input);
                 var result = await ps.StandardOutput.ReadToEndAsync();
 
                 // 时间与内存。
                 runTime += ps.TotalProcessorTime;
-                var memory = ps.PeakVirtualMemorySize64/1024.0f/1024.0f;
+                var memory = (long)job.PeakProcessMemoryUsed/1024f/1024f;
                 var runTimeMs = (int)runTime.TotalMilliseconds;
                 peakMemory = Math.Max(peakMemory, memory);
 
-                if (ps.PeakVirtualMemorySize64 > data.MemoryLimitMb)
+                if (memory > data.MemoryLimitMb)
                 {
                     await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, memory);
                 }
