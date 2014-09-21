@@ -73,6 +73,7 @@ namespace SdojJudger
                     var ps = job.CreateProcessSecured(pi);
 
                     ps.StandardInput.Write(data.Input);
+                    ps.StandardInput.Close();
                     var result = ps.StandardOutput.ReadToEnd();
 
                     // 时间与内存。
