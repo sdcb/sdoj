@@ -1,4 +1,5 @@
-﻿using System.Web.Optimization;
+﻿using System.Collections.Generic;
+using System.Web.Optimization;
 
 namespace SdojWeb
 {
@@ -14,7 +15,10 @@ namespace SdojWeb
                         "~/Scripts/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/Scripts/jquery.validate.js", 
+                        "~/Scripts/jquery.validate.unobstrusive.js",
+                        "~/Scripts/jquery.validate-localization.js",
+                        "~/Scripts/jquery-validate.bootstrap-tooltip.js").ForceOrdered());
 
             bundles.Add(new ScriptBundle("~/bundles/jquerystyle").Include(
                         "~/Scripts/jquery-validate.bootstrap-tooltip.js"
@@ -41,6 +45,23 @@ namespace SdojWeb
             // 生产准备时，请使用 http://modernizr.com 上的生成工具来仅选择所需的测试。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
+        }
+    }
+
+    internal static class BundleExtensions
+    {
+        public static Bundle ForceOrdered(this Bundle sb)
+        {
+            sb.Orderer = new AsIsBundleOrderer();
+            return sb;
+        }
+    }
+
+    internal class AsIsBundleOrderer : IBundleOrderer
+    {
+        public IEnumerable<BundleFile> OrderFiles(BundleContext context, IEnumerable<BundleFile> files)
+        {
+            return files;
         }
     }
 }

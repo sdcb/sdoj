@@ -344,6 +344,7 @@
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
     <Content Include="Scripts\jquery-1.11.1.min.map" />
+    <Content Include="Scripts\jquery.validate-localization.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.11.1.js" />
     <Content Include="Scripts\jquery-ui.min-1.11.1.js" />
