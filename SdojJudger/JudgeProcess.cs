@@ -60,18 +60,17 @@ namespace SdojJudger
 
             foreach (var data in datas)
             {
-                var pi = new ProcessStartInfo
+                var pi = new ProcessStartInfo(asm.PathToAssembly, "")
                 {
                     UseShellExecute = false,
-                    FileName = asm.PathToAssembly,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
                 };
                 var ps = job.CreateProcessSecured(pi);
 
-                var stdinTask = ps.StandardInput.WriteAsync(data.Input);
-                var result = await ps.StandardOutput.ReadToEndAsync();
+                ps.StandardInput.Write(data.Input);
+                var result = ps.StandardOutput.ReadToEnd();
 
                 // 时间与内存。
                 runTime += ps.TotalProcessorTime;
@@ -81,20 +80,26 @@ namespace SdojJudger
 
                 if (memory > data.MemoryLimitMb)
                 {
+                    job.TerminateAllProcesses(0);
                     await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, memory);
+                    return;
                 }
                 if (ps.TotalProcessorTime.TotalMilliseconds > data.TimeLimit)
                 {
+                    job.TerminateAllProcesses(0);
                     await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, memory);
+                    return;
                 }
 
                 // 正确性。
                 if (result != data.Output)
                 {
+                    job.TerminateAllProcesses(0);
                     await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
                     return;
                 }
             }
+            job.TerminateAllProcesses(0);
             await _client.Update(_spush.Id, SolutionState.Accepted, (int)runTime.TotalMilliseconds, peakMemory);
         }
 
