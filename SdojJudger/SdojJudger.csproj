@@ -60,6 +60,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualC" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -81,6 +82,9 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Compiler\CompilerProvider.cs" />
+    <Compile Include="Compiler\CppCompiler.cs" />
+    <Compile Include="Compiler\CSharpCompiler.cs" />
+    <Compile Include="Compiler\VisualBasicCompiler.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
     <Compile Include="Database\QuestionData.cs" />
     <Compile Include="HubClient.cs" />

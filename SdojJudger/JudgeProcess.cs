@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -6,8 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using log4net;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
+using SdojJudger.Compiler;
 using SdojJudger.Database;
 using SdojJudger.Models;
 
@@ -29,92 +28,65 @@ namespace SdojJudger
             if (_sfull == null) return;
             await UpdateQuestionData();
 
-            if (_spush.Language == Languages.CSharp)
+            var compiler = CompilerProvider.GetCompiler(_spush);
+            if (compiler == null)
             {
-                var csc = new CSharpCodeProvider();
-                var options = new CompilerParameters { GenerateExecutable = true };
-                var asm = csc.CompileAssemblyFromSource(options, _sfull.Source);
+                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0.0f);
+                return;
+            }
+            var asm = compiler.Compile(_sfull.Source);
 
-                if (asm.Errors.HasErrors)
+            if (asm.Errors.HasErrors)
+            {
+                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
+                return;
+            }
+
+            var db = JudgerDbContext.Create();
+            var dataIds = _sfull.QuestionDatas
+                .Select(x => x.Id).ToArray();
+            var datas = await db.Datas
+                .Where(x => dataIds.Contains(x.Id))
+                .ToArrayAsync();
+
+            var runTime = new TimeSpan();
+            float peakMemory = 0;
+            foreach (var data in datas)
+            {
+                var ps = Process.Start(new ProcessStartInfo
                 {
-                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
+                    UseShellExecute = false,
+                    FileName = asm.PathToAssembly,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                });
+                var stdinTask = ps.StandardInput.WriteAsync(data.Input);
+                var result = await ps.StandardOutput.ReadToEndAsync();
+
+                // 时间与内存。
+                runTime += ps.TotalProcessorTime;
+                var memory = ps.PeakVirtualMemorySize64/1024.0f/1024.0f;
+                var runTimeMs = (int)runTime.TotalMilliseconds;
+                peakMemory = Math.Max(peakMemory, memory);
+
+                if (ps.PeakVirtualMemorySize64 > data.MemoryLimitMb)
+                {
+                    await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, memory);
+                }
+                if (ps.TotalProcessorTime.TotalMilliseconds > data.TimeLimit)
+                {
+                    await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, memory);
+                }
+
+                // 正确性。
+                if (result != data.Output)
+                {
+                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
                     return;
                 }
-
-                var db = JudgerDbContext.Create();
-                var dataIds = _sfull.QuestionDatas
-                    .Select(x => x.Id).ToArray();
-                var datas = await db.Datas
-                    .Where(x => dataIds.Contains(x.Id))
-                    .ToArrayAsync();
-
-                foreach (var data in datas)
-                {
-                    var ps = Process.Start(new ProcessStartInfo
-                    {
-                        UseShellExecute = false, 
-                        FileName = asm.PathToAssembly,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true,
-                    });
-                    var stdinTask = ps.StandardInput.WriteAsync(data.Input);
-                    var result = await ps.StandardOutput.ReadToEndAsync();
-
-                    if (result != data.Output)
-                    {
-                        await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
-                        return;
-                    }
-                }
-                await _client.Update(_spush.Id, SolutionState.Accepted, 768, 34.5f);
             }
-            else if (_spush.Language == Languages.Cpp)
-            {
-                var csc = new CSharpCodeProvider();
-                var options = new CompilerParameters { GenerateExecutable = true };
-                var asm = csc.CompileAssemblyFromSource(options, _sfull.Source);
-
-                if (asm.Errors.HasErrors)
-                {
-                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
-                    return;
-                }
-
-                var db = JudgerDbContext.Create();
-                var dataIds = _sfull.QuestionDatas
-                    .Select(x => x.Id).ToArray();
-                var datas = await db.Datas
-                    .Where(x => dataIds.Contains(x.Id))
-                    .ToArrayAsync();
-
-                foreach (var data in datas)
-                {
-                    var ps = Process.Start(new ProcessStartInfo
-                    {
-                        UseShellExecute = false,
-                        FileName = asm.PathToAssembly,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true,
-                    });
-                    var stdinTask = ps.StandardInput.WriteAsync(data.Input);
-                    var result = await ps.StandardOutput.ReadToEndAsync();
-
-                    if (result != data.Output)
-                    {
-                        await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
-                        return;
-                    }
-                }
-                await _client.Update(_spush.Id, SolutionState.Accepted, 768, 34.5f);
-            }
-            else if (_spush.Language == Languages.Vb)
-            {
-                var vbc = new VBCodeProvider();
-                var options = new CompilerParameters();
-                var asm = vbc.CompileAssemblyFromSource(options, _sfull.Source);
-            }
+            await _client.Update(_spush.Id, SolutionState.Accepted, (int)runTime.TotalMilliseconds, peakMemory);
         }
 
         private async Task UpdateQuestionData()

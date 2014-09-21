@@ -1,6 +1,28 @@
-﻿namespace SdojJudger.Compiler
+﻿using System.CodeDom.Compiler;
+using SdojJudger.Models;
+
+namespace SdojJudger.Compiler
 {
-    public class CompilerProvider
+    public abstract class CompilerProvider
     {
+        public static CompilerProvider GetCompiler(SolutionPushModel model)
+        {
+            if (model.Language == Languages.CSharp)
+            {
+                return new CSharpCompiler();
+            }
+            if (model.Language == Languages.Cpp)
+            {
+                return new VisualBasicCompiler();
+            }
+            if (model.Language == Languages.Vb)
+            {
+                return new VisualBasicCompiler();
+            }
+
+            return null;
+        }
+
+        public abstract CompilerResults Compile(string source);
     }
 }
