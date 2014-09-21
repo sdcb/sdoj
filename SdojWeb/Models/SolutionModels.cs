@@ -129,7 +129,7 @@ namespace SdojWeb.Models
         [Display(Name = "状态")]
         public SolutionState State { get; set; }
 
-        [Display(Name = "内存使用(MB)")]
+        [Display(Name = "内存使用(MB)"), DisplayFormat(DataFormatString = "{0:F2}")]
         public float UsingMemoryMb { get; set; }
 
         [Display(Name = "耗时(ms)")]

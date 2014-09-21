@@ -95,7 +95,7 @@ namespace SdojWeb.Manager
             }
 
             data.Input = input;
-            data.Output = output;
+            data.Output = output.TrimEnd();
             data.TimeLimit = time;
             data.MemoryLimitMb = memory;
             data.UpdateTime = DateTime.Now;
