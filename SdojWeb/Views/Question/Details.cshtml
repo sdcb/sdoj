@@ -41,6 +41,10 @@
             <i class="glyphicon glyphicon-edit"></i>
             编辑
         </a>
+        <a class="btn btn-success" href="@Url.Action("Data", new {id=Model.Id})">
+            <i class="glyphicon glyphicon-file"></i>
+            测试数据
+        </a>
         <button type="button" class="btn btn-warning" onclick="rejudge(@Model.Id)">
             <i class="glyphicon glyphicon-repeat"></i>
             重新评测
