@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -162,13 +164,14 @@ namespace SdojWeb.Controllers
             var exist = await _manager.ExistName(name);
             return Json(!exist, JsonRequestBehavior.AllowGet);
         }
-        
+
         // GET: /Question/5/Data/
         [Route("Question/{id}/Data")]
         public async Task<ActionResult> Data(int id)
         {
             var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
                 .Project().To<QuestionDataSummaryModel>()
+                .OrderBy(x => x.Id)
                 .ToArrayAsync();
 
             ViewBag.QuestionId = id;
@@ -256,6 +259,53 @@ namespace SdojWeb.Controllers
                 return NonOwnerReturn(model.QuestionId);
             }
             return View(model);
+        }
+
+        // GET: /question/5/data/3
+        [Route("Question/{questionId}/Data/Get")]
+        public async Task<ActionResult> GetData(int questionId, int id)
+        {
+            var owns = await _manager.IsUserOwnsQuestion(questionId);
+            if (!owns)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            var data = await _db.QuestionDatas
+                .Where(x => x.QuestionId == questionId && x.Id == id)
+                .Select(x => new
+                {
+                    Input = x.Input,
+                    Output = x.Output,
+                    Time = x.TimeLimit,
+                    Memory = x.MemoryLimitMb
+                })
+                .FirstAsync();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /question/5/data/save/3
+        [Route("Question/{questionId}/Data/Save")]
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DataSave(int questionId, bool delete, int? id, string input, string output, int time, float memory)
+        {
+            var owns = await _manager.IsUserOwnsQuestion(questionId);
+            if (!owns)
+            {
+                return NonOwnerReturn(questionId);
+            }
+
+            if (delete)
+            {
+                if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                await _manager.DeleteData(id.Value);
+            }
+            else
+            {
+                await _manager.SaveData(questionId, id, input, output, time, memory);
+            }
+
+            return RedirectToAction("Data", new {id = questionId});
         }
 
         // POST: /Question/5/Data/5/Delete

@@ -2,15 +2,20 @@
 
 @{
     int questionId = ViewBag.QuestionId;
-    bool owns = ViewBag.IsUserOwnsQuestion;
+    var owns = (bool)ViewBag.IsUserOwnsQuestion;
     ViewBag.Title = "测试数据";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("新增测试数据", "DataCreate", new {id=questionId})
-</p>
+<div class="form-tools clearfix">
+    <div class="pull-right">
+        <button class="btn btn-xs btn-default" data-toggle="modal" data-target="#data-modal" data-bind="click: clear">
+            <i class="glyphicon glyphicon-plus"></i>
+            新增测试数据
+        </button>
+    </div>
+</div>
 
 <div class="table-responsive">
     <table class="table table-bordered table-condensed table-hover table-striped">
@@ -58,16 +63,14 @@
                         @Html.DisplayFor(modelItem => item.TimeLimit)
                     </td>
                     <td>
-                        <a title="编辑此测试数据" href='@Url.Action("DataEdit", new { id = item.Id, questionId = item.QuestionId })'>
-                            @Html.DisplayFor(x => item.UpdateTime)
-                        </a>
+                        @Html.DisplayFor(x => item.UpdateTime)
                     </td>
                     <td>
-                        @if (owns && !item.IsSampleData)
+                        @if (owns)
                         {
-                            <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@item.Id)">
-                                <i class="glyphicon glyphicon-remove"></i>
-                                删除
+                            <button class="btn btn-info btn-block btn-xs" data-toggle="modal" data-target="#data-modal" data-bind="click: view.bind($data, @item.Id, @(owns?"true":"false"))">
+                                <i class="glyphicon glyphicon-edit"></i>
+                                编辑
                             </button>
                         }
                     </td>
@@ -77,10 +80,63 @@
     </table>
 </div>
 
+<div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="data-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="@Url.Action("DataSave", new {questionId=questionId})" method="POST" id="data-modal-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" data-bind="value: id"/>
+                <input type="hidden" name="delete" data-bind="value: deleteMe"/>
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="data-modal-label">测试数据</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>输入数据</label>
+                                <textarea rows="5" class="form-control input-sm" name="input" data-bind="value: input"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>输出数据</label>
+                                <textarea rows="5" class="form-control input-sm" name="output" data-bind="value: output"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>时间限制(ms)</label>
+                                <input type="text"class="form-control input-sm" name="time" data-bind="value: time"/>
+                            </div>
+                            <div class="form-group">
+                                <label>内存限制(MB)</label>
+                                <input type="text" class="form-control input-sm" name="memory" data-bind="value: memory" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <!-- ko if: showDelete -->
+                    <button type="button" class="btn btn-danger" data-bind="click: trydelete">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        删除
+                    </button>
+                    <!-- /ko -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-save"></i>
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 @Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null) |
 @Html.ActionLink("返回列表", "Index", "Question")
 
-@using (Html.BeginForm("DataDelete", "Question", new {questionId}, FormMethod.Post, new { id = "delete-form" }))
+@using (Html.BeginForm("DataDelete", "Question", new { questionId }, FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" />
@@ -88,6 +144,9 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/ko")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerystyle")
     <script>
         function deleteMe(id) {
             if (confirm('确定要删除此数据吗？')) {
@@ -95,5 +154,79 @@
                 $("#delete-form").submit();
             }
         }
+
+        $.ajaxSetup({ cache: false });
+
+        $("#data-modal-form").validate({
+            rules: {
+                output: {
+                    required: true
+                },
+                time: {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    max: 50000
+                },
+                memory: {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    max: 1000
+                }
+            }
+        });
+
+        function ViewModel() {
+            var self = this;
+
+            self.isSample = ko.observable();
+            self.id = ko.observable();
+
+            self.deleteMe = ko.observable(false);
+            self.showDelete = ko.observable(true);
+
+            self.input = ko.observable();
+            self.output = ko.observable();
+            self.time = ko.observable();
+            self.memory = ko.observable();
+
+            self.view = function(id, isSample) {
+                self.clear();
+                self.showDelete(true);
+
+                $.getJSON('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function(data) {
+                    self.id(id);
+                    self.isSample(isSample);
+
+                    self.input(data.Input);
+                    self.output(data.Output);
+                    self.time(data.Time);
+                    self.memory(data.Memory);
+                });
+            };
+
+            self.clear = function() {
+                self.id(null);
+                self.isSample(null);
+                self.deleteMe(false);
+                self.showDelete(false);
+
+                self.input(null);
+                self.output(null);
+                self.time(null);
+                self.memory(null);
+            };
+
+            self.trydelete = function(vm, e) {
+                if (confirm("确实要删除此测试数据吗？")) {
+                    self.deleteMe(true);
+                    $("#data-modal-form").submit();
+                };
+            };
+        }
+
+        var vm = new ViewModel();
+        ko.applyBindings(vm);
     </script>
 }

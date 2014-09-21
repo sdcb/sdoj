@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using AutoMapper.QueryableExtensions;
-using Microsoft.Ajax.Utilities;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;

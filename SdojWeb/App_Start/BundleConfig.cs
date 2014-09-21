@@ -16,6 +16,10 @@ namespace SdojWeb
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquerystyle").Include(
+                        "~/Scripts/jquery-validate.bootstrap-tooltip.js"
+                        ));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryajax").Include(
                         "~/Scripts/jquery.unobtrusive-ajax*"));
 

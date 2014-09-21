@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using StructureMap;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +10,7 @@ using SdojWeb.Infrastructure.ModelMetadata;
 
 namespace SdojWeb
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         public IContainer Container
         {
