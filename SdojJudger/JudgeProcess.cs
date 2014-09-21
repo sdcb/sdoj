@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using JobManagement;
@@ -58,49 +59,58 @@ namespace SdojJudger
             job.Limits.PerProcessUserTimeLimit = TimeSpan.FromMilliseconds(datas.Sum(x => x.TimeLimit));
             job.Limits.ProcessMemoryLimit = (IntPtr)((double)_spush.FullMemoryLimitMb*1024*1024);
 
-            foreach (var data in datas)
+            try
             {
-                var pi = new ProcessStartInfo(asm.PathToAssembly, "")
+                foreach (var data in datas)
                 {
-                    UseShellExecute = false,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                };
-                var ps = job.CreateProcessSecured(pi);
+                    var pi = new ProcessStartInfo(asm.PathToAssembly, "")
+                    {
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                    };
+                    var ps = job.CreateProcessSecured(pi);
 
-                ps.StandardInput.Write(data.Input);
-                var result = ps.StandardOutput.ReadToEnd();
+                    ps.StandardInput.Write(data.Input);
+                    var result = ps.StandardOutput.ReadToEnd();
 
-                // 时间与内存。
-                runTime += ps.TotalProcessorTime;
-                var memory = (long)job.PeakProcessMemoryUsed/1024f/1024f;
-                var runTimeMs = (int)runTime.TotalMilliseconds;
-                peakMemory = Math.Max(peakMemory, memory);
+                    // 时间与内存。
+                    runTime += ps.TotalProcessorTime;
+                    var memory = (long) job.PeakProcessMemoryUsed/1024f/1024f;
+                    var runTimeMs = (int) runTime.TotalMilliseconds;
+                    peakMemory = Math.Max(peakMemory, memory);
 
-                if (memory > data.MemoryLimitMb)
-                {
-                    job.TerminateAllProcesses(0);
-                    await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, memory);
-                    return;
+                    if (memory > data.MemoryLimitMb)
+                    {
+                        await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, memory);
+                        return;
+                    }
+                    if (ps.TotalProcessorTime.TotalMilliseconds > data.TimeLimit)
+                    {
+                        await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, memory);
+                        return;
+                    }
+
+                    // 正确性。
+                    if (result.TrimEnd() != data.Output)
+                    {
+                        await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
+                        return;
+                    }
                 }
-                if (ps.TotalProcessorTime.TotalMilliseconds > data.TimeLimit)
-                {
-                    job.TerminateAllProcesses(0);
-                    await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, memory);
-                    return;
-                }
-
-                // 正确性。
-                if (result != data.Output)
-                {
-                    job.TerminateAllProcesses(0);
-                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, 0, 0);
-                    return;
-                }
+                await _client.Update(_spush.Id, SolutionState.Accepted, (int)runTime.TotalMilliseconds, peakMemory);
             }
-            job.TerminateAllProcesses(0);
-            await _client.Update(_spush.Id, SolutionState.Accepted, (int)runTime.TotalMilliseconds, peakMemory);
+            catch (FileLoadException)
+            {
+                var memory = (long) job.PeakProcessMemoryUsed/1024f/1024f;
+                peakMemory = Math.Max(peakMemory, memory);
+                var t = _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, (int)runTime.TotalMilliseconds, peakMemory);
+            }
+            finally
+            {
+                job.TerminateAllProcesses(0);
+            }
         }
 
         private async Task UpdateQuestionData()
