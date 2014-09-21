@@ -1,7 +1,7 @@
 ﻿@using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
-@model IEnumerable<SdojWeb.Models.UserSummaryViewModel>
+@model IEnumerable<UserSummaryViewModel>
 @{
     ViewBag.Title = "用户管理";
     var paged = (SortablePagedList<UserSummaryViewModel>)Model;
@@ -58,7 +58,7 @@
                 <th>
                     @Html.DisplayNameFor(x => x.Roles)
                 </th>
-                <th>操作</th>
+                <th colspan="2">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@
             {
                 <tr>
                     <td>
-                        @Html.ActionLink(@user.UserName, "Edit", new { id = user.Id })
+                        @Html.DisplayFor(x => user.UserName)
                     </td>
                     <td>
                         @Html.DisplayFor(x => user.Email)
@@ -79,6 +79,12 @@
                         {
                             <span class="label label-info">@Html.DisplayFor(x => item.Name)</span>
                         }
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn-xs btn-block" href="@Url.Action("Edit", new {id=user.Id})">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            管理角色
+                        </a>
                     </td>
                     <td>
                         <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@user.Id)">
@@ -101,6 +107,7 @@
         </div>
     </div>
 </div>
+
 @using (Html.BeginForm("DeleteUser", "Identity", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()

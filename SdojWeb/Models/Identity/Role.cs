@@ -16,6 +16,7 @@ namespace SdojWeb.Models
 
         [Required]
         [StringLength(256)]
+        [Display(Name = "½ÇÉ«")]
         public string Name { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
