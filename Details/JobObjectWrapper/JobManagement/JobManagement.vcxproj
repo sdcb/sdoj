@@ -89,7 +89,7 @@
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRules>
     </CodeAnalysisRules>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>Migrated rules for JobManagement.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
@@ -148,7 +148,7 @@
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <AdditionalDependencies>user32.lib;psapi.lib;advapi32.lib</AdditionalDependencies>
