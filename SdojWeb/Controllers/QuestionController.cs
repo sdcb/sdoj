@@ -156,7 +156,7 @@ namespace SdojWeb.Controllers
 
             _db.Questions.Remove(question);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Details").WithSuccess("删除成功。");
+            return RedirectToAction("Index").WithSuccess("题目删除成功。");
         }
 
         public async Task<ActionResult> CheckName(string name)
@@ -167,6 +167,7 @@ namespace SdojWeb.Controllers
 
         // GET: /Question/5/Data/
         [Route("Question/{id}/Data")]
+        [AllowAnonymous]
         public async Task<ActionResult> Data(int id)
         {
             var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
@@ -178,89 +179,7 @@ namespace SdojWeb.Controllers
             ViewBag.IsUserOwnsQuestion = await _manager.IsUserOwnsQuestion(id);
             return View(questionDatas);
         }
-
-        // GET: /Question/5/Data/Create
-        [Route("Question/{id}/Data/Create")]
-        public async Task<ActionResult> DataCreate(int id)
-        {
-            if (await _manager.IsUserOwnsQuestion(id))
-            {
-                var model = new QuestionDataEditModel
-                {
-                    QuestionId = id,
-                    QuestionName = await _manager.GetName(id)
-                };
-                return View(model);
-            }
-            return NonOwnerReturn(id);
-        }
-
-        // POST: /Question/5/Data/Create
-        [Route("Question/{id}/Data/Create")]
-        [HttpPost, ValidateAntiForgeryToken, ActionName("DataCreate")]
-        public async Task<ActionResult> DataCreateConfirmed(QuestionDataEditModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (await _manager.IsUserOwnsQuestion(model.QuestionId))
-                {
-                    var questionData = Mapper.Map<QuestionData>(model);
-
-                    _db.QuestionDatas.Add(questionData);
-                    await _db.SaveChangesAsync();
-                    return RedirectToAction("Data", new { id = model.QuestionId })
-                        .WithInfo("已成功创建该测试数据。");
-                }
-
-                return NonOwnerReturn(model.QuestionId);
-            }
-
-            return View(model);
-        }
-
-        // GET: /Question/5/Data/Edit
-        [Route("Question/{questionId}/Data/{id}/Edit")]
-        public async Task<ActionResult> DataEdit(int id, int questionId)
-        {
-            var model = await _db.QuestionDatas
-                .Project().To<QuestionDataEditModel>()
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (User.IsUserOrRole(model.CreateUserId, SystemRoles.QuestionAdmin))
-            {
-                return View(model);
-            }
-
-            return NonOwnerReturn(model.QuestionId);
-        }
-
-        // POST: /Question/5/Data/Edit
-        [Route("Question/{questionId}/Data/{id}/Edit")]
-        [HttpPost, ValidateAntiForgeryToken, ActionName("DataEdit")]
-        public async Task<ActionResult> DataEditConfirmed(QuestionDataEditModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userId = await _db.QuestionDatas
-                    .Where(x => x.Id == model.Id)
-                    .Select(x => x.Question.CreateUserId)
-                    .FirstAsync();
-
-                if (User.IsUserOrRole(userId, SystemRoles.QuestionAdmin))
-                {
-                    var questionData = Mapper.Map<QuestionData>(model);
-                    _db.Entry(questionData).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
-
-                    return RedirectToAction("Data", new { id = model.QuestionId })
-                        .WithInfo("测试数据保存成功。");
-                }
-
-                return NonOwnerReturn(model.QuestionId);
-            }
-            return View(model);
-        }
-
+        
         // GET: /question/5/data/3
         [Route("Question/{questionId}/Data/Get")]
         public async Task<ActionResult> GetData(int questionId, int id)
@@ -306,24 +225,6 @@ namespace SdojWeb.Controllers
             }
 
             return RedirectToAction("Data", new {id = questionId});
-        }
-
-        // POST: /Question/5/Data/5/Delete
-        [Route("Question/{questionId}/Data/Delete")]
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> DataDelete(int id, int questionId)
-        {
-            if (!await _manager.IsUserOwnsQuestion(questionId))
-            {
-                return NonOwnerReturn(questionId);
-            }
-
-            var model = await _db.QuestionDatas.FindAsync(id);
-            _db.Entry(model).State = EntityState.Deleted;
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Data", new { id = questionId })
-                .WithSuccess("测试数据删除成功。");
         }
 
         private ActionResult NonOwnerReturn(int questionId)
