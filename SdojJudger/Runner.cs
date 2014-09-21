@@ -24,9 +24,8 @@ namespace SdojJudger
                 _hub.CookieContainer.Add(authCookie);
                 _proxy = _hub.CreateHubProxy(AppSettings.HubName);
                 _proxy.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
-                await _hub.Start();
-
                 _judger = new JudgeScheduler();
+                await _hub.Start();
 
                 _log.InfoFormat("{0} online.", AppSettings.UserName);
 
