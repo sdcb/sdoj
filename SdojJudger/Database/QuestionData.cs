@@ -8,10 +8,10 @@ namespace SdojJudger.Database
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "ntext"), MaxLength]
         public string Input { get; set; }
 
-        [Required, Column(TypeName = "ntext")]
+        [Required, Column(TypeName = "ntext"), MaxLength]
         public string Output { get; set; }
 
         public float MemoryLimitMb { get; set; }

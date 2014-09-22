@@ -27,7 +27,7 @@ namespace SdojJudger
             {
                 return;
             }
-            _log.InfoExt(() => string.Format("接收推送{0}，语言{1}, 最大内存{2}MB", model.Id, model.Language, model.FullMemoryLimitMb));
+            _log.InfoExt(() => string.Format("Recieved Id {0}, {1}, Memory {2}MB", model.Id, model.Language, model.FullMemoryLimitMb));
             _queue.Add(model);
 
             if (_task == null)
@@ -41,8 +41,16 @@ namespace SdojJudger
             SolutionPushModel spush;
             while (_queue.TryTake(out spush, 500))
             {
-                var ps = new JudgeProcess(spush);
-                await ps.ExecuteAsync();
+                try
+                {
+                    var ps = new JudgeProcess(spush);
+                    await ps.ExecuteAsync();
+                }
+                catch (Exception e)
+                {
+                    _log.FatalExt(() => e.Message);
+                    throw;
+                }
             }
             _task = null;
         }

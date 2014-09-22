@@ -197,7 +197,7 @@
         shub.client.push = function(id, name, runtime, memory) {
             $("#state-" + id).text(name);
             $("#runtime-" + id).text(runtime);
-            $("#memory-" + id).text(memory);
+            $("#memory-" + id).text(memory.toFixed(2));
         };
         $.connection.hub.start();
 

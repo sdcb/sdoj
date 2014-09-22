@@ -131,8 +131,6 @@ namespace SdojJudger
                 .ToArrayAsync();
             var except = serverItems.Except(dbItems).ToArray();
 
-            var datas = new List<QuestionData>(except.Length);
-
             // 将旧数据或者没有的数据更新。
             if (except.Length > 0)
             {
@@ -151,7 +149,7 @@ namespace SdojJudger
                 await db.SaveChangesAsync();
 
                 _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
-                if (datas.Count != except.Length)
+                if (hubDatas.Length != except.Length)
                 {
                     _log.Warn("Server returned less data than excepted.");
                 }
