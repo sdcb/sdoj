@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
 using Microsoft.AspNet.SignalR.Client;
@@ -17,10 +18,18 @@ namespace SdojJudger
 
         public async Task<SolutionFullModel> Lock(int solutionId)
         {
-            var result = await _server.Invoke<SolutionFullModel>(
+            try
+            {
+                var result = await _server.Invoke<SolutionFullModel>(
                 AppSettings.HubLock, solutionId);
-            _log.DebugExt(() => JsonConvert.SerializeObject(result));
-            return result;
+                _log.DebugExt(() => JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (InvalidOperationException e)
+            {
+                return null;
+            }
+            
         }
 
         public async Task<bool> Update(int solutionId,

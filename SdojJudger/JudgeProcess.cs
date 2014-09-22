@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JobManagement;
 using log4net;
+using log4net.Util;
 using SdojJudger.Compiler;
 using SdojJudger.Database;
 using SdojJudger.Models;
@@ -27,7 +27,11 @@ namespace SdojJudger
         {
             // 获取并锁定解答的详情。
             _sfull = await _client.Lock(_spush.Id);
-            if (_sfull == null) return;
+            if (_sfull == null)
+            {
+                _log.InfoExt(() => "Failed to lock " + _spush.Id + ", move next.");
+                return;
+            }
             await UpdateQuestionData();
 
             var compiler = CompilerProvider.GetCompiler(_spush);
