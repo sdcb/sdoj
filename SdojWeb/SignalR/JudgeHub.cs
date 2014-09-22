@@ -90,6 +90,7 @@ namespace SdojWeb.SignalR
                 .Where(x =>
                     //x.Question.CreateUserId == userId &&
                     solutionId == x.Id &&
+                    x.State < SolutionState.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
                 .Select(x => new
                 {
