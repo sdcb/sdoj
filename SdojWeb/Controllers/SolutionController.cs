@@ -193,6 +193,9 @@ namespace SdojWeb.Controllers
             await _db.Solutions
                 .Where(x => x.Id == id)
                 .UpdateAsync(s => new Solution {State = SolutionState.Queuing});
+            await _db.SolutionLocks
+                .Where(x => x.SolutionId == id)
+                .DeleteAsync();
 
             var judgeModel = await _db.Solutions
                     .Project().To<SolutionPushModel>()
