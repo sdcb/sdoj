@@ -29,29 +29,23 @@ struct judge_info
 	int64_t memory_limit;
 };
 
-enum class judge_result_types
-{
-	queuing = 0,
-	juding = 1,
-	completed = 100,
-	compile_error = 101,
-	accepted = 102,
-	wrong_answer = 103,
-	runtime_error = 104,
-	time_limit_exceed = 105,
-	memory_limit_exceed = 106,
-};
-
 struct api_judge_result
 {
-	judge_result_types result_type;
+	uint32_t error_code;
+	uint32_t except_code;
 	int32_t time;
 	float memory;
+	wchar_t * output;
 };
 
 class judge_process
 {
 public:
+
+	judge_process(judge_info const & ji) :
+		judge_info(ji)
+	{
+	}
 
 	void execute();
 
@@ -59,7 +53,7 @@ public:
 
 private:
 
-	judge_info m_judge_info;
+	judge_info const judge_info;
 
 	api_judge_result m_result;
 };

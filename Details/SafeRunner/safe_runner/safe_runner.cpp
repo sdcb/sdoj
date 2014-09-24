@@ -3,6 +3,32 @@
 
 using namespace std;
 
+
+
+api_judge_result judge(api_judge_info const & aji)
+{
+	judge_process ps{ aji };
+	ps.execute();
+	api_judge_result result = ps.get_result();
+	return result;
+}
+
+void free_judge_result(api_judge_result & result)
+{
+	if (result.output != nullptr)
+	{
+		delete[] result.output;
+		result.output = nullptr;
+	}
+}
+
+
+
+
+
+
+
+
 void cluck()
 {
 }
