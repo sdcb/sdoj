@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="handle.h" />
     <ClInclude Include="judge_process.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="safe_runner.h" />

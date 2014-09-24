@@ -10,6 +10,7 @@ judge_info::judge_info(api_judge_info const & aji) :
 
 void judge_process::execute()
 {
+
 }
 
 api_judge_result judge_process::get_result()
