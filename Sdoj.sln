@@ -55,8 +55,10 @@ Global
 		{BFC12033-CA82-43B7-ABA2-6E43B21264B5}.Release|x86.Build.0 = Release|Win32
 		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Debug|x64.ActiveCfg = Debug|x64
 		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Debug|x86.ActiveCfg = Debug|x86
+		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Debug|x86.Build.0 = Debug|x86
 		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Release|x64.ActiveCfg = Release|x64
-		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Release|x86.ActiveCfg = Release|x86
+		{2BEB6AB5-80B1-48DD-8029-15CE69CC7C0B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

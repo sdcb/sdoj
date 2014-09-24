@@ -1,2 +1,2 @@
-__declspec(dllexport)
 void cluck();
+int get3();

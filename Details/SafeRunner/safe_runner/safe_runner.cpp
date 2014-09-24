@@ -1,6 +1,8 @@
-#include <stdio.h>
-
 void cluck()
 {
-	printf("cluck!\n");
+}
+
+int get3()
+{
+	return 3;
 }

@@ -8,4 +8,7 @@
     <ClCompile Include="safe_runner.cpp" />
     <ClCompile Include="judge_process.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Source.def" />
+  </ItemGroup>
 </Project>
