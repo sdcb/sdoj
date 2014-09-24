@@ -9,12 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SdojJudger", "SdojJudger\Sd
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Details", "Details", "{A574E464-911C-4EDF-987A-6507E093A723}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JobObjectWrapper", "JobObjectWrapper", "{BE000895-C8F7-425E-9634-601ECCBB45D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InJobProcessCreator", "Details\JobObjectWrapper\InJobProcessCreator\InJobProcessCreator.csproj", "{1208C948-CD63-45A9-8031-3D7EF416E623}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JobManagement", "Details\JobObjectWrapper\JobManagement\JobManagement.vcxproj", "{0E50E067-74E6-41E9-8E69-B485813CA7D8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -29,21 +23,8 @@ Global
 		{FB77AEA8-44FA-402F-B166-0CE5A015585C}.Debug|x86.Build.0 = Debug|x86
 		{FB77AEA8-44FA-402F-B166-0CE5A015585C}.Release|x86.ActiveCfg = Release|x86
 		{FB77AEA8-44FA-402F-B166-0CE5A015585C}.Release|x86.Build.0 = Release|x86
-		{1208C948-CD63-45A9-8031-3D7EF416E623}.Debug|x86.ActiveCfg = Debug|x86
-		{1208C948-CD63-45A9-8031-3D7EF416E623}.Debug|x86.Build.0 = Debug|x86
-		{1208C948-CD63-45A9-8031-3D7EF416E623}.Release|x86.ActiveCfg = Release|x86
-		{1208C948-CD63-45A9-8031-3D7EF416E623}.Release|x86.Build.0 = Release|x86
-		{0E50E067-74E6-41E9-8E69-B485813CA7D8}.Debug|x86.ActiveCfg = Debug|Win32
-		{0E50E067-74E6-41E9-8E69-B485813CA7D8}.Debug|x86.Build.0 = Debug|Win32
-		{0E50E067-74E6-41E9-8E69-B485813CA7D8}.Release|x86.ActiveCfg = Release|Win32
-		{0E50E067-74E6-41E9-8E69-B485813CA7D8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{BE000895-C8F7-425E-9634-601ECCBB45D6} = {A574E464-911C-4EDF-987A-6507E093A723}
-		{1208C948-CD63-45A9-8031-3D7EF416E623} = {BE000895-C8F7-425E-9634-601ECCBB45D6}
-		{0E50E067-74E6-41E9-8E69-B485813CA7D8} = {BE000895-C8F7-425E-9634-601ECCBB45D6}
 	EndGlobalSection
 EndGlobal

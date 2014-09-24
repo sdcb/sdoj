@@ -146,12 +146,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Details\JobObjectWrapper\JobManagement\JobManagement.vcxproj">
-      <Project>{0e50e067-74e6-41e9-8e69-b485813ca7d8}</Project>
-      <Name>JobManagement</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
