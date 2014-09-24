@@ -7,3 +7,12 @@ judge_info::judge_info(api_judge_info const & aji) :
 	output(aji.output, aji.output_len)
 {
 }
+
+void judge_process::execute()
+{
+}
+
+api_judge_result judge_process::get_result()
+{
+	return m_result;
+}

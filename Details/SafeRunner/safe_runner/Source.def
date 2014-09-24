@@ -6,3 +6,5 @@ get3
 string_length
 concat_string_table
 concat_string_args
+
+judge

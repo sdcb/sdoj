@@ -18,6 +18,8 @@ struct api_judge_info
 
 struct judge_info
 {
+	judge_info(){}
+
 	judge_info(api_judge_info const &);
 
 	std::wstring path;
@@ -45,5 +47,19 @@ struct api_judge_result
 	judge_result_types result_type;
 	int32_t time;
 	float memory;
-	uint32_t exception_code;
+};
+
+class judge_process
+{
+public:
+
+	void execute();
+
+	api_judge_result get_result();
+
+private:
+
+	judge_info m_judge_info;
+
+	api_judge_result m_result;
 };
