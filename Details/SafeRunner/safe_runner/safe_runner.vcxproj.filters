@@ -3,10 +3,12 @@
   <ItemGroup>
     <ClInclude Include="safe_runner.h" />
     <ClInclude Include="judge_process.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="safe_runner.cpp" />
     <ClCompile Include="judge_process.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />

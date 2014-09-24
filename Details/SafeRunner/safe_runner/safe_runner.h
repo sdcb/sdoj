@@ -1,5 +1,4 @@
-#include <iostream>
-#include <string>
+#pragma once
 
 void cluck();
 int get3();
