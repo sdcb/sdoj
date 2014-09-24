@@ -19,7 +19,7 @@ namespace SafeRunnerTest
         }
 
         [Fact]
-        public void Get3_should_really_returns_3()
+        public void Get3_should_returns_3()
         {
             // arrange
 
@@ -34,7 +34,7 @@ namespace SafeRunnerTest
         [InlineData("Hello World", 11)]
         [InlineData("", 0)]
         [InlineData(null, -1)]
-        public void StringLength_should_really_count_length_of_string(string text, int expect)
+        public void StringLength_should_count_length_of_string(string text, int expect)
         {
             // arrange
 
@@ -49,7 +49,7 @@ namespace SafeRunnerTest
         [InlineData("A", "B", "C", 4, true)]
         [InlineData("", "", "", 1, true)]
         [InlineData("", "", "", 0, false)]
-        public void ConcatStringTable_should_really_concat_string(string s1, string s2, string s3, int length, bool expected)
+        public void ConcatStringTable_should_concat_string(string s1, string s2, string s3, int length, bool expected)
         {
             // arrange
             var table = new NativeDll.StringTable
@@ -78,7 +78,7 @@ namespace SafeRunnerTest
         [InlineData("A", "B", "C", 4, true)]
         [InlineData("", "", "", 1, true)]
         [InlineData("", "", "", 0, false)]
-        public void ConcatStringArgs_should_really_concat_string(string s1, string s2, string s3, int length, bool expected)
+        public void ConcatStringArgs_should_concat_string(string s1, string s2, string s3, int length, bool expected)
         {
             // arrange
             var buffer = new StringBuilder(length);

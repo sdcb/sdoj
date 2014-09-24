@@ -11,7 +11,7 @@ namespace SafeRunnerTest
         [DllImport("safe_runner", EntryPoint = "get3")]
         public static extern int Get3();
 
-        [DllImport("safe_runner", EntryPoint = "string_length")]
+        [DllImport("safe_runner", EntryPoint = "string_length", CallingConvention = CallingConvention.Cdecl, CharSet =  CharSet.Unicode  )]
         public static extern int StringLength(string str);
 
         [DllImport("safe_runner", EntryPoint = "concat_string_table", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
