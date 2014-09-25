@@ -11,9 +11,9 @@ struct api_judge_info
 	wchar_t * output;
 	int output_len;
 
-	int32_t time_limit;
+	int32_t time_limit_ms;
 
-	float memory_limit;
+	float memory_limit_mb;
 };
 
 struct judge_info
@@ -25,8 +25,8 @@ struct judge_info
 	std::wstring path;
 	std::wstring input;
 	std::wstring output;
-	int32_t time_limit;
-	int64_t memory_limit;
+	int64_t time_limit;
+	size_t memory_limit;
 };
 
 struct api_judge_result
@@ -36,6 +36,8 @@ struct api_judge_result
 	int32_t time;
 	float memory;
 	wchar_t * output;
+	wchar_t * error;
+	wchar_t * exception;
 };
 
 class judge_process
@@ -43,7 +45,7 @@ class judge_process
 public:
 
 	judge_process(judge_info const & ji) :
-		judge_info(ji)
+		m_judge_info(ji)
 	{
 	}
 
@@ -53,7 +55,7 @@ public:
 
 private:
 
-	judge_info const judge_info;
+	judge_info const m_judge_info;
 
 	api_judge_result m_result;
 };
