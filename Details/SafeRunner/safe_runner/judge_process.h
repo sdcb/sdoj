@@ -55,7 +55,7 @@ public:
 
 private:
 
-	judge_info const m_judge_info;
+	judge_info m_judge_info;
 
 	api_judge_result m_result;
 };
