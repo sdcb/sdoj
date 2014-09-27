@@ -138,7 +138,7 @@ namespace SdojWeb.Controllers
                 }
 
                 await _manager.Update(secretModel, model);
-                return RedirectToAction("Details");
+                return RedirectToAction("Details", new {id = model.Id});
             }
             return View(model);
         }

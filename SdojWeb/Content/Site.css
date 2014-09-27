@@ -28,3 +28,6 @@ textarea {
 .form-tools {
     margin-bottom: 10px;
 }
+div.well {
+    white-space:pre;
+}
