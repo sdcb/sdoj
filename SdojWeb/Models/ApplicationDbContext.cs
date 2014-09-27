@@ -29,6 +29,15 @@ namespace SdojWeb.Models
                 .WithRequired(l => l.Solution)
                 .WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<User>()
+                .HasMany(x => x.Roles).WithMany(x => x.Users)
+                .Map(x =>
+                {
+                    x.ToTable("UserRole");
+                    x.MapLeftKey("UserId");
+                    x.MapRightKey("RoleId");
+                });
+
             base.OnModelCreating(modelBuilder);
         }
 
