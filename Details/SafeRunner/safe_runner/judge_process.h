@@ -45,17 +45,33 @@ class judge_process
 public:
 
 	judge_process(judge_info const & ji) :
-		m_judge_info(ji)
+		m_judge_info(ji), 
+		error_code(0), 
+		except_code(0), 
+		time(0), 
+		memory(0)
 	{
 	}
 
 	void execute();
 
-	api_judge_result get_result();
+	void get_result(api_judge_result &);
 
 private:
 
 	judge_info m_judge_info;
 
-	api_judge_result m_result;
+	std::wstring error;
+
+	std::wstring exception;
+
+	std::wstring output;
+
+	uint32_t error_code;
+
+	uint32_t except_code;
+
+	int64_t time;
+
+	int64_t memory;
 };

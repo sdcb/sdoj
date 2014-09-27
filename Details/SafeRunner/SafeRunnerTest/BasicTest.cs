@@ -46,7 +46,7 @@ namespace SafeRunnerTest
         }
 
         [Theory]
-        [InlineData("A", "B", "C", 4, true)]
+        [InlineData("Hello", "World", "C", 12, true)]
         [InlineData("", "", "", 1, true)]
         [InlineData("", "", "", 0, false)]
         public void ConcatStringTable_should_concat_string(string s1, string s2, string s3, int length, bool expected)

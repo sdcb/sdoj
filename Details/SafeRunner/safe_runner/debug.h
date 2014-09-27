@@ -58,3 +58,18 @@ struct Tracer
 #else
 #define TRACE __noop
 #endif
+
+struct win32_exception
+{
+	win32_exception() :
+		error_code(GetLastError())
+	{
+	}
+
+	DWORD error_code;
+};
+
+inline void ThrowIfFailed(BOOL ok)
+{
+	if (!ok) throw win32_exception();
+}

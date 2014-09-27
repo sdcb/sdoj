@@ -48,9 +48,9 @@ struct process_information
 
 null_handle create_job_object(judge_info const &);
 
-inline int64_t ms_to_ns100(int64_t);
+inline int64_t ms_to_ns100(int ms);
 
-inline int64_t ns100_to_ms(int64_t);
+inline int ns100_to_ms(int64_t ns100);
 
 process_information create_security_process(wchar_t * cmd, 
 											HANDLE in_read, 
@@ -81,15 +81,35 @@ void judge_process::execute()
 															  pipe_handles.out_write.get(), 
 															  pipe_handles.err_write.get(), 
 															  job.get()) };
-
-
 }
 
 
 
-api_judge_result judge_process::get_result()
+void judge_process::get_result(api_judge_result & result)
 {
-	return m_result;
+	
+	result.error_code  = error_code;
+	result.except_code = except_code;
+	result.memory      = memory/1024/1024.0f;
+	result.time        = ns100_to_ms(time);
+
+	if (output.size() > 0)
+	{
+		result.output = new wchar_t[output.size() + 1];
+		wcscpy_s(result.output, output.size(), output.c_str());
+	}
+
+	if (error_code != 0 && error.size() > 0)
+	{
+		result.error = new wchar_t[error.size() + 1];
+		wcscpy_s(result.error, error.size(), error.c_str());
+	}
+	
+	if (except_code != 0 && exception.size() > 0)
+	{
+		result.exception = new wchar_t[exception.size() + 1];
+		wcscpy_s(result.exception, exception.size(), exception.c_str());
+	}
 }
 
 
@@ -99,7 +119,7 @@ null_handle create_job_object(judge_info const & info)
 	null_handle job{ CreateJobObject(nullptr, nullptr) };
 	VERIFY(job);
 
-
+	
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_limit{};
 	extend_limit.ProcessMemoryLimit										= info.memory_limit;
 	extend_limit.BasicLimitInformation.ActiveProcessLimit				= 1;
@@ -109,7 +129,7 @@ null_handle create_job_object(judge_info const & info)
 																		  JOB_OBJECT_LIMIT_PROCESS_TIME               |
 																		  JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION |
 																		  JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-	VERIFY(SetInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_limit, sizeof(extend_limit)));
+	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_limit, sizeof(extend_limit)));
 	
 
 	JOBOBJECT_BASIC_UI_RESTRICTIONS ui_limit;
@@ -121,12 +141,12 @@ null_handle create_job_object(judge_info const & info)
 								   JOB_OBJECT_UILIMIT_GLOBALATOMS     	|
 								   JOB_OBJECT_UILIMIT_DESKTOP         	|
 								   JOB_OBJECT_UILIMIT_EXITWINDOWS;
-	VERIFY(SetInformationJobObject(job.get(), JobObjectBasicUIRestrictions, &ui_limit, sizeof(ui_limit)));
+	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectBasicUIRestrictions, &ui_limit, sizeof(ui_limit)));
 	
 
 	JOBOBJECT_END_OF_JOB_TIME_INFORMATION end_info;
 	end_info.EndOfJobTimeAction = JOB_OBJECT_TERMINATE_AT_END_OF_JOB;
-	VERIFY(SetInformationJobObject(job.get(), JobObjectEndOfJobTimeInformation, &end_info, sizeof(end_info)));
+	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectEndOfJobTimeInformation, &end_info, sizeof(end_info)));
 
 
 	return job;
@@ -134,16 +154,16 @@ null_handle create_job_object(judge_info const & info)
 
 
 
-inline int64_t ms_to_ns100(int64_t ms)
+inline int64_t ms_to_ns100(int ms)
 {
-	return ms * 10000;
+	return ms * 10000L;
 }
 
 
 
-inline int64_t ns100_to_ms(int64_t ns100)
+inline int ns100_to_ms(int64_t ns100)
 {
-	return ns100 / 10000;
+	return static_cast<int>(ns100 / 10000);
 }
 
 
@@ -244,20 +264,24 @@ null_handle create_security_process_token()
 redirect_process_attr_list::redirect_process_attr_list(HANDLE in_read, HANDLE out_write, HANDLE err_write)
 {
 	unsigned long size;
-	VERIFY(InitializeProcThreadAttributeList(nullptr, 1, 0, &size));
+	VERIFY(InitializeProcThreadAttributeList(nullptr, 1, 0, &size) || GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
 	LPPROC_THREAD_ATTRIBUTE_LIST attr_list;
 	attr_list = reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(HeapAlloc(GetProcessHeap(), 0, size));
 	VERIFY(attr_list);
 
+	VERIFY(InitializeProcThreadAttributeList(attr_list, 1, 0, &size));
+
 	HANDLE handles[] = { in_read, out_write, err_write };
-	VERIFY(UpdateProcThreadAttribute(attr_list, 
+	VERIFY(UpdateProcThreadAttribute(attr_list,
 									 0, 
 									 PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
 									 handles,
 									 sizeof(handles), 
 									 nullptr, 
 									 nullptr));
+
+	m_attr_list = attr_list;
 }
 
 
