@@ -68,7 +68,6 @@ namespace SafeRunnerTest
 
             // act
             var ok = NativeDll.Judge(ref empty, ref result);
-            var psCalc = Process.GetProcessesByName("calc.exe");
 
             // assert
             ok.Should().BeTrue();

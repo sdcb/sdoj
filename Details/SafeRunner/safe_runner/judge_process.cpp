@@ -81,6 +81,41 @@ void judge_process::execute()
 															  pipe_handles.out_write.get(), 
 															  pipe_handles.err_write.get(), 
 															  job.get()) };
+
+	VERIFY(WriteFile(pipe_handles.in_write.get(), 
+					 m_judge_info.input.c_str(), 
+					 m_judge_info.input.size() * sizeof(wchar_t), 
+					 nullptr, 
+					 nullptr));
+	pipe_handles.in_write.reset();
+
+	VERIFY(ResumeThread(process_info.thread_handle.get()));
+
+	char text[4096];
+	DWORD read{};
+	/*VERIFY(ReadFile(pipe_handles.out_read.get(), 
+					(void*)text, 
+					_countof(text)*sizeof(char), 
+					&read, 
+					nullptr));*/
+	text[read] = '\0';
+
+	int c;
+	c = MultiByteToWideChar(CP_ACP, 0, text, read, nullptr, 0);
+	output.resize(read + 1);
+	MultiByteToWideChar(CP_ACP, 0, text, read, &output[0], output.size());
+
+	WaitForSingleObject(process_info.process_handle.get(), static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+	TerminateProcess(process_info.process_handle.get(), 0);
+
+	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
+	VERIFY(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
+
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_info;
+	VERIFY(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));
+
+	time = basic_info.TotalUserTime.QuadPart;
+	memory = extend_info.PeakJobMemoryUsed;
 }
 
 
@@ -203,9 +238,9 @@ process_information create_security_process(wchar_t * cmd,
 	si.StartupInfo.hStdOutput = out_write;
 	si.StartupInfo.hStdError = err_write;
 
-	unsigned long flags = DEBUG_ONLY_THIS_PROCESS | 
-						  CREATE_SUSPENDED        | 
-						  CREATE_NO_WINDOW        | 
+	unsigned long flags = CREATE_SUSPENDED        | 
+						  /*DEBUG_ONLY_THIS_PROCESS | */
+						  /*CREATE_NO_WINDOW        | */
 						  EXTENDED_STARTUPINFO_PRESENT;
 	VERIFY(CreateProcessAsUser(token.get(), 
 							   nullptr, 

@@ -77,12 +77,9 @@ namespace SafeRunnerTest
             public uint ExceptionCode;
             public int Time;
             public float Memory;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string Output;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string ErrorMessage;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string ExceptionMessage;
+            public IntPtr Output;
+            public IntPtr ErrorMessage;
+            public IntPtr ExceptionMessage;
         };
     }
 }
