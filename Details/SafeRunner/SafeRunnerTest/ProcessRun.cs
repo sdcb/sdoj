@@ -45,8 +45,8 @@ namespace SafeRunnerTest
         public void Emtpy_call_should_return_fail()
         {
             // arrange
-            var empty = new NativeDll.ApiJudgeInfo();
-            var result = new NativeDll.ApiJudgeResult();
+            var empty = new ApiJudgeInfo();
+            var result = new ApiJudgeResult();
 
             // act
             var ok = NativeDll.Judge(ref empty, ref result);
@@ -59,25 +59,30 @@ namespace SafeRunnerTest
         public void Create_calc_should_return_success()
         {
             // arrange
-            var empty = new NativeDll.ApiJudgeInfo();
-            empty.Path = "calc.exe";
-            empty.PathLength = empty.Path.Length;
-            empty.MemoryLimitMb = 1;
-            empty.TimeLimitMs = 1000;
-            var result = new NativeDll.ApiJudgeResult();
+            var calc = new JudgeInfo
+            {
+                Path = "calc.exe", 
+                MemoryLimitMb = 1.0f, 
+                TimeLimitMs = 1000, 
+                Input = null
+            };
 
             // act
-            var ok = NativeDll.Judge(ref empty, ref result);
+            var result = NativeDll.Judge(calc);
 
             // assert
-            ok.Should().BeTrue();
+            result.Succeed.Should().BeTrue();
+            result.ErrorCode.Should().Be(0);
+            result.ErrorMessage.Should().BeNull();
+            result.TimeMs.Should().BeGreaterThan(0);
+            result.MemoryMb.Should().BeGreaterThan(0);
         }
 
         [Fact]
         public void Regular_clear_call_should_be_ok()
         {
             // arrange
-            var result = new NativeDll.ApiJudgeResult();
+            var result = new ApiJudgeResult();
 
             // act
 
@@ -90,7 +95,24 @@ namespace SafeRunnerTest
         [Fact]
         public void Process_should_return_expected_output()
         {
-            
+            // Arrange
+            var compiler = new CSharpCodeProvider();
+            var options = new CompilerParameters { GenerateExecutable = true };
+            var res = compiler.CompileAssemblyFromSource(options, Code);
+            var info = new JudgeInfo
+            {
+                Input = "Flash", 
+                MemoryLimitMb = 1, 
+                Path = res.PathToAssembly, 
+                TimeLimitMs = 1000
+            };
+
+            // Act
+            var result = NativeDll.Judge(info);
+
+            // Assert
+            result.Succeed.Should().BeTrue();
+
         }
 
         public const string Code = 

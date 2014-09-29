@@ -3,13 +3,12 @@
 struct api_judge_info
 {
 	wchar_t * path;
+
 	int path_len;
 
 	wchar_t * input;
-	int input_len;
 
-	wchar_t * output;
-	int output_len;
+	int input_len;
 
 	int32_t time_limit_ms;
 
@@ -24,7 +23,6 @@ struct judge_info
 
 	std::wstring path;
 	std::wstring input;
-	std::wstring output;
 	int64_t time_limit;
 	size_t memory_limit;
 };

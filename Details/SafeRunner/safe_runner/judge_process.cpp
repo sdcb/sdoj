@@ -64,7 +64,6 @@ null_handle create_security_process_token();
 judge_info::judge_info(api_judge_info const & aji) :
 	path(aji.path, aji.path_len), 
 	input(aji.input, aji.input_len), 
-	output(aji.output, aji.output_len), 
 	time_limit(ms_to_ns100(aji.time_limit_ms)),
 	memory_limit(static_cast<size_t>(aji.memory_limit_mb * 1024.0 * 1024))
 {
@@ -82,14 +81,14 @@ void judge_process::execute()
 															  pipe_handles.err_write.get(), 
 															  job.get()) };
 
-	VERIFY(WriteFile(pipe_handles.in_write.get(), 
-					 m_judge_info.input.c_str(), 
-					 m_judge_info.input.size() * sizeof(wchar_t), 
-					 nullptr, 
-					 nullptr));
+	ThrowIfFailed(WriteFile(pipe_handles.in_write.get(),
+							m_judge_info.input.c_str(), 
+							m_judge_info.input.size() * sizeof(wchar_t), 
+							nullptr, 
+							nullptr));
 	pipe_handles.in_write.reset();
 
-	VERIFY(ResumeThread(process_info.thread_handle.get()));
+	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 
 	char text[4096];
 	DWORD read{};
@@ -109,10 +108,10 @@ void judge_process::execute()
 	TerminateProcess(process_info.process_handle.get(), 0);
 
 	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
-	VERIFY(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
+	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_info;
-	VERIFY(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));
+	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));
 
 	time = basic_info.TotalUserTime.QuadPart;
 	memory = extend_info.PeakJobMemoryUsed;
@@ -152,7 +151,7 @@ void judge_process::get_result(api_judge_result & result)
 null_handle create_job_object(judge_info const & info)
 {
 	null_handle job{ CreateJobObject(nullptr, nullptr) };
-	VERIFY(job);
+	ThrowIfFailed(job);
 
 	
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_limit{};
@@ -205,13 +204,13 @@ inline int ns100_to_ms(int64_t ns100)
 
 pipe_handles::pipe_handles()
 {
-	VERIFY(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
-	VERIFY(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), nullptr, 0));
-	VERIFY(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));
 
-	VERIFY(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
-	VERIFY(SetHandleInformation(out_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
-	VERIFY(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	ThrowIfFailed(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	ThrowIfFailed(SetHandleInformation(out_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	ThrowIfFailed(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
 }
 
 
@@ -242,19 +241,19 @@ process_information create_security_process(wchar_t * cmd,
 						  /*DEBUG_ONLY_THIS_PROCESS | */
 						  /*CREATE_NO_WINDOW        | */
 						  EXTENDED_STARTUPINFO_PRESENT;
-	VERIFY(CreateProcessAsUser(token.get(), 
-							   nullptr, 
-							   &cmd[0], 
-							   nullptr, 
-							   nullptr, 
-							   true, 
-							   flags, 
-							   nullptr, 
-							   nullptr, 
-							   &si.StartupInfo, 
-							   &pi));
+	ThrowIfFailed(CreateProcessAsUser(token.get(), 
+									  nullptr, 
+									  &cmd[0], 
+									  nullptr, 
+									  nullptr, 
+									  true, 
+									  flags, 
+									  nullptr, 
+									  nullptr, 
+									  &si.StartupInfo, 
+									  &pi));
 
-	VERIFY(AssignProcessToJobObject(job, pi.hProcess));
+	ThrowIfFailed(AssignProcessToJobObject(job, pi.hProcess));
 
 	return process_information{ pi };
 }
@@ -264,32 +263,32 @@ process_information create_security_process(wchar_t * cmd,
 null_handle create_security_process_token()
 {
 	null_handle pstoken, newtoken;
-	VERIFY(OpenProcessToken(GetCurrentProcess(), 
-							TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY, 
-							pstoken.get_address_of()));
+	ThrowIfFailed(OpenProcessToken(GetCurrentProcess(),
+								   TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY, 
+								   pstoken.get_address_of()));
 
-	VERIFY(DuplicateTokenEx(pstoken.get(), 
-							0, 
-							nullptr, 
-							SecurityImpersonation, 
-							TokenPrimary, 
-							newtoken.get_address_of()));
+	ThrowIfFailed(DuplicateTokenEx(pstoken.get(),
+								   0, 
+								   nullptr, 
+								   SecurityImpersonation, 
+								   TokenPrimary, 
+								   newtoken.get_address_of()));
 
 	SID_IDENTIFIER_AUTHORITY sia = SECURITY_MANDATORY_LABEL_AUTHORITY;
 	PSID sid;
-	VERIFY(AllocateAndInitializeSid(&sia,
-									1, 
-									SECURITY_MANDATORY_LOW_RID,
-									0, 0, 0, 0, 0, 0, 0, 
-									&sid));
+	ThrowIfFailed(AllocateAndInitializeSid(&sia,
+										   1, 
+										   SECURITY_MANDATORY_LOW_RID,
+										   0, 0, 0, 0, 0, 0, 0, 
+										   &sid));
 
 	TOKEN_MANDATORY_LABEL tml{};
 	tml.Label.Attributes = SE_GROUP_INTEGRITY;
 	tml.Label.Sid = sid;
-	VERIFY(SetTokenInformation(newtoken.get(), 
-							   TokenIntegrityLevel, 
-							   &tml, 
-							   sizeof(tml) + GetLengthSid(sid)));
+	ThrowIfFailed(SetTokenInformation(newtoken.get(),
+									  TokenIntegrityLevel, 
+									  &tml, 
+									  sizeof(tml) + GetLengthSid(sid)));
 
 	return newtoken;
 }
@@ -299,22 +298,22 @@ null_handle create_security_process_token()
 redirect_process_attr_list::redirect_process_attr_list(HANDLE in_read, HANDLE out_write, HANDLE err_write)
 {
 	unsigned long size;
-	VERIFY(InitializeProcThreadAttributeList(nullptr, 1, 0, &size) || GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+	ThrowIfFailed(InitializeProcThreadAttributeList(nullptr, 1, 0, &size) || GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
 	LPPROC_THREAD_ATTRIBUTE_LIST attr_list;
 	attr_list = reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(HeapAlloc(GetProcessHeap(), 0, size));
-	VERIFY(attr_list);
+	ThrowIfFailed(attr_list);
 
-	VERIFY(InitializeProcThreadAttributeList(attr_list, 1, 0, &size));
+	ThrowIfFailed(InitializeProcThreadAttributeList(attr_list, 1, 0, &size));
 
 	HANDLE handles[] = { in_read, out_write, err_write };
-	VERIFY(UpdateProcThreadAttribute(attr_list,
-									 0, 
-									 PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
-									 handles,
-									 sizeof(handles), 
-									 nullptr, 
-									 nullptr));
+	ThrowIfFailed(UpdateProcThreadAttribute(attr_list,
+											0, 
+											PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
+											handles,
+											sizeof(handles), 
+											nullptr, 
+											nullptr));
 
 	m_attr_list = attr_list;
 }
@@ -324,7 +323,7 @@ redirect_process_attr_list::redirect_process_attr_list(HANDLE in_read, HANDLE ou
 redirect_process_attr_list::~redirect_process_attr_list()
 {
 	DeleteProcThreadAttributeList(m_attr_list);
-	VERIFY(HeapFree(GetProcessHeap(), 0, m_attr_list));
+	ThrowIfFailed(HeapFree(GetProcessHeap(), 0, m_attr_list));
 }
 
 
@@ -338,16 +337,16 @@ LPPROC_THREAD_ATTRIBUTE_LIST redirect_process_attr_list::get()
 
 process_information::process_information(process_information && that)
 {
-	VERIFY(process_handle.reset(that.process_handle.release()));
-	VERIFY(thread_handle.reset(that.thread_handle.release()));
+	ThrowIfFailed(process_handle.reset(that.process_handle.release()));
+	ThrowIfFailed(thread_handle.reset(that.thread_handle.release()));
 }
 
 
 
 process_information::process_information(PROCESS_INFORMATION const & that)
 {
-	VERIFY(process_handle.reset(that.hProcess));
-	VERIFY(thread_handle.reset(that.hThread));
+	ThrowIfFailed(process_handle.reset(that.hProcess));
+	ThrowIfFailed(thread_handle.reset(that.hThread));
 	process_id = that.dwProcessId;
 	thread_id = that.dwThreadId;
 }

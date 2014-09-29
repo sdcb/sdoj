@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -16,6 +17,24 @@ namespace SafeRunnerTest
 
         [DllImport("safe_runner", EntryPoint = "free_judge_result", CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern void FreeJudgeResult(ref ApiJudgeResult result);
+
+        public static JudgeResult Judge(JudgeInfo info)
+        {
+            var aji = (ApiJudgeInfo) (info);
+            var ajr = new ApiJudgeResult();
+
+            try
+            {
+                var ok = Judge(ref aji, ref ajr);
+                var result = (JudgeResult) ajr;
+                result.Succeed = ok;
+                return result;
+            }
+            finally
+            {
+                FreeJudgeResult(ref ajr);
+            }
+        }
 
         [DllImport("safe_runner", EntryPoint = "cluck")]
         public extern static void Cluck();
@@ -53,33 +72,113 @@ namespace SafeRunnerTest
             public string String3;
             public int Length3;
         }
+    }
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ApiJudgeInfo
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ApiJudgeInfo
+    {
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string Path;
+
+        public int PathLength;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string Input;
+
+        public int InputLength;
+
+        public int TimeLimitMs;
+
+        public float MemoryLimitMb;
+    }
+
+    public class JudgeInfo
+    {
+        public string Path { get; set; }
+
+        public string Input { get; set; }
+
+        public int TimeLimitMs { get; set; }
+
+        public float MemoryLimitMb { get; set; }
+
+
+        public static explicit operator ApiJudgeInfo(JudgeInfo info)
         {
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string Path;
-            public int PathLength;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string Input;
-            public int InputLength;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string Output;
-            public int OutputLength;
-            public int TimeLimitMs;
-            public float MemoryLimitMb;
+            // info.Path must not be null.
+
+            var aji = new ApiJudgeInfo
+            {
+                Path = info.Path, 
+                PathLength = info.Path.Length, 
+                Input = info.Input, 
+                TimeLimitMs = info.TimeLimitMs, 
+                MemoryLimitMb = info.MemoryLimitMb
+            };
+
+            if (info.Input != null)
+            {
+                aji.InputLength = info.Input.Length;
+            }
+
+            return aji;
         }
+    }
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ApiJudgeResult
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ApiJudgeResult
+    {
+        public readonly uint ErrorCode;
+        public readonly uint ExceptionCode;
+        public readonly int TimeMs;
+        public readonly float MemoryMb;
+        public IntPtr Output;
+        public IntPtr ErrorMessage;
+        public IntPtr ExceptionMessage;
+    };
+
+    public class JudgeResult
+    {
+        public uint ErrorCode { get; set; }
+
+        public uint ExceptionCode { get; set; }
+
+        public int TimeMs { get; set; }
+
+        public float MemoryMb { get; set; }
+
+        public string Output { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public string ExceptionMessage { get; set; }
+
+        public bool Succeed { get; set; }
+
+        public static explicit operator JudgeResult(ApiJudgeResult info)
         {
-            public uint ErrorCode;
-            public uint ExceptionCode;
-            public int Time;
-            public float Memory;
-            public IntPtr Output;
-            public IntPtr ErrorMessage;
-            public IntPtr ExceptionMessage;
-        };
+            var result = new JudgeResult
+            {
+                ErrorCode = info.ErrorCode, 
+                ExceptionCode = info.ExceptionCode, 
+                TimeMs = info.TimeMs, 
+                MemoryMb = info.MemoryMb, 
+            };
+
+            if (info.Output != IntPtr.Zero)
+            {
+                result.Output = Marshal.PtrToStringUni(info.Output);
+            }
+            if (info.ErrorMessage != IntPtr.Zero)
+            {
+                result.ErrorMessage = Marshal.PtrToStringUni(info.ErrorMessage);
+            }
+            if (info.ExceptionMessage != IntPtr.Zero)
+            {
+                result.ExceptionMessage = Marshal.PtrToStringUni(info.ExceptionMessage);
+            }
+
+            return result;
+        }
     }
 }

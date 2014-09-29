@@ -69,7 +69,14 @@ struct win32_exception
 	DWORD error_code;
 };
 
-inline void ThrowIfFailed(BOOL ok)
+template <typename T>
+inline void ThrowIfFailed(T const & ok)
+{
+	if (!ok) throw win32_exception();
+}
+
+template <typename T>
+inline void ThrowIfFailed(T const && ok)
 {
 	if (!ok) throw win32_exception();
 }
