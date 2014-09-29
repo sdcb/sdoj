@@ -104,7 +104,8 @@ void judge_process::execute()
 	output.resize(read + 1);
 	MultiByteToWideChar(CP_ACP, 0, text, read, &output[0], output.size());
 
-	WaitForSingleObject(process_info.process_handle.get(), static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
+											static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
 	TerminateProcess(process_info.process_handle.get(), 0);
 
 	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
@@ -113,7 +114,14 @@ void judge_process::execute()
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_info;
 	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));
 
-	time = basic_info.TotalUserTime.QuadPart;
+	if (wait_result == WAIT_TIMEOUT)
+	{
+		time = ns100_to_ms(m_judge_info.time_limit);
+	}
+	else if (wait_result == WAIT_OBJECT_0)
+	{
+		time = basic_info.TotalUserTime.QuadPart;
+	}
 	memory = extend_info.PeakJobMemoryUsed;
 }
 
@@ -188,14 +196,14 @@ null_handle create_job_object(judge_info const & info)
 
 
 
-inline int64_t ms_to_ns100(int ms)
+inline int64_t ms_to_ns100(int32_t ms)
 {
 	return ms * 10000L;
 }
 
 
 
-inline int ns100_to_ms(int64_t ns100)
+inline int32_t ns100_to_ms(int64_t ns100)
 {
 	return static_cast<int>(ns100 / 10000);
 }
