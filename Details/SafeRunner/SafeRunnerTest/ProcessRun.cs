@@ -74,7 +74,6 @@ namespace SafeRunnerTest
             result.Succeed.Should().BeTrue();
             result.ErrorCode.Should().Be(0);
             result.ErrorMessage.Should().BeNull();
-            result.TimeMs.Should().BeGreaterThan(0);
             result.MemoryMb.Should().BeGreaterThan(0);
         }
 

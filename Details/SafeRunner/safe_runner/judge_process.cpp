@@ -116,7 +116,7 @@ void judge_process::execute()
 
 	if (wait_result == WAIT_TIMEOUT)
 	{
-		time = ns100_to_ms(m_judge_info.time_limit);
+		time = m_judge_info.time_limit;
 	}
 	else if (wait_result == WAIT_OBJECT_0)
 	{
