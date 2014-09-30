@@ -111,6 +111,7 @@ namespace SafeRunnerTest
 
             // Assert
             result.Succeed.Should().BeTrue();
+            result.Output.Should().Be("Hey Flash!");
 
         }
 
