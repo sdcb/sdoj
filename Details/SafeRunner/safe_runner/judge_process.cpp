@@ -15,13 +15,14 @@ struct pipe_handles
 struct redirect_process_attr_list
 {
 public:
-	redirect_process_attr_list(HANDLE in_read, HANDLE out_write, HANDLE err_write);
+	redirect_process_attr_list(HANDLE * handles, int handle_count);
 
 	~redirect_process_attr_list();
 
 	redirect_process_attr_list(redirect_process_attr_list const &) = delete;
-
+	redirect_process_attr_list(redirect_process_attr_list &&) = delete;
 	redirect_process_attr_list operator=(redirect_process_attr_list const &) = delete;
+	redirect_process_attr_list operator=(redirect_process_attr_list &&) = delete;
 
 	LPPROC_THREAD_ATTRIBUTE_LIST get();
 
@@ -52,6 +53,10 @@ inline int64_t ms_to_ns100(int ms);
 
 inline int ns100_to_ms(int64_t ns100);
 
+std::wstring ansi_to_unicode(std::string const & ansi);
+
+std::string unicode_to_ansi(std::string const & unicode);
+
 process_information create_security_process(wchar_t * cmd, 
 											HANDLE in_read, 
 											HANDLE out_write, 
@@ -80,24 +85,32 @@ void judge_process::execute()
 															  pipe_handles.out_write.get(), 
 															  pipe_handles.err_write.get(), 
 															  job.get()) };
-
+	DWORD writed;
 	ThrowIfFailed(WriteFile(pipe_handles.in_write.get(),
-							m_judge_info.input.c_str(), 
-							m_judge_info.input.size() * sizeof(wchar_t), 
-							nullptr, 
-							nullptr));
+		m_judge_info.input.c_str(),
+		m_judge_info.input.size() * sizeof(wchar_t),
+		&writed,
+		nullptr));
 	pipe_handles.in_write.reset();
 
 	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 
 	char text[4096];
 	DWORD read{};
-	/*VERIFY(ReadFile(pipe_handles.out_read.get(), 
+	if (PeekNamedPipe(pipe_handles.out_read.get(), 
+					  (void*)text, 
+					  sizeof(text), 
+					  &read, 
+					  nullptr, 
+					  nullptr) && read > 0)
+	{
+		VERIFY(ReadFile(pipe_handles.out_read.get(), 
 					(void*)text, 
-					_countof(text)*sizeof(char), 
+					sizeof(text),
 					&read, 
-					nullptr));*/
-	text[read] = '\0';
+					nullptr));
+		text[read] = '\0';
+	}
 
 	int c;
 	c = MultiByteToWideChar(CP_ACP, 0, text, read, nullptr, 0);
@@ -106,7 +119,6 @@ void judge_process::execute()
 
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
 											static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
-	TerminateProcess(process_info.process_handle.get(), 0);
 
 	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
 	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
@@ -123,6 +135,7 @@ void judge_process::execute()
 		time = basic_info.TotalUserTime.QuadPart;
 	}
 	memory = extend_info.PeakJobMemoryUsed;
+	
 }
 
 
@@ -212,13 +225,19 @@ inline int32_t ns100_to_ms(int64_t ns100)
 
 pipe_handles::pipe_handles()
 {
-	ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
-	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), nullptr, 0));
-	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));
+	SECURITY_ATTRIBUTES sa{ sizeof(sa), nullptr, true };
 
-	ThrowIfFailed(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	/*ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));*/
+
+	ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), &sa, 0));
+	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), &sa, 0));
+	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), &sa, 0));
+
+	/*ThrowIfFailed(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
 	ThrowIfFailed(SetHandleInformation(out_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
-	ThrowIfFailed(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	ThrowIfFailed(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));*/
 }
 
 
@@ -236,7 +255,8 @@ process_information create_security_process(wchar_t * cmd,
 	ASSERT(job != nullptr);
 
 	null_handle token{ create_security_process_token() };
-	redirect_process_attr_list attr_list{ in_read, out_write, err_write };
+	HANDLE handles[] { in_read, out_write, err_write };
+	redirect_process_attr_list attr_list{ handles, _countof(handles) };
 	
 	PROCESS_INFORMATION pi;
 	STARTUPINFOEX si{};
@@ -244,6 +264,8 @@ process_information create_security_process(wchar_t * cmd,
 	si.StartupInfo.hStdInput = in_read;
 	si.StartupInfo.hStdOutput = out_write;
 	si.StartupInfo.hStdError = err_write;
+	si.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+	si.lpAttributeList = attr_list.get();
 
 	unsigned long flags = CREATE_SUSPENDED        | 
 						  /*DEBUG_ONLY_THIS_PROCESS | */
@@ -254,12 +276,22 @@ process_information create_security_process(wchar_t * cmd,
 									  &cmd[0], 
 									  nullptr, 
 									  nullptr, 
-									  true, 
+									  TRUE, 
 									  flags, 
 									  nullptr, 
 									  nullptr, 
-									  &si.StartupInfo, 
+									  reinterpret_cast<LPSTARTUPINFO>(&si), 
 									  &pi));
+	//ThrowIfFailed(CreateProcess(nullptr, 
+	//							&cmd[0], 
+	//							nullptr, 
+	//							nullptr, 
+	//							true, 
+	//							flags, 
+	//							nullptr, 
+	//							nullptr, 
+	//							&si.StartupInfo, 
+	//							&pi));
 
 	ThrowIfFailed(AssignProcessToJobObject(job, pi.hProcess));
 
@@ -268,44 +300,9 @@ process_information create_security_process(wchar_t * cmd,
 
 
 
-null_handle create_security_process_token()
+redirect_process_attr_list::redirect_process_attr_list(HANDLE * handles, int handle_count)
 {
-	null_handle pstoken, newtoken;
-	ThrowIfFailed(OpenProcessToken(GetCurrentProcess(),
-								   TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY, 
-								   pstoken.get_address_of()));
-
-	ThrowIfFailed(DuplicateTokenEx(pstoken.get(),
-								   0, 
-								   nullptr, 
-								   SecurityImpersonation, 
-								   TokenPrimary, 
-								   newtoken.get_address_of()));
-
-	SID_IDENTIFIER_AUTHORITY sia = SECURITY_MANDATORY_LABEL_AUTHORITY;
-	PSID sid;
-	ThrowIfFailed(AllocateAndInitializeSid(&sia,
-										   1, 
-										   SECURITY_MANDATORY_LOW_RID,
-										   0, 0, 0, 0, 0, 0, 0, 
-										   &sid));
-
-	TOKEN_MANDATORY_LABEL tml{};
-	tml.Label.Attributes = SE_GROUP_INTEGRITY;
-	tml.Label.Sid = sid;
-	ThrowIfFailed(SetTokenInformation(newtoken.get(),
-									  TokenIntegrityLevel, 
-									  &tml, 
-									  sizeof(tml) + GetLengthSid(sid)));
-
-	return newtoken;
-}
-
-
-
-redirect_process_attr_list::redirect_process_attr_list(HANDLE in_read, HANDLE out_write, HANDLE err_write)
-{
-	unsigned long size;
+	unsigned long size = 0;
 	ThrowIfFailed(InitializeProcThreadAttributeList(nullptr, 1, 0, &size) || GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
 	LPPROC_THREAD_ATTRIBUTE_LIST attr_list;
@@ -314,15 +311,13 @@ redirect_process_attr_list::redirect_process_attr_list(HANDLE in_read, HANDLE ou
 
 	ThrowIfFailed(InitializeProcThreadAttributeList(attr_list, 1, 0, &size));
 
-	HANDLE handles[] = { in_read, out_write, err_write };
 	ThrowIfFailed(UpdateProcThreadAttribute(attr_list,
 											0, 
 											PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
 											handles,
-											sizeof(handles), 
+											sizeof(HANDLE)*handle_count, 
 											nullptr, 
 											nullptr));
-
 	m_attr_list = attr_list;
 }
 
@@ -339,6 +334,41 @@ redirect_process_attr_list::~redirect_process_attr_list()
 LPPROC_THREAD_ATTRIBUTE_LIST redirect_process_attr_list::get()
 {
 	return m_attr_list;
+}
+
+
+
+null_handle create_security_process_token()
+{
+	null_handle pstoken, newtoken;
+	ThrowIfFailed(OpenProcessToken(GetCurrentProcess(),
+		TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY,
+		pstoken.get_address_of()));
+
+	ThrowIfFailed(DuplicateTokenEx(pstoken.get(),
+		0,
+		nullptr,
+		SecurityImpersonation,
+		TokenPrimary,
+		newtoken.get_address_of()));
+
+	SID_IDENTIFIER_AUTHORITY sia = SECURITY_MANDATORY_LABEL_AUTHORITY;
+	PSID sid;
+	ThrowIfFailed(AllocateAndInitializeSid(&sia,
+		1,
+		SECURITY_MANDATORY_LOW_RID,
+		0, 0, 0, 0, 0, 0, 0,
+		&sid));
+
+	TOKEN_MANDATORY_LABEL tml{};
+	tml.Label.Attributes = SE_GROUP_INTEGRITY;
+	tml.Label.Sid = sid;
+	ThrowIfFailed(SetTokenInformation(newtoken.get(),
+		TokenIntegrityLevel,
+		&tml,
+		sizeof(tml) + GetLengthSid(sid)));
+
+	return newtoken;
 }
 
 

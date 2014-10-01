@@ -101,7 +101,7 @@ namespace SafeRunnerTest
             var info = new JudgeInfo
             {
                 Input = "Flash", 
-                MemoryLimitMb = 1, 
+                MemoryLimitMb = 10, 
                 Path = res.PathToAssembly, 
                 TimeLimitMs = 1000
             };
@@ -112,22 +112,23 @@ namespace SafeRunnerTest
             // Assert
             result.Succeed.Should().BeTrue();
             result.Output.Should().Be("Hey Flash!");
-
         }
 
         public const string Code = 
-            "using System;                                    " +
-            "                                                 " +
-            "namespace CsConsole                              " +
-            "{                                                " +
-            "    class Program                                " +
-            "    {                                            " +
-            "        static void Main(string[] args)          " +
-            "        {                                        " +
-            "            var str = Console.In.ReadToEnd();    " +
-            "            Console.WriteLine(\"Hey {0}!\", str);" +
-            "        }                                        " +
-            "    }                                            " +
-            "}                                                ";
+            "using System;                                        " +
+            "using System.Text;                                   " +
+            "                                                     " +
+            "namespace CsConsole                                  " +
+            "{                                                    " +
+            "    class Program                                    " +
+            "    {                                                " +
+            "        static void Main(string[] args)              " +
+            "        {                                            " +
+            "            Console.InputEncoding = Encoding.Unicode;" +
+            "            var str = Console.In.ReadToEnd();        " +
+            "            Console.Write(\"Hey {0}!\", str);        " +
+            "        }                                            " +
+            "    }                                                " +
+            "}                                                    ";
     }
 }
