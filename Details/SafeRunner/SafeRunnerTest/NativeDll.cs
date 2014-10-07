@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -27,6 +28,7 @@ namespace SafeRunnerTest
             {
                 var ok = Judge(ref aji, ref ajr);
                 var result = (JudgeResult) ajr;
+                result.ErrorMessage = GetWin32ErrorMessage(result.ErrorCode);
                 result.Succeed = ok;
                 return result;
             }
@@ -34,6 +36,12 @@ namespace SafeRunnerTest
             {
                 FreeJudgeResult(ref ajr);
             }
+        }
+
+        private static string GetWin32ErrorMessage(int errorCode)
+        {
+            var win32Exception = new Win32Exception(errorCode);
+            return win32Exception.Message;
         }
 
         [DllImport("safe_runner", EntryPoint = "cluck")]
@@ -128,8 +136,8 @@ namespace SafeRunnerTest
     [StructLayout(LayoutKind.Sequential)]
     public struct ApiJudgeResult
     {
-        public readonly uint ErrorCode;
-        public readonly uint ExceptionCode;
+        public readonly int ErrorCode;
+        public readonly int ExceptionCode;
         public readonly int TimeMs;
         public readonly float MemoryMb;
         public IntPtr Output;
@@ -139,9 +147,9 @@ namespace SafeRunnerTest
 
     public class JudgeResult
     {
-        public uint ErrorCode { get; set; }
+        public int ErrorCode { get; set; }
 
-        public uint ExceptionCode { get; set; }
+        public int ExceptionCode { get; set; }
 
         public int TimeMs { get; set; }
 

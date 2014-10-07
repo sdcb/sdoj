@@ -12,6 +12,24 @@ namespace SafeRunnerTest
     public class SecurityTest
     {
         [Fact]
+        public void TerminateProcessById_should_can_compile()
+        {
+            // Arrange
+            var compiler = new CSharpCodeProvider();
+            var options = new CompilerParameters
+            {
+                GenerateExecutable = true
+            };
+            options.ReferencedAssemblies.Add("System.dll");
+
+            // Arrange
+            var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
+
+            // Assert
+            asm.Errors.HasErrors.Should().BeFalse();
+        }
+
+        [Fact]
         public void Process_should_not_terminate_other_process()
         {
             Process ps = null;
@@ -19,19 +37,6 @@ namespace SafeRunnerTest
             try
             {
                 // Arrange
-                const string source = "using System;" +
-                                      "using System.Diagnostics;" +
-                                      "" +
-                                      "class Program" +
-                                      "{" +
-                                      "    static void Main(string[] args)" +
-                                      "    {" +
-                                      "        var line = Console.ReadLine();" +
-                                      "        var id = int.Parse(line);" +
-                                      "        var ps = Process.GetProcessById(id);" +
-                                      "        ps.Kill();" +
-                                      "    }" +
-                                      "}";
                 ps = Process.Start("calc");
                 Assert.NotNull(ps);
 
@@ -41,7 +46,7 @@ namespace SafeRunnerTest
                     GenerateExecutable = true
                 };
                 options.ReferencedAssemblies.Add("System.dll");
-                var asm = compiler.CompileAssemblyFromSource(options, source);
+                var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
                 asm.Errors.HasErrors.Should().BeFalse();
 
                 var info = new JudgeInfo
@@ -64,5 +69,19 @@ namespace SafeRunnerTest
                 ps.Kill();
             }
         }
+
+        private const string TerminateProcessByIdSource = "using System;" +
+                                                          "using System.Diagnostics;" +
+                                                          "" +
+                                                          "class Program" +
+                                                          "{" +
+                                                          "    static void Main(string[] args)" +
+                                                          "    {" +
+                                                          "        var line = Console.ReadLine();" +
+                                                          "        var id = int.Parse(line);" +
+                                                          "        var ps = Process.GetProcessById(id);" +
+                                                          "        ps.Kill();" +
+                                                          "    }" +
+                                                          "}";
     }
 }

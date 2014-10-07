@@ -45,7 +45,7 @@ namespace SafeRunnerTest
             var calc = new JudgeInfo
             {
                 Path = "calc.exe", 
-                MemoryLimitMb = 1.0f, 
+                MemoryLimitMb = 10.0f, 
                 TimeLimitMs = 1000, 
                 Input = null
             };
@@ -56,7 +56,6 @@ namespace SafeRunnerTest
             // assert
             result.Succeed.Should().BeTrue();
             result.ErrorCode.Should().Be(0);
-            result.ErrorMessage.Should().BeNull();
             result.MemoryMb.Should().BeGreaterThan(0);
         }
 
