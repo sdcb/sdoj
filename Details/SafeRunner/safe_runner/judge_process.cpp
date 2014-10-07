@@ -53,9 +53,9 @@ inline int64_t ms_to_ns100(int ms);
 
 inline int ns100_to_ms(int64_t ns100);
 
-std::wstring ansi_to_unicode(std::string const & ansi);
+std::wstring s2ws(const std::string& s);
 
-std::string unicode_to_ansi(std::string const & unicode);
+std::string ws2s(const std::wstring& s);
 
 process_information create_security_process(wchar_t * cmd, 
 											HANDLE in_read, 
@@ -85,40 +85,62 @@ void judge_process::execute()
 															  pipe_handles.out_write.get(), 
 															  pipe_handles.err_write.get(), 
 															  job.get()) };
-	DWORD writed;
-	ThrowIfFailed(WriteFile(pipe_handles.in_write.get(),
-		m_judge_info.input.c_str(),
-		m_judge_info.input.size() * sizeof(wchar_t),
-		&writed,
-		nullptr));
-	pipe_handles.in_write.reset();
 
+	// write task
+	auto write_task = std::thread([&](){
+		DWORD writed;
+		BOOL result = WriteFile(pipe_handles.in_write.get(),
+								m_judge_info.input.c_str(),
+								m_judge_info.input.size() * sizeof(wchar_t),
+								&writed,
+								nullptr);
+
+		pipe_handles.in_write.reset();
+	});
+	
 	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 
-	char text[4096];
-	DWORD read{};
-	if (PeekNamedPipe(pipe_handles.out_read.get(), 
-					  (void*)text, 
-					  sizeof(text), 
-					  &read, 
-					  nullptr, 
-					  nullptr) && read > 0)
-	{
-		VERIFY(ReadFile(pipe_handles.out_read.get(), 
-					(void*)text, 
-					sizeof(text),
-					&read, 
-					nullptr));
-		text[read] = '\0';
-	}
+	// read task
+	auto read_task = std::thread([&](){
+		char buffer[4096];
+		DWORD read;
+		std::string ansi_buffer;
 
-	int c;
-	c = MultiByteToWideChar(CP_ACP, 0, text, read, nullptr, 0);
-	output.resize(read + 1);
-	MultiByteToWideChar(CP_ACP, 0, text, read, &output[0], output.size());
+		while (true)
+		{
+			BOOL result = ReadFile(pipe_handles.out_read.get(),
+								   buffer,
+								   sizeof(buffer)-1,
+								   &read,
+								   nullptr);
 
+			if (result)
+			{
+				buffer[read] = '\0';
+
+				ansi_buffer.append(buffer, read);
+			}
+			else if (GetLastError() == ERROR_OPERATION_ABORTED)
+			{
+				break;
+			}
+		}
+
+		output.assign(s2ws(ansi_buffer));
+	});
+	
+	// wait the process ( terminate in job close )
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
-											static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+		static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+
+	// terminate io.
+	{
+		BOOL cancel_result1, cancel_result2;
+		cancel_result2 = CancelSynchronousIo(write_task.native_handle());
+		cancel_result1 = CancelSynchronousIo(read_task.native_handle());
+		write_task.join();
+		read_task.join();
+	}
 
 	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
 	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
@@ -134,8 +156,7 @@ void judge_process::execute()
 	{
 		time = basic_info.TotalUserTime.QuadPart;
 	}
-	memory = extend_info.PeakJobMemoryUsed;
-	
+	memory = extend_info.PeakJobMemoryUsed;	
 }
 
 
@@ -282,16 +303,6 @@ process_information create_security_process(wchar_t * cmd,
 									  nullptr, 
 									  reinterpret_cast<LPSTARTUPINFO>(&si), 
 									  &pi));
-	//ThrowIfFailed(CreateProcess(nullptr, 
-	//							&cmd[0], 
-	//							nullptr, 
-	//							nullptr, 
-	//							true, 
-	//							flags, 
-	//							nullptr, 
-	//							nullptr, 
-	//							&si.StartupInfo, 
-	//							&pi));
 
 	ThrowIfFailed(AssignProcessToJobObject(job, pi.hProcess));
 
@@ -387,4 +398,26 @@ process_information::process_information(PROCESS_INFORMATION const & that)
 	ThrowIfFailed(thread_handle.reset(that.hThread));
 	process_id = that.dwProcessId;
 	thread_id = that.dwThreadId;
+}
+
+
+
+std::wstring s2ws(const std::string& s)
+{
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	std::wstring r(len, L'\0');
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, &r[0], len);
+	return r;
+}
+
+std::string ws2s(const std::wstring& s)
+{
+	int len;
+	int slength = (int)s.length() + 1;
+	len = WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, 0, 0, 0, 0);
+	std::string r(len, '\0');
+	WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
+	return r;
 }
