@@ -32,42 +32,35 @@ namespace SafeRunnerTest
         [Fact]
         public void Process_should_not_terminate_other_process()
         {
-            Process ps = null;
+            // Arrange
+            var ps = Process.Start("calc");
+            Assert.NotNull(ps);
 
-            try
+            var compiler = new CSharpCodeProvider();
+            var options = new CompilerParameters
             {
-                // Arrange
-                ps = Process.Start("calc");
-                Assert.NotNull(ps);
+                GenerateExecutable = true
+            };
+            options.ReferencedAssemblies.Add("System.dll");
+            var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
+            asm.Errors.HasErrors.Should().BeFalse();
 
-                var compiler = new CSharpCodeProvider();
-                var options = new CompilerParameters
-                {
-                    GenerateExecutable = true
-                };
-                options.ReferencedAssemblies.Add("System.dll");
-                var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
-                asm.Errors.HasErrors.Should().BeFalse();
-
-                var info = new JudgeInfo
-                {
-                    Input = ps.Id.ToString(CultureInfo.InvariantCulture),
-                    MemoryLimitMb = 10.0f,
-                    Path = asm.PathToAssembly,
-                    TimeLimitMs = 1000
-                };
-
-                // Act
-                var result = NativeDll.Judge(info);
-
-                // Assert
-                result.ErrorCode.Should().NotBe(0);
-            }
-            finally
+            var info = new JudgeInfo
             {
-                // Clean up
-                ps.Kill();
-            }
+                Input = ps.Id.ToString(CultureInfo.InvariantCulture),
+                MemoryLimitMb = 10.0f,
+                Path = asm.PathToAssembly,
+                TimeLimitMs = 1000
+            };
+
+            // Act
+            var result = NativeDll.Judge(info);
+
+            // Assert
+            result.ExitCode.Should().NotBe(0);
+
+            // Clean up
+            ps.Kill();
         }
 
         private const string TerminateProcessByIdSource = "using System;" +

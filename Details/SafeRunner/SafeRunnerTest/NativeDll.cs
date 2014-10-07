@@ -131,6 +131,7 @@ namespace SafeRunnerTest
     {
         public readonly int ErrorCode;
         public readonly int ExceptionCode;
+        public readonly int ExitCode;
         public readonly int TimeMs;
         public readonly float MemoryMb;
         public IntPtr Output;
@@ -142,6 +143,8 @@ namespace SafeRunnerTest
         public int ErrorCode { get; set; }
 
         public int ExceptionCode { get; set; }
+
+        public int ExitCode { get; set; }
 
         public int TimeMs { get; set; }
 
@@ -177,6 +180,8 @@ namespace SafeRunnerTest
 
             var win32Exception = new Win32Exception(info.ErrorCode);
             result.ErrorMessage = win32Exception.Message;
+
+            result.ExitCode = info.ExitCode;
 
             return result;
         }

@@ -31,6 +31,7 @@ struct api_judge_result
 {
 	uint32_t error_code;
 	uint32_t except_code;
+	int32_t exit_code;
 	int32_t time;
 	float memory;
 	wchar_t * output;
@@ -67,6 +68,8 @@ private:
 	uint32_t error_code;
 
 	uint32_t except_code;
+
+	DWORD exit_code;
 
 	int64_t time;
 

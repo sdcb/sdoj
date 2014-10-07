@@ -132,6 +132,7 @@ void judge_process::execute()
 	// wait the process ( terminate in job close )
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
 		static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+	BOOL ok = GetExitCodeProcess(process_info.process_handle.get(), &exit_code);
 
 	// terminate io.
 	{
@@ -165,6 +166,7 @@ void judge_process::get_result(api_judge_result & result)
 {
 	
 	result.error_code  = error_code;
+	result.exit_code   = exit_code;
 	result.except_code = except_code;
 	result.memory      = memory/1024/1024.0f;
 	result.time        = ns100_to_ms(time);
