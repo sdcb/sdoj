@@ -55,12 +55,46 @@ namespace SafeRunnerTest
 
             // Act
             var result = NativeDll.Judge(info);
+            var that = Process.GetProcessById(ps.Id);
 
             // Assert
             result.ExitCode.Should().NotBe(0);
+            that.Should().NotBeNull();
 
             // Clean up
             ps.Kill();
+        }
+
+        [Fact]
+        public void Not_using_judge_should_exit_calc()
+        {
+            // Arrange
+            var ps = Process.Start("calc");
+            var compiler = new CSharpCodeProvider();
+            var options = new CompilerParameters
+            {
+                GenerateExecutable = true
+            };
+            options.ReferencedAssemblies.Add("System.dll");
+            var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
+
+            var pi = new ProcessStartInfo(asm.PathToAssembly)
+            {
+                RedirectStandardInput = true, 
+                UseShellExecute = false, 
+            };
+
+            // Act
+            var asmPs = Process.Start(pi);
+            asmPs.StandardInput.Write(ps.Id);
+            asmPs.StandardInput.Close();
+            asmPs.WaitForExit();
+
+            // Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Process.GetProcessById(ps.Id);
+            });
         }
 
         private const string TerminateProcessByIdSource = "using System;" +
