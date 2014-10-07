@@ -97,6 +97,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="BasicJudgeTest.cs" />
     <Compile Include="BasicTest.cs" />
     <Compile Include="NativeDll.cs" />
     <Compile Include="ProcessRun.cs" />
