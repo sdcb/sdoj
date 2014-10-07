@@ -39,12 +39,6 @@ void free_judge_result(api_judge_result & result)
 		delete[] result.exception;
 		result.exception = nullptr;
 	}
-
-	if (result.error != nullptr)
-	{
-		delete[] result.error;
-		result.error = nullptr;
-	}
 }
 
 

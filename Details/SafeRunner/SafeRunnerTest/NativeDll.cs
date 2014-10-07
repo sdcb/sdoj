@@ -28,7 +28,6 @@ namespace SafeRunnerTest
             {
                 var ok = Judge(ref aji, ref ajr);
                 var result = (JudgeResult) ajr;
-                result.ErrorMessage = GetWin32ErrorMessage(result.ErrorCode);
                 result.Succeed = ok;
                 return result;
             }
@@ -36,12 +35,6 @@ namespace SafeRunnerTest
             {
                 FreeJudgeResult(ref ajr);
             }
-        }
-
-        private static string GetWin32ErrorMessage(int errorCode)
-        {
-            var win32Exception = new Win32Exception(errorCode);
-            return win32Exception.Message;
         }
 
         [DllImport("safe_runner", EntryPoint = "cluck")]
@@ -141,7 +134,6 @@ namespace SafeRunnerTest
         public readonly int TimeMs;
         public readonly float MemoryMb;
         public IntPtr Output;
-        public IntPtr ErrorMessage;
         public IntPtr ExceptionMessage;
     };
 
@@ -177,14 +169,14 @@ namespace SafeRunnerTest
             {
                 result.Output = Marshal.PtrToStringUni(info.Output);
             }
-            if (info.ErrorMessage != IntPtr.Zero)
-            {
-                result.ErrorMessage = Marshal.PtrToStringUni(info.ErrorMessage);
-            }
+
             if (info.ExceptionMessage != IntPtr.Zero)
             {
                 result.ExceptionMessage = Marshal.PtrToStringUni(info.ExceptionMessage);
             }
+
+            var win32Exception = new Win32Exception(info.ErrorCode);
+            result.ErrorMessage = win32Exception.Message;
 
             return result;
         }

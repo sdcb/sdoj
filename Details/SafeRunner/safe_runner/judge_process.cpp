@@ -174,12 +174,6 @@ void judge_process::get_result(api_judge_result & result)
 		result.output = new wchar_t[output.size() + 1];
 		wcscpy_s(result.output, output.size(), output.c_str());
 	}
-
-	if (error_code != 0 && error.size() > 0)
-	{
-		result.error = new wchar_t[error.size() + 1];
-		wcscpy_s(result.error, error.size(), error.c_str());
-	}
 	
 	if (except_code != 0 && exception.size() > 0)
 	{

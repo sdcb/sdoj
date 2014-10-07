@@ -34,7 +34,6 @@ struct api_judge_result
 	int32_t time;
 	float memory;
 	wchar_t * output;
-	wchar_t * error;
 	wchar_t * exception;
 };
 
