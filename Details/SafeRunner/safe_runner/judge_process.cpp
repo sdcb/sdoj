@@ -242,19 +242,13 @@ inline int32_t ns100_to_ms(int64_t ns100)
 
 pipe_handles::pipe_handles()
 {
-	SECURITY_ATTRIBUTES sa{ sizeof(sa), nullptr, true };
-
-	/*ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
+	ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), nullptr, 0));
 	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), nullptr, 0));
-	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));*/
+	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), nullptr, 0));
 
-	ThrowIfFailed(CreatePipe(in_read.get_address_of(), in_write.get_address_of(), &sa, 0));
-	ThrowIfFailed(CreatePipe(out_read.get_address_of(), out_write.get_address_of(), &sa, 0));
-	ThrowIfFailed(CreatePipe(err_read.get_address_of(), err_write.get_address_of(), &sa, 0));
-
-	/*ThrowIfFailed(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
+	ThrowIfFailed(SetHandleInformation(in_read.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
 	ThrowIfFailed(SetHandleInformation(out_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
-	ThrowIfFailed(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));*/
+	ThrowIfFailed(SetHandleInformation(err_write.get(), HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT));
 }
 
 
