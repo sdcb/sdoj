@@ -1,15 +1,14 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using FluentAssertions;
 using Microsoft.CSharp;
 using Xunit;
 
-namespace SafeRunnerTest
+namespace SafeRunnerTest.SecurityTest
 {
-    public class SecurityTest
+    public class CannotTerminateProcessTest
     {
         [Fact]
         public void TerminateProcessById_should_can_compile()
