@@ -103,6 +103,8 @@
     <Compile Include="ProcessRun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityTest\CannotTerminateProcessTest.cs" />
+    <Compile Include="SecurityTest\InfinateLoopTimeoutTest.cs" />
+    <Compile Include="SecurityTest\MemoryLimitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,6 +2,8 @@
 #include "handle.h"
 #include "judge_process.h"
 
+#include <Psapi.h>
+
 struct pipe_handles
 {
 	pipe_handles();
@@ -157,7 +159,7 @@ void judge_process::execute()
 	{
 		time = basic_info.TotalUserTime.QuadPart;
 	}
-	memory = extend_info.PeakJobMemoryUsed;	
+	memory = extend_info.PeakJobMemoryUsed;
 }
 
 
@@ -191,21 +193,28 @@ null_handle create_job_object(judge_info const & info)
 	null_handle job{ CreateJobObject(nullptr, nullptr) };
 	ThrowIfFailed(job);
 
-	
+	// 注意：
+	// 此处不能对JOB_OBJECT_LIMIT_PROCESS_MEMORY进行限制
+	// 因为如果限制，则内存使用峰值的数值时将不正确。
+
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_limit{};
-	extend_limit.ProcessMemoryLimit										= info.memory_limit;
+	extend_limit.JobMemoryLimit											= info.memory_limit;
+	/*extend_limit.ProcessMemoryLimit                                     = info.memory_limit;*/
 	extend_limit.BasicLimitInformation.ActiveProcessLimit				= 1;
 	extend_limit.BasicLimitInformation.PerProcessUserTimeLimit.QuadPart = info.time_limit;
-	extend_limit.BasicLimitInformation.LimitFlags						= JOB_OBJECT_LIMIT_PROCESS_MEMORY             |
+	extend_limit.BasicLimitInformation.LimitFlags						= JOB_OBJECT_LIMIT_JOB_MEMORY                 |
+																		  /*JOB_OBJECT_LIMIT_PROCESS_MEMORY             |*/
 																		  JOB_OBJECT_LIMIT_ACTIVE_PROCESS             |
 																		  JOB_OBJECT_LIMIT_PROCESS_TIME               |
 																		  JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION |
-																		  JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+																		  JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE          |
+																		  0;
 	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_limit, sizeof(extend_limit)));
 	
 
 	JOBOBJECT_BASIC_UI_RESTRICTIONS ui_limit;
-	ui_limit.UIRestrictionsClass = JOB_OBJECT_UILIMIT_HANDLES			|
+	ui_limit.UIRestrictionsClass = 0                                    |
+								   JOB_OBJECT_UILIMIT_HANDLES			|
 								   JOB_OBJECT_UILIMIT_READCLIPBOARD   	|
 								   JOB_OBJECT_UILIMIT_WRITECLIPBOARD  	|
 								   JOB_OBJECT_UILIMIT_SYSTEMPARAMETERS	|

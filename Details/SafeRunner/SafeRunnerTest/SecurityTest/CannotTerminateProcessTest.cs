@@ -32,9 +32,6 @@ namespace SafeRunnerTest.SecurityTest
         public void Process_should_not_terminate_other_process()
         {
             // Arrange
-            var ps = Process.Start("calc");
-            Assert.NotNull(ps);
-
             var compiler = new CSharpCodeProvider();
             var options = new CompilerParameters
             {
@@ -44,6 +41,7 @@ namespace SafeRunnerTest.SecurityTest
             var asm = compiler.CompileAssemblyFromSource(options, TerminateProcessByIdSource);
             asm.Errors.HasErrors.Should().BeFalse();
 
+            var ps = Process.Start("calc");
             var info = new JudgeInfo
             {
                 Input = ps.Id.ToString(CultureInfo.InvariantCulture),
@@ -68,7 +66,6 @@ namespace SafeRunnerTest.SecurityTest
         public void Not_using_judge_should_exit_calc()
         {
             // Arrange
-            var ps = Process.Start("calc");
             var compiler = new CSharpCodeProvider();
             var options = new CompilerParameters
             {
@@ -84,6 +81,7 @@ namespace SafeRunnerTest.SecurityTest
             };
 
             // Act
+            var ps = Process.Start("calc");
             var asmPs = Process.Start(pi);
             asmPs.StandardInput.Write(ps.Id);
             asmPs.StandardInput.Close();
