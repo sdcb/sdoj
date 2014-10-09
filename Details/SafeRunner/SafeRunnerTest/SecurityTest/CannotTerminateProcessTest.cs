@@ -47,7 +47,7 @@ namespace SafeRunnerTest.SecurityTest
                 Input = ps.Id.ToString(CultureInfo.InvariantCulture),
                 MemoryLimitMb = 10.0f,
                 Path = asm.PathToAssembly,
-                TimeLimitMs = 1000
+                TimeLimitMs = 100
             };
 
             // Act
