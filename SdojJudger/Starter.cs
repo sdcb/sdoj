@@ -7,12 +7,12 @@ using SdojJudger.Models;
 
 namespace SdojJudger
 {
-    public class Runner
+    public class Starter
     {
         public async Task Run()
         {
             var authCookie = await AuthenticateUser(AppSettings.UserName, AppSettings.Password);
-            _log = LogManager.GetLogger(typeof (Runner));
+            _log = LogManager.GetLogger(typeof(Starter));
             
             if (authCookie == null)
             {

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using log4net;
@@ -10,6 +10,7 @@ using log4net.Util;
 using SdojJudger.Compiler;
 using SdojJudger.Database;
 using SdojJudger.Models;
+using SdojJudger.Runner;
 
 namespace SdojJudger
 {
@@ -19,7 +20,7 @@ namespace SdojJudger
         {
             _spush = spush;
             _log = LogManager.GetLogger(typeof (JudgeProcess));
-            _client = App.Runner.GetClient();
+            _client = App.Starter.GetClient();
         }
 
         public async Task ExecuteAsync()
@@ -54,10 +55,54 @@ namespace SdojJudger
                 .Where(x => dataIds.Contains(x.Id))
                 .ToArrayAsync();
 
-            var runTime = new TimeSpan();
-            float peakMemory = 0;
+            // Judging
+            await Judge(datas, asm);
+        }
 
-            await _client.Update(_spush.Id, SolutionState.CompileError, (int)runTime.TotalMilliseconds, peakMemory);
+        private async Task Judge(IEnumerable<QuestionData> datas, CompilerResults asm)
+        {
+            int runTimeMs = 0;
+            float peakMemoryMb = 0;
+
+            foreach (var data in datas)
+            {
+                var info = new JudgeInfo
+                {
+                    Input = data.Input,
+                    MemoryLimitMb = data.MemoryLimitMb,
+                    Path = asm.PathToAssembly,
+                    TimeLimitMs = data.TimeLimit,
+                };
+
+                var result = NativeDll.Judge(info);
+
+                runTimeMs += result.TimeMs;
+                peakMemoryMb = Math.Max(peakMemoryMb, result.MemoryMb);
+
+                if (result.ErrorCode != 0 || !result.Succeed)
+                {
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // system error
+                }
+                else if (result.ExitCode != 0)
+                {
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
+                }
+                else if (result.TimeMs > data.TimeLimit)
+                {
+                    await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, peakMemoryMb);
+                }
+                else if (result.MemoryMb > data.MemoryLimitMb)
+                {
+                    await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, peakMemoryMb);
+                }
+
+                var trimed = result.Output.TrimEnd();
+                if (trimed != data.Output)
+                {
+                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
+                }
+            }
+            await _client.Update(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb);
         }
 
         private async Task UpdateQuestionData()

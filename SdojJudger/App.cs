@@ -14,8 +14,8 @@ namespace SdojJudger
 
             try
             {
-                Runner = new Runner();
-                var task = Runner.Run();
+                Starter = new Starter();
+                var task = Starter.Run();
                 task.Wait();
 
                 while (true)
@@ -27,7 +27,7 @@ namespace SdojJudger
                     }
                     if (line == "restart")
                     {
-                        task = Runner.Restart();
+                        task = Starter.Restart();
                         task.Wait();
                     }
                 }
@@ -42,7 +42,7 @@ namespace SdojJudger
             }
         }
 
-        public static Runner Runner { get; set; }
+        public static Starter Starter { get; set; }
 
         private static ILog _log;
     }

@@ -91,9 +91,13 @@ void judge_process::execute()
 	// write task
 	auto write_task = std::thread([&](){
 		DWORD writed;
+		std::string ansi_string = ws2s(m_judge_info.input);
+		size_t length = ansi_string.length();
+		if (*ansi_string.rbegin() == '\0') --length;
+
 		BOOL result = WriteFile(pipe_handles.in_write.get(),
-								m_judge_info.input.c_str(),
-								m_judge_info.input.size() * sizeof(wchar_t),
+								ansi_string.c_str(),
+								length,
 								&writed,
 								nullptr);
 

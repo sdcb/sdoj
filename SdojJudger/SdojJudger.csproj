@@ -138,8 +138,11 @@
     <Compile Include="Models\QuestionDataHashModel.cs" />
     <Compile Include="Models\SolutionState.cs" />
     <Compile Include="App.cs" />
+    <Compile Include="Runner\JudgeInfo.cs" />
+    <Compile Include="Runner\JudgeResult.cs" />
+    <Compile Include="Runner\NativeDll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner.cs" />
+    <Compile Include="Starter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -165,6 +168,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Debug\safe_runner.dll">
+      <Link>Reference\safe_runner.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Debug\safe_runner.pdb">
+      <Link>Reference\safe_runner.pdb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
