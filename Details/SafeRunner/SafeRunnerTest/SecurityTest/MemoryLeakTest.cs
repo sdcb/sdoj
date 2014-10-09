@@ -11,8 +11,8 @@ namespace SafeRunnerTest.SecurityTest
 {
     public class MemoryLeakTest
     {
-        [Fact(Skip="性能测试")]
-        [InlineData(1000)]
+        [Theory(Timeout = 1000)]
+        [InlineData(100)]
         public void Judge_run_many_times_should_not_leak_memory(int times)
         {
             // Arrange
