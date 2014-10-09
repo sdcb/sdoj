@@ -46,7 +46,7 @@ namespace SafeRunnerTest
             {
                 Path = "calc.exe", 
                 MemoryLimitMb = 10.0f, 
-                TimeLimitMs = 1000, 
+                TimeLimitMs = 100, 
                 Input = null
             };
 

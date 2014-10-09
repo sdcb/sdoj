@@ -11,8 +11,8 @@ namespace SafeRunnerTest.SecurityTest
 {
     public class MemoryLeakTest
     {
-        [Theory(Timeout = 1000)]
-        [InlineData(100)]
+        [Theory]
+        [InlineData(20)]
         public void Judge_run_many_times_should_not_leak_memory(int times)
         {
             // Arrange
@@ -32,6 +32,16 @@ namespace SafeRunnerTest.SecurityTest
             };
 
             // Act & Assert
+            GC.Collect();
+            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
+
+            Parallel.For(0, times, (i) => NativeDll.Judge(info));
+
+            GC.Collect();
+            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
+
+            Parallel.For(0, times, (i) => NativeDll.Judge(info));
+
             GC.Collect();
             Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
 
