@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
+using Microsoft.VisualBasic.Devices;
 using SdojJudger.Compiler;
 using SdojJudger.Database;
 using SdojJudger.Models;
@@ -26,6 +26,25 @@ namespace SdojJudger
         public async Task ExecuteAsync()
         {
             // 获取并锁定解答的详情。
+            if (!CompilerProvider.IsLanguageAvailable(_spush))
+            {
+                _log.InfoExt(() => string.Format("Skipped compiling {0}, Because {1} compiler is not availabel.", 
+                        _spush.Id, _spush.Language));
+                return;
+            }
+            {
+                var info = new ComputerInfo();
+                if (info.AvailablePhysicalMemory < _spush.FullMemoryLimitMb*1024*1024)
+                {
+                    _log.InfoExt(
+                        () =>
+                            string.Format("Skipped judging {0}, because system memory running low(Req {1}/ Need {2}).",
+                                _spush.Id, info.AvailablePhysicalMemory, _spush.FullMemoryLimitMb*1024*1024)
+                        );
+                    return;
+                }
+            }
+
             _sfull = await _client.Lock(_spush.Id);
             if (_sfull == null)
             {
@@ -42,7 +61,7 @@ namespace SdojJudger
             }
             var asm = compiler.Compile(_sfull.Source);
 
-            if (asm.Errors.HasErrors)
+            if (asm.HasErrors)
             {
                 await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
                 return;
@@ -59,7 +78,7 @@ namespace SdojJudger
             await Judge(datas, asm);
         }
 
-        private async Task Judge(IEnumerable<QuestionData> datas, CompilerResults asm)
+        private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm)
         {
             int runTimeMs = 0;
             float peakMemoryMb = 0;
@@ -82,24 +101,29 @@ namespace SdojJudger
                 if (result.ErrorCode != 0 || !result.Succeed)
                 {
                     await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // system error
+                    return;
                 }
-                else if (result.ExitCode != 0)
-                {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
-                }
-                else if (result.TimeMs > data.TimeLimit)
+                if (result.TimeMs >= data.TimeLimit)
                 {
                     await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, peakMemoryMb);
+                    return;
                 }
-                else if (result.MemoryMb > data.MemoryLimitMb)
+                if (result.MemoryMb >= data.MemoryLimitMb)
                 {
                     await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, peakMemoryMb);
+                    return;
+                }
+                if (result.ExitCode != 0)
+                {
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
+                    return;
                 }
 
                 var trimed = result.Output.TrimEnd();
                 if (trimed != data.Output)
                 {
                     await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
+                    return;
                 }
             }
             await _client.Update(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb);

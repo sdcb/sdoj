@@ -1,5 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using SdojJudger.Models;
+﻿using SdojJudger.Models;
 
 namespace SdojJudger.Compiler
 {
@@ -13,16 +12,31 @@ namespace SdojJudger.Compiler
             }
             if (model.Language == Languages.Cpp)
             {
-                return new VisualBasicCompiler();
+                return new CppCompiler();
             }
             if (model.Language == Languages.Vb)
             {
                 return new VisualBasicCompiler();
             }
+            if (model.Language == Languages.C)
+            {
+                return new CCompiler();
+            }
 
             return null;
         }
 
-        public abstract CompilerResults Compile(string source);
+        public static bool IsLanguageAvailable(SolutionPushModel model)
+        {
+            if (model.Language == Languages.C || model.Language == Languages.Cpp)
+            {
+                return AppSettings.VcCommandline != null &&
+                       AppSettings.GccCommandline != null;
+            }
+            // else
+            return true;
+        }
+
+        public abstract CompileResult Compile(string source);
     }
 }

@@ -4,13 +4,13 @@ using System.IO;
 
 namespace SdojJudger.Compiler
 {
-    public class CppCompiler : CompilerProvider
+    public class CCompiler : CompilerProvider
     {
         public override CompileResult Compile(string source)
         {
             var filename = GetTempFileNameWithoutExtension();
 
-            File.WriteAllText(filename + ".cpp", source);
+            File.WriteAllText(filename + ".c", source);
 
             CompileCppFile(filename);
 
@@ -39,43 +39,16 @@ namespace SdojJudger.Compiler
 
         private static void CompileCppFile(string sourceFile)
         {
-            //if (AppSettings.GccCommandline != null)
-            //{
-            //    CompileByGcc(sourceFile);
-            //    return;
-            //}
-            if (AppSettings.VcCommandline != null)
-            {
-                CompileByVc(sourceFile);
-                return;
-            }
-        }
-
-        private static void CompileByGcc(string sourceFile)
-        {
-            // C11
-            // gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
-            // -std=c11 -Wl,--stack=67108864 -O2 -o %1.exe %1
-
-            // C++11
-            // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
-            // -x c++ -std=c++11 -Wl,--stack=67108864 -O2 -o %1.exe %1
-
-            throw new NotImplementedException();
-        }
-
-        private static void CompileByVc(string sourceFile)
-        {
             var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
-            var cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
-                     Environment.NewLine +
+            var cl = string.Format("cl \"{0}.c\" /Fe:\"{0}.exe\" /nologo /Ox > \"{0}.txt\"", sourceFile) + 
+                     Environment.NewLine + 
                      "exit";
             var info = new ProcessStartInfo("cmd.exe")
             {
-                Arguments = arg,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardInput = true,
+                Arguments = arg, 
+                UseShellExecute = false, 
+                CreateNoWindow = true, 
+                RedirectStandardInput = true, 
             };
             var ps = Process.Start(info);
 
