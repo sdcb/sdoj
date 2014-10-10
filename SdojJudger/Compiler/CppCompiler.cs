@@ -53,6 +53,14 @@ namespace SdojJudger.Compiler
 
         private static void CompileByGcc(string sourceFile)
         {
+            // C11
+            // gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
+            // -std=c11 -Wl,--stack=67108864 -O2 -o %1.exe %1
+
+            // C++11
+            // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
+            // -x c++ -std=c++11 -Wl,--stack=67108864 -O2 -o %1.exe %1
+
             throw new NotImplementedException();
         }
 
