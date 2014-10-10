@@ -102,17 +102,17 @@ namespace SdojJudger
                 {
                     await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // system error
                 }
-                else if (result.ExitCode != 0)
-                {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
-                }
-                else if (result.TimeMs > data.TimeLimit)
+                else if (result.TimeMs >= data.TimeLimit)
                 {
                     await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, peakMemoryMb);
                 }
-                else if (result.MemoryMb > data.MemoryLimitMb)
+                else if (result.MemoryMb >= data.MemoryLimitMb)
                 {
                     await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, peakMemoryMb);
+                }
+                else if (result.ExitCode != 0)
+                {
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
                 }
 
                 var trimed = result.Output.TrimEnd();
