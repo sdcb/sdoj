@@ -23,6 +23,6 @@ namespace SdojJudger.Compiler
             return null;
         }
 
-        public abstract CompilerResults Compile(string source);
+        public abstract CompileResult Compile(string source);
     }
 }

@@ -25,7 +25,7 @@ namespace SdojJudger
                 _log.DebugExt(() => JsonConvert.SerializeObject(result));
                 return result;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException )
             {
                 return null;
             }

@@ -4,11 +4,11 @@ namespace SdojJudger.Compiler
 {
     public class CppCompiler : CompilerProvider
     {
-        public override CompilerResults Compile(string source)
+        public override CompileResult Compile(string source)
         {
             var result = new CompilerResults(null);
             result.Errors.Add(new CompilerError());
-            return result;
+            return new CompileResult(result);
         }
     }
 }
