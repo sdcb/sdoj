@@ -123,6 +123,7 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="Compiler\CompileResult.cs" />
     <Compile Include="Compiler\CompilerProvider.cs" />
+    <Compile Include="Compiler\CCompiler.cs" />
     <Compile Include="Compiler\CppCompiler.cs" />
     <Compile Include="Compiler\CSharpCompiler.cs" />
     <Compile Include="Compiler\VisualBasicCompiler.cs" />

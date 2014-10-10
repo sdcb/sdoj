@@ -19,6 +19,10 @@ namespace SdojJudger.Compiler
             {
                 return new VisualBasicCompiler();
             }
+            if (model.Language == Languages.C)
+            {
+                return new CCompiler();
+            }
 
             return null;
         }

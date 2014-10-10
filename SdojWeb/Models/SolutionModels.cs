@@ -175,6 +175,8 @@ namespace SdojWeb.Models
         [Display(Name = "Visual Basic")]
         Vb = 2, 
         [Display(Name = "C++")]
-        Cpp = 3, 
+        Cpp = 3,
+        [Display(Name = "C")]
+        C = 4, 
     }
 }
