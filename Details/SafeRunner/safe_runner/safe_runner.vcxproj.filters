@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
