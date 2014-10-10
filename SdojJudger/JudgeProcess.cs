@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -41,7 +42,7 @@ namespace SdojJudger
             }
             var asm = compiler.Compile(_sfull.Source);
 
-            if (!asm.Succeed)
+            if (asm.Errors.HasErrors)
             {
                 await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
                 return;
@@ -58,7 +59,7 @@ namespace SdojJudger
             await Judge(datas, asm);
         }
 
-        private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm)
+        private async Task Judge(IEnumerable<QuestionData> datas, CompilerResults asm)
         {
             int runTimeMs = 0;
             float peakMemoryMb = 0;

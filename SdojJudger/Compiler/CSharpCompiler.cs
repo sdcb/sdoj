@@ -5,13 +5,12 @@ namespace SdojJudger.Compiler
 {
     public class CSharpCompiler : CompilerProvider
     {
-        public override CompileResult Compile(string sourceCode)
+        public override CompilerResults Compile(string source)
         {
             var csc = new CSharpCodeProvider();
             var options = new CompilerParameters { GenerateExecutable = true };
-            var asm = csc.CompileAssemblyFromSource(options, sourceCode);
-            
-            return ToCompileResult(asm);
+            var asm = csc.CompileAssemblyFromSource(options, source);
+            return asm;
         }
     }
 }

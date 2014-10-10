@@ -26,11 +26,6 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings["password"]; }
         }
 
-        public static string VcCommandline
-        {
-            get { return ConfigurationManager.AppSettings["vcCommandline"]; }
-        }
-
         public const string HubName = "JudgeHub";
 
         public const string HubJudge = "Judge";

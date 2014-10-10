@@ -5,12 +5,12 @@ namespace SdojJudger.Compiler
 {
     public class VisualBasicCompiler : CompilerProvider
     {
-        public override CompileResult Compile(string sourceCode)
+        public override CompilerResults Compile(string source)
         {
             var vbc = new VBCodeProvider();
             var options = new CompilerParameters { GenerateExecutable = true };
-            var asm = vbc.CompileAssemblyFromSource(options, sourceCode);
-            return ToCompileResult(asm);
+            var asm = vbc.CompileAssemblyFromSource(options, source);
+            return asm;
         }
     }
 }

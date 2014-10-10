@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using SdojJudger.Models;
 
 namespace SdojJudger.Compiler
@@ -24,17 +23,6 @@ namespace SdojJudger.Compiler
             return null;
         }
 
-        public abstract CompileResult Compile(string sourceCode);
-
-        protected static CompileResult ToCompileResult(CompilerResults compilerResults)
-        {
-            var result = new CompileResult()
-            {
-                Output = string.Join(Environment.NewLine, compilerResults.Output), 
-                Succeed = compilerResults.Errors.HasErrors, 
-                PathToAssembly = compilerResults.PathToAssembly, 
-            };
-            return result;
-        }
+        public abstract CompilerResults Compile(string source);
     }
 }
