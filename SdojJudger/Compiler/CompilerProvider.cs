@@ -13,7 +13,7 @@ namespace SdojJudger.Compiler
             }
             if (model.Language == Languages.Cpp)
             {
-                return new VisualBasicCompiler();
+                return new CppCompiler();
             }
             if (model.Language == Languages.Vb)
             {

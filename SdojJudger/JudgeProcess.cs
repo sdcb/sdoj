@@ -99,6 +99,7 @@ namespace SdojJudger
                 if (trimed != data.Output)
                 {
                     await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
+                    return;
                 }
             }
             await _client.Update(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb);
