@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using SdojJudger.Runner;
 
 namespace SdojJudger.Compiler
 {
@@ -40,16 +39,35 @@ namespace SdojJudger.Compiler
 
         private static void CompileCppFile(string sourceFile)
         {
+            //if (AppSettings.GccCommandline != null)
+            //{
+            //    CompileByGcc(sourceFile);
+            //    return;
+            //}
+            if (AppSettings.VcCommandline != null)
+            {
+                CompileByVc(sourceFile);
+                return;
+            }
+        }
+
+        private static void CompileByGcc(string sourceFile)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void CompileByVc(string sourceFile)
+        {
             var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
-            var cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /nologo /Ox > \"{0}.txt\"", sourceFile) + 
-                     Environment.NewLine + 
+            var cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
+                     Environment.NewLine +
                      "exit";
             var info = new ProcessStartInfo("cmd.exe")
             {
-                Arguments = arg, 
-                UseShellExecute = false, 
-                CreateNoWindow = true, 
-                RedirectStandardInput = true, 
+                Arguments = arg,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = true,
             };
             var ps = Process.Start(info);
 

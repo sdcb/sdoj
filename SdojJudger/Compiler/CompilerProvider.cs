@@ -1,5 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using SdojJudger.Models;
+﻿using SdojJudger.Models;
 
 namespace SdojJudger.Compiler
 {
@@ -31,7 +30,8 @@ namespace SdojJudger.Compiler
         {
             if (model.Language == Languages.C || model.Language == Languages.Cpp)
             {
-                return AppSettings.VcCommandline != null;
+                return AppSettings.VcCommandline != null &&
+                       AppSettings.GccCommandline != null;
             }
             // else
             return true;
