@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
+using Microsoft.VisualBasic.Devices;
 using SdojJudger.Compiler;
 using SdojJudger.Database;
 using SdojJudger.Models;
@@ -25,6 +26,25 @@ namespace SdojJudger
         public async Task ExecuteAsync()
         {
             // 获取并锁定解答的详情。
+            if (!CompilerProvider.IsLanguageAvailable(_spush))
+            {
+                _log.InfoExt(() => string.Format("Skipped compiling {0}, Because {1} compiler is not availabel.", 
+                        _spush.Id, _spush.Language));
+                return;
+            }
+            {
+                var info = new ComputerInfo();
+                if (info.AvailablePhysicalMemory < _spush.FullMemoryLimitMb*1024*1024)
+                {
+                    _log.InfoExt(
+                        () =>
+                            string.Format("Skipped judging {0}, because system memory running low(Req {1}/ Need {2}).",
+                                _spush.Id, info.AvailablePhysicalMemory, _spush.FullMemoryLimitMb*1024*1024)
+                        );
+                    return;
+                }
+            }
+
             _sfull = await _client.Lock(_spush.Id);
             if (_sfull == null)
             {

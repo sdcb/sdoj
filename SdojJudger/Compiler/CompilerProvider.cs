@@ -27,6 +27,16 @@ namespace SdojJudger.Compiler
             return null;
         }
 
+        public static bool IsLanguageAvailable(SolutionPushModel model)
+        {
+            if (model.Language == Languages.C || model.Language == Languages.Cpp)
+            {
+                return AppSettings.VcCommandline != null;
+            }
+            // else
+            return true;
+        }
+
         public abstract CompileResult Compile(string source);
     }
 }
