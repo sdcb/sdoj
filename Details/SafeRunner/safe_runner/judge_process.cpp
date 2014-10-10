@@ -135,9 +135,15 @@ void judge_process::execute()
 		output.assign(s2ws(ansi_buffer));
 	});
 	
+	auto wait_start = std::chrono::high_resolution_clock::now();
+
 	// wait the process ( terminate in job close )
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
 		static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+
+	auto wait_end = std::chrono::high_resolution_clock::now();
+	auto microsecond = std::chrono::duration_cast<std::chrono::microseconds>(wait_end - wait_start);
+
 	BOOL ok = GetExitCodeProcess(process_info.process_handle.get(), &exit_code);
 
 	// terminate io.
@@ -149,8 +155,8 @@ void judge_process::execute()
 		read_task.join();
 	}
 
-	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
-	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
+	//JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
+	//ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_info;
 	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));
@@ -161,7 +167,7 @@ void judge_process::execute()
 	}
 	else if (wait_result == WAIT_OBJECT_0)
 	{
-		time = basic_info.TotalUserTime.QuadPart;
+		time = microsecond.count() * 10;
 	}
 	memory = extend_info.PeakJobMemoryUsed;
 }
