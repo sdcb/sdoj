@@ -97,6 +97,26 @@ namespace SdojWeb.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
         }
 
+        // GET: Solution/CompilerOutput/5
+        public async Task<ActionResult> CompilerOutput(int id)
+        {
+            var model = await _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    QuestionCreateUserId = x.Question.CreateUserId,
+                    AuthorId = x.CreateUserId,
+                    CompilerOutput = x.CompilerOutput
+                }).FirstAsync();
+
+            if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
+            {
+                return Content(model.CompilerOutput);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+        }
+
         // GET: Solution/Details/5
         public async Task<ActionResult> Details(int id)
         {
