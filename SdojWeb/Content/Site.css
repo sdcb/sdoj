@@ -31,3 +31,6 @@ textarea {
 div.well {
     white-space:pre;
 }
+.modal-lg input,select,textarea {
+    max-width: 100%;
+}

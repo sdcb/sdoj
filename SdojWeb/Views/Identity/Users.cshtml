@@ -10,6 +10,7 @@
     Func<int, RouteValueDictionary> getPagedRoute = p => new RouteValueDictionary(route) { { "page", p } };
 }
 <h2>@ViewBag.Title</h2>
+
 <form class="search-form" method="GET" action="@Url.Action("Users")">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <input type="text" class="form-control input-sm" name="username" placeholder="用户名..." value="@route["username"]" />
@@ -42,61 +43,67 @@
         <button class="btn btn-default btn-sm" type="submit">过滤</button>
     </div>
 </form>
-<div class="table-responsive">
-    <table class="table table-bordered table-condensed table-hover table-striped" id="user-table">
-        <thead>
-            <tr>
-                <th>
-                    @thb.BuildA(x => x.UserName)
-                </th>
-                <th>
-                    @thb.BuildA(x => x.Email)
-                </th>
-                <th>
-                    @thb.BuildA(x => x.EmailConfirmed)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(x => x.Roles)
-                </th>
-                <th colspan="2">操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(x => user.UserName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(x => user.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(item => user.EmailConfirmed)
-                    </td>
-                    <td>
-                        @foreach (var item in user.Roles)
-                        {
-                            <span class="label label-info">@Html.DisplayFor(x => item.Name)</span>
-                        }
-                    </td>
-                    <td>
-                        <a class="btn btn-primary btn-xs btn-block" href="@Url.Action("Edit", new {id=user.Id})">
-                            <i class="glyphicon glyphicon-cog"></i>
-                            管理角色
-                        </a>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@user.Id)">
-                            <i class="glyphicon glyphicon-remove"></i>
-                            删除
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-hover table-striped" id="user-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @thb.BuildA(x => x.UserName)
+                        </th>
+                        <th>
+                            @thb.BuildA(x => x.Email)
+                        </th>
+                        <th>
+                            @thb.BuildA(x => x.EmailConfirmed)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(x => x.Roles)
+                        </th>
+                        <th colspan="2">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(x => user.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => user.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(item => user.EmailConfirmed)
+                            </td>
+                            <td>
+                                @foreach (var item in user.Roles)
+                                {
+                                    <span class="label label-info">@Html.DisplayFor(x => item.Name)</span>
+                                }
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-xs btn-block" href="@Url.Action("Edit", new {id=user.Id})">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    管理角色
+                                </a>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-xs btn-block" onclick="deleteMe(@user.Id)">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                    删除
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 <div class="row">
     <div class="col-xs-6">
         第 @paged.PageNumber 页，共 @paged.PageSize 页

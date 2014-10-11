@@ -23,7 +23,7 @@
     };
 
     var paged = Model as SortablePagedList<SolutionSummaryModel>;
-    var route = (RouteValueDictionary) ViewBag.Route;
+    var route = (RouteValueDictionary)ViewBag.Route;
     var thb = paged.GetThBuilder(Html, "Index", route);
 
 }
@@ -39,109 +39,114 @@
         </div>
     }
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("username", route["username"], new {@class = "form-control input-sm", placeholder = "用户名..."})
+        @Html.TextBox("username", route["username"], new { @class = "form-control input-sm", placeholder = "用户名..." })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("question", route["question"], new {@class = "form-control input-sm", placeholder = "题目名..."})
+        @Html.TextBox("question", route["question"], new { @class = "form-control input-sm", placeholder = "题目名..." })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         @Html.EnumDropDownList("language", (Languages?)route["language"], "语言...", new { @class = "form-control input-sm" })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.EnumDropDownList("state", (SolutionState?)route["state"], "状态...", new { @class="form-control input-sm"})
+        @Html.EnumDropDownList("state", (SolutionState?)route["state"], "状态...", new { @class = "form-control input-sm" })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <button type="submit" class="btn btn-default btn-sm">过滤</button>
     </div>
 </form>
-<div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreateUserName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.QuestionName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Language)
-                </th>
-                <th>
-                    @thb.BuildA(x => x.SourceLength)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.State)
-                </th>
-                <th>
-                    @thb.BuildA(x => x.RunTime)
-                </th>
-                <th>
-                    @thb.BuildA(x => x.UsingMemoryMb)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SubmitTime)
-                </th>
-                <th>源代码</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreateUserName)
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.QuestionName, "Details", "Question", new {id = item.QuestionId}, null)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Language)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SourceLength)
-                    </td>
-                    <td id="state-@item.Id">
-                        @Html.DisplayFor(modelItem => item.State)
-                    </td>
-                    <td id="runtime-@item.Id">
-                        @Html.DisplayFor(modelItem => item.RunTime)
-                    </td>
-                    <td id="memory-@item.Id">
-                        @Html.DisplayFor(modelItem => item.UsingMemoryMb)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SubmitTime)
-                    </td>
-                    <td>
-                        @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
-                        {
-                            <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
-                               data-bind="click: loadcode.bind($data, @item.Id)">
-                                <i class="glyphicon glyphicon-file"></i>
-                                源码
-                            </a>
-                        }
-                    </td>
-                    <th>
-                        @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
-                        {
-                            <button class="btn btn-warning btn-block btn-xs" data-bind="click: rejudge.bind($data, @item.Id)">
-                                <i class="glyphicon glyphicon-repeat"></i>
-                                重新评测
-                            </button>
-                        }
-                    </th>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateUserName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QuestionName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Language)
+                        </th>
+                        <th>
+                            @thb.BuildA(x => x.SourceLength)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.State)
+                        </th>
+                        <th>
+                            @thb.BuildA(x => x.RunTime)
+                        </th>
+                        <th>
+                            @thb.BuildA(x => x.UsingMemoryMb)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SubmitTime)
+                        </th>
+                        <th>源代码</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateUserName)
+                            </td>
+                            <td>
+                                @Html.ActionLink(item.QuestionName, "Details", "Question", new { id = item.QuestionId }, null)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Language)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SourceLength)
+                            </td>
+                            <td id="state-@item.Id">
+                                @Html.DisplayFor(modelItem => item.State)
+                            </td>
+                            <td id="runtime-@item.Id">
+                                @Html.DisplayFor(modelItem => item.RunTime)
+                            </td>
+                            <td id="memory-@item.Id">
+                                @Html.DisplayFor(modelItem => item.UsingMemoryMb)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SubmitTime)
+                            </td>
+                            <td>
+                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                                {
+                                    <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
+                                       data-bind="click: loadcode.bind($data, @item.Id)">
+                                        <i class="glyphicon glyphicon-file"></i>
+                                        源码
+                                    </a>
+                                }
+                            </td>
+                            <th>
+                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                                {
+                                    <button class="btn btn-warning btn-block btn-xs" data-bind="click: rejudge.bind($data, @item.Id)">
+                                        <i class="glyphicon glyphicon-repeat"></i>
+                                        重新评测
+                                    </button>
+                                }
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="source-code-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -174,7 +179,6 @@
         </div>
     </div>
 </div>
-
 @using (Html.BeginForm("Delete", "Solution", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
@@ -185,7 +189,6 @@
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" />
 }
-
 @section scripts
 {
     @Scripts.Render("~/bundles/signalr")
@@ -194,7 +197,7 @@
     <script>
 
         var shub = $.connection.solutionHub;
-        shub.client.push = function(id, name, runtime, memory) {
+        shub.client.push = function (id, name, runtime, memory) {
             $("#state-" + id).text(name);
             $("#runtime-" + id).text(runtime);
             $("#memory-" + id).text(memory.toFixed(2));
@@ -205,11 +208,11 @@
             var self = this;
             self.onlyMe = '@route["onlyMe"]';
             self.code = ko.observable();
-            
-            self.loadcode = function(id) {
+
+            self.loadcode = function (id) {
                 self.code('加载中...');
                 self.id = null;
-                $.get("@Url.Action("Source")", { id: id }, function(data) {
+                $.get("@Url.Action("Source")", { id: id }, function (data) {
                     self.code(data);
                     self.id = id;
                 });
