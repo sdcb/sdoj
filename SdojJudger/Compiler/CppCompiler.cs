@@ -29,7 +29,7 @@ namespace SdojJudger.Compiler
 
             var executableFile = filename + ".exe";
             var log = File.ReadAllText(filename + ".txt");
-            log = log.Replace(filename, "source");
+            log = log.Replace(filename, "Source");
 
             if (!File.Exists(executableFile))
             {

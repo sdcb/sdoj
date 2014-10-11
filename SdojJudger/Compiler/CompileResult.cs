@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 
 namespace SdojJudger.Compiler
 {
@@ -13,10 +12,13 @@ namespace SdojJudger.Compiler
         public CompileResult(CompilerResults compilerResults)
         {
             HasErrors = compilerResults.Errors.HasErrors;
-            foreach (var output in compilerResults.Output)
+            foreach (CompilerError output in compilerResults.Errors)
             {
+                output.FileName = "Source";
                 Output += output;
             }
+            
+            
             PathToAssembly = compilerResults.PathToAssembly;
         }
 
