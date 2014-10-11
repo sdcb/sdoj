@@ -13,7 +13,10 @@ namespace SdojJudger.Compiler
         public CompileResult(CompilerResults compilerResults)
         {
             HasErrors = compilerResults.Errors.HasErrors;
-            Output = string.Join(Environment.NewLine, compilerResults.Output);
+            foreach (var output in compilerResults.Output)
+            {
+                Output += output;
+            }
             PathToAssembly = compilerResults.PathToAssembly;
         }
 

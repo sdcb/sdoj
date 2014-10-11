@@ -46,7 +46,8 @@ namespace SdojWeb.SignalR
         }
 
         public async Task<bool> Update(int solutionId,
-            SolutionState stateId, int runTimeMs, float usingMemoryMb)
+            SolutionState stateId, int runTimeMs, float usingMemoryMb, 
+            string compilerOutput)
         {
             var db = GetDbContext();
             var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
@@ -68,6 +69,10 @@ namespace SdojWeb.SignalR
             solution.State = stateId;
             solution.RunTime = runTimeMs;
             solution.UsingMemoryMb = usingMemoryMb;
+            if (solution.State == SolutionState.CompileError)
+            {
+                solution.CompilerOutput = compilerOutput;
+            }
             solution.Lock = null;
 
             // 删除锁，保存数据。

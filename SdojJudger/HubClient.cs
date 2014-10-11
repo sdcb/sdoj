@@ -32,11 +32,11 @@ namespace SdojJudger
             
         }
 
-        public async Task<bool> Update(int solutionId,
-            SolutionState statusId, int runTimeMs, float usingMemoryMb)
+        public async Task<bool> Update(int solutionId, SolutionState statusId, 
+            int runTimeMs, float usingMemoryMb, string compilerOutput = "")
         {
             var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
-                solutionId, statusId, runTimeMs, usingMemoryMb);
+                solutionId, statusId, runTimeMs, usingMemoryMb, compilerOutput);
             _log.DebugExt(() => JsonConvert.SerializeObject(result));
             _log.InfoExt(() => string.Format("Commit {0}-{1}, {2}ms,{3}MB", solutionId, statusId, runTimeMs, usingMemoryMb));
             return result;

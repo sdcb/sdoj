@@ -26,6 +26,9 @@ namespace SdojWeb.Models
         [MaxLength(32*1024)]
         public string Source { get; set; }
 
+        [MaxLength(500)]
+        public string CompilerOutput { get; set; }
+
         public SolutionState State { get; set; }
 
         public float UsingMemoryMb { get; set; }

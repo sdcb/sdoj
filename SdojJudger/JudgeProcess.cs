@@ -54,16 +54,11 @@ namespace SdojJudger
             await UpdateQuestionData();
 
             var compiler = CompilerProvider.GetCompiler(_spush);
-            if (compiler == null)
-            {
-                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0.0f);
-                return;
-            }
             var asm = compiler.Compile(_sfull.Source);
 
             if (asm.HasErrors)
             {
-                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0);
+                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0, asm.Output);
                 return;
             }
 
