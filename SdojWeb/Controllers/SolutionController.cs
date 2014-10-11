@@ -184,7 +184,7 @@ namespace SdojWeb.Controllers
                 })
                 .FirstAsync();
 
-            if (User.IsUserOrRole(acl.QuestionCreatorId, SystemRoles.QuestionAdmin))
+            if (!User.IsUserOrRole(acl.QuestionCreatorId, SystemRoles.QuestionAdmin))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
