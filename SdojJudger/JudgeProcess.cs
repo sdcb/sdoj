@@ -75,7 +75,9 @@ namespace SdojJudger
                 .ToArrayAsync();
 
             // Judging
+            _log.DebugExt("Judging...");
             await Judge(datas, asm);
+            _log.DebugExt("Judged");
         }
 
         private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm)

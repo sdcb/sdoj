@@ -299,7 +299,7 @@ process_information create_security_process(wchar_t * cmd,
 
 	unsigned long flags = CREATE_SUSPENDED        | 
 						  /*DEBUG_ONLY_THIS_PROCESS | */
-						  /*CREATE_NO_WINDOW        | */
+						  CREATE_NO_WINDOW        | 
 						  EXTENDED_STARTUPINFO_PRESENT;
 	ThrowIfFailed(CreateProcessAsUser(token.get(), 
 									  nullptr, 

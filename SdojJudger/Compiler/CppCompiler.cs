@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using log4net;
+using log4net.Util;
 
 namespace SdojJudger.Compiler
 {
@@ -11,10 +13,14 @@ namespace SdojJudger.Compiler
             CompileAsC = compileAsC;
 
             _fileExtension = compileAsC ? ".c" : ".cpp";
+
+            _logger = LogManager.GetLogger(GetType());
         }
 
         public override CompileResult Compile(string source)
         {
+            _logger.DebugExt(() => "Start compiling");
+
             var filename = GetTempFileNameWithoutExtension();
 
             File.WriteAllText(filename + _fileExtension, source);
@@ -107,6 +113,7 @@ namespace SdojJudger.Compiler
 
             var ps = Process.Start(pi);
             ps.StandardInput.WriteLine(input);
+            _logger.DebugExt(() => input);
             ps.StandardInput.Close();
 
             ps.WaitForExit();
@@ -140,11 +147,14 @@ namespace SdojJudger.Compiler
             var ps = Process.Start(info);
 
             ps.StandardInput.WriteLine(cl);
+            _logger.DebugExt(() => cl);
             ps.WaitForExit();
         }
 
         public bool CompileAsC { get; private set; }
 
         private readonly string _fileExtension;
+
+        private readonly ILog _logger;
     }
 }
