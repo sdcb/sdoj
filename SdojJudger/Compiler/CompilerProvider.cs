@@ -31,7 +31,7 @@ namespace SdojJudger.Compiler
             if (model.Language == Languages.C || model.Language == Languages.Cpp)
             {
                 return AppSettings.VcCommandline != null &&
-                       AppSettings.GccCommandline != null;
+                       AppSettings.GccPath != null;
             }
             // else
             return true;

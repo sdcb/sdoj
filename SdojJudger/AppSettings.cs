@@ -31,9 +31,9 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings["VcCommandline"]; }
         }
 
-        public static string GccCommandline
+        public static string GccPath
         {
-            get { return ConfigurationManager.AppSettings["gccCommandline"]; }
+            get { return ConfigurationManager.AppSettings["GccPath"]; }
         }
 
         public const string HubName = "JudgeHub";
