@@ -23,6 +23,7 @@ namespace SdojWeb.Models
         public Languages Language { get; set; }
 
         [Required]
+        [MaxLength(32*1024)]
         public string Source { get; set; }
 
         public SolutionState State { get; set; }
@@ -57,6 +58,7 @@ namespace SdojWeb.Models
         public Languages Language { get; set; }
 
         [Display(Name = "源代码"), Required, DataType(DataType.MultilineText)]
+        [MaxLength(32*1024)]
         public string Source { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
