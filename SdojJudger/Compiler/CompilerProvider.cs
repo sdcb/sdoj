@@ -12,7 +12,7 @@ namespace SdojJudger.Compiler
             }
             if (model.Language == Languages.Cpp)
             {
-                return new CppCompiler();
+                return new CppCompiler(compileAsC:false);
             }
             if (model.Language == Languages.Vb)
             {
@@ -20,7 +20,7 @@ namespace SdojJudger.Compiler
             }
             if (model.Language == Languages.C)
             {
-                return new CCompiler();
+                return new CppCompiler(compileAsC: true);
             }
 
             return null;

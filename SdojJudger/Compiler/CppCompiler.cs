@@ -6,13 +6,20 @@ namespace SdojJudger.Compiler
 {
     public class CppCompiler : CompilerProvider
     {
+        public CppCompiler(bool compileAsC)
+        {
+            CompileAsC = compileAsC;
+
+            _fileExtension = compileAsC ? ".c" : ".cpp";
+        }
+
         public override CompileResult Compile(string source)
         {
             var filename = GetTempFileNameWithoutExtension();
 
-            File.WriteAllText(filename + ".cpp", source);
+            File.WriteAllText(filename + _fileExtension, source);
 
-            CompileCppFile(filename);
+            CompileSourceFile(filename);
 
             var executableFile = filename + ".exe";
             var log = File.ReadAllText(filename + ".txt");
@@ -37,30 +44,22 @@ namespace SdojJudger.Compiler
             return filename;
         }
 
-        private static void CompileCppFile(string sourceFile)
+        private void CompileSourceFile(string sourceFile)
         {
             if (AppSettings.GccPath != null)
             {
                 CompileByGcc(sourceFile);
                 return;
             }
-            //if (AppSettings.VcCommandline != null)
-            //{
-            //    CompileByVc(sourceFile);
-            //    return;
-            //}
+            if (AppSettings.VcCommandline != null)
+            {
+                CompileByVc(sourceFile);
+                return;
+            }
         }
 
-        private static void CompileByGcc(string sourceFile)
+        private void CompileByGcc(string sourceFile)
         {
-            // C11
-            // gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
-            // -std=c11 -Wl,--stack=67108864 -O2 -o %1.exe %1
-
-            // C++11
-            // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s 
-            // -x c++ -std=c++11 -Wl,--stack=67108864 -O2 -o %1.exe %1
-
             var pi = new ProcessStartInfo("cmd.exe")
             {
                 UseShellExecute = false,
@@ -69,16 +68,42 @@ namespace SdojJudger.Compiler
                 Arguments = "/Q"
             };
 
-            var gcc = Path.Combine(AppSettings.GccPath, "g++.exe");
-            var input =
-                "setlocal" + Environment.NewLine +
-                "set path=%path%;" + AppSettings.GccPath + Environment.NewLine +
-                string.Format(
-                    "{0} -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++11 -O2 -o {1}.exe {1}.cpp" +
-                    " > {1}.txt 2>&1", 
-                    gcc, 
-                    sourceFile) + Environment.NewLine +
-                "exit";
+            string input;
+
+            // C11
+            // gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o %1.exe %1
+
+            // C++11
+            // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o %1.exe %1
+            if (CompileAsC)
+            {
+                var gcc = Path.Combine(AppSettings.GccPath, "gcc.exe");
+                input =
+                    "setlocal" + Environment.NewLine +
+                    "set path=%path%;" + AppSettings.GccPath + Environment.NewLine +
+                    string.Format(
+                        "{0} -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {1}.exe {1}.c" +
+                        " > {1}.txt 2>&1",
+                        gcc,
+                        sourceFile) + Environment.NewLine +
+                    "exit";
+            }
+            else
+            {
+                var gcc = Path.Combine(AppSettings.GccPath, "g++.exe");
+                input =
+                    "setlocal" + Environment.NewLine +
+                    "set path=%path%;" + AppSettings.GccPath + Environment.NewLine +
+                    string.Format(
+                        "{0} -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o {1}.exe {1}.cpp" +
+                        " > {1}.txt 2>&1",
+                        gcc,
+                        sourceFile) + Environment.NewLine +
+                    "exit";
+            }
+            
+
+            
 
             var ps = Process.Start(pi);
             ps.StandardInput.WriteLine(input);
@@ -87,12 +112,24 @@ namespace SdojJudger.Compiler
             ps.WaitForExit();
         }
 
-        private static void CompileByVc(string sourceFile)
+        private void CompileByVc(string sourceFile)
         {
             var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
-            var cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
+            string cl;
+
+            if (CompileAsC)
+            {
+                cl = string.Format("cl \"{0}.c\" /Fe:\"{0}.exe\" /Fo:\"{0}.obj\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
                      Environment.NewLine +
                      "exit";
+            }
+            else
+            {
+                cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /Fo:\"{0}.obj\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
+                     Environment.NewLine +
+                     "exit";
+            }
+            
             var info = new ProcessStartInfo("cmd.exe")
             {
                 Arguments = arg,
@@ -105,5 +142,9 @@ namespace SdojJudger.Compiler
             ps.StandardInput.WriteLine(cl);
             ps.WaitForExit();
         }
+
+        public bool CompileAsC { get; private set; }
+
+        private readonly string _fileExtension;
     }
 }
