@@ -160,10 +160,9 @@ namespace SdojWeb.Controllers
                     QuestionCreatorId = x.Question.CreateUserId
                 })
                 .FirstAsync();
-            if (!CheckAccess(acl.AuthorId, acl.QuestionCreatorId))
+            if (!User.IsUserOrRole(acl.QuestionCreatorId, SystemRoles.QuestionAdmin))
             {
-                return RedirectToAction("Index")
-                    .WithWarning("只能删除自己提交的解答。");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // update
@@ -184,7 +183,8 @@ namespace SdojWeb.Controllers
                     QuestionCreatorId = x.Question.CreateUserId
                 })
                 .FirstAsync();
-            if (!CheckAccess(acl.AuthorId, acl.QuestionCreatorId))
+
+            if (User.IsUserOrRole(acl.QuestionCreatorId, SystemRoles.QuestionAdmin))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

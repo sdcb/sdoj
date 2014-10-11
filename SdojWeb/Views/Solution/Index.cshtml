@@ -62,6 +62,9 @@
                 <thead>
                     <tr>
                         <th>
+                            @Html.DisplayNameFor(x => x.Id)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.CreateUserName)
                         </th>
                         <th>
@@ -86,13 +89,16 @@
                             @Html.DisplayNameFor(model => model.SubmitTime)
                         </th>
                         <th>源代码</th>
-                        <th>操作</th>
+                        <th colspan="2">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(x => item.Id)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.CreateUserName)
                             </td>
@@ -128,11 +134,20 @@
                                 }
                             </td>
                             <th>
-                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                                @if (User.IsUserOrRole(item.QuestionCreateUserId, SystemRoles.QuestionAdmin))
                                 {
                                     <button class="btn btn-warning btn-block btn-xs" data-bind="click: rejudge.bind($data, @item.Id)">
                                         <i class="glyphicon glyphicon-repeat"></i>
                                         重新评测
+                                    </button>
+                                }
+                            </th>
+                            <th>
+                                @if (User.IsUserOrRole(item.QuestionCreateUserId, SystemRoles.QuestionAdmin))
+                                {
+                                    <button class="btn btn-danger btn-block btn-xs" data-bind="click: deleteMe.bind($data, @item.Id)">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        删除
                                     </button>
                                 }
                             </th>
@@ -156,10 +171,6 @@
                 <pre data-bind="text: code"></pre>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bind="click: deleteMe">
-                    <i class="glyphicon glyphicon-remove"></i>
-                    删除
-                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     关闭
                 </button>
@@ -217,9 +228,9 @@
                     self.id = id;
                 });
             };
-            self.deleteMe = function () {
+            self.deleteMe = function (id) {
                 if (confirm('确定要删除此解答吗？')) {
-                    $("#delete-form input[name='id']").val(self.id);
+                    $("#delete-form input[name='id']").val(id);
                     $("#delete-form").submit();
                 }
             };

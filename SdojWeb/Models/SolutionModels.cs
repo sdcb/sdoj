@@ -106,6 +106,7 @@ namespace SdojWeb.Models
 
     public class SolutionSummaryModel : IHaveCustomMapping
     {
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Display(Name = "用户名")]
