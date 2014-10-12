@@ -34,7 +34,7 @@ namespace SdojWeb.Models
     {
         [Required]
         [MinLength(1)]
-        [Display(Name = "电子邮件")]
+        [Display(Name = "用户名")]
         public string Email { get; set; }
 
         [Required]
