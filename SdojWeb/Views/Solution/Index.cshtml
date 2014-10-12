@@ -112,7 +112,7 @@
                                 @Html.DisplayFor(modelItem => item.SourceLength)
                             </td>
                             <td id="state-@item.Id">
-                                @if (item.State == SolutionState.CompileError)
+                                @if (item.State == SolutionState.CompileError && checkAccess(item.CreateUserId, item.QuestionCreateUserId))
                                 {
                                     <text>
                                         <a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, @item.Id)">
