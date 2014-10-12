@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using FluentAssertions;
 using Microsoft.CSharp;
+using SdojJudger.Runner;
 using Xunit;
 
 namespace SafeRunnerTest
@@ -25,20 +26,6 @@ namespace SafeRunnerTest
         }
 
         [Fact]
-        public void Emtpy_call_should_return_fail()
-        {
-            // arrange
-            var empty = new ApiJudgeInfo();
-            var result = new ApiJudgeResult();
-
-            // act
-            var ok = NativeDll.Judge(ref empty, ref result);
-
-            // assert
-            ok.Should().BeFalse();
-        }
-
-        [Fact]
         public void Create_calc_should_return_success()
         {
             // arrange
@@ -57,20 +44,6 @@ namespace SafeRunnerTest
             result.Succeed.Should().BeTrue();
             result.ErrorCode.Should().Be(0);
             result.MemoryMb.Should().BeGreaterThan(0);
-        }
-
-        [Fact]
-        public void Regular_clear_call_should_be_ok()
-        {
-            // arrange
-            var result = new ApiJudgeResult();
-
-            // act
-
-            // assert
-            Assert.DoesNotThrow(() => NativeDll.FreeJudgeResult(ref result));
-            Assert.DoesNotThrow(() => NativeDll.FreeJudgeResult(ref result));
-            Assert.DoesNotThrow(() => NativeDll.FreeJudgeResult(ref result));
         }
     }
 }

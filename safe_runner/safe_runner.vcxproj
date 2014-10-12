@@ -66,7 +66,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <NuGetPackageImportStamp>6736e85a</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>755aef05</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -171,16 +171,16 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\packages\boost.1.56.0.0\build\native\boost.targets" Condition="Exists('..\..\..\packages\boost.1.56.0.0\build\native\boost.targets')" />
-    <Import Project="..\..\..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets" Condition="Exists('..\..\..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets')" />
-    <Import Project="..\..\..\packages\boost_system.1.56.0.0\build\native\boost_system.targets" Condition="Exists('..\..\..\packages\boost_system.1.56.0.0\build\native\boost_system.targets')" />
+    <Import Project="..\packages\boost.1.56.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.56.0.0\build\native\boost.targets')" />
+    <Import Project="..\packages\boost_system.1.56.0.0\build\native\boost_system.targets" Condition="Exists('..\packages\boost_system.1.56.0.0\build\native\boost_system.targets')" />
+    <Import Project="..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets" Condition="Exists('..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。启用“NuGet 程序包还原”可下载这些程序包。有关详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\boost.1.56.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\boost.1.56.0.0\build\native\boost.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\boost_system.1.56.0.0\build\native\boost_system.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\boost_system.1.56.0.0\build\native\boost_system.targets'))" />
+    <Error Condition="!Exists('..\packages\boost.1.56.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.56.0.0\build\native\boost.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_system.1.56.0.0\build\native\boost_system.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_system.1.56.0.0\build\native\boost_system.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_chrono.1.56.0.0\build\native\boost_chrono.targets'))" />
   </Target>
 </Project>

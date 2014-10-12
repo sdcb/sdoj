@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.CSharp;
+using SdojJudger.Runner;
 using Xunit;
 using Xunit.Extensions;
 

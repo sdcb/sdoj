@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using FluentAssertions;
 using Microsoft.CSharp;
+using SdojJudger.Runner;
 using Xunit;
 
 namespace SafeRunnerTest.SecurityTest

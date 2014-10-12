@@ -1,6 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using FluentAssertions;
 using Microsoft.CSharp;
+using SdojJudger.Runner;
 using Xunit;
 
 namespace SafeRunnerTest
