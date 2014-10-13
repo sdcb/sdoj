@@ -25,6 +25,12 @@ namespace SdojWeb.Models
         [Required, MaxLength(4000)]
         public string Description { get; set; }
 
+        [MaxLength(1000)]
+        public string InputExplain { get; set; }
+
+        [MaxLength(1000)]
+        public string OutputExplain { get; set; }
+
         public DateTime CreateTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
@@ -49,6 +55,12 @@ namespace SdojWeb.Models
 
         [Display(Name = "描述"), DataType(DataType.MultilineText)]
         public string Description { get; set; }
+
+        [Display(Name = "输入说明"), DataType(DataType.MultilineText), DisplayFormat(NullDisplayText = "无")]
+        public string InputExplain { get; set; }
+
+        [Display(Name = "输出说明"), DataType(DataType.MultilineText), DisplayFormat(NullDisplayText = "无")]
+        public string OutputExplain { get; set; }
 
         [Display(Name = "总内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
         public float MemoryLimitMb { get; set; }
@@ -81,6 +93,12 @@ namespace SdojWeb.Models
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string Description { get; set; }
+
+        [Display(Name = "输入说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        public string InputExplain { get; set; }
+
+        [Display(Name = "输出说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        public string OutputExplain { get; set; }
 
         [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }
@@ -128,6 +146,12 @@ namespace SdojWeb.Models
 
         [HiddenInput]
         public int? QuestionDataId { get; set; }
+
+        [Display(Name = "输入说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        public string InputExplain { get; set; }
+
+        [Display(Name = "输出说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        public string OutputExplain { get; set; }
 
         [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }

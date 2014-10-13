@@ -13,15 +13,31 @@
 
 <hr />
 
-<div>
-    <h4>@Html.DisplayNameFor(model => model.Description)</h4>
-    <div class="well">@Html.DisplayFor(model => model.Description)</div>
+<h4>@Html.DisplayNameFor(model => model.Description)</h4>
+<div class="well">@Html.DisplayFor(model => model.Description)</div>
 
-    <h4>@Html.DisplayNameFor(model => model.SampleInput)</h4>
-    <div class="well">@Html.DisplayFor(model => model.SampleInput)</div>
+<div class="row">
+    @if (Model.InputExplain != null || Model.OutputExplain != null)
+    {
+        <div class="col-xs-12 col-sm-6">
+            <h4>@Html.DisplayNameFor(x => x.InputExplain)</h4>
+            <div class="well">@Html.DisplayFor(x => x.InputExplain)</div>
+        </div>
 
-    <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
-    <div class="well">@Html.DisplayFor(model => model.SampleOutput)</div>
+        <div class="col-xs-12 col-sm-6">
+            <h4>@Html.DisplayNameFor(x => x.OutputExplain)</h4>
+            <div class="well">@Html.DisplayFor(x => x.OutputExplain)</div>
+        </div>
+    }
+    
+    <div class="col-xs-12 col-sm-6">
+        <h4>@Html.DisplayNameFor(model => model.SampleInput)</h4>
+        <div class="well">@Html.DisplayFor(model => model.SampleInput)</div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
+        <div class="well">@Html.DisplayFor(model => model.SampleOutput)</div>
+    </div>
 </div>
 
 <p>
