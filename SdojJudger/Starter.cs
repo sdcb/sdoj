@@ -11,10 +11,14 @@ namespace SdojJudger
 {
     public class Starter
     {
+        public Starter()
+        {
+            _log = LogManager.GetLogger(typeof(Starter));
+        }
+
         public async Task Run()
         {
             var authCookie = await AuthenticateUser(AppSettings.UserName, AppSettings.Password);
-            _log = LogManager.GetLogger(typeof(Starter));
             
             if (authCookie == null)
             {
@@ -49,15 +53,22 @@ namespace SdojJudger
 
         public async Task Restart()
         {
-            if (Interlocked.CompareExchange(ref _restarting, 1, 0) == 0)
+            try
             {
-                _log.InfoExt(() => "Restarting...");
-                _hub.Dispose();
-                _judger.Dispose();
-                await Run();
+                if (Interlocked.CompareExchange(ref _restarting, 1, 0) == 0)
+                {
+                    _log.InfoExt(() => "Restarting...");
+                    _hub.Dispose();
+                    _judger.Dispose();
+                    await Run();
+                }
+            }
+            finally
+            {
                 var result = Interlocked.CompareExchange(ref _restarting, 0, 1);
                 // Assert result == 0
             }
+            
         }
 
         public HubClient GetClient()
@@ -105,7 +116,7 @@ namespace SdojJudger
 
         private HubConnection _hub;
 
-        private ILog _log;
+        private readonly ILog _log;
 
         private int _restarting = 0;
     }
