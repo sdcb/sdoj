@@ -31,7 +31,7 @@
     </a>
     @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
     {
-        <a class="btn btn-default" href="@Url.Action("Edit", new {id=Model.Id})">
+        <a class="btn btn-success" href="@Url.Action("Edit", new {id=Model.Id})">
             <i class="glyphicon glyphicon-edit"></i>
             编辑
         </a>
@@ -44,7 +44,7 @@
             删除
         </button>
     }
-    <a class="btn btn-success" href="@Url.Action("Data", new {id=Model.Id})">
+    <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
         <i class="glyphicon glyphicon-file"></i>
         测试数据
     </a>

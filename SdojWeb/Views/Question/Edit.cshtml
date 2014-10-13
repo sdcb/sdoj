@@ -18,14 +18,17 @@
         
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="保存" class="btn btn-default" />
+                <button type="submit" class="btn btn-primary" >
+                    <i class="glyphicon glyphicon-file"></i>
+                    保存
+                </button>
             </div>
         </div>
         
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <a class="btn btn-primary" href="@Url.Action("Data", new {id=Model.Id})">
-                    <i class="glyphicon glyphicon-file"></i>
+                <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
+                    <i class="glyphicon glyphicon-edit"></i>
                     编辑测试数据
                 </a>
             </div>
