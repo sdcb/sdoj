@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using log4net;
+using log4net.Util;
 using Microsoft.AspNet.SignalR.Client;
 using SdojJudger.Models;
 
@@ -22,8 +23,15 @@ namespace SdojJudger
             {
                 _hub = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
                 _hub.CookieContainer.Add(authCookie);
+                _hub.Closed += async () =>
+                {
+                    _log.WarnExt(() => "Connection Closed, Restart.");
+                    await Restart();
+                };
+
                 _proxy = _hub.CreateHubProxy(AppSettings.HubName);
                 _proxy.On<SolutionPushModel>(AppSettings.HubJudge, OnClientJudge);
+                
                 _judger = new JudgeScheduler();
                 await _hub.Start();
 
@@ -42,7 +50,6 @@ namespace SdojJudger
         {
             _hub.Dispose();
             _judger.Dispose();
-            _log.Info("Connection stoped.");
             await Run();
         }
 

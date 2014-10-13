@@ -12,14 +12,14 @@ namespace SdojJudger
             _log = LogManager.GetLogger(typeof(App));
             _log.InfoFormat("App started at {0}", DateTime.Now);
 
-            try
+            while (true)
             {
                 Starter = new Starter();
-                var task = Starter.Run();
-                task.Wait();
-
-                while (true)
+                try
                 {
+                    var task = Starter.Run();
+                    task.Wait();
+
                     var line = Console.ReadLine();
                     if (line == "exit")
                     {
@@ -31,15 +31,15 @@ namespace SdojJudger
                         task.Wait();
                     }
                 }
+                catch (Exception e)
+                {
+                    _log.Fatal("", e);
+                    var task = Starter.Restart();
+                    task.Wait();
+                }
             }
-            catch (Exception e)
-            {
-                _log.Fatal("", e);
-            }
-            finally
-            {
-                _log.InfoFormat("App exited at {0}", DateTime.Now);
-            }
+
+            _log.InfoFormat("App exited at {0}", DateTime.Now);
         }
 
         public static Starter Starter { get; set; }
