@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
@@ -25,7 +26,7 @@ namespace SdojJudger
                 _hub.CookieContainer.Add(authCookie);
                 _hub.Closed += async () =>
                 {
-                    _log.WarnExt(() => "Connection Closed, Restart.");
+                    _log.WarnExt(() => "Connection Closed");
                     await Restart();
                 };
 
@@ -48,9 +49,15 @@ namespace SdojJudger
 
         public async Task Restart()
         {
-            _hub.Dispose();
-            _judger.Dispose();
-            await Run();
+            if (Interlocked.CompareExchange(ref _restarting, 1, 0) == 0)
+            {
+                _log.InfoExt(() => "Restarting...");
+                _hub.Dispose();
+                _judger.Dispose();
+                await Run();
+                var result = Interlocked.CompareExchange(ref _restarting, 0, 1);
+                // Assert result == 0
+            }
         }
 
         public HubClient GetClient()
@@ -99,5 +106,7 @@ namespace SdojJudger
         private HubConnection _hub;
 
         private ILog _log;
+
+        private int _restarting = 0;
     }
 }

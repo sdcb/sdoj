@@ -12,12 +12,13 @@ namespace SdojJudger
             _log = LogManager.GetLogger(typeof(App));
             _log.InfoFormat("App started at {0}", DateTime.Now);
 
+            Starter = new Starter();
+            var task = Starter.Run();
+
             while (true)
             {
-                Starter = new Starter();
                 try
                 {
-                    var task = Starter.Run();
                     task.Wait();
 
                     var line = Console.ReadLine();
@@ -28,14 +29,12 @@ namespace SdojJudger
                     if (line == "restart")
                     {
                         task = Starter.Restart();
-                        task.Wait();
                     }
                 }
                 catch (Exception e)
                 {
                     _log.Fatal("", e);
-                    var task = Starter.Restart();
-                    task.Wait();
+                    task = Starter.Restart();
                 }
             }
 
