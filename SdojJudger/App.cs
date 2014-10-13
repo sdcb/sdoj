@@ -41,7 +41,7 @@ namespace SdojJudger
             _log.InfoFormat("App exited at {0}", DateTime.Now);
         }
 
-        public static Starter Starter { get; set; }
+        public static Starter Starter { get; private set; }
 
         private static ILog _log;
     }
