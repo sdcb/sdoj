@@ -25,13 +25,13 @@
 </div>
 
 <p>
-    <a class="btn btn-default" href="@Url.Action("Create", "Solution", new {id=Model.Id})">
+    <a class="btn btn-primary" href="@Url.Action("Create", "Solution", new {id=Model.Id})">
         <i class="glyphicon glyphicon-plus-sign"></i>
         解答
     </a>
     @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
     {
-        <a class="btn btn-primary" href="@Url.Action("Edit", new {id=Model.Id})">
+        <a class="btn btn-default" href="@Url.Action("Edit", new {id=Model.Id})">
             <i class="glyphicon glyphicon-edit"></i>
             编辑
         </a>

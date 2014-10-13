@@ -28,6 +28,7 @@ namespace SdojWeb.Models
 
     public class QuestionDataSummaryModel : IHaveCustomMapping
     {
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Display(Name = "题目")]

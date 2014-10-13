@@ -80,10 +80,10 @@
                                 @Html.DisplayFor(modelItem => item.TimeLimit)
                             </td>
                             <td>
-                                @Html.DisplayFor(x => item.DataCount)
+                                @Html.ActionLink(Html.DisplayFor(x => item.DataCount).ToString(), "Data", new {id=item.Id})
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.SolutionCount)
+                                @Html.ActionLink(Html.DisplayFor(x => item.SolutionCount).ToString(), "Index", "Solution", new {question=item.Name}, null)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.UpdateTime)

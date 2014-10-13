@@ -3,7 +3,8 @@
 @{
     int questionId = ViewBag.QuestionId;
     var owns = (bool)ViewBag.IsUserOwnsQuestion;
-    ViewBag.Title = "测试数据";
+    var questionName = (string) ViewBag.QuestionName;
+    ViewBag.Title = questionName + "-测试数据";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -27,7 +28,7 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.QuestionName)
+                            @Html.DisplayNameFor(x => x.Id)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.InputLength)
@@ -52,7 +53,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.ActionLink(item.QuestionName, "Details", "Question", new { id = item.QuestionId }, null)
+                                @Html.DisplayFor(x => item.Id)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.InputLength)
