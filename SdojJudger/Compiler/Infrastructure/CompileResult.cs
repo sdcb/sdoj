@@ -1,6 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 
-namespace SdojJudger.Compiler
+namespace SdojJudger.Compiler.Infrastructure
 {
     public class CompileResult
     {

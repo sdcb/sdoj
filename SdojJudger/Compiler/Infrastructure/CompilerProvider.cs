@@ -1,6 +1,5 @@
 ﻿using SdojJudger.Models;
-
-namespace SdojJudger.Compiler
+namespace SdojJudger.Compiler.Infrastructure
 {
     public abstract class CompilerProvider
     {

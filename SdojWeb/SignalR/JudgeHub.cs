@@ -114,7 +114,7 @@ namespace SdojWeb.SignalR
             slock.LockClientId = Guid.Parse(Context.ConnectionId);
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
-            detail.Solution.State = SolutionState.Juding;
+            detail.Solution.State = SolutionState.Compiling;
             db.Entry(detail.Solution).State = EntityState.Modified;
 
             db.Entry(slock).State = detail.Lock == null
@@ -129,7 +129,7 @@ namespace SdojWeb.SignalR
                 .FirstOrDefaultAsync();
 
             Commit();
-            SolutionHub.PushChange(solutionId, SolutionState.Juding, 0, 0.0f);
+            SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
             return result;
         }
 

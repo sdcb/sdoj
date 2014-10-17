@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
 using Microsoft.VisualBasic.Devices;
-using SdojJudger.Compiler;
+using SdojJudger.Compiler.Infrastructure;
 using SdojJudger.Database;
 using SdojJudger.Models;
 using SdojJudger.Runner;
@@ -60,6 +60,10 @@ namespace SdojJudger
             {
                 await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0, asm.Output);
                 return;
+            }
+            else
+            {
+                await _client.UpdateInLock(_spush.Id, SolutionState.Judging);
             }
 
             var db = JudgerDbContext.Create();

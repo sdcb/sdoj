@@ -142,7 +142,9 @@ namespace SdojWeb.Models
         [Display(Name = "排队中")]
         Queuing = 0,
         [Display(Name = "编译中")]
-        Juding = 1,
+        Compiling = 1,
+        [Display(Name = "评测中")]
+        Judging = 2,
         [Display(Name = "已完成")]
         Completed = 100,
         [Display(Name = "编译失败")]

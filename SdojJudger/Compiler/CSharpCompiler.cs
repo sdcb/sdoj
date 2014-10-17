@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using Microsoft.CSharp;
+using SdojJudger.Compiler.Infrastructure;
 
 namespace SdojJudger.Compiler
 {
