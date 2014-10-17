@@ -11,7 +11,7 @@ namespace SdojJudger.Compiler.Infrastructure
             }
             if (model.Language == Languages.Cpp)
             {
-                return new CppCompiler(compileAsC:false);
+                return new CppCompiler(compileAsC: false);
             }
             if (model.Language == Languages.Vb)
             {
@@ -20,6 +20,10 @@ namespace SdojJudger.Compiler.Infrastructure
             if (model.Language == Languages.C)
             {
                 return new CppCompiler(compileAsC: true);
+            }
+            if (model.Language == Languages.Python3)
+            {
+                return new Python3Compiler();
             }
 
             return null;
@@ -32,8 +36,16 @@ namespace SdojJudger.Compiler.Infrastructure
                 return AppSettings.VcCommandline != null ||
                        AppSettings.GccPath != null;
             }
+            if (model.Language == Languages.Python3)
+            {
+                return AppSettings.Python3Path != null;
+            }
+            if (model.Language == Languages.CSharp || model.Language == Languages.Vb)
+            {
+                return true;
+            }
             // else
-            return true;
+            return false;
         }
 
         public abstract CompileResult Compile(string source);

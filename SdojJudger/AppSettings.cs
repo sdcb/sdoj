@@ -36,6 +36,11 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings["GccPath"]; }
         }
 
+        public static string Python3Path
+        {
+            get { return ConfigurationManager.AppSettings["Python3Path"]; }
+        }
+
         public const string HubName = "JudgeHub";
 
         public const string HubJudge = "Judge";
