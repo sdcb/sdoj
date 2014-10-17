@@ -289,7 +289,6 @@
     <Compile Include="Models\SolutionModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalR\JudgeHub.cs" />
-    <Compile Include="SignalR\PerformanceCounterHub.cs" />
     <Compile Include="SignalR\MoveShapeHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

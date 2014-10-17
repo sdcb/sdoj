@@ -31,24 +31,3 @@
 </div>
 
 @Html.Partial("_PerformanceCounter")
-
-@section scripts
-{
-    @Scripts.Render("~/bundles/signalr")
-    <script src="~/signalr/hubs"></script>
-
-    <script>
-        $(function () {
-            var chat = $.connection.pcHub;
-            chat.client.pc = function (cpu, startTime, threadCount, memUsage) {
-                $('#pcCpuTime').text(cpu);
-                $('#pcRunningTime').text(startTime);
-                $('#pcThreads').text(threadCount);
-                $('#pcMem').text((memUsage / 1024 / 1024).toFixed(2));
-            };
-            $.connection.hub.start().done(function () {
-                console.log("启动成功");
-            });
-        });
-    </script>
-}
