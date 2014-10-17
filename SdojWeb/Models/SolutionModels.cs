@@ -171,5 +171,7 @@ namespace SdojWeb.Models
         Cpp = 3,
         [Display(Name = "C")]
         C = 4, 
+        [Display(Name = "Python")]
+        Python3 = 5, 
     }
 }
