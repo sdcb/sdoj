@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AutoMapper;
@@ -161,6 +162,8 @@ namespace SdojWeb.Controllers
                     .FirstOrDefaultAsync(x => x.Id == solution.Id);
                 JudgeHub.Judge(judgeModel);
 
+                Response.SetCookie(new HttpCookie(PreferredLanguage, model.Language.ToString()));
+
                 return RedirectToAction("Index");
             }
 
@@ -240,5 +243,7 @@ namespace SdojWeb.Controllers
             }
             return false;
         }
+
+        public const string PreferredLanguage = "Preferred-Language";
     }
 }

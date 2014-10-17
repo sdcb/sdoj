@@ -1,21 +1,18 @@
-﻿@model SdojWeb.Models.SolutionCreateModel
-
+﻿@using SdojWeb.Controllers
+@model SdojWeb.Models.SolutionCreateModel
 @{
     ViewBag.Title = "新解答";
 }
-
 <h2>@ViewBag.Title</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.EditorForModel()
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="提交" class="btn btn-default" />
@@ -23,11 +20,19 @@
         </div>
     </div>
 }
-
 <div>
     @Html.ActionLink("解答列表", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    @{
+        var preferedLang = Request.Cookies[SolutionController.PreferredLanguage];
+        if (preferedLang != null)
+        {
+            <script>
+                $("select[name='Language']").val('@preferedLang.Value');
+            </script>
+        }
+    }
 }
