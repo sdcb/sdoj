@@ -32,6 +32,8 @@ div.well {
     white-space:pre;
     word-wrap: break-word;
 }
-.modal-lg input,select,textarea {
+.modal-lg input,
+.modal-lg select,
+.modal-lg textarea {
     max-width: 100%;
 }
