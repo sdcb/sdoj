@@ -228,7 +228,6 @@
     <Compile Include="Models\Identity\EmailService.cs" />
     <Compile Include="Models\Identity\Role.cs" />
     <Compile Include="Models\Identity\RoleStore.cs" />
-    <Compile Include="Models\Identity\UsefulUserModel.cs" />
     <Compile Include="Models\Identity\User.cs" />
     <Compile Include="Models\Identity\UserClaim.cs" />
     <Compile Include="Models\Identity\UserLogin.cs" />

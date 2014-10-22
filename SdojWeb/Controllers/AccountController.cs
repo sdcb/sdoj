@@ -49,10 +49,12 @@ namespace SdojWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email) ??
-                           await UserManager.FindByEmailAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.Email);
                 if (!await UserManager.CheckPasswordAsync(user, model.Password))
+                {
                     user = null;
+                }
+                    
 
                 if (user != null)
                 {
@@ -70,8 +72,7 @@ namespace SdojWeb.Controllers
         [HttpPost, AllowAnonymous]
         public async Task<ActionResult> LoginAsJudger(string username, string password)
         {
-            var user = await UserManager.FindByNameAsync(username) ??
-                       await UserManager.FindByEmailAsync(username);
+            var user = await UserManager.FindByNameAsync(username);
             if (!await UserManager.CheckPasswordAsync(user, password))
                 user = null;
 
@@ -117,7 +118,7 @@ namespace SdojWeb.Controllers
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                    var task = UserManager.SendEmailAsync(user.Id, "确认你的账户",
                         "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
 
                     return this.RedirectToAction<HomeController>(x => x.Index())
@@ -179,7 +180,7 @@ namespace SdojWeb.Controllers
             var email = User.Identity.GetUserName();
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(userid);
             var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = userid, code = code }, protocol: Request.Url.Scheme);
-            await UserManager.SendEmailAsync(User.Identity.GetIntUserId(), "确认你的账户",
+            var task = UserManager.SendEmailAsync(User.Identity.GetIntUserId(), "确认你的账户",
                 "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的账号");
             
 
@@ -214,7 +215,7 @@ namespace SdojWeb.Controllers
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 //await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
-                await UserManager.SendEmailAsync(user.Id, "重置密码",
+                var task = UserManager.SendEmailAsync(user.Id, "重置密码",
                     "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来重置你的密码");
                 
                 return this.RedirectToAction(x => x.ForgotPasswordConfirmation());
@@ -465,7 +466,7 @@ namespace SdojWeb.Controllers
                         
                         string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                        var task = UserManager.SendEmailAsync(user.Id, "确认你的账户",
                             "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
                         
                         return RedirectToLocal(returnUrl);
