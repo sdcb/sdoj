@@ -6,4 +6,3 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <thread>
-#include <boost\chrono.hpp>

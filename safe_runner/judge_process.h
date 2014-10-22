@@ -46,7 +46,7 @@ public:
 		m_judge_info(ji), 
 		error_code(0), 
 		except_code(0), 
-		time(0), 
+		timeMs(0), 
 		memory(0)
 	{
 	}
@@ -71,7 +71,7 @@ private:
 
 	DWORD exit_code;
 
-	int64_t time;
+	int32_t timeMs;
 
 	int64_t memory;
 };

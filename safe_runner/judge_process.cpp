@@ -51,9 +51,9 @@ struct process_information
 
 null_handle create_job_object(judge_info const &);
 
-inline int64_t ms_to_ns100(int ms);
+#define ms_to_ns100(ms) ((ms)*10000LL)
 
-inline int ns100_to_ms(int64_t ns100);
+#define ns100_to_ms(ns100) ((ns100)/10000)
 
 std::wstring s2ws(const std::string& s);
 
@@ -97,7 +97,7 @@ void judge_process::execute()
 
 		BOOL result = WriteFile(pipe_handles.in_write.get(),
 								ansi_string.c_str(),
-								length,
+								static_cast<DWORD>(length),
 								&writed,
 								nullptr);
 
@@ -135,14 +135,16 @@ void judge_process::execute()
 		output.assign(s2ws(ansi_buffer));
 	});
 	
-	auto wait_start = boost::chrono::high_resolution_clock::now();
+	LARGE_INTEGER freq, wait_start, wait_end;
+	QueryPerformanceFrequency(&freq);
+	QueryPerformanceCounter(&wait_start);
 
 	// wait the process ( terminate in job close )
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
 		static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
 
-	auto wait_end = boost::chrono::high_resolution_clock::now();
-	auto microsecond = boost::chrono::duration_cast<boost::chrono::microseconds>(wait_end - wait_start);
+	QueryPerformanceCounter(&wait_end);
+	auto microsecond = 1000LL * (wait_end.QuadPart - wait_start.QuadPart) / freq.QuadPart;
 
 	BOOL ok = GetExitCodeProcess(process_info.process_handle.get(), &exit_code);
 
@@ -163,11 +165,11 @@ void judge_process::execute()
 
 	if (wait_result == WAIT_TIMEOUT)
 	{
-		time = m_judge_info.time_limit;
+		timeMs = static_cast<int32_t>( ns100_to_ms(m_judge_info.time_limit) );
 	}
 	else if (wait_result == WAIT_OBJECT_0)
 	{
-		time = microsecond.count() * 10;
+		timeMs = static_cast<int32_t>( microsecond );
 	}
 	memory = extend_info.PeakJobMemoryUsed;
 }
@@ -181,7 +183,7 @@ void judge_process::get_result(api_judge_result & result)
 	result.exit_code   = exit_code;
 	result.except_code = except_code;
 	result.memory      = memory/1024/1024.0f;
-	result.time        = ns100_to_ms(time);
+	result.time        = timeMs;
 
 	if (output.size() > 0)
 	{
@@ -241,20 +243,6 @@ null_handle create_job_object(judge_info const & info)
 
 
 	return job;
-}
-
-
-
-inline int64_t ms_to_ns100(int32_t ms)
-{
-	return ms * 10000L;
-}
-
-
-
-inline int32_t ns100_to_ms(int64_t ns100)
-{
-	return static_cast<int>(ns100 / 10000);
 }
 
 
@@ -322,7 +310,7 @@ process_information create_security_process(wchar_t * cmd,
 
 redirect_process_attr_list::redirect_process_attr_list(HANDLE * handles, int handle_count)
 {
-	unsigned long size = 0;
+	SIZE_T size = 0;
 	ThrowIfFailed(InitializeProcThreadAttributeList(nullptr, 1, 0, &size) || GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
 	LPPROC_THREAD_ATTRIBUTE_LIST attr_list;
