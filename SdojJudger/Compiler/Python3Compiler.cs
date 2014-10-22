@@ -13,6 +13,7 @@ namespace SdojJudger.Compiler
             File.WriteAllText(filename + ".py", source);
 
             var info = CompileSourceFile(filename);
+            info = info.Replace(filename, "Source");
 
             if (File.Exists(filename + ".pyc"))
             {
