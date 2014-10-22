@@ -31,16 +31,29 @@
     }
 </div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-6">
-        <h4>@Html.DisplayNameFor(model => model.SampleInput)</h4>
-        <div class="well">@Html.DisplayFor(model => model.SampleInput)</div>
+@if (string.IsNullOrEmpty(Model.SampleInput))
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
+            <div class="well">@Html.DisplayFor(model => model.SampleOutput)</div>
+        </div>
     </div>
-    <div class="col-xs-12 col-sm-6">
-        <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
-        <div class="well">@Html.DisplayFor(model => model.SampleOutput)</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <h4>@Html.DisplayNameFor(model => model.SampleInput)</h4>
+            <div class="well">@Html.DisplayFor(model => model.SampleInput)</div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <h4>@Html.DisplayNameFor(model => model.SampleOutput)</h4>
+            <div class="well">@Html.DisplayFor(model => model.SampleOutput)</div>
+        </div>
     </div>
-</div>
+}
+
 
 <p>
     <a class="btn btn-primary" href="@Url.Action("Create", "Solution", new {id=Model.Id})">
