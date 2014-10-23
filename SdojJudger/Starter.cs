@@ -1,5 +1,7 @@
-﻿using System.Net;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -19,15 +21,16 @@ namespace SdojJudger
         public async Task Run()
         {
             var authCookie = await AuthenticateUser(AppSettings.UserName, AppSettings.Password);
-            
-            if (authCookie == null)
+
+            if (authCookie[AppSettings.CookieName] == null)
             {
                 _log.FatalFormat("error: login failed for user {0}", AppSettings.UserName);
             }
             else
             {
-                _hub = new HubConnection(AppSettings.ServerUrl) { CookieContainer = new CookieContainer() };
+                _hub = new HubConnection(AppSettings.ServerUrl) {CookieContainer = new CookieContainer()};
                 _hub.CookieContainer.Add(authCookie);
+
                 _hub.Closed += async () =>
                 {
                     _log.WarnExt(() => "Connection Closed");
@@ -83,29 +86,18 @@ namespace SdojJudger
             _judger.AddOne(model);
         }
 
-        private async Task<Cookie> AuthenticateUser(string user, string password)
+        private async Task<CookieCollection> AuthenticateUser(string user, string password)
         {
-            var request = WebRequest.CreateHttp(AppSettings.LoginUrl);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.CookieContainer = new CookieContainer();
-
-            var authCredentials = string.Format("username={0}&password={1}",
-                WebUtility.UrlEncode(user),
-                WebUtility.UrlEncode(password));
-            var bytes = Encoding.UTF8.GetBytes(authCredentials);
-            request.ContentLength = bytes.Length;
-
-            using (var requestStream = await request.GetRequestStreamAsync())
+            var handler = new HttpClientHandler {UseCookies = true};
+            var httpClient = new HttpClient(handler);
+            var parameters = new Dictionary<string, string>
             {
-                requestStream.Write(bytes, 0, bytes.Length);
-            }
+                {"username", user}, 
+                {"password", password}
+            };
+            var response = await httpClient.PostAsync(AppSettings.LoginUrl, new FormUrlEncodedContent(parameters));
 
-            using (var response = await request.GetResponseAsync() as HttpWebResponse)
-            {
-// ReSharper disable once PossibleNullReferenceException
-                return response.Cookies[AppSettings.CookieName];
-            }
+            return handler.CookieContainer.GetCookies(new Uri(AppSettings.LoginUrl));
         }
 
         // Fields & Properties.
