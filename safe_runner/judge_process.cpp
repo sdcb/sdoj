@@ -286,8 +286,8 @@ process_information create_security_process(wchar_t * cmd,
 	si.lpAttributeList = attr_list.get();
 
 	unsigned long flags = CREATE_SUSPENDED        | 
-						  /*DEBUG_ONLY_THIS_PROCESS | */
 						  CREATE_NO_WINDOW        | 
+						  HIGH_PRIORITY_CLASS     |
 						  EXTENDED_STARTUPINFO_PRESENT;
 	ThrowIfFailed(CreateProcessAsUser(token.get(), 
 									  nullptr, 
