@@ -10,11 +10,13 @@
     <ClInclude Include="handle.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="run_process.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="safe_runner.cpp" />
     <ClCompile Include="judge_process.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="run_process.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />
