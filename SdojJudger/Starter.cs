@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -25,6 +26,7 @@ namespace SdojJudger
             if (authCookie[AppSettings.CookieName] == null)
             {
                 _log.FatalFormat("error: login failed for user {0}", AppSettings.UserName);
+                throw new AuthenticationException();
             }
             else
             {
@@ -61,8 +63,8 @@ namespace SdojJudger
                 if (Interlocked.CompareExchange(ref _restarting, 1, 0) == 0)
                 {
                     _log.InfoExt(() => "Restarting...");
-                    _hub.Dispose();
-                    _judger.Dispose();
+                    if (_hub != null) _hub.Dispose();
+                    if (_judger != null) _judger.Dispose();
                     await Run();
                 }
             }
@@ -96,6 +98,10 @@ namespace SdojJudger
                 {"password", password}
             };
             var response = await httpClient.PostAsync(AppSettings.LoginUrl, new FormUrlEncodedContent(parameters));
+            if (((int) response.StatusCode/100) == 5) // 500 501 502 503....
+            {
+                response.EnsureSuccessStatusCode(); // throw a exception.
+            }
 
             return handler.CookieContainer.GetCookies(new Uri(AppSettings.LoginUrl));
         }
