@@ -74,7 +74,7 @@ namespace SdojJudger.Compiler
                 UseShellExecute = false,
                 CreateNoWindow = true, 
                 RedirectStandardInput = true, 
-                Arguments = "/Q"
+                Arguments = "/Q /K " + "\"" + AppSettings.GccPath + "\""
             };
 
             string input;
@@ -87,9 +87,8 @@ namespace SdojJudger.Compiler
             if (CompileAsC)
             {
                 input =
-                    AppSettings.GccPath + Environment.NewLine + 
                     string.Format(
-                        "gcc.exe -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {0}.exe {0}.c" +
+                        "g++.exe -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {0}.exe {0}.c" +
                         " > {0}.txt 2>&1",
                         sourceFile) + Environment.NewLine +
                     "exit";
@@ -97,7 +96,6 @@ namespace SdojJudger.Compiler
             else
             {
                 input =
-                    AppSettings.GccPath + Environment.NewLine + 
                     string.Format(
                         "g++.exe -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o {0}.exe {0}.cpp" +
                         " > {0}.txt 2>&1",
