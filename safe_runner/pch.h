@@ -6,3 +6,5 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <thread>
+#include "handle.h"
+#include "debug.h"

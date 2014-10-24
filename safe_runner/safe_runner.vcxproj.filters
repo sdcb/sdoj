@@ -11,12 +11,14 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="run_process.h" />
+    <ClInclude Include="os_wrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="safe_runner.cpp" />
     <ClCompile Include="judge_process.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="run_process.cpp" />
+    <ClCompile Include="os_wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />
