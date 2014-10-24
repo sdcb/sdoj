@@ -4,3 +4,5 @@ EXPORTS
 
 judge
 free_judge_result
+begin_run
+end_run

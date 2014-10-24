@@ -6,14 +6,14 @@ using namespace std;
 
 
 
-void run_process::run()
+void run_process::begin_run()
 {
 
 }
 
 
 
-void run_process::wait()
+void run_process::end_run()
 {
 
 }

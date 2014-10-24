@@ -65,7 +65,7 @@ void run(api_run_info const & info, api_run_io_result & io_result)
 	{
 		auto rp = new run_process(info);
 
-		rp->run();
+		rp->begin_run();
 
 		// set io_result success at run_process
 		rp->get_io_result(io_result);
@@ -90,7 +90,7 @@ void wait_run(run_process * run_process, api_run_result result)
 			delete run_process; 
 		} };
 
-		run_process->wait();
+		run_process->end_run();
 
 		// set result success at run_process
 		run_process->get_result(result);

@@ -46,13 +46,16 @@ struct api_run_result
 class run_process
 {
 public:
-	run_process(api_run_info const & info) 
+	run_process(api_run_info const & info) :
+		m_path(info.path, info.path_len), 
+		m_time_limit_ms(info.time_limit_ms), 
+		m_memory_limit_mb(info.memory_limit_mb)
 	{
 	}
 
-	void run();
+	void begin_run();
 
-	void wait();
+	void end_run();
 
 	void get_io_result(api_run_io_result & io_result);
 
