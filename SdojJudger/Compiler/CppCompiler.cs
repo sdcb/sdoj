@@ -89,7 +89,7 @@ namespace SdojJudger.Compiler
                 input =
                     AppSettings.GccPath + Environment.NewLine + 
                     string.Format(
-                        "gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {0}.exe {0}.c" +
+                        "gcc.exe -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {0}.exe {0}.c" +
                         " > {0}.txt 2>&1",
                         sourceFile) + Environment.NewLine +
                     "exit";
