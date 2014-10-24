@@ -86,33 +86,25 @@ namespace SdojJudger.Compiler
             // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o %1.exe %1
             if (CompileAsC)
             {
-                var gcc = Path.Combine(AppSettings.GccPath, "gcc.exe");
                 input =
-                    "setlocal" + Environment.NewLine +
-                    "set path=%path%;" + AppSettings.GccPath + Environment.NewLine +
+                    AppSettings.GccPath + Environment.NewLine + 
                     string.Format(
-                        "{0} -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {1}.exe {1}.c" +
-                        " > {1}.txt 2>&1",
-                        gcc,
+                        "gcc -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c -std=c11 -O2 -o {0}.exe {0}.c" +
+                        " > {0}.txt 2>&1",
                         sourceFile) + Environment.NewLine +
                     "exit";
             }
             else
             {
-                var gcc = Path.Combine(AppSettings.GccPath, "g++.exe");
                 input =
-                    "setlocal" + Environment.NewLine +
-                    "set path=%path%;" + AppSettings.GccPath + Environment.NewLine +
+                    AppSettings.GccPath + Environment.NewLine + 
                     string.Format(
-                        "{0} -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o {1}.exe {1}.cpp" +
-                        " > {1}.txt 2>&1",
-                        gcc,
+                        "g++.exe -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o {0}.exe {0}.cpp" +
+                        " > {0}.txt 2>&1",
                         sourceFile) + Environment.NewLine +
                     "exit";
             }
-            
 
-            
 
             var ps = Process.Start(pi);
             ps.StandardInput.WriteLine(input);
