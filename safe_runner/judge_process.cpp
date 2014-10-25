@@ -40,16 +40,17 @@ void judge_process::execute()
 
 		pipe_handles.in_write.reset();
 	});
-	
-	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 
 	// read task
 	std::atomic_bool continue_read_task{ true };
+	
 	auto read_task = std::thread([&](){
 		char buffer[4096];
 		DWORD read;
 		std::string ansi_buffer;
 
+		// 如果进程没有退出，使用同步IO
+		// 如果进程退出了，则检查buffer中有没有数据。
 		while (continue_read_task)
 		{
 			BOOL result = ReadFile(pipe_handles.out_read.get(),
@@ -70,8 +71,30 @@ void judge_process::execute()
 			}
 		}
 
+		// 进程结束了，
+		while (PeekNamedPipe(pipe_handles.out_read.get(),
+							 buffer,
+							 sizeof(buffer - 1),
+							 nullptr,
+							 &read,
+							 nullptr) &&
+				read != 0)
+		{
+			ReadFile(pipe_handles.out_read.get(),
+					 buffer,
+					 sizeof(buffer) - 1,
+					 &read,
+					 nullptr);
+
+			buffer[read] = '\0';
+
+			ansi_buffer.append(buffer, read);
+		}
+
 		output.assign(s2ws(ansi_buffer));
 	});
+
+	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 	
 	LARGE_INTEGER freq, wait_start, wait_end;
 	QueryPerformanceFrequency(&freq);

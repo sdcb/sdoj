@@ -123,6 +123,7 @@ namespace SdojJudger
                 var trimed = result.Output.TrimEnd();
                 if (trimed != data.Output)
                 {
+                    _log.DebugExt(() => string.Format("\r\nExpected: \r\n{0} \r\nActual: \r\n{1}", data.Output, result.Output));
                     await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
                     return;
                 }
