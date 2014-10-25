@@ -11,6 +11,8 @@ namespace SdojJudger.Compiler
             var vbc = new VBCodeProvider();
             var options = new CompilerParameters { GenerateExecutable = true };
             options.ReferencedAssemblies.Add("System.dll");
+            options.ReferencedAssemblies.Add("System.Core.dll");
+            options.ReferencedAssemblies.Add("Microsoft.VisualBasic.dll");
             var asm = vbc.CompileAssemblyFromSource(options, source);
             return new CompileResult(asm);
         }
