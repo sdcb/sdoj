@@ -41,6 +41,7 @@ namespace SdojWeb.Manager
 
             question.SampleData.Input = model.SampleInput;
             question.SampleData.Output = model.SampleOutput;
+            question.SampleData.UpdateTime = DateTime.Now;
             question.UpdateTime = DateTime.Now;
 
             _db.Entry(question).State = EntityState.Modified;

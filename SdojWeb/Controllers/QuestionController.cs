@@ -45,11 +45,11 @@ namespace SdojWeb.Controllers
             if (!string.IsNullOrWhiteSpace(name))
             {
                 name = name.Trim();
-                query = query.Where(x => x.Name.StartsWith(name));
+                query = query.Where(x => x.Name.StartsWith(name.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(creator))
             {
-                query = query.Where(x => x.Creator == creator);
+                query = query.Where(x => x.Creator == creator.Trim());
             }
 
             var models = query.ToSortedPagedList(page, orderBy, asc);

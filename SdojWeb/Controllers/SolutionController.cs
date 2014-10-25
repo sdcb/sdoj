@@ -55,11 +55,11 @@ namespace SdojWeb.Controllers
             }
             if (!string.IsNullOrWhiteSpace(question))
             {
-                query = query.Where(x => x.QuestionName == question);
+                query = query.Where(x => x.QuestionName == question.Trim());
             }
             if (!string.IsNullOrWhiteSpace(username))
             {
-                query = query.Where(x => x.CreateUserName == username);
+                query = query.Where(x => x.CreateUserName == username.Trim());
             }
             if (language != null)
             {
