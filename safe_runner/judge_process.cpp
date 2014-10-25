@@ -25,17 +25,18 @@ void judge_process::execute()
 															  job.get()) };
 
 	// write task
+	std::atomic_bool continue_write_task{ true };
 	auto write_task = std::thread([&](){
 		DWORD writed;
 		std::string ansi_string = ws2s(m_judge_info.input);
 		size_t length = ansi_string.length();
 		if (*ansi_string.rbegin() == '\0') --length;
 
-		BOOL result = WriteFile(pipe_handles.in_write.get(),
-								ansi_string.c_str(),
-								static_cast<DWORD>(length),
-								&writed,
-								nullptr);
+		continue_write_task && WriteFile(pipe_handles.in_write.get(),
+										 ansi_string.c_str(),
+										 static_cast<DWORD>(length),
+										 &writed,
+										 nullptr);
 
 		pipe_handles.in_write.reset();
 	});
@@ -43,12 +44,13 @@ void judge_process::execute()
 	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
 
 	// read task
+	std::atomic_bool continue_read_task{ true };
 	auto read_task = std::thread([&](){
 		char buffer[4096];
 		DWORD read;
 		std::string ansi_buffer;
 
-		while (true)
+		while (continue_read_task)
 		{
 			BOOL result = ReadFile(pipe_handles.out_read.get(),
 								   buffer,
@@ -87,14 +89,16 @@ void judge_process::execute()
 	// terminate io.
 	{
 		BOOL cancel_result1, cancel_result2;
+
 		cancel_result2 = CancelSynchronousIo(write_task.native_handle());
 		cancel_result1 = CancelSynchronousIo(read_task.native_handle());
+
+		continue_write_task = false;
 		write_task.join();
+
+		continue_read_task = false;
 		read_task.join();
 	}
-
-	//JOBOBJECT_BASIC_ACCOUNTING_INFORMATION basic_info;
-	//ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectBasicAccountingInformation, &basic_info, sizeof(basic_info), nullptr));
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_info;
 	ThrowIfFailed(QueryInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_info, sizeof(extend_info), nullptr));

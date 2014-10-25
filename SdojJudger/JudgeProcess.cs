@@ -74,9 +74,7 @@ namespace SdojJudger
                 .ToArrayAsync();
 
             // Judging
-            _log.DebugExt("Judging...");
             await Judge(datas, asm);
-            _log.DebugExt("Judged");
         }
 
         private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm)
@@ -94,7 +92,9 @@ namespace SdojJudger
                     TimeLimitMs = data.TimeLimit,
                 };
 
+                _log.DebugExt("NativeDll Juding...");
                 var result = NativeDll.Judge(info);
+                _log.DebugExt("NativeDll Judged...");
 
                 runTimeMs += result.TimeMs;
                 peakMemoryMb = Math.Max(peakMemoryMb, result.MemoryMb);
