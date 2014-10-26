@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "safe_runner.h"
-#include "debug.h"
 
 using namespace std;
 
@@ -59,7 +58,7 @@ void free_judge_result(api_judge_result & result)
 	}
 }
 
-void run(api_run_info const & info, api_run_io_result & io_result)
+static void __stdcall begin_run(api_run_info const & info, api_run_io_result & io_result)
 {
 	try
 	{
@@ -82,7 +81,7 @@ void run(api_run_info const & info, api_run_io_result & io_result)
 	}
 }
 
-void wait_run(run_process * run_process, api_run_result result)
+static void __stdcall end_run(run_process * run_process, api_run_result result)
 {
 	try
 	{

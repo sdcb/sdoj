@@ -21,11 +21,11 @@ struct api_run_io_result
 
 	uint32_t error_code;
 
-	intptr_t input_write_handle;
+	HANDLE input_write_handle;
 
-	intptr_t output_read_handle;
+	HANDLE output_read_handle;
 
-	intptr_t error_read_handle;
+	HANDLE error_read_handle;
 };
 
 struct api_run_result
@@ -38,9 +38,9 @@ struct api_run_result
 
 	int32_t exit_code;
 
-	int32_t timeMs;
+	int32_t time_ms;
 
-	float memoryMb;
+	float memory_mb;
 };
 
 class run_process
@@ -83,7 +83,7 @@ private:
 
 	DWORD m_exit_code;
 
-	int32_t m_timeMs;
+	int32_t m_time_ms;
 
-	int64_t m_memory;
+	int64_t m_memory_mb;
 };
