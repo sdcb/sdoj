@@ -15,7 +15,7 @@ using Timer = System.Timers.Timer;
 
 namespace SdojWeb.SignalR
 {
-    [Authorize(Roles = SystemRoles.Judger)]
+    [Microsoft.AspNet.SignalR.Authorize(Roles = SystemRoles.Judger)]
     public class JudgeHub : Hub
     {
         // Hub API
@@ -71,14 +71,7 @@ namespace SdojWeb.SignalR
             solution.UsingMemoryMb = usingMemoryMb;
             if (solution.State == SolutionState.CompileError)
             {
-                if (compilerOutput.Length > 500)
-                {
-                    solution.CompilerOutput = compilerOutput.Substring(500);
-                }
-                else
-                {
-                    solution.CompilerOutput = compilerOutput;
-                }
+                solution.CompilerOutput = compilerOutput.Substring(0, Solution.CompilerOutputLength);
             }
             solution.Lock = null;
 
@@ -250,7 +243,6 @@ namespace SdojWeb.SignalR
                 var hub = GlobalHost.ConnectionManager.GetHubContext<JudgeHub>();
                 using (var db = ApplicationDbContext.Create())
                 {
-                    var transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
                     var models = await db.Solutions
                         .Where(x =>
                             x.State < SolutionState.Completed && 
@@ -258,7 +250,6 @@ namespace SdojWeb.SignalR
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
                         .ToArrayAsync();
-                    transaction.Commit();
 
                     foreach (var model in models)
                     {

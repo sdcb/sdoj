@@ -129,7 +129,7 @@ namespace SdojJudger.Compiler
                      "exit";
             }
 
-            var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
+            var arg = "/Q /K " + AppSettings.VcCommandline;
             var info = new ProcessStartInfo("cmd.exe")
             {
                 Arguments = arg,
