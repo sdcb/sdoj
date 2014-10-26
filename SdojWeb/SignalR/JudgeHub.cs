@@ -71,7 +71,14 @@ namespace SdojWeb.SignalR
             solution.UsingMemoryMb = usingMemoryMb;
             if (solution.State == SolutionState.CompileError)
             {
-                solution.CompilerOutput = compilerOutput.Substring(0, Solution.CompilerOutputLength);
+                if (compilerOutput.Length > Solution.CompilerOutputLength)
+                {
+                    solution.CompilerOutput = compilerOutput.Substring(0, Solution.CompilerOutputLength);
+                }
+                else
+                {
+                    solution.CompilerOutput = compilerOutput;
+                }
             }
             solution.Lock = null;
 
