@@ -21,15 +21,18 @@ namespace SdojJudger
             try
             {
                 var result = await _server.Invoke<SolutionFullModel>(
-                AppSettings.HubLock, solutionId);
+                    AppSettings.HubLock, solutionId);
                 _log.DebugExt(() => JsonConvert.SerializeObject(result));
                 return result;
             }
-            catch (InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 return null;
             }
-            
+            catch (JsonReaderException)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> Update(int solutionId, SolutionState statusId, 

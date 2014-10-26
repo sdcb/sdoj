@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using log4net;
 using log4net.Util;
 using SdojJudger.Compiler.Infrastructure;
@@ -22,15 +23,17 @@ namespace SdojJudger.Compiler
         {
             _logger.DebugExt(() => "Start compiling");
 
+
             var filename = GetTempFileNameWithoutExtension();
+            var fullpath = Path.Combine(Path.GetTempPath(), filename);
 
-            File.WriteAllText(filename + _fileExtension, source);
+            File.WriteAllText(fullpath + _fileExtension, source);
 
-            CompileSourceFile(filename);
+            CompileSourceFile(fullpath);
 
-            var executableFile = filename + ".exe";
-            var log = File.ReadAllText(filename + ".txt");
-            log = log.Replace(filename, "Source");
+            var executableFile = fullpath + ".exe";
+            var log = File.ReadAllText(fullpath + ".txt", Encoding.Default);
+            log = log.Replace(fullpath, "Source").Replace(filename, "Source");
 
             if (!File.Exists(executableFile))
             {
@@ -47,10 +50,7 @@ namespace SdojJudger.Compiler
 
         private static string GetTempFileNameWithoutExtension()
         {
-            var filename = Path.Combine(
-                Path.GetTempPath(),
-                "judge-" + Guid.NewGuid());
-            return filename;
+            return "judge-" + Guid.NewGuid();
         }
 
         private void CompileSourceFile(string sourceFile)
@@ -114,7 +114,6 @@ namespace SdojJudger.Compiler
 
         private void CompileByVc(string sourceFile)
         {
-            var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
             string cl;
 
             if (CompileAsC)
@@ -129,7 +128,8 @@ namespace SdojJudger.Compiler
                      Environment.NewLine +
                      "exit";
             }
-            
+
+            var arg = "/Q /K " + "\"" + AppSettings.VcCommandline + "\"";
             var info = new ProcessStartInfo("cmd.exe")
             {
                 Arguments = arg,
