@@ -1,12 +1,11 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
-using AutoMapper;
 using EntityFramework.Extensions;
+using SdojWeb.Infrastructure;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
@@ -87,6 +86,8 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken, SdojAuthorize(Roles = SystemRoles.QuestionAdminOrCreator)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
+            TransactionInRequest.EnsureTransaction();
+
             if (ModelState.IsValid)
             {
                 if (await _manager.ExistName(createModel.Name))
@@ -125,6 +126,8 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(QuestionEditModel model)
         {
+            TransactionInRequest.EnsureTransaction();
+
             if (ModelState.IsValid)
             {
                 var secretModel = await _db.Questions
@@ -210,6 +213,8 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DataSave(int questionId, bool delete, int? id, string input, string output, int time, float memory)
         {
+            TransactionInRequest.EnsureTransaction();
+
             var owns = await _manager.IsUserOwnsQuestion(questionId);
             if (!owns)
             {
@@ -237,6 +242,8 @@ namespace SdojWeb.Controllers
 
         public async Task<ActionResult> ReJudge(int id)
         {
+            TransactionInRequest.EnsureTransaction();
+
             var creator = await _db.Questions
                 .Where(x => x.Id == id)
                 .Select(x => x.CreateUserId)

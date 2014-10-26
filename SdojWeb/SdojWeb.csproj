@@ -277,7 +277,7 @@
     <Compile Include="Infrastructure\Tasks\IRunAtStartup.cs" />
     <Compile Include="Infrastructure\Tasks\IRunOnEachRequest.cs" />
     <Compile Include="Infrastructure\Tasks\IRunOnError.cs" />
-    <Compile Include="Infrastructure\TransactionPerRequest.cs" />
+    <Compile Include="Infrastructure\TransactionInRequest.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />

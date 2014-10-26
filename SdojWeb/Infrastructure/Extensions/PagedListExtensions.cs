@@ -5,7 +5,7 @@ namespace SdojWeb.Infrastructure.Extensions
 {
     public static class PagedListExtensions
     {
-        public static IPagedList<TModel> ToSortedPagedList<TModel>(this IQueryable<TModel> query, int? page, string orderBy, bool? asc)
+        public static IPagedList<TModel> ToSortedPagedList<TModel>(this IQueryable<TModel> query, int? page, string orderBy, bool? asc) where TModel : class 
         {
             page = page ?? 1;
 

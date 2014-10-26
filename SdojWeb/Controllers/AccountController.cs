@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using SdojWeb.Infrastructure;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
@@ -54,7 +55,7 @@ namespace SdojWeb.Controllers
                 {
                     user = null;
                 }
-                    
+
 
                 if (user != null)
                 {
@@ -108,9 +109,11 @@ namespace SdojWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            TransactionInRequest.EnsureTransaction();
+
             if (ModelState.IsValid)
             {
-                var user = new User{UserName = model.UserName, Email = model.Email};
+                var user = new User { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -124,6 +127,7 @@ namespace SdojWeb.Controllers
                     return this.RedirectToAction<HomeController>(x => x.Index())
                         .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
                 }
+
                 AddErrors(result);
             }
 
@@ -136,7 +140,7 @@ namespace SdojWeb.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmUser(int? userId, string code)
         {
-            if (userId == null || code == null) 
+            if (userId == null || code == null)
             {
                 return View("Error");
             }
@@ -182,7 +186,7 @@ namespace SdojWeb.Controllers
             var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = userid, code = code }, protocol: Request.Url.Scheme);
             await UserManager.SendEmailAsync(User.Identity.GetIntUserId(), "确认你的账户",
                 "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的账号");
-            
+
 
             return this.RedirectToAction<HomeController>(x => x.Index())
                 .WithInfo("已经向你的邮箱" + email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
@@ -217,7 +221,7 @@ namespace SdojWeb.Controllers
                 //await SendEmail(user.Email, callbackUrl, "ResetPassword", "请单击此处重置你的密码");
                 await UserManager.SendEmailAsync(user.Id, "重置密码",
                     "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来重置你的密码");
-                
+
                 return this.RedirectToAction(x => x.ForgotPasswordConfirmation());
             }
 
@@ -232,13 +236,13 @@ namespace SdojWeb.Controllers
         {
             return View();
         }
-	
+
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            if (code == null) 
+            if (code == null)
             {
                 return View("Error");
             }
@@ -455,7 +459,7 @@ namespace SdojWeb.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new User{Email = model.Email, UserName = model.Email};
+                var user = new User { Email = model.Email, UserName = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -463,12 +467,12 @@ namespace SdojWeb.Controllers
                     if (result.Succeeded)
                     {
                         await SignInAsync(user, isPersistent: false);
-                        
+
                         string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         await UserManager.SendEmailAsync(user.Id, "确认你的账户",
                             "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
-                        
+
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -600,11 +604,7 @@ namespace SdojWeb.Controllers
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
-            public ChallengeResult(string provider, string redirectUri) : this(provider, redirectUri, null)
-            {
-            }
-
-            public ChallengeResult(string provider, string redirectUri, string userId)
+            public ChallengeResult(string provider, string redirectUri, string userId = null)
             {
                 LoginProvider = provider;
                 RedirectUri = redirectUri;

@@ -54,10 +54,10 @@ namespace SdojWeb.Controllers
             var query = UserMgr.Users
                 .OrderBy(x => x.Id)
                 .Project().To<UserSummaryViewModel>();
-
+            
             if (!string.IsNullOrWhiteSpace(username))
                 query = query.Where(x => x.UserName == username);
-
+            
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(x => x.Email == email);
 

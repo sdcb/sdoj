@@ -239,15 +239,6 @@
     <script>
         $.ajaxSetup({ cache: false });
 
-        var shub = $.connection.solutionHub;
-        shub.client.push = function(id, name, runtime, memory) {
-            $("#runtime-" + id).text(runtime);
-            $("#memory-" + id).text(memory.toFixed(2));
-
-            $("#state-" + id).text(name);
-        };
-        $.connection.hub.start();
-
         function ViewModel() {
             var self = this;
             self.onlyMe = '@route["onlyMe"]';
@@ -286,7 +277,19 @@
             };
         };
 
-        var vm = new ViewModel();
-        ko.applyBindings(vm);
+        var shub = $.connection.solutionHub;
+        shub.client.push = function (id, name, runtime, memory) {
+            $("#runtime-" + id).text(runtime);
+            $("#memory-" + id).text(memory.toFixed(2));
+
+            $("#state-" + id).text(name);
+        };
+        $.connection.hub.start();
+
+        setTimeout(function () {
+            var vm = new ViewModel();
+            ko.applyBindings(vm);
+        }, 500);
+        
     </script>
 }

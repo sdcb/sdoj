@@ -9,6 +9,7 @@ using System.Web.Routing;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EntityFramework.Extensions;
+using SdojWeb.Infrastructure;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -151,6 +152,8 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public async Task<ActionResult> Create(SolutionCreateModel model)
         {
+            TransactionInRequest.EnsureTransaction();
+
             if (ModelState.IsValid)
             {
                 var solution = Mapper.Map<Solution>(model);

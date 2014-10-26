@@ -7,7 +7,7 @@ using SdojWeb.Infrastructure.Extensions;
 
 namespace SdojWeb.Infrastructure.Html
 {
-    public class SortableThBuilder<TModel>
+    public class SortableThBuilder<TModel> where TModel : class
     {
         internal SortableThBuilder(HtmlHelper html, SortablePagedList<TModel> paged, string action, RouteValueDictionary route)
         {

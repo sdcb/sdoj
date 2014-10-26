@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Web.Mvc;
 using SdojWeb.Infrastructure.Tasks;
 using SdojWeb.Models;
 using System.Data.Entity;
@@ -6,26 +7,19 @@ using System.Web;
 
 namespace SdojWeb.Infrastructure
 {
-    public sealed class TransactionPerRequest :
-        IRunOnEachRequest, 
+    public sealed class TransactionInRequest :
         IRunOnError, 
         IRunAfterEachRequest
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly HttpContextBase _httpContext;
 
-        public TransactionPerRequest(
+        public TransactionInRequest(
             ApplicationDbContext dbContext,
             HttpContextBase httpContext)
         {
             _dbContext = dbContext;
             _httpContext = httpContext;
-        }
-
-        void IRunOnEachRequest.Execute()
-        {
-            _httpContext.Items[TransactionKey] =
-                _dbContext.Database.BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
         void IRunOnError.Execute()
@@ -47,6 +41,18 @@ namespace SdojWeb.Infrastructure
                 {
                     transaction.Commit();
                 }
+            }
+        }
+
+        public static void EnsureTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            var httpContext = HttpContext.Current;
+            var transaction = httpContext.Items[TransactionKey] as DbContextTransaction;
+
+            if (transaction == null)
+            {
+                var dbCotnext = DependencyResolver.Current.GetService<ApplicationDbContext>();
+                httpContext.Items[TransactionKey] = dbCotnext.Database.BeginTransaction(isolationLevel);
             }
         }
 
