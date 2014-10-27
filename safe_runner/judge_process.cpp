@@ -64,6 +64,11 @@ void judge_process::execute()
 				buffer[read] = '\0';
 
 				ansi_buffer.append(buffer, read);
+
+				if (ansi_buffer.size() > 20 * 1024 * 1024)
+				{
+					return;
+				}
 			}
 			else if (GetLastError() == ERROR_OPERATION_ABORTED)
 			{
@@ -89,6 +94,11 @@ void judge_process::execute()
 			buffer[read] = '\0';
 
 			ansi_buffer.append(buffer, read);
+
+			if (ansi_buffer.size() > 20 * 1024 * 1024)
+			{
+				return;
+			}
 		}
 
 		output.assign(s2ws(ansi_buffer));
