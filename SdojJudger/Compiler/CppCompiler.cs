@@ -118,13 +118,23 @@ namespace SdojJudger.Compiler
 
             if (CompileAsC)
             {
-                cl = string.Format("cl \"{0}.c\" /Fe:\"{0}.exe\" /Fo:\"{0}.obj\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
+                cl = string.Format("cl \"{0}.c\" /MD /EHsc " +
+                                   "/D \"ONLINE_JUDGE\" /D \"_CRT_SECURE_NO_DEPRECATE\" " +
+                                   "/Fe:\"{0}.exe\" " +
+                                   "/Fo:\"{0}.obj\" " +
+                                   "/nologo /Ox " +
+                                   "> \"{0}.txt\"", sourceFile) +
                      Environment.NewLine +
                      "exit";
             }
             else
             {
-                cl = string.Format("cl \"{0}.cpp\" /Fe:\"{0}.exe\" /Fo:\"{0}.obj\" /nologo /Ox > \"{0}.txt\"", sourceFile) +
+                cl = string.Format("cl \"{0}.cpp\" /MD /EHsc " +
+                                   "/D \"ONLINE_JUDGE\" /D \"_CRT_SECURE_NO_DEPRECATE\" /D \"BOOST_ALL_DYN_LINK\" " +
+                                   "/Fe:\"{0}.exe\" " +
+                                   "/Fo:\"{0}.obj\" " +
+                                   "/nologo /Ox " +
+                                   "> \"{0}.txt\"", sourceFile) +
                      Environment.NewLine +
                      "exit";
             }
