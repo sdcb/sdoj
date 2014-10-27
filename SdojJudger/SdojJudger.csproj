@@ -175,24 +175,18 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Debug\safe_runner.dll">
-      <Link>Reference\Debug\safe_runner.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Debug\safe_runner.pdb">
-      <Link>Reference\Debug\safe_runner.pdb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Release\safe_runner.dll">
+    <Content Include="..\x64\Release\safe_runner.dll">
       <Link>Reference\Release\safe_runner.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Release\safe_runner.pdb">
+    <Content Include="..\x64\Release\safe_runner.pdb">
       <Link>Reference\Release\safe_runner.pdb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Reference\Debug\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

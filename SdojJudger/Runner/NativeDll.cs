@@ -27,10 +27,14 @@ namespace SdojJudger.Runner
 
         // P/Invoke functions
 #if DEBUG
-        [DllImport(@"Reference\Debug\safe_runner", EntryPoint = "free_judge_result", CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(@"Reference\Debug\safe_runner", 
 #else
-        [DllImport(@"Reference\Release\safe_runner", EntryPoint = "free_judge_result", CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(@"Reference\Release\safe_runner", 
 #endif
+            EntryPoint = "free_judge_result", 
+            CallingConvention = CallingConvention.Cdecl, 
+            SetLastError = true, 
+            CharSet = CharSet.Unicode)]
         private static extern void FreeJudgeResult(ref ApiJudgeResult result);
 
 #if DEBUG
