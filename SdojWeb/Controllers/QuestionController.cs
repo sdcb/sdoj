@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using EntityFramework.Extensions;
+using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -37,9 +38,24 @@ namespace SdojWeb.Controllers
                 {"creator",creator}
             };
 
+            var uid = User.Identity.GetUserId<int>();
             var query = _db.Questions
                 .OrderByDescending(x => x.Id)
-                .Project().To<QuestionSummaryViewModel>();
+                .Select(x => new QuestionSummaryViewModel
+                {
+                    Id = x.Id,
+                    Creator = x.CreateUser.UserName,
+                    DataCount = x.Datas.Count,
+                    MemoryLimitMb = x.Datas.Max(v => v.MemoryLimitMb),
+                    Name = x.Name,
+                    SolutionCount = x.Solutions.Count,
+                    TimeLimit = x.Datas.Sum(v => v.TimeLimit),
+                    UpdateTime = x.UpdateTime,
+
+                    Complished = 
+                        ( x.Solutions.Any(v => v.CreateUserId == uid && v.State == SolutionState.Accepted) ? 1 : 0 ) +
+                        ( x.Solutions.Any(v => v.CreateUserId == uid) ? 1 : 0 ), 
+                });
 
             if (!string.IsNullOrWhiteSpace(name))
             {

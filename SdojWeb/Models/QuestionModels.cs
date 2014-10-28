@@ -187,7 +187,7 @@ namespace SdojWeb.Models
         public QuestionData SampleData { get; set; }
     }
 
-    public class QuestionSummaryViewModel : IHaveCustomMapping
+    public class QuestionSummaryViewModel
     {
         [HiddenInput]
         public int Id { get; set; }
@@ -213,14 +213,20 @@ namespace SdojWeb.Models
         [Display(Name = "解答数"), DisplayFormat(DataFormatString = "{0}个")]
         public int SolutionCount { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
-        {
-            configuration.CreateMap<Question, QuestionSummaryViewModel>()
-                .ForMember(d => d.Creator, s => s.MapFrom(x => x.CreateUser.UserName))
-                .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
-                .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count))
-                .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-                .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
-        }
+        [Display(Name = "通过")]
+        public int Complished { get; set; }
+
+        // // 不能实行，因为AutoMapper不能传Context。
+        //public void CreateMappings(IConfiguration configuration)
+        //{
+        //    configuration.CreateMap<Question, QuestionSummaryViewModel>()
+        //        .ForMember(d => d.Creator, s => s.MapFrom(x => x.CreateUser.UserName))
+        //        .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
+        //        .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count))
+        //        .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
+        //        .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)))
+        //        .ForMember(d => d.Complished, s => s.MapFrom(x => x.Solutions.Any(v =>
+        //            v.State == SolutionState.Accepted)));
+        //}
     }
 }
