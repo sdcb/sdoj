@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
@@ -32,7 +34,7 @@ namespace SdojWeb.Infrastructure.Extensions
         {
             var optionalItem = new SelectListItem {Value = "", Text = optionalLabel};
             var selectList = new List<SelectListItem> {optionalItem};
-            selectList.AddRange(EnumHelper.GetSelectList(typeof (TEnum)));
+            selectList.AddRange(GetSelectList(typeof (TEnum)));
 
             if (value == null)
             {
@@ -59,6 +61,50 @@ namespace SdojWeb.Infrastructure.Extensions
             }
 
             return html.DropDownList(name, selectList, htmlAttribute);
+        }
+
+        private static IEnumerable<SelectListItem> GetSelectList(Type type)
+        {
+            IList<SelectListItem> selectList = new List<SelectListItem>();
+
+            // According to HTML5: "The first child option element of a select element with a required attribute and
+            // without a multiple attribute, and whose size is "1", must have either an empty value attribute, or must
+            // have no text content."  SelectExtensions.DropDownList[For]() methods often generate a matching
+            // <select/>.  Empty value for Nullable<T>, empty text for round-tripping an unrecognized value, or option
+            // label serves in some cases.  But otherwise, ignoring this does not cause problems in either IE or Chrome.
+            Type checkedType = Nullable.GetUnderlyingType(type) ?? type;
+            if (checkedType != type)
+            {
+                // Underlying type was non-null so handle Nullable<T>; ensure returned list has a spot for null
+                selectList.Add(new SelectListItem { Text = String.Empty, Value = String.Empty, });
+            }
+
+            // Populate the list
+            const BindingFlags bindingFlags =
+                BindingFlags.DeclaredOnly | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static;
+            foreach (FieldInfo field in checkedType.GetFields(bindingFlags))
+            {
+                selectList.Add(new SelectListItem { Text = GetDisplayName(field), Value = field.Name, });
+            }
+
+            return selectList;
+
+        }
+
+        // Return non-empty name specified in a [Display] attribute for the given field, if any; field's name otherwise
+        private static string GetDisplayName(FieldInfo field)
+        {
+            var display = field.GetCustomAttribute<DisplayAttribute>(inherit: false);
+            if (display != null)
+            {
+                string name = display.GetName();
+                if (!String.IsNullOrEmpty(name))
+                {
+                    return name;
+                }
+            }
+
+            return field.Name;
         }
     }
 }
