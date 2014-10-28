@@ -7,18 +7,17 @@ using System.Web;
 
 namespace SdojWeb.Infrastructure
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public sealed class TransactionInRequest :
         IRunOnError, 
         IRunAfterEachRequest
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly HttpContextBase _httpContext;
 
         public TransactionInRequest(
             ApplicationDbContext dbContext,
             HttpContextBase httpContext)
         {
-            _dbContext = dbContext;
             _httpContext = httpContext;
         }
 
@@ -56,7 +55,7 @@ namespace SdojWeb.Infrastructure
             }
         }
 
-        public const string TransactionKey = "_Transaction";
-        public const string TransactionError = "_Error";
+        private const string TransactionKey = "_Transaction";
+        private const string TransactionError = "_Error";
     }
 }
