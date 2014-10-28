@@ -15,7 +15,6 @@ namespace SdojWeb.Infrastructure
         private readonly HttpContextBase _httpContext;
 
         public TransactionInRequest(
-            ApplicationDbContext dbContext,
             HttpContextBase httpContext)
         {
             _httpContext = httpContext;
