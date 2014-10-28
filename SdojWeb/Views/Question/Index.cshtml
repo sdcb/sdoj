@@ -74,7 +74,7 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <td>
-                                    @if (item.Complished < 0)
+                                    @if (item.Complished > 0)
                                     {
                                         if (item.Complished == 2)
                                         {
