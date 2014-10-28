@@ -58,7 +58,6 @@ namespace SdojWeb.Controllers
 
         // GET: Questions/5
         [AllowAnonymous]
-        [Route("question/{id}")]
         public async Task<ActionResult> Details(int id)
         {
             var question = await _db.Questions
