@@ -198,37 +198,26 @@ namespace SdojWeb.Models
         [Display(Name = "作者")]
         public string Creator { get; set; }
 
-        [Display(Name = "内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
-        public float MemoryLimitMb { get; set; }
-
-        [Display(Name = "时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
-        public int TimeLimit { get; set; }
-
         [Display(Name = "更新时间")]
         public DateTime UpdateTime { get; set; }
 
         [Display(Name = "测试数据"), DisplayFormat(DataFormatString = "{0}个")]
         public int DataCount { get; set; }
 
-        [Display(Name = "解答数"), DisplayFormat(DataFormatString = "{0}个")]
+        [Display(Name = "通过/解答")]
         public int SolutionCount { get; set; }
+
+        public int AcceptedCount { get; set; }
 
         [Display(Name = "通过")]
         public bool Complished { get; set; }
 
         public bool Started { get; set; }
 
-        // // 不能实行，因为AutoMapper不能传Context。
-        //public void CreateMappings(IConfiguration configuration)
-        //{
-        //    configuration.CreateMap<Question, QuestionSummaryViewModel>()
-        //        .ForMember(d => d.Creator, s => s.MapFrom(x => x.CreateUser.UserName))
-        //        .ForMember(d => d.DataCount, s => s.MapFrom(x => x.Datas.Count))
-        //        .ForMember(d => d.SolutionCount, s => s.MapFrom(x => x.Solutions.Count))
-        //        .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-        //        .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)))
-        //        .ForMember(d => d.Complished, s => s.MapFrom(x => x.Solutions.Any(v =>
-        //            v.State == SolutionState.Accepted)));
-        //}
+        [Display(Name = "内存限制(MB)")]
+        public float MemoryLimitMb { get; set; }
+
+        [Display(Name = "时间限制(ms)")]
+        public int TimeLimit { get; set; }
     }
 }

@@ -46,11 +46,14 @@ namespace SdojWeb.Controllers
                     Id = x.Id,
                     Creator = x.CreateUser.UserName,
                     DataCount = x.Datas.Count,
-                    MemoryLimitMb = x.Datas.Max(v => v.MemoryLimitMb),
                     Name = x.Name,
-                    SolutionCount = x.Solutions.Count,
-                    TimeLimit = x.Datas.Sum(v => v.TimeLimit),
                     UpdateTime = x.UpdateTime,
+
+                    MemoryLimitMb = x.Datas.Max(v => v.MemoryLimitMb),
+                    TimeLimit = x.Datas.Sum(v => v.TimeLimit),
+
+                    SolutionCount = x.Solutions.Count,
+                    AcceptedCount = x.Solutions.Count(v => v.State == SolutionState.Accepted), 
 
                     Complished = x.Solutions.Any(v => v.CreateUserId == uid && v.State == SolutionState.Accepted),
                     Started = x.Solutions.Any(v => v.CreateUserId == uid)

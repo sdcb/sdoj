@@ -1,4 +1,6 @@
-﻿@using PagedList.Mvc
+﻿@using System.Data.Entity.Infrastructure
+@using Microsoft.Ajax.Utilities
+@using PagedList.Mvc
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
@@ -51,16 +53,16 @@
                             @Html.DisplayNameFor(model => model.Creator)
                         </th>
                         <th>
-                            @thb.BuildA(x => x.MemoryLimitMb)
+                            @Html.DisplayNameFor(x => x.TimeLimit)
                         </th>
                         <th>
-                            @thb.BuildA(x => x.TimeLimit)
+                            @Html.DisplayNameFor(x => x.MemoryLimitMb)
                         </th>
                         <th>
                             @Html.DisplayNameFor(x => x.DataCount)
                         </th>
                         <th>
-                            @thb.BuildA(x => x.SolutionCount)
+                            @Html.DisplayNameFor(x => x.SolutionCount)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.UpdateTime)
@@ -100,16 +102,18 @@
                                 @Html.DisplayFor(modelItem => item.Creator)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+                                @Html.DisplayFor(x => item.TimeLimit)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.TimeLimit)
+                                @Html.DisplayFor(x => item.MemoryLimitMb)
                             </td>
                             <td>
                                 @Html.ActionLink(Html.DisplayFor(x => item.DataCount).ToString(), "Data", new { id = item.Id })
                             </td>
                             <td>
-                                @Html.ActionLink(Html.DisplayFor(x => item.SolutionCount).ToString(), "Index", "Solution", new { question = item.Name }, null)
+                                @Html.ActionLink(item.AcceptedCount.ToStringInvariant(), "Index", "Solution", new { question = item.Name, state = SolutionState.Accepted }, null)
+                                /
+                                @Html.ActionLink(item.SolutionCount.ToStringInvariant(), "Index", "Solution", new { question = item.Name }, null)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.UpdateTime)
