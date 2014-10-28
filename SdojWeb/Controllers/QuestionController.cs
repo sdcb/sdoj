@@ -126,8 +126,6 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(QuestionEditModel model)
         {
-            TransactionInRequest.EnsureTransaction();
-
             if (ModelState.IsValid)
             {
                 var secretModel = await _db.Questions

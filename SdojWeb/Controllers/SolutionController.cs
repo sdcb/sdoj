@@ -152,8 +152,6 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public async Task<ActionResult> Create(SolutionCreateModel model)
         {
-            TransactionInRequest.EnsureTransaction();
-
             if (ModelState.IsValid)
             {
                 var solution = Mapper.Map<Solution>(model);
