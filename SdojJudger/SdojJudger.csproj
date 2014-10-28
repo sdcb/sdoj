@@ -128,6 +128,7 @@
     <Compile Include="Compiler\Infrastructure\CompilerProvider.cs" />
     <Compile Include="Compiler\CppCompiler.cs" />
     <Compile Include="Compiler\CSharpCompiler.cs" />
+    <Compile Include="Compiler\Infrastructure\DotNetCompiler.cs" />
     <Compile Include="Compiler\Python3Compiler.cs" />
     <Compile Include="Compiler\VisualBasicCompiler.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
