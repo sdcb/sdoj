@@ -214,7 +214,9 @@ namespace SdojWeb.Models
         public int SolutionCount { get; set; }
 
         [Display(Name = "通过")]
-        public int Complished { get; set; }
+        public bool Complished { get; set; }
+
+        public bool Started { get; set; }
 
         // // 不能实行，因为AutoMapper不能传Context。
         //public void CreateMappings(IConfiguration configuration)

@@ -41,7 +41,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <th>
-                                @thb.BuildA(x => x.Complished)
+                                @Html.DisplayNameFor(x => x.Complished)
                             </th>
                         }
                         <th>
@@ -74,9 +74,9 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <td>
-                                    @if (item.Complished > 0)
+                                    @if (item.Started)
                                     {
-                                        if (item.Complished == 2)
+                                        if (item.Complished)
                                         {
                                             <span class="text-success">
                                                 <i class="glyphicon glyphicon-ok">

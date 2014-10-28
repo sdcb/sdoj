@@ -52,9 +52,8 @@ namespace SdojWeb.Controllers
                     TimeLimit = x.Datas.Sum(v => v.TimeLimit),
                     UpdateTime = x.UpdateTime,
 
-                    Complished = 
-                        ( x.Solutions.Any(v => v.CreateUserId == uid && v.State == SolutionState.Accepted) ? 1 : 0 ) +
-                        ( x.Solutions.Any(v => v.CreateUserId == uid) ? 1 : 0 ), 
+                    Complished = x.Solutions.Any(v => v.CreateUserId == uid && v.State == SolutionState.Accepted),
+                    Started = x.Solutions.Any(v => v.CreateUserId == uid)
                 });
 
             if (!string.IsNullOrWhiteSpace(name))
