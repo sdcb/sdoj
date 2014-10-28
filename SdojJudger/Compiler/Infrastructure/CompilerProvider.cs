@@ -1,7 +1,8 @@
-﻿using SdojJudger.Models;
+﻿using System;
+using SdojJudger.Models;
 namespace SdojJudger.Compiler.Infrastructure
 {
-    public abstract class CompilerProvider
+    public abstract class CompilerProvider : IDisposable
     {
         public static CompilerProvider GetCompiler(SolutionPushModel model)
         {
@@ -49,5 +50,7 @@ namespace SdojJudger.Compiler.Infrastructure
         }
 
         public abstract CompileResult Compile(string source);
+
+        public abstract void Dispose();
     }
 }

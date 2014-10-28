@@ -9,19 +9,19 @@ namespace SdojJudger.Compiler
     {
         public override CompileResult Compile(string source)
         {
-            var filename = GetTempFileNameWithoutExtension();
-            File.WriteAllText(filename + ".py", source);
+            _filename = GetTempFileNameWithoutExtension();
+            File.WriteAllText(_filename + ".py", source);
 
-            var info = CompileSourceFile(filename);
-            info = info.Replace(filename, "Source");
+            var info = CompileSourceFile(_filename);
+            info = info.Replace(_filename, "Source");
 
-            if (File.Exists(filename + ".pyc"))
+            if (File.Exists(_filename + ".pyc"))
             {
                 return new CompileResult
                 {
                     HasErrors = false, 
-                    Output = info, 
-                    PathToAssembly = string.Format("{0} {1}.pyc", AppSettings.Python3Path, filename)
+                    Output = info,
+                    PathToAssembly = string.Format("{0} {1}.pyc", AppSettings.Python3Path, _filename)
                 };
             }
             else
@@ -32,6 +32,20 @@ namespace SdojJudger.Compiler
                     Output = info, 
                     PathToAssembly = null
                 };
+            }
+        }
+
+        private string _filename;
+
+        public override void Dispose()
+        {
+            if (File.Exists(_filename + ".py"))
+            {
+                File.Delete(_filename + ".py");
+            }
+            if (File.Exists(_filename + ".pyc"))
+            {
+                File.Delete(_filename + ".pyc");
             }
         }
 

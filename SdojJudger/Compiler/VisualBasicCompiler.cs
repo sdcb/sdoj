@@ -1,4 +1,5 @@
 ﻿using System.CodeDom.Compiler;
+using System.IO;
 using Microsoft.VisualBasic;
 using SdojJudger.Compiler.Infrastructure;
 
@@ -13,8 +14,18 @@ namespace SdojJudger.Compiler
             options.ReferencedAssemblies.Add("System.dll");
             options.ReferencedAssemblies.Add("System.Core.dll");
             options.ReferencedAssemblies.Add("Microsoft.VisualBasic.dll");
-            var asm = vbc.CompileAssemblyFromSource(options, source);
-            return new CompileResult(asm);
+            _asm = vbc.CompileAssemblyFromSource(options, source);
+            return new CompileResult(_asm);
         }
+
+        public override void Dispose()
+        {
+            if (File.Exists(_asm.PathToAssembly))
+            {
+                File.Delete(_asm.PathToAssembly);
+            }
+        }
+
+        private CompilerResults _asm;
     }
 }

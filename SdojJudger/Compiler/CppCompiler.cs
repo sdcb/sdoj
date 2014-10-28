@@ -12,7 +12,7 @@ namespace SdojJudger.Compiler
     {
         public CppCompiler(bool compileAsC)
         {
-            CompileAsC = compileAsC;
+            _compileAsC = compileAsC;
 
             _fileExtension = compileAsC ? ".c" : ".cpp";
 
@@ -25,15 +25,15 @@ namespace SdojJudger.Compiler
 
 
             var filename = GetTempFileNameWithoutExtension();
-            var fullpath = Path.Combine(Path.GetTempPath(), filename);
+            _fullpath = Path.Combine(Path.GetTempPath(), filename);
 
-            File.WriteAllText(fullpath + _fileExtension, source);
+            File.WriteAllText(_fullpath + _fileExtension, source);
 
-            CompileSourceFile(fullpath);
+            CompileSourceFile(_fullpath);
 
-            var executableFile = fullpath + ".exe";
-            var log = File.ReadAllText(fullpath + ".txt", Encoding.Default);
-            log = log.Replace(fullpath, "Source").Replace(filename, "Source");
+            var executableFile = _fullpath + ".exe";
+            var log = File.ReadAllText(_fullpath + ".txt", Encoding.Default);
+            log = log.Replace(_fullpath, "Source").Replace(filename, "Source");
 
             if (!File.Exists(executableFile))
             {
@@ -46,6 +46,26 @@ namespace SdojJudger.Compiler
                 Output = log, 
                 PathToAssembly = executableFile
             };
+        }
+
+        public override void Dispose()
+        {
+            if (File.Exists(_fullpath + _fileExtension))
+            {
+                File.Delete(_fullpath + _fileExtension);
+            }
+            if (File.Exists(_fullpath + ".obj"))
+            {
+                File.Delete(_fullpath + ".obj");
+            }
+            if (File.Exists(_fullpath + ".exe"))
+            {
+                File.Delete(_fullpath + ".exe");
+            }
+            if (File.Exists(_fullpath + ".txt"))
+            {
+                File.Delete(_fullpath + ".txt");
+            }
         }
 
         private static string GetTempFileNameWithoutExtension()
@@ -84,7 +104,7 @@ namespace SdojJudger.Compiler
 
             // C++11
             // g++ -static -fno-strict-aliasing -DONLINE_JUDGE -lm -s -x c++ -std=c++1y -O2 -o %1.exe %1
-            if (CompileAsC)
+            if (_compileAsC)
             {
                 input =
                     string.Format(
@@ -116,7 +136,7 @@ namespace SdojJudger.Compiler
         {
             string cl;
 
-            if (CompileAsC)
+            if (_compileAsC)
             {
                 cl = string.Format("cl \"{0}.c\" /MD /EHsc " +
                                    "/D \"ONLINE_JUDGE\" /D \"_CRT_SECURE_NO_DEPRECATE\" " +
@@ -154,10 +174,12 @@ namespace SdojJudger.Compiler
             ps.WaitForExit();
         }
 
-        public bool CompileAsC { get; private set; }
+        private readonly bool _compileAsC;
 
         private readonly string _fileExtension;
 
         private readonly ILog _logger;
+
+        private string _fullpath;
     }
 }
