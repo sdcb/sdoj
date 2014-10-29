@@ -54,7 +54,7 @@ struct process_information
 
 
 
-null_handle create_job_object(size_t memory_limit, int64_t time_limit);
+null_handle create_job_object(size_t memory_limit, int64_t time_limit, bool limit_process_count);
 
 
 

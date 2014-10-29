@@ -7,7 +7,8 @@ using namespace std;
 run_process::run_process(api_run_info const & info) :
 	m_path(info.path, info.path_len),
 	m_time_limit(ms_to_ns100(info.time_limit_ms)),
-	m_memory_limit(static_cast<int64_t>((double)info.memory_limit_mb * 1024 * 1024))
+	m_memory_limit(static_cast<int64_t>((double)info.memory_limit_mb * 1024 * 1024)), 
+	m_limit_process_count(info.limit_process_count)
 {
 }
 
@@ -15,7 +16,7 @@ run_process::run_process(api_run_info const & info) :
 
 void run_process::begin_run()
 {
-	null_handle m_job{ create_job_object(m_memory_limit, m_time_limit) };
+	null_handle m_job{ create_job_object(m_memory_limit, m_time_limit, m_limit_process_count) };
 	pipe_handles pipe_handles;
 	m_pi = move(create_security_process(&m_path[0], 
 										pipe_handles.in_read.get(), 

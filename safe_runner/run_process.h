@@ -12,6 +12,8 @@ struct api_run_info
 	int32_t time_limit_ms;
 
 	float memory_limit_mb;
+
+	bool limit_process_count;
 };
 
 struct api_run_io_result
@@ -62,6 +64,8 @@ private:
 	int64_t m_time_limit;
 
 	int64_t m_memory_limit;
+
+	bool m_limit_process_count;
 
 	// io result:
 	null_handle m_input_write;

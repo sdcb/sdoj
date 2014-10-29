@@ -16,7 +16,7 @@ judge_info::judge_info(api_judge_info const & aji) :
 
 void judge_process::execute()
 {
-	null_handle job{ create_job_object(m_judge_info.memory_limit, m_judge_info.time_limit) };
+	null_handle job{ create_job_object(m_judge_info.memory_limit, m_judge_info.time_limit, true) };
 	pipe_handles pipe_handles;
 	process_information process_info{ create_security_process(&m_judge_info.path[0], 
 															  pipe_handles.in_read.get(), 

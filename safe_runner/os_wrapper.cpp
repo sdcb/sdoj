@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "os_wrapper.h"
 
-null_handle create_job_object(size_t memory_limit, int64_t time_limit)
+null_handle create_job_object(size_t memory_limit, int64_t time_limit, bool limit_process_count)
 {
 	null_handle job{ CreateJobObject(nullptr, nullptr) };
 	ThrowIfFailed(job);
@@ -12,29 +12,32 @@ null_handle create_job_object(size_t memory_limit, int64_t time_limit)
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_limit{};
 	extend_limit.JobMemoryLimit = memory_limit;
-	/*extend_limit.ProcessMemoryLimit                                     = info.memory_limit;*/
-	extend_limit.BasicLimitInformation.ActiveProcessLimit = 1;
 	extend_limit.BasicLimitInformation.PerProcessUserTimeLimit.QuadPart = time_limit;
-	extend_limit.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_JOB_MEMORY |
-		/*JOB_OBJECT_LIMIT_PROCESS_MEMORY             |*/
-		JOB_OBJECT_LIMIT_ACTIVE_PROCESS |
-		JOB_OBJECT_LIMIT_PROCESS_TIME |
-		JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION |
-		JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE |
-		0;
+	extend_limit.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_JOB_MEMORY					|
+													JOB_OBJECT_LIMIT_PROCESS_TIME				|
+													JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION |
+													JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE			|
+													0;
+
+	if (limit_process_count)
+	{
+		extend_limit.BasicLimitInformation.ActiveProcessLimit	= 1;
+		extend_limit.BasicLimitInformation.LimitFlags			|= JOB_OBJECT_LIMIT_ACTIVE_PROCESS;
+	}
+
 	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_limit, sizeof(extend_limit)));
 
 
 	JOBOBJECT_BASIC_UI_RESTRICTIONS ui_limit;
-	ui_limit.UIRestrictionsClass = 0 |
-		JOB_OBJECT_UILIMIT_HANDLES |
-		JOB_OBJECT_UILIMIT_READCLIPBOARD |
-		JOB_OBJECT_UILIMIT_WRITECLIPBOARD |
-		JOB_OBJECT_UILIMIT_SYSTEMPARAMETERS |
-		JOB_OBJECT_UILIMIT_DISPLAYSETTINGS |
-		JOB_OBJECT_UILIMIT_GLOBALATOMS |
-		JOB_OBJECT_UILIMIT_DESKTOP |
-		JOB_OBJECT_UILIMIT_EXITWINDOWS;
+	ui_limit.UIRestrictionsClass = 0									|
+								   JOB_OBJECT_UILIMIT_HANDLES			|
+								   JOB_OBJECT_UILIMIT_READCLIPBOARD		|
+								   JOB_OBJECT_UILIMIT_WRITECLIPBOARD	|
+								   JOB_OBJECT_UILIMIT_SYSTEMPARAMETERS	|
+								   JOB_OBJECT_UILIMIT_DISPLAYSETTINGS	|
+								   JOB_OBJECT_UILIMIT_GLOBALATOMS		|
+								   JOB_OBJECT_UILIMIT_DESKTOP			|
+								   JOB_OBJECT_UILIMIT_EXITWINDOWS;
 	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectBasicUIRestrictions, &ui_limit, sizeof(ui_limit)));
 
 
@@ -86,21 +89,21 @@ process_information create_security_process(wchar_t * cmd,
 	si.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
 	si.lpAttributeList = attr_list.get();
 
-	unsigned long flags = CREATE_SUSPENDED |
-		CREATE_NO_WINDOW |
-		HIGH_PRIORITY_CLASS |
-		EXTENDED_STARTUPINFO_PRESENT;
+	unsigned long flags = CREATE_SUSPENDED		|
+						  CREATE_NO_WINDOW		|
+						  HIGH_PRIORITY_CLASS	|
+						  EXTENDED_STARTUPINFO_PRESENT;
 	ThrowIfFailed(CreateProcessAsUser(token.get(),
-		nullptr,
-		&cmd[0],
-		nullptr,
-		nullptr,
-		TRUE,
-		flags,
-		nullptr,
-		nullptr,
-		reinterpret_cast<LPSTARTUPINFO>(&si),
-		&pi));
+									  nullptr,
+									  &cmd[0],
+									  nullptr,
+									  nullptr,
+									  TRUE,
+									  flags,
+									  nullptr,
+									  nullptr,
+									  reinterpret_cast<LPSTARTUPINFO>(&si),
+									  &pi));
 
 	ThrowIfFailed(AssignProcessToJobObject(job, pi.hProcess));
 
