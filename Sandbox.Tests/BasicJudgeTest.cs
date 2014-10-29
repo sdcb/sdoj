@@ -4,7 +4,7 @@ using Microsoft.CSharp;
 using SdojJudger.Runner;
 using Xunit;
 
-namespace SafeRunnerTest
+namespace Sandbox.Tests
 {
     class BasicJudgeTest
     {

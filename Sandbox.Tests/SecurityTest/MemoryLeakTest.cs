@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.CSharp;
 using SdojJudger.Runner;
-using Xunit;
 using Xunit.Extensions;
 
-namespace SafeRunnerTest.SecurityTest
+namespace Sandbox.Tests.SecurityTest
 {
     public class MemoryLeakTest
     {

@@ -1,11 +1,9 @@
-﻿using System.CodeDom.Compiler;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using FluentAssertions;
-using Microsoft.CSharp;
 using SdojJudger.Runner;
 using Xunit;
 
-namespace SafeRunnerTest
+namespace Sandbox.Tests
 {
     public class ProcessRun
     {
