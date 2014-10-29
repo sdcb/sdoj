@@ -139,9 +139,9 @@ namespace SdojWeb.Controllers
 
         //
         // GET: Solution/Create/id
-        public ActionResult Create(int? id)
+        public ActionResult Create(int id, string name)
         {
-            var solutionCreateModel = new SolutionCreateModel {QuestionId = id??0};
+            var solutionCreateModel = new SolutionCreateModel {QuestionId = id, Name = name};
             return View(solutionCreateModel);
         }
 

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
+using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Mapping;
@@ -56,8 +57,11 @@ namespace SdojWeb.Models
 
     public class SolutionCreateModel : IHaveCustomMapping
     {
-        [Display(Name = "题目"), Required, Editable(false)]
+        [Display(Name = "ID"), Required, HiddenInput]
         public int QuestionId { get; set; }
+
+        [Display(Name = "题目"), Editable(false)]
+        public string Name { get; set; }
 
         [Display(Name = "语言"), Required]
         public Languages Language { get; set; }
