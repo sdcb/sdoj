@@ -40,10 +40,14 @@ struct process_information
 	uint32_t process_id;
 	uint32_t thread_id;
 
+	process_information(){}
+
 	process_information(process_information const &) = delete;
 	process_information operator=(process_information const &) = delete;
 
 	process_information(process_information &&);
+
+	process_information operator=(process_information &&);
 
 	process_information(PROCESS_INFORMATION const &);
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "os_wrapper.h"
 
 class run_process;
 
@@ -34,8 +35,6 @@ struct api_run_result
 
 	uint32_t error_code;
 
-	uint32_t except_code;
-
 	int32_t exit_code;
 
 	int32_t time_ms;
@@ -46,12 +45,7 @@ struct api_run_result
 class run_process
 {
 public:
-	run_process(api_run_info const & info) :
-		m_path(info.path, info.path_len), 
-		m_time_limit_ms(info.time_limit_ms), 
-		m_memory_limit_mb(info.memory_limit_mb)
-	{
-	}
+	run_process(api_run_info const & info);
 
 	void begin_run();
 
@@ -65,21 +59,24 @@ private:
 	// input: 
 	std::wstring m_path;
 
-	int32_t m_time_limit_ms;
+	int64_t m_time_limit;
 
-	float m_memory_limit_mb;
+	int64_t m_memory_limit;
 
 	// io result:
-	HANDLE m_input_write;
+	null_handle m_input_write;
 
-	HANDLE m_output_read;
+	null_handle m_output_read;
 
-	HANDLE m_error_read;
+	null_handle m_error_read;
+
+	// temp: 
+	process_information m_pi;
+
+	null_handle m_job;
 
 	// result: 
 	uint32_t m_error_code;
-
-	uint32_t m_except_code;
 
 	DWORD m_exit_code;
 

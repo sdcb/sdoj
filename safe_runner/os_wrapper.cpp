@@ -186,6 +186,20 @@ process_information::process_information(process_information && that)
 {
 	ThrowIfFailed(process_handle.reset(that.process_handle.release()));
 	ThrowIfFailed(thread_handle.reset(that.thread_handle.release()));
+	process_id = that.process_id;
+	thread_id = that.thread_id;
+}
+
+
+
+process_information process_information::operator=(process_information && that)
+{
+	process_information pi;
+	pi.process_handle.reset(that.process_handle.release());
+	pi.thread_handle.reset(that.process_handle.release());
+	pi.process_id = that.process_id;
+	pi.thread_id = that.thread_id;
+	return pi;
 }
 
 

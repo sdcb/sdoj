@@ -112,7 +112,7 @@ void judge_process::execute()
 
 	// wait the process ( terminate in job close )
 	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
-		static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
+											static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
 
 	QueryPerformanceCounter(&wait_end);
 	auto microsecond = 1000LL * (wait_end.QuadPart - wait_start.QuadPart) / freq.QuadPart;
