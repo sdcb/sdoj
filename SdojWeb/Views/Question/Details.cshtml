@@ -1,5 +1,6 @@
 ﻿@using SdojWeb.Infrastructure.Identity
-@model SdojWeb.Models.QuestionDetailModel
+@using SdojWeb.Models
+@model QuestionDetailModel
 @{
     ViewBag.Title = Model.Name;
 }
@@ -55,32 +56,43 @@ else
 }
 
 
-<p>
+<div class="clearfix">
     <a class="btn btn-primary" href="@Url.Action("Create", "Solution", new {id=Model.Id})">
         <i class="glyphicon glyphicon-plus-sign"></i>
         解答
     </a>
-    @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
-    {
-        <a class="btn btn-success" href="@Url.Action("Edit", new {id=Model.Id})">
-            <i class="glyphicon glyphicon-edit"></i>
-            编辑
+    <div class="pull-right">
+        @if (User.IsUserOrRole(Model.CreateUserId, SystemRoles.QuestionAdmin))
+        {
+            <a class="btn btn-success" href="@Url.Action("Edit", new {id=Model.Id})">
+                <i class="glyphicon glyphicon-edit"></i>
+                编辑
+            </a>
+            <button type="button" class="btn btn-warning" onclick="rejudge(@Model.Id)">
+                <i class="glyphicon glyphicon-repeat"></i>
+                重新评测
+            </button>
+            <button type="button" class="btn btn-danger" onclick="deleteMe(@Model.Id)">
+                <i class="glyphicon glyphicon-remove"></i>
+                删除
+            </button>
+        }
+        <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
+            <i class="glyphicon glyphicon-file"></i>
+            测试数据
         </a>
-        <button type="button" class="btn btn-warning" onclick="rejudge(@Model.Id)">
-            <i class="glyphicon glyphicon-repeat"></i>
-            重新评测
-        </button>
-        <button type="button" class="btn btn-danger" onclick="deleteMe(@Model.Id)">
-            <i class="glyphicon glyphicon-remove"></i>
-            删除
-        </button>
-    }
-    <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
-        <i class="glyphicon glyphicon-file"></i>
-        测试数据
-    </a>
-</p>
+    </div>
+</div>
+
+<hr/>
 @Html.ActionLink("返回列表", "Index")
+
+<div class="pull-right clearfix">
+    @Html.ActionLink("查看通过解答", "Index", "Solution", new {question=Model.Name, state = SolutionState.Accepted}, null) |
+    @Html.ActionLink("查看所有解答", "Index", "Solution", new {question=Model.Name}, null)
+</div>
+
+
 @using (Html.BeginForm("Delete", "Question", FormMethod.Post, new { id = "delete-form" }))
 {
     @Html.AntiForgeryToken()
