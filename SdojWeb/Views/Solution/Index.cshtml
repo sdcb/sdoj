@@ -248,8 +248,8 @@
             self.loadcode = function(id) {
                 self.code('加载中...');
                 self.id = null;
-                $.get("@Url.Action("Source")", { id: id }, function(data) {
-                    self.code(data);
+                $.get("@Url.Action("Source")", { id: id }, function (data) {
+                    self.code(data.replace(new RegExp("\t", "g"), "    "));
                     self.id = id;
                 });
             };
