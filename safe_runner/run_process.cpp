@@ -36,6 +36,6 @@ void run_process::get_result(api_run_result & result)
 	result.error_code = m_error_code;
 	result.except_code = m_except_code;
 	result.exit_code = m_exit_code;
-	result.memory_mb = m_memory_mb;
+	result.memory_mb = m_memory_mb/1024/1024.0f;
 	result.time_ms = m_time_ms;
 }

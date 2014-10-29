@@ -14,11 +14,6 @@ namespace SdojJudger.Compiler
             options.ReferencedAssemblies.Add("Microsoft.VisualBasic.dll");
             _asm = vbc.CompileAssemblyFromSource(options, source);
 
-            if (!_asm.Errors.HasErrors)
-            {
-                NGen(_asm.PathToAssembly);
-            }
-
             return new CompileResult(_asm);
         }
 
@@ -27,7 +22,6 @@ namespace SdojJudger.Compiler
             if (File.Exists(_asm.PathToAssembly))
             {
                 File.Delete(_asm.PathToAssembly);
-                UnNGen(_asm.PathToAssembly);
             }
         }
 
