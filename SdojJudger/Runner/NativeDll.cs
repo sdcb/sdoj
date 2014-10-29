@@ -27,9 +27,9 @@ namespace SdojJudger.Runner
 
         // P/Invoke functions
 #if DEBUG
-        [DllImport(@"Reference\Debug\safe_runner", 
+        [DllImport(@"Reference\Debug\sandbox", 
 #else
-        [DllImport(@"Reference\Release\safe_runner", 
+        [DllImport(@"Reference\Release\sandbox", 
 #endif
             EntryPoint = "free_judge_result", 
             CallingConvention = CallingConvention.Cdecl, 
@@ -38,9 +38,9 @@ namespace SdojJudger.Runner
         private static extern void FreeJudgeResult(ref ApiJudgeResult result);
 
 #if DEBUG
-        [DllImport(@"Reference\Debug\safe_runner",
+        [DllImport(@"Reference\Debug\sandbox",
 #else
-        [DllImport(@"Reference\Release\safe_runner",
+        [DllImport(@"Reference\Release\sandbox",
 #endif
             EntryPoint = "judge",
             CallingConvention = CallingConvention.Cdecl,

@@ -22,6 +22,7 @@
     <ProjectGuid>{BFC12033-CA82-43B7-ABA2-6E43B21264B5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>safe_runner</RootNamespace>
+    <ProjectName>sandbox</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
