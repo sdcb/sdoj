@@ -156,7 +156,7 @@
     <ClInclude Include="os_wrapper.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="run_process.h" />
-    <ClInclude Include="safe_runner.h" />
+    <ClInclude Include="sandbox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="judge_process.cpp" />
@@ -168,7 +168,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="run_process.cpp" />
-    <ClCompile Include="safe_runner.cpp" />
+    <ClCompile Include="sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />
