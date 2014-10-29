@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace SdojWeb.Infrastructure.ModelMetadata.Filters
 {
-    public class TextAreaByNameFilter : IModelMetadataFilter
+    // 暂时没有用。
+    //public class TextAreaByNameFilter : IModelMetadataFilter
+    public class TextAreaByNameFilter
     {
         private static readonly HashSet<string> TextAreaFieldNames =
             new HashSet<string>
