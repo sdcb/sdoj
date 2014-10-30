@@ -52,7 +52,7 @@ namespace SdojWeb.Controllers
             };
 
             var query = UserMgr.Users
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.Id)
                 .Project().To<UserSummaryViewModel>();
             
             if (!string.IsNullOrWhiteSpace(username))
