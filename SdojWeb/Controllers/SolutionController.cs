@@ -77,7 +77,8 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-        // GET: Solution/Source/5
+        // POST: Solution/Source/5
+        [HttpPost]
         public async Task<ActionResult> Source(int id)
         {
             var model = await _db.Solutions
@@ -92,13 +93,14 @@ namespace SdojWeb.Controllers
 
             if (CheckAccess(model.AuthorId, model.QuestionCreateUserId) || User.IsInRole(SystemRoles.SolutionViewer))
             {
-                return Content(model.Source);
+                return Content(model.Source, "text/plain");
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
         }
 
-        // GET: Solution/CompilerOutput/5
+        // POST: Solution/CompilerOutput/5
+        [HttpPost]
         public async Task<ActionResult> CompilerOutput(int id)
         {
             var model = await _db.Solutions
@@ -112,7 +114,7 @@ namespace SdojWeb.Controllers
 
             if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
             {
-                return Content(model.CompilerOutput);
+                return Content(model.CompilerOutput, "text/plain");
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
