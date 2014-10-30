@@ -135,7 +135,7 @@
                                 @Html.DisplayFor(modelItem => item.SubmitTime)
                             </td>
                             <td>
-                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId) || User.IsInRole(SystemRoles.SolutionViewer))
                                 {
                                     <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
                                        data-bind="click: loadcode.bind($data, @item.Id)">

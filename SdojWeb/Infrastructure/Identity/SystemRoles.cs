@@ -8,8 +8,10 @@
 
         public const string QuestionCreator = "题目作者";
 
-        public const string QuestionAdminOrCreator = "题目管理员, 题目作者";
+        public const string QuestionAdminOrCreator = QuestionAdmin + "," + QuestionCreator;
 
         public const string Judger = "评测人员";
+
+        public const string SolutionViewer = "可看答案";
     }
 }

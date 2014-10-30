@@ -28,6 +28,7 @@ namespace SdojWeb.Migrations
             roleManager.Create(new Role { Name = SystemRoles.QuestionAdmin });
             roleManager.Create(new Role { Name = SystemRoles.QuestionCreator });
             roleManager.Create(new Role { Name = SystemRoles.Judger });
+            roleManager.Create(new Role { Name = SystemRoles.SolutionViewer });
 
             // 添加预定义用户。
 

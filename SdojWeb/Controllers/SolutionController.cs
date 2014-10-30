@@ -90,7 +90,7 @@ namespace SdojWeb.Controllers
                 })
                 .FirstAsync();
 
-            if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
+            if (CheckAccess(model.AuthorId, model.QuestionCreateUserId) || User.IsInRole(SystemRoles.SolutionViewer))
             {
                 return Content(model.Source);
             }
