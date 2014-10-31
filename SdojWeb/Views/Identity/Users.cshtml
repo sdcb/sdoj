@@ -52,6 +52,9 @@
                 <thead>
                     <tr>
                         <th>
+                            @thb.BuildA(x => x.Id)
+                        </th>
+                        <th>
                             @thb.BuildA(x => x.UserName)
                         </th>
                         <th>
@@ -70,6 +73,9 @@
                     @foreach (var user in Model)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(x => user.Id)
+                            </td>
                             <td>
                                 @Html.DisplayFor(x => user.UserName)
                             </td>
