@@ -428,6 +428,7 @@
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
     <Content Include="Views\Shared\_Nav.cshtml" />
     <Content Include="Views\Question\Data.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Markdown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

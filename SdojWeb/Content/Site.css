@@ -37,3 +37,7 @@ div.well {
 .modal-lg textarea {
     max-width: 100%;
 }
+
+.markdown textarea {
+    max-width: 100%;
+}

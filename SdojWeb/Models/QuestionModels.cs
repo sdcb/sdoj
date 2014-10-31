@@ -91,13 +91,13 @@ namespace SdojWeb.Models
         [Display(Name = "标题"), Required, Remote("CheckName", "Question"), MaxLength(30)]
         public string Name { get; set; }
 
-        [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
         public string Description { get; set; }
 
-        [Display(Name = "输入说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        [Display(Name = "输入说明"), MaxLength(1000), DataType("Markdown")]
         public string InputExplain { get; set; }
 
-        [Display(Name = "输出说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
 
         [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
@@ -135,7 +135,7 @@ namespace SdojWeb.Models
         [Display(Name = "标题"), Required, MaxLength(30)]
         public string Name { get; set; }
 
-        [Display(Name = "描述"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
         public string Description { get; set; }
 
         [Display(Name = "内存限制(MB)"), Editable(false)]
@@ -147,10 +147,10 @@ namespace SdojWeb.Models
         [HiddenInput]
         public int? QuestionDataId { get; set; }
 
-        [Display(Name = "输入说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        [Display(Name = "输入说明"), MaxLength(1000), DataType("Markdown")]
         public string InputExplain { get; set; }
 
-        [Display(Name = "输出说明"), MaxLength(1000), DataType(DataType.MultilineText)]
+        [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
 
         [Display(Name = "输入样例"), DataType(DataType.MultilineText)]

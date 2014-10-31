@@ -1,0 +1,9 @@
+﻿@model string
+@Html.TextArea("", ViewData.TemplateInfo.FormattedModelValue.ToString(),
+        new
+        {
+            @class = "form-control markdown",
+            rows = 15,
+            placeholder = ViewData.ModelMetadata.Watermark, 
+            data_provide = "markdown",
+        })
