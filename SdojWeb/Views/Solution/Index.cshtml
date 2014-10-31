@@ -176,12 +176,19 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">源代码</h4>
+                <h4 class="modal-title" id="myModalLabel">
+                    源代码
+                </h4>
             </div>
             <div class="modal-body">
                 <pre data-bind="text: code"></pre>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-primary" data-bind="click: rawCode">
+                    <i class="glyphicon glyphicon-file"></i>
+                    Raw
+                </button>
+
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     关闭
                 </button>
@@ -237,19 +244,23 @@
     <script src="~/signalr/hubs"></script>
     @Scripts.Render("~/bundles/ko")
     <script>
-        function ViewModel() {
-            var self = this;
-            self.onlyMe = '@route["onlyMe"]';
-            self.code = ko.observable();
-            self.compilerOutput = ko.observable();
+    function ViewModel() {
+        var self = this;
+        self.onlyMe = '@route["onlyMe"]';
+        self.code = ko.observable();
+        self.compilerOutput = ko.observable();
 
-            self.loadcode = function(id) {
-                self.code('加载中...');
-                self.id = null;
-                $.post("@Url.Action("Source")" + "/" + id, function (data) {
+        self.loadcode = function(id) {
+            self.code('加载中...');
+            self.id = null;
+            $.get("@Url.Action("Source")" + "/" + id, function (data) {
                     self.code(data.replace(new RegExp("\t", "g"), "    "));
                     self.id = id;
                 });
+            };
+            self.rawCode = function() {
+                var url = '@Url.Action("Source", "Solution")' + '/' + self.id;
+                window.open(url);
             };
             self.deleteMe = function(id) {
                 if (confirm('确定要删除此解答吗？')) {
@@ -270,24 +281,24 @@
                 $("#compiler-modal").modal();
                 self.compilerOutput('加载中...');
                 $.post("@Url.Action("CompilerOutput")" + "/" + id, function (data) {
-                    self.compilerOutput(data);
-                });
-            };
+                self.compilerOutput(data);
+            });
         };
+    };
 
-        var shub = $.connection.solutionHub;
-        shub.client.push = function (id, name, runtime, memory) {
-            $("#runtime-" + id).text(runtime);
-            $("#memory-" + id).text(memory.toFixed(2));
+    var shub = $.connection.solutionHub;
+    shub.client.push = function (id, name, runtime, memory) {
+        $("#runtime-" + id).text(runtime);
+        $("#memory-" + id).text(memory.toFixed(2));
 
-            $("#state-" + id).text(name);
-        };
-        $.connection.hub.start();
+        $("#state-" + id).text(name);
+    };
+    $.connection.hub.start();
 
-        setTimeout(function () {
-            var vm = new ViewModel();
-            ko.applyBindings(vm);
-        }, 500);
-        
+    setTimeout(function () {
+        var vm = new ViewModel();
+        ko.applyBindings(vm);
+    }, 500);
+
     </script>
 }

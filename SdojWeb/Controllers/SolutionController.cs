@@ -77,8 +77,7 @@ namespace SdojWeb.Controllers
             return View(model);
         }
 
-        // POST: Solution/Source/5
-        [HttpPost]
+        // GET: Solution/Source/5
         public async Task<ActionResult> Source(int id)
         {
             var model = await _db.Solutions
