@@ -4,6 +4,7 @@
     ViewBag.Title = "创建";
 }
 
+@Styles.Render("~/bundles/bootstrap-markdown-css")
 <h2>@ViewBag.Title</h2>
 
 
@@ -31,4 +32,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/marked")
+    @Scripts.Render("~/bundles/bootstrap-markdown")
+
+    <script>
+        $("#Description").markdown();
+    </script>
 }

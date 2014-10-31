@@ -15,7 +15,7 @@ namespace SdojWeb
                         "~/Scripts/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate.js", 
+                        "~/Scripts/jquery.validate.js",
                         "~/Scripts/jquery.validate.unobstrusive.js",
                         "~/Scripts/jquery.validate-localization.js",
                         "~/Scripts/jquery-validate.bootstrap-tooltip.js").ForceOrdered());
@@ -38,9 +38,18 @@ namespace SdojWeb
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
+            bundles.Add(new StyleBundle("~/bundles/bootstrap-markdown-css").Include(
+                        "~/Content/bootstrap-markdown/bootstrap-markdown.min.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/marked").Include(
+                        "~/Scripts/marked.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-markdown").Include(
+                        "~/Scripts/bootstrap-markdown.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
                 "~/Scripts/jquery.signalR-{version}.js"));
-            
+
             // 使用要用于开发和学习的 Modernizr 的开发版本。然后，当你做好
             // 生产准备时，请使用 http://modernizr.com 上的生成工具来仅选择所需的测试。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
