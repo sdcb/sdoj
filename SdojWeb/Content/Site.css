@@ -10,9 +10,8 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
+input.form-control,
+select.form-control {
     max-width: 500px;
 }
 
@@ -31,13 +30,4 @@ textarea {
 div.well {
     white-space:pre;
     word-wrap: break-word;
-}
-.modal-lg input,
-.modal-lg select,
-.modal-lg textarea {
-    max-width: 100%;
-}
-
-.markdown textarea {
-    max-width: 100%;
 }

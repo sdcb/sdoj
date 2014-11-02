@@ -102,6 +102,7 @@ namespace SdojWeb.Controllers
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost, ValidateAntiForgeryToken, SdojAuthorize(Roles = SystemRoles.QuestionAdminOrCreator)]
+        [ValidateInput(false)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
             TransactionInRequest.EnsureTransaction();
@@ -141,7 +142,7 @@ namespace SdojWeb.Controllers
         // POST: Questions/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public async Task<ActionResult> Edit(QuestionEditModel model)
         {
             if (ModelState.IsValid)

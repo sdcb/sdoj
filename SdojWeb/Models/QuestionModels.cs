@@ -53,13 +53,13 @@ namespace SdojWeb.Models
         [Display(Name = "标题")]
         public string Name { get; set; }
 
-        [Display(Name = "描述"), DataType(DataType.MultilineText)]
+        [Display(Name = "描述"), DataType("Markdown")]
         public string Description { get; set; }
 
-        [Display(Name = "输入说明"), DataType(DataType.MultilineText), DisplayFormat(NullDisplayText = "无")]
+        [Display(Name = "输入说明"), DataType("Markdown"), DisplayFormat(NullDisplayText = "无")]
         public string InputExplain { get; set; }
 
-        [Display(Name = "输出说明"), DataType(DataType.MultilineText), DisplayFormat(NullDisplayText = "无")]
+        [Display(Name = "输出说明"), DataType("Markdown"), DisplayFormat(NullDisplayText = "无")]
         public string OutputExplain { get; set; }
 
         [Display(Name = "总内存限制"), DisplayFormat(DataFormatString = "{0} MB")]

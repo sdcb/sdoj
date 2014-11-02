@@ -105,6 +105,7 @@ else
 }
 @section scripts
 {
+    @Scripts.Render("~/bundles/marked")
     <script>
         function deleteMe(id) {
             if (confirm('确定要删除此题目吗？')) {
@@ -119,5 +120,12 @@ else
                 $("#rejudge-form").submit();
             }
         }
+
+        $(".markdown").each(function(i, ee) {
+            var e = $(ee);
+            var text = e.text();
+            var m = marked(text);
+            e.text(m);
+        });
     </script>
 }
