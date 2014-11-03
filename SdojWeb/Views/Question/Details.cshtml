@@ -125,7 +125,8 @@ else
             var e = $(ee);
             var text = e.text();
             var m = marked(text);
-            e.text(m);
+            e.html(m);
+            e.closest('.well').css({ "padding-bottom": "0" });
         });
     </script>
 }

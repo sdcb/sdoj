@@ -31,3 +31,7 @@ div.well {
     white-space:pre;
     word-wrap: break-word;
 }
+
+.well .markdown blockquote {
+    font-size: 15px;
+}
