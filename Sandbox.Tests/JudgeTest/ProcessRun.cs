@@ -3,7 +3,7 @@ using FluentAssertions;
 using SdojJudger.Runner;
 using Xunit;
 
-namespace Sandbox.Tests
+namespace SandboxTests.JudgeTest
 {
     public class ProcessRun
     {

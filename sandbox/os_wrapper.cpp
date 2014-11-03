@@ -64,7 +64,7 @@ pipe_handles::pipe_handles()
 
 
 
-process_information create_security_process(wchar_t * cmd,
+std::unique_ptr<process_information> create_security_process(wchar_t * cmd,
 	HANDLE in_read,
 	HANDLE out_write,
 	HANDLE err_write,
@@ -107,7 +107,7 @@ process_information create_security_process(wchar_t * cmd,
 
 	ThrowIfFailed(AssignProcessToJobObject(job, pi.hProcess));
 
-	return process_information{ pi };
+	return std::make_unique<process_information>(pi);
 }
 
 

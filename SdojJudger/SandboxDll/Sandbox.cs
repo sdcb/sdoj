@@ -35,17 +35,17 @@ namespace SdojJudger.SandboxDll
 
 
 #if DEBUG
-        [DllImport(@"Reference\Debug\safe_runner", 
+        [DllImport(@"Reference\Debug\sandbox", 
 #else 
-        [DllImport(@"Reference\Release\safe_runner", 
+        [DllImport(@"Reference\Release\sandbox", 
 #endif
             EntryPoint = "begin_run", CharSet = CharSet.Unicode)]
         private static extern void NativeBeginRun(ref ApiRunInfo info, ref ApiRunIoResult result);
 
 #if DEBUG
-        [DllImport(@"Reference\Debug\safe_runner", 
+        [DllImport(@"Reference\Debug\sandbox", 
 #else
-        [DllImport(@"Reference\Release\safe_runner",
+        [DllImport(@"Reference\Release\sandbox",
 #endif
             EntryPoint = "end_run", CharSet = CharSet.Unicode)]
         private static extern void NativeEndRun(IntPtr instance, ref ApiRunResult result);

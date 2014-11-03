@@ -7,5 +7,6 @@
 #include <Windows.h>
 #include <thread>
 #include <atomic>
+#include <memory>
 #include "handle.h"
 #include "debug.h"

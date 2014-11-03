@@ -18,11 +18,11 @@ void judge_process::execute()
 {
 	null_handle job{ create_job_object(m_judge_info.memory_limit, m_judge_info.time_limit, true) };
 	pipe_handles pipe_handles;
-	process_information process_info{ create_security_process(&m_judge_info.path[0], 
-															  pipe_handles.in_read.get(), 
-															  pipe_handles.out_write.get(), 
-															  pipe_handles.err_write.get(), 
-															  job.get()) };
+	auto process_info = create_security_process(&m_judge_info.path[0], 
+												pipe_handles.in_read.get(), 
+												pipe_handles.out_write.get(), 
+												pipe_handles.err_write.get(), 
+												job.get());
 
 	// write task
 	std::atomic_bool continue_write_task{ true };
@@ -104,20 +104,20 @@ void judge_process::execute()
 		output.assign(s2ws(ansi_buffer));
 	});
 
-	ThrowIfFailed(ResumeThread(process_info.thread_handle.get()));
+	ThrowIfFailed(ResumeThread(process_info->thread_handle.get()));
 	
 	LARGE_INTEGER freq, wait_start, wait_end;
 	QueryPerformanceFrequency(&freq);
 	QueryPerformanceCounter(&wait_start);
 
 	// wait the process ( terminate in job close )
-	DWORD wait_result = WaitForSingleObject(process_info.process_handle.get(), 
+	DWORD wait_result = WaitForSingleObject(process_info->process_handle.get(), 
 											static_cast<DWORD>(ns100_to_ms(m_judge_info.time_limit)));
 
 	QueryPerformanceCounter(&wait_end);
 	auto microsecond = 1000LL * (wait_end.QuadPart - wait_start.QuadPart) / freq.QuadPart;
 
-	BOOL ok = GetExitCodeProcess(process_info.process_handle.get(), &exit_code);
+	BOOL ok = GetExitCodeProcess(process_info->process_handle.get(), &exit_code);
 
 	// terminate io.
 	{

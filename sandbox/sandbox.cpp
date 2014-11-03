@@ -58,13 +58,13 @@ void free_judge_result(api_judge_result & result)
 	}
 }
 
-static void __stdcall begin_run(api_run_info const & info, api_run_io_result & io_result)
+void __stdcall begin_run(api_run_info const & info, api_run_io_result & io_result)
 {
 	try
 	{
 		auto rp = new run_process(info);
 
-		rp->begin_run();
+		rp->begin_runs();
 
 		// set io_result success at run_process
 		rp->get_io_result(io_result);
@@ -81,7 +81,7 @@ static void __stdcall begin_run(api_run_info const & info, api_run_io_result & i
 	}
 }
 
-static void __stdcall end_run(run_process * run_process, api_run_result result)
+void __stdcall end_run(run_process * run_process, api_run_result result)
 {
 	try
 	{
@@ -89,7 +89,7 @@ static void __stdcall end_run(run_process * run_process, api_run_result result)
 			delete run_process; 
 		} };
 
-		run_process->end_run();
+		run_process->end_runs();
 
 		// set result success at run_process
 		run_process->get_result(result);

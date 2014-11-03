@@ -74,7 +74,7 @@ std::string ws2s(const std::wstring& s);
 
 
 
-process_information create_security_process(wchar_t * cmd,
+std::unique_ptr<process_information> create_security_process(wchar_t * cmd,
 	HANDLE in_read,
 	HANDLE out_write,
 	HANDLE err_write,

@@ -14,15 +14,15 @@ run_process::run_process(api_run_info const & info) :
 
 
 
-void run_process::begin_run()
+void run_process::begin_runs()
 {
 	null_handle m_job{ create_job_object(m_memory_limit, m_time_limit, m_limit_process_count) };
 	pipe_handles pipe_handles;
-	m_pi = move(create_security_process(&m_path[0], 
+	m_pi = create_security_process(&m_path[0], 
 										pipe_handles.in_read.get(), 
 										pipe_handles.out_write.get(), 
 										pipe_handles.err_write.get(), 
-										m_job.get()));
+										m_job.get());
 
 	// write task & read task in upper level application.
 	m_input_write.reset( pipe_handles.in_write.release() );
@@ -32,20 +32,20 @@ void run_process::begin_run()
 
 
 
-void run_process::end_run()
+void run_process::end_runs()
 {
-	ThrowIfFailed(ResumeThread(m_pi.thread_handle.get()));
+	ThrowIfFailed(ResumeThread(m_pi->thread_handle.get()));
 
 	LARGE_INTEGER freq, wait_start, wait_end;
 	QueryPerformanceCounter(&freq);
 	QueryPerformanceCounter(&wait_start);
 
-	DWORD wait_result = WaitForSingleObject(m_pi.process_handle.get(), 
+	DWORD wait_result = WaitForSingleObject(m_pi->process_handle.get(), 
 											static_cast<DWORD>(ns100_to_ms( m_time_limit )));
 	QueryPerformanceCounter(&wait_end);
 	int64_t wait_ms = 1000LL * (wait_end.QuadPart - wait_start.QuadPart) / freq.QuadPart;
 
-	BOOL ok = GetExitCodeProcess(m_pi.process_handle.get(), &m_exit_code);
+	BOOL ok = GetExitCodeProcess(m_pi->process_handle.get(), &m_exit_code);
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION exinfo;
 	ThrowIfFailed(QueryInformationJobObject(m_job.get(), 

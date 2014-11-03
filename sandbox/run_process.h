@@ -49,9 +49,9 @@ class run_process
 public:
 	run_process(api_run_info const & info);
 
-	void begin_run();
+	void begin_runs();
 
-	void end_run();
+	void end_runs();
 
 	void get_io_result(api_run_io_result & io_result);
 
@@ -75,7 +75,7 @@ private:
 	null_handle m_error_read;
 
 	// temp: 
-	process_information m_pi;
+	std::unique_ptr<process_information> m_pi;
 
 	null_handle m_job;
 
