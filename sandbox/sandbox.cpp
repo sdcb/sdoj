@@ -7,7 +7,7 @@ using namespace std;
 class scope_exit 
 {
 public:
-	scope_exit(function<void()> const & f) :
+	scope_exit(function<void()> f) :
 		m_f(f)
 	{
 	}
@@ -18,7 +18,7 @@ public:
 	}
 
 private:
-	function<void()> const & m_f;
+	function<void()> m_f;
 };
 
 
@@ -68,6 +68,7 @@ void __stdcall begin_run(api_run_info const & info, api_run_io_result & io_resul
 
 		// set io_result success at run_process
 		rp->get_io_result(io_result);
+		io_result.succeed = true;
 	}
 	catch (win32_exception const & e)
 	{
@@ -93,6 +94,7 @@ void __stdcall end_run(run_process * run_process, api_run_result result)
 
 		// set result success at run_process
 		run_process->get_result(result);
+		result.succeed = true;
 	}
 	catch (win32_exception const & e)
 	{

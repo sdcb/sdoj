@@ -16,18 +16,18 @@ run_process::run_process(api_run_info const & info) :
 
 void run_process::begin_runs()
 {
-	null_handle m_job{ create_job_object(m_memory_limit, m_time_limit, m_limit_process_count) };
+	m_job = null_handle{ create_job_object(m_memory_limit, m_time_limit, m_limit_process_count) };
 	pipe_handles pipe_handles;
 	m_pi = create_security_process(&m_path[0], 
-										pipe_handles.in_read.get(), 
-										pipe_handles.out_write.get(), 
-										pipe_handles.err_write.get(), 
-										m_job.get());
+								   pipe_handles.in_read.get(), 
+								   pipe_handles.out_write.get(), 
+								   pipe_handles.err_write.get(), 
+								   m_job.get());
 
 	// write task & read task in upper level application.
-	m_input_write.reset( pipe_handles.in_write.release() );
-	m_output_read.reset( pipe_handles.out_read.release() );
-	m_error_read.reset( pipe_handles.err_read.release() );
+	m_input_write = ( pipe_handles.in_write.release() );
+	m_output_read = ( pipe_handles.out_read.release() );
+	m_error_read = ( pipe_handles.err_read.release() );
 }
 
 
@@ -37,7 +37,7 @@ void run_process::end_runs()
 	ThrowIfFailed(ResumeThread(m_pi->thread_handle.get()));
 
 	LARGE_INTEGER freq, wait_start, wait_end;
-	QueryPerformanceCounter(&freq);
+	QueryPerformanceFrequency(&freq);
 	QueryPerformanceCounter(&wait_start);
 
 	DWORD wait_result = WaitForSingleObject(m_pi->process_handle.get(), 
@@ -53,6 +53,7 @@ void run_process::end_runs()
 											&exinfo, 
 											sizeof(exinfo), 
 											nullptr));
+	m_memory =  exinfo.PeakJobMemoryUsed;
 
 	if (wait_result == WAIT_TIMEOUT && wait_ms < ns100_to_ms(m_time_limit))
 	{
@@ -69,9 +70,9 @@ void run_process::end_runs()
 void run_process::get_io_result(api_run_io_result & io_result)
 {
 	io_result.error_code = m_error_code;
-	io_result.error_read_handle = m_error_read.get();
-	io_result.output_read_handle = m_output_read.get();
-	io_result.input_write_handle = m_input_write.get();
+	io_result.error_read_handle = m_error_read;
+	io_result.output_read_handle = m_output_read;
+	io_result.input_write_handle = m_input_write;
 	io_result.notuse = this;
 }
 
@@ -81,6 +82,6 @@ void run_process::get_result(api_run_result & result)
 {
 	result.error_code = m_error_code;
 	result.exit_code = m_exit_code;
-	result.memory_mb = m_memory_mb/1024/1024.0f;
+	result.memory_mb = m_memory/1024/1024.0f;
 	result.time_ms = m_time_ms;
 }

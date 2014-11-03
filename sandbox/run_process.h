@@ -68,11 +68,11 @@ private:
 	bool m_limit_process_count;
 
 	// io result:
-	null_handle m_input_write;
+	HANDLE m_input_write;
 
-	null_handle m_output_read;
+	HANDLE m_output_read;
 
-	null_handle m_error_read;
+	HANDLE m_error_read;
 
 	// temp: 
 	std::unique_ptr<process_information> m_pi;
@@ -86,5 +86,5 @@ private:
 
 	int32_t m_time_ms;
 
-	int64_t m_memory_mb;
+	int64_t m_memory;
 };
