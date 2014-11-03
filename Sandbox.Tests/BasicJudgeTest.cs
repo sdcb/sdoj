@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Sandbox.Tests
 {
-    class BasicJudgeTest
+    public class BasicJudgeTest
     {
         [Fact]
         public void Code_should_can_compile()
@@ -79,7 +79,6 @@ namespace Sandbox.Tests
             "    {                                                " +
             "        static void Main(string[] args)              " +
             "        {                                            " +
-            "            Console.InputEncoding = Encoding.Unicode;" +
             "            var str = Console.In.ReadToEnd();        " +
             "            Console.Write(\"Hey {0}!\", str);        " +
             "        }                                            " +
