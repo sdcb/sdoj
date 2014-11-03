@@ -104,6 +104,49 @@ namespace SandboxTests.RunTest
             compiler.Dispose();
         }
 
+        [Fact]
+        [Trait("Run", "Basic")]
+        public void Run_can_accept_10k_input()
+        {
+            // Arrange
+            var compiler = new CSharpCompiler();
+            var asm = compiler.Compile(Code);
+            var path = asm.PathToAssembly;
+
+            var info = new SandboxRunInfo
+            {
+                LimitProcessCount = false,
+                MemoryLimitMb = 10.0f,
+                Path = path,
+                TimeLimitMs = 1000
+            };
+
+            // Act
+            var ior = Sandbox.BeginRun(info);
+
+            // Assert
+            var input = new string('林', 10*1024);
+            var expected = string.Format("Hey {0}!", input);
+            
+            var writer = new StreamWriter(ior.InputWriteStream);
+            var writeTask = writer.WriteAsync(input).ContinueWith((a) => writer.Close());
+            
+            var reader = new StreamReader(ior.OutputReadStream);
+            var readTask = reader.ReadToEndAsync();
+
+            var res = Sandbox.EndRun(ior.InstanceHandle);
+            writeTask.Wait();
+            readTask.Wait();
+
+            var actual = readTask.Result;
+            actual.Should().Be(expected);
+
+            res.Succeed.Should().BeTrue();
+            res.MemoryMb.Should().BeGreaterThan(0);
+            res.TimeMs.Should().BeGreaterOrEqualTo(0);
+            compiler.Dispose();
+        }
+
         public const string Code =
             "using System;                             " +
             "using System.Text;                        " +
