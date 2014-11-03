@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using FluentAssertions;
 using SdojJudger.Compiler;
-using SdojJudger.Compiler.Infrastructure;
 using SdojJudger.SandboxDll;
 using Xunit;
-using Xunit.Sdk;
 
 namespace SandboxTests.RunTest
 {
@@ -129,7 +126,7 @@ namespace SandboxTests.RunTest
             var expected = string.Format("Hey {0}!", input);
             
             var writer = new StreamWriter(ior.InputWriteStream);
-            var writeTask = writer.WriteAsync(input).ContinueWith((a) => writer.Close());
+            var writeTask = writer.WriteAsync(input).ContinueWith(a => writer.Close());
             
             var reader = new StreamReader(ior.OutputReadStream);
             var readTask = reader.ReadToEndAsync();
