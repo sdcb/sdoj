@@ -7,7 +7,7 @@ using Microsoft.CSharp;
 using SdojJudger.Runner;
 using Xunit.Extensions;
 
-namespace Sandbox.Tests.SecurityTest
+namespace Sandbox.Tests.JudgeTest.SecurityTest
 {
     public class MemoryLeakTest
     {

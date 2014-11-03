@@ -5,7 +5,7 @@ using Microsoft.CSharp;
 using SdojJudger.Runner;
 using Xunit;
 
-namespace Sandbox.Tests.SecurityTest
+namespace Sandbox.Tests.JudgeTest.SecurityTest
 {
     public class MemoryLimitTest
     {
