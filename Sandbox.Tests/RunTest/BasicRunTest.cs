@@ -5,6 +5,7 @@ using FluentAssertions;
 using SdojJudger.Compiler;
 using SdojJudger.SandboxDll;
 using Xunit;
+using Xunit.Extensions;
 
 namespace SandboxTests.RunTest
 {
@@ -60,6 +61,9 @@ namespace SandboxTests.RunTest
                 Assert.Equal(username, actualUsername);
             }
             Process.GetProcessesByName("whoami").Length.Should().Be(0);
+
+            Console.WriteLine("Time: {0}ms", res.TimeMs);
+            Console.WriteLine("Memory: {0}MB", res.MemoryMb);
         }
 
 
@@ -87,7 +91,7 @@ namespace SandboxTests.RunTest
             // Assert
             using (var writer = new StreamWriter(ior.InputWriteStream))
             {
-                writer.Write("Flash中文");
+                writer.WriteAsync("Flash中文");
             }
             var reader = new StreamReader(ior.OutputReadStream);
             var readTask = reader.ReadToEndAsync();
@@ -99,11 +103,16 @@ namespace SandboxTests.RunTest
             res.MemoryMb.Should().BeGreaterThan(0);
             res.TimeMs.Should().BeGreaterOrEqualTo(0);
             compiler.Dispose();
+
+            Console.WriteLine("Time: {0}ms", res.TimeMs);
+            Console.WriteLine("Memory: {0}MB", res.MemoryMb);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData(1024*1024)]
+        [InlineData(0)]
         [Trait("Run", "Basic")]
-        public void Run_can_accept_10k_input()
+        public void Run_can_accept_vary_input(int size)
         {
             // Arrange
             var compiler = new CSharpCompiler();
@@ -113,7 +122,7 @@ namespace SandboxTests.RunTest
             var info = new SandboxRunInfo
             {
                 LimitProcessCount = false,
-                MemoryLimitMb = 10.0f,
+                MemoryLimitMb = 20.0f,
                 Path = path,
                 TimeLimitMs = 1000
             };
@@ -122,7 +131,7 @@ namespace SandboxTests.RunTest
             var ior = Sandbox.BeginRun(info);
 
             // Assert
-            var input = new string('林', 10*1024);
+            var input = new string('林', size);
             var expected = string.Format("Hey {0}!", input);
             
             var writer = new StreamWriter(ior.InputWriteStream);
@@ -135,12 +144,17 @@ namespace SandboxTests.RunTest
             writeTask.Wait();
             readTask.Wait();
 
+            res.Succeed.Should().BeTrue();
+            res.MemoryMb.Should().BeLessThan(info.MemoryLimitMb);
+            res.TimeMs.Should().BeLessThan(info.TimeLimitMs);
+            res.ExitCode.Should().Be(0);
+
             var actual = readTask.Result;
             actual.Should().Be(expected);
 
-            res.Succeed.Should().BeTrue();
-            res.MemoryMb.Should().BeGreaterThan(0);
-            res.TimeMs.Should().BeGreaterOrEqualTo(0);
+            Console.WriteLine("Time: {0}ms", res.TimeMs);
+            Console.WriteLine("Memory: {0}MB", res.MemoryMb);
+
             compiler.Dispose();
         }
 
@@ -153,7 +167,9 @@ namespace SandboxTests.RunTest
             "    static void Main(string[] args)       " +
             "    {                                     " +
             "        var str = Console.In.ReadToEnd(); " +
-            "        Console.Write(\"Hey {0}!\", str); " +
+            "        Console.Write(\"Hey \");          " +
+            "        Console.Write(str);               " +
+            "        Console.Write(\"!\");             " +
             "    }                                     " +
             "}                                         ";
     }

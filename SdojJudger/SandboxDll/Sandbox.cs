@@ -134,7 +134,7 @@ namespace SdojJudger.SandboxDll
 
             readonly int TimeMs;
 
-            readonly int MemoryMB;
+            readonly float MemoryMB;
 
             public static explicit operator SandboxRunResult(ApiRunResult apiResult)
             {
@@ -143,7 +143,8 @@ namespace SdojJudger.SandboxDll
                     ErrorCode = apiResult.ErrorCode, 
                     Succeed = apiResult.Succeed, 
                     MemoryMb = apiResult.MemoryMB, 
-                    TimeMs = apiResult.TimeMs
+                    TimeMs = apiResult.TimeMs, 
+                    ExitCode = apiResult.ExitCode
                 };
 
                 var win32Exception = new Win32Exception(apiResult.ErrorCode);

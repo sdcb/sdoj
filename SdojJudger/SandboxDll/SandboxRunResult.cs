@@ -10,6 +10,8 @@
 
         public int TimeMs { get; set; }
 
-        public int MemoryMb { get; set; }
+        public float MemoryMb { get; set; }
+
+        public int ExitCode { get; set; }
     }
 }
