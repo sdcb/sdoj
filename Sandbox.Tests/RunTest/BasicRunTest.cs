@@ -122,9 +122,9 @@ namespace SandboxTests.RunTest
             var info = new SandboxRunInfo
             {
                 LimitProcessCount = 1,
-                MemoryLimitMb = 20.0f,
+                MemoryLimitMb = 150.0f,
                 Path = path,
-                TimeLimitMs = 1000
+                TimeLimitMs = 3000
             };
 
             // Act
