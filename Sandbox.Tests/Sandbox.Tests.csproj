@@ -106,6 +106,12 @@
     <Compile Include="JudgeTest\SecurityTest\MemoryLeakTest.cs" />
     <Compile Include="JudgeTest\SecurityTest\MemoryLimitTest.cs" />
     <Compile Include="RunTest\BasicRunTest.cs" />
+    <Compile Include="RunTest\JudgeTest\BasicJudgeTest.cs" />
+    <Compile Include="RunTest\JudgeTest\ProcessRun.cs" />
+    <Compile Include="RunTest\JudgeTest\SecurityTest\CannotTerminateProcessTest.cs" />
+    <Compile Include="RunTest\JudgeTest\SecurityTest\InfinateLoopTimeoutTest.cs" />
+    <Compile Include="RunTest\JudgeTest\SecurityTest\MemoryLeakTest.cs" />
+    <Compile Include="RunTest\JudgeTest\SecurityTest\MemoryLimitTest.cs" />
     <Compile Include="RunTest\SecurityTest\CreateProcessLimitTest.cs" />
   </ItemGroup>
   <ItemGroup>

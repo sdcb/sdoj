@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.CSharp;
 using SdojJudger.Runner;
+using SdojJudger.SandboxDll;
 using Xunit;
 using Xunit.Extensions;
 
-namespace SandboxTests.JudgeTest.SecurityTest
+namespace SandboxTests.RunTest.JudgeTest.SecurityTest
 {
-    [Trait("Judge", "Memory Leak!")]
+    [Trait("Run from Judge", "Memory Leak!")]
     public class MemoryLeakTest
     {
         [Theory]
@@ -37,17 +38,17 @@ namespace SandboxTests.JudgeTest.SecurityTest
             GC.Collect();
             Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
 
-            Parallel.For(0, times, (i) => NativeDll.Judge(info));
+            Parallel.For(0, times, (i) => Sandbox.Judge(info));
 
             GC.Collect();
             Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
 
-            Parallel.For(0, times, (i) => NativeDll.Judge(info));
+            Parallel.For(0, times, (i) => Sandbox.Judge(info));
 
             GC.Collect();
             Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
 
-            Parallel.For(0, times, (i) => NativeDll.Judge(info));
+            Parallel.For(0, times, (i) => Sandbox.Judge(info));
 
             GC.Collect();
             Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
