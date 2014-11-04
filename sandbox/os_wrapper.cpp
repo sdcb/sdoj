@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "os_wrapper.h"
 
-null_handle create_job_object(size_t memory_limit, int64_t time_limit, bool limit_process_count)
+null_handle create_job_object(size_t memory_limit, int64_t time_limit, int limit_process_count)
 {
 	null_handle job{ CreateJobObject(nullptr, nullptr) };
 	ThrowIfFailed(job);
@@ -11,19 +11,17 @@ null_handle create_job_object(size_t memory_limit, int64_t time_limit, bool limi
 	// 因为如果限制，则内存使用峰值的数值时将不正确。
 
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION extend_limit{};
-	extend_limit.JobMemoryLimit = memory_limit;
+
+	extend_limit.JobMemoryLimit											= memory_limit;
+	extend_limit.BasicLimitInformation.ActiveProcessLimit				= limit_process_count;
 	extend_limit.BasicLimitInformation.PerProcessUserTimeLimit.QuadPart = time_limit;
+
 	extend_limit.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_JOB_MEMORY					|
+													JOB_OBJECT_LIMIT_ACTIVE_PROCESS				|
 													JOB_OBJECT_LIMIT_PROCESS_TIME				|
 													JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION |
 													JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE			|
 													0;
-
-	if (limit_process_count)
-	{
-		extend_limit.BasicLimitInformation.ActiveProcessLimit	= 1;
-		extend_limit.BasicLimitInformation.LimitFlags			|= JOB_OBJECT_LIMIT_ACTIVE_PROCESS;
-	}
 
 	ThrowIfFailed(SetInformationJobObject(job.get(), JobObjectExtendedLimitInformation, &extend_limit, sizeof(extend_limit)));
 

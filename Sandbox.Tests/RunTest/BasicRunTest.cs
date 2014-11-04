@@ -18,7 +18,7 @@ namespace SandboxTests.RunTest
             // Arrange
             var info = new SandboxRunInfo
             {
-                LimitProcessCount = false,
+                LimitProcessCount = 1,
                 MemoryLimitMb = 10.0f,
                 Path = "whoami",
                 TimeLimitMs = 1000
@@ -79,7 +79,7 @@ namespace SandboxTests.RunTest
 
             var info = new SandboxRunInfo
             {
-                LimitProcessCount = false,
+                LimitProcessCount = 1,
                 MemoryLimitMb = 10.0f,
                 Path = path,
                 TimeLimitMs = 1000
@@ -121,7 +121,7 @@ namespace SandboxTests.RunTest
 
             var info = new SandboxRunInfo
             {
-                LimitProcessCount = false,
+                LimitProcessCount = 1,
                 MemoryLimitMb = 20.0f,
                 Path = path,
                 TimeLimitMs = 1000

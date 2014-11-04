@@ -13,7 +13,7 @@ struct api_run_info
 
 	float memory_limit_mb;
 
-	bool limit_process_count;
+	int limit_process_count;
 };
 
 struct api_run_io_result
@@ -65,7 +65,7 @@ private:
 
 	int64_t m_memory_limit;
 
-	bool m_limit_process_count;
+	int m_limit_process_count;
 
 	// io result:
 	HANDLE m_input_write;

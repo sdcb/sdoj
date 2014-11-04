@@ -62,7 +62,7 @@ namespace SdojJudger.SandboxDll
 
             private float MemoryLimitMb;
 
-            private bool LimitProcessCount;
+            private int LimitProcessCount;
 
             public static explicit operator ApiRunInfo(SandboxRunInfo info)
             {

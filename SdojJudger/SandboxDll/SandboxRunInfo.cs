@@ -8,6 +8,6 @@
 
         public float MemoryLimitMb { get; set; }
 
-        public bool LimitProcessCount { get; set; }
+        public int LimitProcessCount { get; set; }
     }
 }
