@@ -152,31 +152,33 @@ null_handle create_security_process_token()
 {
 	null_handle pstoken, newtoken;
 	ThrowIfFailed(OpenProcessToken(GetCurrentProcess(),
-		TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY,
-		pstoken.get_address_of()));
+								   TOKEN_DUPLICATE | TOKEN_QUERY | TOKEN_ADJUST_DEFAULT | TOKEN_ASSIGN_PRIMARY,
+								   pstoken.get_address_of()));
 
 	ThrowIfFailed(DuplicateTokenEx(pstoken.get(),
-		0,
-		nullptr,
-		SecurityImpersonation,
-		TokenPrimary,
-		newtoken.get_address_of()));
+								   0,
+								   nullptr,
+								   SecurityImpersonation,
+								   TokenPrimary,
+								   newtoken.get_address_of()));
 
 	SID_IDENTIFIER_AUTHORITY sia = SECURITY_MANDATORY_LABEL_AUTHORITY;
 	PSID sid;
 	ThrowIfFailed(AllocateAndInitializeSid(&sia,
-		1,
-		SECURITY_MANDATORY_LOW_RID,
-		0, 0, 0, 0, 0, 0, 0,
-		&sid));
+										   1,
+										   SECURITY_MANDATORY_LOW_RID,
+										   0, 0, 0, 0, 0, 0, 0,
+										   &sid));
 
 	TOKEN_MANDATORY_LABEL tml{};
 	tml.Label.Attributes = SE_GROUP_INTEGRITY;
 	tml.Label.Sid = sid;
 	ThrowIfFailed(SetTokenInformation(newtoken.get(),
-		TokenIntegrityLevel,
-		&tml,
-		sizeof(tml) + GetLengthSid(sid)));
+									  TokenIntegrityLevel,
+									  &tml,
+									  sizeof(tml) + GetLengthSid(sid)));
+
+	ThrowIfFailed( FreeSid(sid) == nullptr );
 
 	return newtoken;
 }
