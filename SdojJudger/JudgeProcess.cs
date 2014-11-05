@@ -11,6 +11,7 @@ using SdojJudger.Compiler.Infrastructure;
 using SdojJudger.Database;
 using SdojJudger.Models;
 using SdojJudger.Runner;
+using SdojJudger.SandboxDll;
 
 namespace SdojJudger
 {
@@ -96,7 +97,8 @@ namespace SdojJudger
                 };
 
                 _log.DebugExt("NativeDll Juding...");
-                var result = NativeDll.Judge(info);
+                //var result = NativeDll.Judge(info);
+                var result = Sandbox.Judge(info);
                 _log.DebugExt("NativeDll Judged...");
 
                 runTimeMs += result.TimeMs;
