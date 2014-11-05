@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.CSharp;
@@ -33,25 +32,20 @@ namespace SandboxTests.RunTest.JudgeTest.SecurityTest
                 Path = asm.PathToAssembly, 
                 TimeLimitMs = 150
             };
+            var parallelOption = new ParallelOptions {MaxDegreeOfParallelism = 4};
 
             // Act & Assert
-            GC.Collect();
-            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
+            Console.WriteLine(GC.GetTotalMemory(true));
+            //for (int i = 0; i < times; ++i) Sandbox.Judge(info);
+            Parallel.For(0, times, parallelOption, (i) => Sandbox.Judge(info));
 
-            Parallel.For(0, times, (i) => Sandbox.Judge(info));
+            Console.WriteLine(GC.GetTotalMemory(true));
+            Parallel.For(0, times, parallelOption, (i) => Sandbox.Judge(info));
 
-            GC.Collect();
-            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
+            Console.WriteLine(GC.GetTotalMemory(true));
+            Parallel.For(0, times, parallelOption, (i) => Sandbox.Judge(info));
 
-            Parallel.For(0, times, (i) => Sandbox.Judge(info));
-
-            GC.Collect();
-            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
-
-            Parallel.For(0, times, (i) => Sandbox.Judge(info));
-
-            GC.Collect();
-            Console.WriteLine(Process.GetCurrentProcess().VirtualMemorySize64);
+            Console.WriteLine(GC.GetTotalMemory(true));
         }
 
         public const string Code =
