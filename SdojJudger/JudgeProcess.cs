@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using log4net;
@@ -70,9 +68,7 @@ namespace SdojJudger
             var db = JudgerDbContext.Create();
             var dataIds = _sfull.QuestionDatas
                 .Select(x => x.Id).ToArray();
-            var datas = await db.Datas
-                .Where(x => dataIds.Contains(x.Id))
-                .ToArrayAsync();
+            var datas = await db.FindDatasByIds(dataIds);
 
             // Judging
             using (compiler)
@@ -141,16 +137,16 @@ namespace SdojJudger
             // 与本地数据库对比时间戳。
             var serverItems = _sfull.QuestionDatas
                 .OrderBy(x => x.Id)
-                .Select(x => new { x.Id, x.UpdateTime.Ticks })
+                .Select(x => new QuestionDataSummary
+                {
+                    Id = x.Id,
+                    UpdateTicks = x.UpdateTime.Ticks
+                })
                 .ToArray();
             var ids = _sfull.QuestionDatas.Select(x => x.Id);
 
             var db = JudgerDbContext.Create();
-            var dbItems = await db.Datas
-                .Where(x => ids.Contains(x.Id))
-                .Select(x => new { x.Id, Ticks = x.UpdateTicks })
-                .OrderBy(x => x.Id)
-                .ToArrayAsync();
+            var dbItems = await db.FindDataSummarysByIdsInOrder(ids);
             var except = serverItems.Except(dbItems).ToArray();
 
             // 将旧数据或者没有的数据更新。
@@ -165,10 +161,9 @@ namespace SdojJudger
                     Output = hubData.Output,
                     MemoryLimitMb = hubData.MemoryLimitMb,
                     TimeLimit = hubData.TimeLimit,
-                    UpdateTicks = serverItems.First(x => x.Id == hubData.Id).Ticks
+                    UpdateTicks = serverItems.First(x => x.Id == hubData.Id).UpdateTicks
                 }).ToArray();
-                db.Datas.AddOrUpdate(dbDatas);
-                await db.SaveChangesAsync();
+                await db.DeleteAndCreateData(dbDatas);
 
                 _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
                 if (hubDatas.Length != except.Length)
