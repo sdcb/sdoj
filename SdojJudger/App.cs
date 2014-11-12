@@ -36,6 +36,10 @@ namespace SdojJudger
                     {
                         task = Starter.Restart();
                     }
+                    if (line == "gc")
+                    {
+                        GC.Collect();
+                    }
                 }
                 catch (AggregateException e)
                 {
