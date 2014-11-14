@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using log4net;
 using System.IO;
+using System;
 
 namespace SdojJudger.Database
 {
@@ -50,8 +51,8 @@ namespace SdojJudger.Database
                 {
                     var command = new SqlCeCommand(insertSql, (SqlCeConnection)_db, tran);
                     command.Parameters.AddWithValue("@Id", data.Id);
-                    command.Parameters.AddWithValue("@Input", data.Input);
-                    command.Parameters.AddWithValue("@Output", data.Output);
+                    command.Parameters.AddWithValue("@Input", data.Input ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Output", data.Output ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@MemoryLimitMb", data.MemoryLimitMb);
                     command.Parameters.AddWithValue("@TimeLimit", data.TimeLimit);
                     command.Parameters.AddWithValue("@UpdateTicks", data.UpdateTicks);
