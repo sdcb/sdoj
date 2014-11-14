@@ -4,6 +4,7 @@ using System.Security.Authentication;
 using System.Threading;
 using log4net;
 using log4net.Config;
+using SdojJudger.Database;
 
 namespace SdojJudger
 {
@@ -17,6 +18,8 @@ namespace SdojJudger
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+
+            InitializeDatabase();
 
             Starter = new Starter();
             var task = Starter.Run();
@@ -56,6 +59,12 @@ namespace SdojJudger
                     }
                 }
             }
+        }
+
+        static void InitializeDatabase()
+        {
+            var db = JudgerDbContext.Create();
+            db.Initialize().Wait();
         }
 
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)

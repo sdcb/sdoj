@@ -89,9 +89,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -128,6 +125,8 @@
     <Compile Include="Compiler\Infrastructure\DotNetCompiler.cs" />
     <Compile Include="Compiler\Python3Compiler.cs" />
     <Compile Include="Compiler\VisualBasicCompiler.cs" />
+    <Compile Include="Database\Dapper\SqlMapper.cs" />
+    <Compile Include="Database\Dapper\SqlMapperAsync.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
     <Compile Include="Database\QuestionDataSummary.cs" />
     <Compile Include="Database\QuestionData.cs" />
