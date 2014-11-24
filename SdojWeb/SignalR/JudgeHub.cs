@@ -12,6 +12,7 @@ using SdojWeb.Models;
 using System.Threading;
 using SdojWeb.Models.JudgePush;
 using Timer = System.Timers.Timer;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.SignalR
 {

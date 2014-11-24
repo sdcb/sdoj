@@ -3,29 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {
-    public class QuestionData
-    {
-        public int Id { get; set; }
-
-        public Question Question { get; set; }
-
-        public int QuestionId { get; set; }
-
-        public string Input { get; set; }
-
-        [Required]
-        public string Output { get; set; }
-
-        public float MemoryLimitMb { get; set; }
-
-        public int TimeLimit { get; set; }
-
-        public DateTime UpdateTime { get; set; }
-    }
-
     public class QuestionDataSummaryModel : IHaveCustomMapping
     {
         [Display(Name = "ID")]

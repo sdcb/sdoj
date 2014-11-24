@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Identity;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {
@@ -13,13 +14,11 @@ namespace SdojWeb.Models
     {
         public User()
         {
-// ReSharper disable DoNotCallOverridableMethodsInConstructor
             UserClaims = new HashSet<UserClaim>();
             UserLogins = new HashSet<UserLogin>();
             Questions = new HashSet<Question>();
             Solutions = new HashSet<Solution>();
             Roles = new HashSet<Role>();
-// ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(ApplicationUserManager manager)

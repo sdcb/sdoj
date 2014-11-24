@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System;
 using System.Data.Entity;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {

@@ -15,6 +15,7 @@ using SdojWeb.Infrastructure.Alerts;
 using AutoMapper.QueryableExtensions;
 using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Controllers
 {

@@ -7,6 +7,7 @@ using EntityFramework.Extensions;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using System.Threading.Tasks;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Manager
 {

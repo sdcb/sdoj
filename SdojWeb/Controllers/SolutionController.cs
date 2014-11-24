@@ -15,6 +15,7 @@ using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Models;
 using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Controllers
 {

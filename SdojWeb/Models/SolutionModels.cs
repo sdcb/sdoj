@@ -6,55 +6,10 @@ using System.Web.Mvc;
 using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Mapping;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {
-    public class Solution
-    {
-        public int Id { get; set; }
-
-        public User CreateUser { get; set; }
-
-        public int CreateUserId { get; set; }
-
-        public Question Question { get; set; }
-
-        public int QuestionId { get; set; }
-
-        public Languages Language { get; set; }
-
-        [Required]
-        [MaxLength(32*1024)]
-        public string Source { get; set; }
-
-        [MaxLength(CompilerOutputLength)]
-        public string CompilerOutput { get; set; }
-
-        public SolutionState State { get; set; }
-
-        public float UsingMemoryMb { get; set; }
-
-        public int RunTime { get; set; }
-
-        public DateTime SubmitTime { get; set; }
-
-        public SolutionLock Lock { get; set; }
-
-        public const int CompilerOutputLength = 500;
-    }
-
-    public class SolutionLock
-    {
-        [Key, ForeignKey("Solution")]
-        public int SolutionId { get; set; }
-
-        public Solution Solution { get; set; }
-
-        public Guid LockClientId { get; set; }
-
-        public DateTime LockEndTime { get; set; }
-    }
-
     public class SolutionCreateModel : IHaveCustomMapping
     {
         [Display(Name = "ID"), Required, HiddenInput]

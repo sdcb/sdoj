@@ -2,6 +2,7 @@
 using AutoMapper;
 using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Mapping;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {

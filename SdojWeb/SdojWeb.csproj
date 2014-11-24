@@ -224,6 +224,10 @@
     <Compile Include="Infrastructure\Html\SortableThBuilder.cs" />
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
+    <Compile Include="Models\DbModels\Question.cs" />
+    <Compile Include="Models\DbModels\QuestionData.cs" />
+    <Compile Include="Models\DbModels\Solution.cs" />
+    <Compile Include="Models\DbModels\SolutionLock.cs" />
     <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
     <Compile Include="Models\Identity\ApplicationUserManager.cs" />
     <Compile Include="Models\Identity\EmailService.cs" />
