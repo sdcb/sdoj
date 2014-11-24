@@ -151,6 +151,7 @@ namespace SdojJudger.Compiler
             {
                 cl = string.Format("cl \"{0}.cpp\" /MD /EHsc " +
                                    "/D \"ONLINE_JUDGE\" /D \"_CRT_SECURE_NO_DEPRECATE\" /D \"BOOST_ALL_DYN_LINK\" " +
+                                   // "/D \"ONLINE_JUDGE\" /D \"_CRT_SECURE_NO_DEPRECATE\" " +
                                    "/Fe:\"{0}.exe\" " +
                                    "/Fo:\"{0}.obj\" " +
                                    "/nologo /Ox " +
