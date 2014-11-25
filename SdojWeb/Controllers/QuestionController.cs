@@ -16,6 +16,7 @@ using AutoMapper.QueryableExtensions;
 using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
 using SdojWeb.Models.DbModels;
+using System.Text;
 
 namespace SdojWeb.Controllers
 {
@@ -224,6 +225,42 @@ namespace SdojWeb.Controllers
                 })
                 .FirstAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [Route("Question/{questionId}/Data/{id}/Input")]
+        public async Task<ActionResult> DownloadInputData(int questionId, int id)
+        {
+            var owns = await _manager.IsUserOwnsQuestion(questionId);
+            if (!owns)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            var input = await _db.QuestionDatas
+                .Where(x => x.QuestionId == questionId && x.Id == id)
+                .Select(x => x.Input)
+                .FirstAsync();
+
+            var filename = string.Format("{0}-{1}-input.txt", questionId, id);
+            return File(Encoding.UTF8.GetBytes(input), "text/plain", filename);
+        }
+
+        [Route("Question/{questionId}/Data/{id}/Output")]
+        public async Task<ActionResult> DownloadOutputData(int questionId, int id)
+        {
+            var owns = await _manager.IsUserOwnsQuestion(questionId);
+            if (!owns)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            var output = await _db.QuestionDatas
+                .Where(x => x.QuestionId == questionId && x.Id == id)
+                .Select(x => x.Output)
+                .FirstAsync();
+
+            var filename = string.Format("{0}-{1}-output.txt", questionId, id);
+            return File(Encoding.UTF8.GetBytes(output), "text/plain", filename);
         }
 
         // POST: /question/5/data/save/3

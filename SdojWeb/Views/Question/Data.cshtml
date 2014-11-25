@@ -56,10 +56,14 @@
                                 @Html.DisplayFor(x => item.Id)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.InputLength)
+                                <a href="@Url.Action("DownloadInputData", "Question", new { id = item.Id, questionId = questionId })" target ="_blank">
+                                    @Html.DisplayFor(modelItem => item.InputLength)
+                                </a>
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.OutputLength)
+                                <a href="@Url.Action("DownloadOutputData", "Question", new { id = item.Id, questionId = questionId })" target ="_blank">
+                                    @Html.DisplayFor(modelItem => item.OutputLength)
+                                </a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.MemoryLimitMb)
@@ -73,10 +77,20 @@
                             <td>
                                 @if (owns)
                                 {
-                                    <button class="btn btn-info btn-block btn-xs" data-toggle="modal" data-target="#data-modal" data-bind="click: view.bind($data, @item.Id, @(item.IsSampleData?"true":"false"))">
-                                        <i class="glyphicon glyphicon-edit"></i>
-                                        编辑
-                                    </button>
+                                    if (item.InputLength + item.OutputLength > 128*1024)
+                                    {
+                                        <span title="数据量太大，请点击输入、输出的长度进行下载。">请下载</span>                                        
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-info btn-block btn-xs" 
+                                                data-toggle="modal" 
+                                                data-target="#data-modal"
+                                                data-bind="click: view.bind($data, @item.Id, @(item.IsSampleData?"true":"false"))">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                            编辑
+                                        </button>
+                                    }
                                 }
                             </td>
                         </tr>
