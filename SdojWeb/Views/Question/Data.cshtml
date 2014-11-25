@@ -56,14 +56,28 @@
                                 @Html.DisplayFor(x => item.Id)
                             </td>
                             <td>
-                                <a href="@Url.Action("DownloadInputData", "Question", new { id = item.Id, questionId = questionId })" target ="_blank">
+                                @if (owns)
+                                {
+                                    <a href="@Url.Action("DownloadInputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
+                                        @Html.DisplayFor(modelItem => item.InputLength)
+                                    </a>
+                                }
+                                else
+                                {
                                     @Html.DisplayFor(modelItem => item.InputLength)
-                                </a>
+                                }                                
                             </td>
                             <td>
-                                <a href="@Url.Action("DownloadOutputData", "Question", new { id = item.Id, questionId = questionId })" target ="_blank">
+                                @if (owns)
+                                {
+                                    <a href="@Url.Action("DownloadOutputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
+                                        @Html.DisplayFor(modelItem => item.OutputLength)
+                                    </a>
+                                }
+                                else
+                                {
                                     @Html.DisplayFor(modelItem => item.OutputLength)
-                                </a>
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.MemoryLimitMb)
