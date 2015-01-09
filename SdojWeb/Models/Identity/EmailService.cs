@@ -9,23 +9,25 @@ namespace SdojWeb.Models
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            const string mailfrom = "sdcb@live.cn";
-            const string password = "***REMOVED***";
+            var from = AppSettings.EmailFrom;
+            var password = AppSettings.EmailPassword;
+            var host = AppSettings.SmtpHost;
+            var port = AppSettings.SmtpPort;
 
-            var mail = new MailMessage(mailfrom, message.Destination)
+            var mail = new MailMessage(from, message.Destination)
             {
                 Subject = message.Subject,
                 Body = message.Body,
                 IsBodyHtml = true,
             };
 
-            var client = new SmtpClient("smtp.live.com", 587)
+            using (var client = new SmtpClient(host, port))
             {
-                Credentials = new NetworkCredential(mailfrom, password),
-                EnableSsl = true,
-            };
+                client.Credentials = new NetworkCredential(from, password);
+                client.EnableSsl = true;
 
-            await client.SendMailAsync(mail);
+                await client.SendMailAsync(mail);
+            }
         }
     }
 }
