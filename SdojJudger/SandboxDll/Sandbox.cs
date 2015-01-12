@@ -67,7 +67,7 @@ namespace SdojJudger.SandboxDll
             {
                 var buffer = new char[4096];
                 var result = new StringBuilder(4096);
-                using (var reader = new StreamReader(ior.OutputReadStream))
+                using (var reader = new StreamReader(ior.OutputReadStream, Encoding.Default))
                 {
                     while (true)
                     {

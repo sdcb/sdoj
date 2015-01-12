@@ -27,7 +27,7 @@ namespace SdojJudger.Compiler
             var filename = GetTempFileNameWithoutExtension();
             _fullpath = Path.Combine(Path.GetTempPath(), filename);
 
-            File.WriteAllText(_fullpath + _fileExtension, source);
+            File.WriteAllText(_fullpath + _fileExtension, source, Encoding.Unicode);
 
             CompileSourceFile(_fullpath);
 
