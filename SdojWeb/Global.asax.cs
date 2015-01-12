@@ -117,5 +117,37 @@ namespace SdojWeb
                 return bool.Parse(settingsString);
             }
         }
+
+        public static string EmailFrom
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["EmailFrom"];
+            }
+        }
+
+        public static string EmailPassword
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["EmailPassword"];
+            }
+        }
+
+        public static string SmtpHost
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["SmtpHost"];
+            }
+        }
+
+        public static int SmtpPort
+        {
+            get
+            {
+                return int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+            }
+        }
     }
 }
