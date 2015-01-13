@@ -29,6 +29,9 @@
 }
 <h2>@ViewBag.Title</h2>
 <form class="search-form">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <input name="id" type="number" value="@route["id"]" class="form-control input-sm" placeholder="ID..." />
+    </div>
     @if (User.Identity.IsAuthenticated)
     {
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">

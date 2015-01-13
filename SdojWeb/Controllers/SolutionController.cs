@@ -31,12 +31,13 @@ namespace SdojWeb.Controllers
 
         // GET: Solution
         [AllowAnonymous]
-        public ActionResult Index(bool? onlyMe, string question, string username, Languages? language, SolutionState? state, 
+        public ActionResult Index(int? id, bool? onlyMe, string question, string username, Languages? language, SolutionState? state, 
             int? page, string orderBy, bool? asc)
         {
             int currentUserId = User.Identity.GetIntUserId();
             var route = new RouteValueDictionary
             {
+                {"id", id }, 
                 {"onlyMe", onlyMe}, 
                 {"question", question},
                 {"username", username}, 
@@ -50,6 +51,10 @@ namespace SdojWeb.Controllers
                 .OrderByDescending(x => x.SubmitTime)
                 .Project().To<SolutionSummaryModel>();
             
+            if (id != null)
+            {
+                query = query.Where(x => x.Id == id.Value);
+            }
             if (onlyMe != null && onlyMe.Value)
             {
                 query = query.Where(x => x.CreateUserId == currentUserId);
