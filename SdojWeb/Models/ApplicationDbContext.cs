@@ -58,6 +58,10 @@ namespace SdojWeb.Models
 
         public DbSet<UserLogin> UserLogins { get; set; }
 
+        public DbSet<QuestionGroup> QuestionGroups { get; set; }
+
+        public DbSet<QuestionGroupItem> QuestionGroupItems { get; set; }
+
         public static ApplicationDbContext Create()
         {
             var db = new ApplicationDbContext();

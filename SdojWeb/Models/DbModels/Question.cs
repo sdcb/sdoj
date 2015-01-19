@@ -38,5 +38,7 @@ namespace SdojWeb.Models.DbModels
         public ICollection<QuestionData> Datas { get; set; }
 
         public ICollection<Solution> Solutions { get; set; }
+
+        public ICollection<QuestionGroupItem> QuestionGroups { get; set; }
     }
 }

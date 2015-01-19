@@ -226,6 +226,10 @@
     <Compile Include="Infrastructure\Html\SortableThBuilder.cs" />
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
+    <Compile Include="Migrations\201501190340143_QuestionGroupMigration.cs" />
+    <Compile Include="Migrations\201501190340143_QuestionGroupMigration.Designer.cs">
+      <DependentUpon>201501190340143_QuestionGroupMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
@@ -242,6 +246,7 @@
     <Compile Include="Models\JudgePush\QuestionDataFullModel.cs" />
     <Compile Include="Models\JudgePush\QuestionDataHashModel.cs" />
     <Compile Include="Models\JudgePush\SolutionPushModel.cs" />
+    <Compile Include="Models\DbModels\QuestionGroup.cs" />
     <Compile Include="SignalR\SolutionHub.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -448,6 +453,11 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201501190340143_QuestionGroupMigration.resx">
+      <DependentUpon>201501190340143_QuestionGroupMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
