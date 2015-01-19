@@ -68,7 +68,7 @@
     </Reference>
     <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.Extended.6.1.0.121\lib\net45\EntityFramework.Extended.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.133\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -351,13 +351,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Properties\PublishProfiles\aliyun.pubxml" />
     <None Include="Properties\PublishProfiles\oj-demo2.pubxml" />
-    <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.11.1.js" />
-    <Content Include="Scripts\jquery-1.11.1.min.js" />
-    <Content Include="Scripts\jquery-1.11.1.min.map" />
+    <None Include="Scripts\jquery-1.11.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.11.2.js" />
+    <Content Include="Scripts\jquery-1.11.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.2.js" />
     <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <Content Include="Scripts\jquery.validate-localization.js" />
@@ -366,6 +365,7 @@
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery-validate.bootstrap-tooltip.js" />
+    <Content Include="Scripts\jquery-1.11.2.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
