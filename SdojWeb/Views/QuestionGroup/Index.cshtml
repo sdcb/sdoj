@@ -1,0 +1,133 @@
+﻿@using SdojWeb.Models;
+@using SdojWeb.Infrastructure.Extensions;
+@using PagedList.Mvc;
+@using SdojWeb.Infrastructure.Extensions;
+
+@model IEnumerable<QuestionGroupListModel>
+
+@{
+    ViewBag.Title = "题目组";
+    var route = (RouteValueDictionary)ViewData["Route"];
+    var paged = (SortablePagedList<QuestionGroupListModel>)Model;
+    var thb = paged.GetThBuilder(Html, "Index", route);
+}
+
+<h2>题目组</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="clearfix">
+        <div class="form-tools pull-right">
+            <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+                <i class="glyphicon glyphicon-plus"></i>
+                新题目组
+            </a>
+        </div>
+    </div>
+}
+
+<form class="search-form">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select class="form-control input-sm" data-value="@route["onlyMe"]" name="onlyMe">
+                <option value="">所有...</option>
+                <option value="True">仅我创建</option>
+            </select>
+        </div>
+    }
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <input name="id" type="number" value="@route["id"]" class="form-control input-sm" placeholder="ID..." />
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("name", route["name"], new { @class = "form-control input-sm", placeholder = "名称..." })
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.TextBox("author", route["author"], new { @class = "form-control input-sm", placeholder = "作者..." })
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <button type="submit" class="btn btn-default btn-sm">过滤</button>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @thb.BuildA(x => x.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(x => x.QuestionCount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateUserName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ModifyTime)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.QuestionCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateUserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModifyTime)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        第 @paged.PageNumber 页，共 @paged.PageCount 页
+    </div>
+    <div class="col-xs-6">
+        <div class="pull-right">
+            @Html.PagedListPager(paged, page => Url.Action("Index", route.CopySetPaged(page, paged.OrderBy, paged.Asc)))
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $("select").each(function (id, s) {
+            $(s).val($(s).data('value'));
+        });
+    </script>
+}

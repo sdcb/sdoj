@@ -7,11 +7,11 @@
 }
 
 <ul class="nav navbar-nav">
-    <li class="@getControllerIsActiveClass("home")">
-        @Html.ActionLink("主页", "Index", "Home")
+    <li class="@getControllerIsActiveClass("questiongroup")">
+        @Html.ActionLink("题目组", "Index", "QuestionGroup")
     </li>
     <li class="@getControllerIsActiveClass("question")">
-        @Html.ActionLink("题目", "Index", "Question")
+        @Html.ActionLink("所有题目", "Index", "Question")
     </li>
     <li class="@getControllerIsActiveClass("solution")">
         @Html.ActionLink("解答", "Index", "Solution")

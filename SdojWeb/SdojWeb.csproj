@@ -220,6 +220,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\QuestionGroupController.cs" />
     <Compile Include="Infrastructure\Extensions\EnumExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\IdentityExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RouteValueDictionaryExtensions.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Models\JudgePush\QuestionDataHashModel.cs" />
     <Compile Include="Models\JudgePush\SolutionPushModel.cs" />
     <Compile Include="Models\DbModels\QuestionGroup.cs" />
+    <Compile Include="Models\QuestionGroupModels.cs" />
     <Compile Include="SignalR\SolutionHub.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -444,6 +446,11 @@
     <Content Include="Views\Question\Data.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Markdown.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Markdown.cshtml" />
+    <Content Include="Views\QuestionGroup\Create.cshtml" />
+    <Content Include="Views\QuestionGroup\Delete.cshtml" />
+    <Content Include="Views\QuestionGroup\Details.cshtml" />
+    <Content Include="Views\QuestionGroup\Edit.cshtml" />
+    <Content Include="Views\QuestionGroup\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
