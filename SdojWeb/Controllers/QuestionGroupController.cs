@@ -6,9 +6,8 @@ using SdojWeb.Models;
 using SdojWeb.Models.DbModels;
 using AutoMapper.QueryableExtensions;
 using System.Web.Routing;
-using System.Linq;
-using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Extensions;
+using SdojWeb.Manager;
 
 namespace SdojWeb.Controllers
 {
@@ -17,9 +16,12 @@ namespace SdojWeb.Controllers
     {
         private readonly ApplicationDbContext _db;
 
-        public QuestionGroupController(ApplicationDbContext db)
+        private readonly QuestionGroupManager _manager;
+
+        public QuestionGroupController(ApplicationDbContext db, QuestionGroupManager manager)
         {
             _db = db;
+            _manager = manager;
         }
 
         // GET: QuestionGroup
@@ -31,32 +33,14 @@ namespace SdojWeb.Controllers
                 { "id", id },
                 { "onlyMe", onlyMe},
                 { "name", name },
-                { "author", author }
+                { "author", author },
+                { "page", page },
+                { "orderBy", orderBy },
+                { "asc", asc }
             };
             ViewData["Route"] = route;
 
-            var query = _db.QuestionGroups.AsQueryable();
-
-            if (id != null)
-            {
-                query = query.Where(x => x.Id == id);
-            }
-            if (onlyMe != null)
-            {
-                var userId = User.Identity.GetUserId<int>();
-                query = query.Where(x => x.CreateUserId == userId);
-            }
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                name = name.Trim();
-                query = query.Where(x => x.Name.StartsWith(name));
-            }
-            if (!string.IsNullOrWhiteSpace(author))
-            {
-                author = author.Trim();
-                query = query.Where(x => x.CreateUser.UserName == author);
-            }
-
+            var query = _manager.List(id, onlyMe, name, author);
             var models = query.Project().To<QuestionGroupListModel>();
             if (orderBy == null)
             {
@@ -66,6 +50,22 @@ namespace SdojWeb.Controllers
             var paged = models.ToSortedPagedList(page, orderBy, asc);
 
             return View(paged);
+        }
+
+        public ActionResult IndexData(int? id, bool? onlyMe, string name, string author,
+            int? page, string orderBy, bool? asc)
+        {
+            var query = _manager.List(id, onlyMe, name, author);
+
+            var models = query.Project().To<QuestionGroupListModel>();
+            if (orderBy == null)
+            {
+                orderBy = "Id";
+                asc = false;
+            }
+            var paged = models.ToSimplePagedList(page, orderBy, asc);
+
+            return Json(paged);
         }
 
         // GET: QuestionGroup/Details/5

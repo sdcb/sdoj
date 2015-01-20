@@ -226,8 +226,10 @@
     <Compile Include="Infrastructure\Extensions\EnumExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\IdentityExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\SimplePagedList.cs" />
     <Compile Include="Infrastructure\Html\SortableThBuilder.cs" />
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
+    <Compile Include="Manager\QuestionGroupManager.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.Designer.cs">
@@ -266,8 +268,8 @@
     <Compile Include="Infrastructure\Alerts\AlertExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\LinkExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\LinqExtensions.cs" />
-    <Compile Include="Infrastructure\Extensions\PagedListExtensions.cs" />
-    <Compile Include="Infrastructure\Extensions\SortablePagedList.cs" />
+    <Compile Include="Infrastructure\Extensions\Paging\PagedListExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\Paging\SortablePagedList.cs" />
     <Compile Include="Infrastructure\Identity\CustomClaims.cs" />
     <Compile Include="Infrastructure\Identity\SdojAuthorize.cs" />
     <Compile Include="Infrastructure\Identity\UserExtension.cs" />
