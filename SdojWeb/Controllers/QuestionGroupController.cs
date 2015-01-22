@@ -11,7 +11,6 @@ using SdojWeb.Manager;
 
 namespace SdojWeb.Controllers
 {
-    [RoutePrefix("Group")]
     public class QuestionGroupController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -52,22 +51,6 @@ namespace SdojWeb.Controllers
             return View(paged);
         }
 
-        public ActionResult IndexData(int? id, bool? onlyMe, string name, string author,
-            int? page, string orderBy, bool? asc)
-        {
-            var query = _manager.List(id, onlyMe, name, author);
-
-            var models = query.Project().To<QuestionGroupListModel>();
-            if (orderBy == null)
-            {
-                orderBy = "Id";
-                asc = false;
-            }
-            var paged = models.ToSimplePagedList(page, orderBy, asc);
-
-            return Json(paged);
-        }
-
         // GET: QuestionGroup/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -86,25 +69,21 @@ namespace SdojWeb.Controllers
         // GET: QuestionGroup/Create
         public ActionResult Create()
         {
-            ViewBag.CreateUserId = new SelectList(_db.Users, "Id", "Email");
             return View();
         }
 
         // POST: QuestionGroup/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,CreateTime,ModifyTime,CreateUserId")] QuestionGroup questionGroup)
+        public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup, int[] ids)
         {
             if (ModelState.IsValid)
             {
-                _db.QuestionGroups.Add(questionGroup);
-                await _db.SaveChangesAsync();
+                //_db.QuestionGroups.Add(questionGroup);
+                //await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CreateUserId = new SelectList(_db.Users, "Id", "Email", questionGroup.CreateUserId);
             return View(questionGroup);
         }
 
