@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using SdojWeb.Infrastructure.ModelMetadata.Attributes;
 
 namespace SdojWeb.Models
 {
@@ -58,6 +59,7 @@ namespace SdojWeb.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
+        [RenderMode(RenderMode.Neither)]
         public List<QuestionGroupItemEditModel> Questions { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
@@ -67,6 +69,18 @@ namespace SdojWeb.Models
 
             configuration.CreateMap<QuestionGroupEditModel, QuestionGroup>();
         }
+    }
+
+    public class QuestionGroupItemEditSaveModel
+    {
+        public int Id { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [MaxLength(20)]
+        public string Alias { get; set; }
+
+        public int Order { get; set; }
     }
 
     public class QuestionGroupItemEditModel : IHaveCustomMapping

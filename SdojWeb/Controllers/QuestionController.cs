@@ -34,43 +34,19 @@ namespace SdojWeb.Controllers
         public ActionResult Index(string name, string creator, 
             int? page, string orderBy, bool? asc)
         {
+            if (orderBy == null)
+            {
+                orderBy = "Id";
+                asc = false;
+            }
+
             var route = new RouteValueDictionary
             {
                 {"name", name},
                 {"creator",creator}
             };
 
-            var uid = User.Identity.GetUserId<int>();
-            var query = _db.Questions
-                .OrderByDescending(x => x.Id)
-                .Select(x => new QuestionSummaryViewModel
-                {
-                    Id = x.Id,
-                    Creator = x.CreateUser.UserName,
-                    DataCount = x.Datas.Count,
-                    Name = x.Name,
-                    UpdateTime = x.UpdateTime,
-
-                    MemoryLimitMb = x.Datas.Max(v => v.MemoryLimitMb),
-                    TimeLimit = x.Datas.Sum(v => v.TimeLimit),
-
-                    SolutionCount = x.Solutions.Count,
-                    AcceptedCount = x.Solutions.Count(v => v.State == SolutionState.Accepted), 
-
-                    Complished = x.Solutions.Any(v => v.CreateUserId == uid && v.State == SolutionState.Accepted),
-                    Started = x.Solutions.Any(v => v.CreateUserId == uid)
-                });
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                name = name.Trim();
-                query = query.Where(x => x.Name.StartsWith(name.Trim()));
-            }
-            if (!string.IsNullOrWhiteSpace(creator))
-            {
-                query = query.Where(x => x.Creator == creator.Trim());
-            }
-
+            var query = _manager.List(name, creator);
             var models = query.ToSortedPagedList(page, orderBy, asc);
             ViewBag.Route = route;
             return View(models);

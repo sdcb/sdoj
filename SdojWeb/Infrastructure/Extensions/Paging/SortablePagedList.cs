@@ -55,5 +55,11 @@ namespace SdojWeb.Infrastructure.Extensions
             var builder = new SortableThBuilder<T>(htmlHelper, this, actionName, route);
             return builder;
         }
+
+        public AjaxUpdateABuilder<T> GetUpdateABuilder(HtmlHelper htmlHelper, string actionName, RouteValueDictionary route, string targetElement)
+        {
+            var builder = new AjaxUpdateABuilder<T>(htmlHelper, this, actionName, route, targetElement);
+            return builder;
+        }
     }
 }

@@ -152,7 +152,7 @@ namespace SdojWeb.Models
         public QuestionData SampleData { get; set; }
     }
 
-    public class QuestionSummaryViewModel
+    public class QuestionSummaryBasicViewModel : IHaveCustomMapping
     {
         [HiddenInput]
         public int Id { get; set; }
@@ -174,15 +174,26 @@ namespace SdojWeb.Models
 
         public int AcceptedCount { get; set; }
 
-        [Display(Name = "通过")]
-        public bool Complished { get; set; }
-
-        public bool Started { get; set; }
-
         [Display(Name = "内存限制(MB)")]
         public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)")]
         public int TimeLimit { get; set; }
+
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<Question, QuestionSummaryBasicViewModel>()
+                .ForMember(s => s.Creator, d => d.MapFrom(x => x.CreateUser.UserName))
+                .ForMember(s => s.DataCount, d => d.MapFrom(x => x.Datas.Count))
+                .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count));
+        }
+    }
+
+    public class QuestionSummaryViewModel : QuestionSummaryBasicViewModel
+    {
+        [Display(Name = "通过")]
+        public bool Complished { get; set; }
+
+        public bool Started { get; set; }
     }
 }

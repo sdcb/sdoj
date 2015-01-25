@@ -1,36 +1,156 @@
 ﻿@model SdojWeb.Models.QuestionGroupEditModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "新题目组";
 }
 
-<h2>Create</h2>
+<h2>@ViewBag.Title</h2>
+
+<div class="form-horizontal">
+    <h4></h4>
+    <hr />
+    <form data-bind="submit: save" id="main-form">
+        @Html.AntiForgeryToken()
 
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>QuestionGroup</h4>
-        <hr />
-
-        @Html.EditorForModel()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="col-md-2">
+                <label>名称</label>
+            </div>
+            <div class="col-md-10">
+                <input class="form-control" name="name" data-bind="value: name" placeholder="名称..." />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label>描述</label>
+            </div>
+            <div class="col-md-10">
+                <input class="form-control" name="description" data-bind="value: description" placeholder="描述..." />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>题目列表</label>
+            </div>
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>别名</th>
+                                <th>题目名</th>
+                                <th>作者</th>
+                                <th>顺序</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: items">
+                            <tr>
+                                <td data-bind="text: id"></td>
+                                <td>
+                                    <input name="questions.alias" class="form-control input-sm" data-bind="value: alias" type="text" data-rule-required="true" />
+                                </td>
+                                <td>
+                                    <span data-bind="text: name"></span>
+                                </td>
+                                <td>
+                                    <span data-bind="text: author"></span>
+                                </td>
+                                <td>
+                                    <input name="questions.order[]" class="form-control input-sm" data-bind="value: order" type="number" data-rule-required="true" data-rule-number="true" />
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning btn-xs btn-block text-center" type="button">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        删除
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <label>题目列表</label>
+        </div>
+        <div class="col-md-10">
+            <form class="search-form">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    @Html.TextBox("name", "", new { @class = "form-control input-sm", placeholder = "标题..." })
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    @Html.TextBox("creator", "", new { @class = "form-control input-sm", placeholder = "作者..." })
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <button class="btn btn-default btn-sm" type="submit">过滤</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+            <div class="row">
+                <div class="col-xs-12" id="question-table">
+                    @Html.Partial("_Question", ViewData["Question"], ViewData)
+                </div>
             </div>
         </div>
     </div>
-}
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="创建" class="btn btn-default" />
+        </div>
+    </div>
+    
+</div>
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/ko")
+    @Scripts.Render("~/bundles/jqueryajax")
+
+    <script>
+        function ViewModel() {
+            var self = this;
+            var prototype = ViewModel.prototype;
+
+            this.name = ko.observable("");
+            this.description = ko.observable("");
+            this.items = ko.observableArray([]);
+
+            this.items.push(new QuestionItem());
+            this.items.push(new QuestionItem());
+            this.items.push(new QuestionItem());
+
+            prototype.save = function (form) {
+                var $form = $(form);
+                $form.valid();
+            }
+        }
+
+        function QuestionItem() {
+            var self = this;
+
+            this.id = ko.observable(null);
+            this.alias = ko.observable("");
+            this.name = ko.observable("");
+            this.author = ko.observable(null);
+            this.order = ko.observable(0);
+        }
+
+        var vm = new ViewModel();
+        ko.applyBindings(vm);
+    </script>
 }

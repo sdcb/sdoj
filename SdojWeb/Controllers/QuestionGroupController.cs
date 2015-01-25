@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using System.Web.Routing;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Manager;
+using System.Linq;
 
 namespace SdojWeb.Controllers
 {
@@ -17,10 +18,13 @@ namespace SdojWeb.Controllers
 
         private readonly QuestionGroupManager _manager;
 
-        public QuestionGroupController(ApplicationDbContext db, QuestionGroupManager manager)
+        private readonly QuestionManager _questionManager;
+
+        public QuestionGroupController(ApplicationDbContext db, QuestionGroupManager manager, QuestionManager questionManager)
         {
             _db = db;
             _manager = manager;
+            _questionManager = questionManager;
         }
 
         // GET: QuestionGroup
@@ -69,13 +73,53 @@ namespace SdojWeb.Controllers
         // GET: QuestionGroup/Create
         public ActionResult Create()
         {
-            return View();
+            var route = new RouteValueDictionary
+            {
+                { "name", "" },
+                { "creator", "" },
+                { "page", 1 },
+                { "orderBy", "Id" },
+                { "asc", false }
+            };
+            ViewData["QuestionRoute"] = route;
+
+            var questions = _questionManager.BasicList(null, null).ToSortedPagedList(1, "Id", false);
+            ViewData["Question"] = questions;
+
+            var model = new QuestionGroupEditModel();
+            return View(model);
+        }
+
+        // POST: QuestionGroup/Question
+        public ActionResult Question(string name, string creator, 
+            int? page, string orderBy, bool? asc)
+        {
+            var route = new RouteValueDictionary
+            {
+                { "name", name },
+                { "creator", creator },
+                { "page", page },
+                { "orderBy", orderBy },
+                { "asc", asc }
+            };
+            ViewData["QuestionRoute"] = route;
+
+            if (orderBy == null)
+            {
+                orderBy = "Id";
+                asc = false;
+            }
+
+            var questions = _questionManager.BasicList(name, creator)
+                .ToSortedPagedList(page, orderBy, asc);
+
+            return PartialView("_Question", questions);
         }
 
         // POST: QuestionGroup/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup, int[] ids)
+        public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup, QuestionGroupItemEditSaveModel[] ids)
         {
             if (ModelState.IsValid)
             {
