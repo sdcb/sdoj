@@ -3,11 +3,14 @@
 
 @model  IAjaxPagerContext
 @{
+    var onSuccessCallback = (string)ViewData["OnSuccessCallback"];
+
     var options = PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions
     {
         UpdateTargetId = Model.GetUpdateTargetId(),
         InsertionMode = InsertionMode.Replace,
-        HttpMethod = "POST"
+        HttpMethod = "POST",
+        OnSuccess = onSuccessCallback
     });
 }
 

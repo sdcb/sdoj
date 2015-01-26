@@ -28,24 +28,24 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>别名</th>
                                 <th>题目名</th>
                                 <th>作者</th>
+                                <th>别名</th>
                                 <th>顺序</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: items">
                             <tr>
-                                <td data-bind="text: id"></td>
-                                <td>
-                                    <input name="questions.alias" class="form-control input-sm" data-bind="value: alias" type="text" data-rule-required="true" />
-                                </td>
+                                <td data-bind="text: questionId"></td>
                                 <td>
                                     <span data-bind="text: name"></span>
                                 </td>
                                 <td>
                                     <span data-bind="text: author"></span>
+                                </td>
+                                <td>
+                                    <input name="questions.alias" class="form-control input-sm" data-bind="value: alias" type="text" data-rule-required="true" />
                                 </td>
                                 <td>
                                     <input name="questions.order[]" class="form-control input-sm" data-bind="value: order" type="number" data-rule-required="true" data-rule-number="true" />
@@ -108,10 +108,6 @@
             this.description = ko.observable("");
             this.items = ko.observableArray([]);
 
-            this.items.push(new QuestionItem());
-            this.items.push(new QuestionItem());
-            this.items.push(new QuestionItem());
-
             prototype.save = function (form) {
                 var $form = $(form);
                 $form.valid();
@@ -122,10 +118,46 @@
             var self = this;
 
             this.id = ko.observable(null);
+            this.questionId = ko.observable(null);
             this.alias = ko.observable("");
             this.name = ko.observable("");
             this.author = ko.observable(null);
             this.order = ko.observable(0);
+        }
+
+        function handle_add_question() {
+            var that = $(this);
+
+            var id = that.data('id');
+            var name = that.data('name');
+            var author = that.data('creator');
+
+            var item = new QuestionItem();
+            item.questionId(id);
+            item.name(name);
+            item.author(author);
+
+            vm.items.push(item);
+            that.remove();
+        }
+
+        $(".add-question-button").click(handle_add_question);
+
+        function on_question_page_loaded() {
+            var ids = ko.utils.arrayMap(vm.items(), function (item) {
+                return item.questionId();
+            });
+
+            $(".add-question-button").each(function (id, element) {
+                var that = $(element);
+                var thatId = that.data('id');
+
+                if ($.inArray(thatId, ids) != -1) {
+                    $(element).remove();
+                }
+            });
+
+            $(".add-question-button").click(handle_add_question);
         }
 
         var vm = new ViewModel();

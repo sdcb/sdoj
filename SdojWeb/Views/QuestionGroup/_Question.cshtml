@@ -68,7 +68,8 @@
                             </a>
                         </td>
                         <td>
-                            <button class="btn btn-success btn-xs btn-block" onclick="deleteMe(@item.Id)">
+                            <button class="btn btn-success btn-xs btn-block add-question-button"
+                                    data-id="@item.Id" data-name="@item.Name" data-creator="@item.Creator">
                                 <i class="glyphicon glyphicon-plus"></i>
                                 添加
                             </button>
@@ -80,4 +81,4 @@
     </div>
 </div>
 
-@Html.Partial("_AjaxPager", thb)
+@Html.Partial("_AjaxPager", thb, new ViewDataDictionary { { "OnSuccessCallback", "on_question_page_loaded()" } })
