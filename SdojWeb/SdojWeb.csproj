@@ -460,6 +460,7 @@
     <Content Include="Views\QuestionGroup\Edit.cshtml" />
     <Content Include="Views\QuestionGroup\Index.cshtml" />
     <Content Include="Views\QuestionGroup\_Question.cshtml" />
+    <Content Include="Views\Shared\_AjaxPager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,83 @@
+﻿@using SdojWeb.Infrastructure.Extensions
+@using SdojWeb.Models
+@using PagedList.Mvc
+@model IEnumerable<QuestionSummaryBasicViewModel>
+@{
+    var paged = Model as SortablePagedList<QuestionSummaryBasicViewModel>;
+    var route = (RouteValueDictionary)ViewData["QuestionRoute"];
+    var thb = paged.GetAjaxUpdateBuilder(Html, "Question", route, "#question-table");
+}
+
+<div class="col-xs-12">
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @thb.AjaxUpdateHeader(x => x.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MemoryLimitMb)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TimeLimit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DataCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SolutionCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdateTime)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Name, "Details", "Question", new { id = item.Id })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Creator)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MemoryLimitMb)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TimeLimit)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Data", "Question", new {id=item.Id})">
+                                @Html.DisplayFor(x => item.DataCount)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SolutionCount)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Question", new {id=item.Id})">
+                                @Html.DisplayFor(modelItem => item.UpdateTime)
+                            </a>
+                        </td>
+                        <td>
+                            <button class="btn btn-success btn-xs btn-block" onclick="deleteMe(@item.Id)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                添加
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_AjaxPager", thb)

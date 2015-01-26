@@ -1,35 +1,27 @@
 ﻿@model SdojWeb.Models.QuestionGroupEditModel
-
 @{
     ViewBag.Title = "新题目组";
 }
-
 <h2>@ViewBag.Title</h2>
-
 <div class="form-horizontal">
     <h4></h4>
     <hr />
     <form data-bind="submit: save" id="main-form">
         @Html.AntiForgeryToken()
-
         <div class="form-group">
             <label class="col-md-2 control-label" for="name">名称</label>
             <div class="col-md-10">
                 <input class="form-control" name="name" data-bind="value: name" placeholder="名称..." />
             </div>
         </div>
-
         <div class="form-group">
             <label class="col-md-2 control-label" for="description">描述</label>
             <div class="col-md-10">
                 <input class="form-control" name="description" data-bind="value: description" placeholder="描述..." />
             </div>
         </div>
-
         <div class="row">
-            <div class="col-md-2">
-                <label>题目列表</label>
-            </div>
+            <label class="col-md-2 control-label">题目列表</label>
             <div class="col-md-10">
                 <div class="table-responsive">
                     <table class="table table-bordered table-condensed table-hover table-striped">
@@ -71,13 +63,11 @@
             </div>
         </div>
     </form>
-
     <div class="form-group">
-        <div class="col-md-2">
-            <label>题目列表</label>
-        </div>
+        <label class="col-md-2 control-label">题目列表</label>
         <div class="col-md-10">
-            <form class="search-form">
+            <form class="search-form" data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#question-table">
+                @Html.AntiForgeryToken()
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     @Html.TextBox("name", "", new { @class = "form-control input-sm", placeholder = "标题..." })
                 </div>
@@ -90,31 +80,25 @@
             </form>
         </div>
         <div class="col-md-offset-2 col-md-10">
-            <div class="row">
-                <div class="col-xs-12" id="question-table">
-                    @Html.Partial("_Question", ViewData["Question"], ViewData)
-                </div>
+            <div class="row" id="question-table">
+                @Html.Partial("_Question", ViewData["Question"], ViewData)
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="button" value="创建" class="btn btn-default" />
         </div>
     </div>
-    
-</div>
 
+</div>
 <div>
     @Html.ActionLink("返回列表", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/ko")
     @Scripts.Render("~/bundles/jqueryajax")
-
     <script>
         function ViewModel() {
             var self = this;
