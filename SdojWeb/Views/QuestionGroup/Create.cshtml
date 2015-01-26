@@ -51,7 +51,8 @@
                                     <input name="questions.order[]" class="form-control input-sm" data-bind="value: order" type="number" data-rule-required="true" data-rule-number="true" />
                                 </td>
                                 <td>
-                                    <button class="btn btn-warning btn-xs btn-block text-center" type="button">
+                                    <button data-bind="click: $parent.remove_question_item.bind($parent, $data)"
+                                            class="btn btn-warning btn-xs btn-block text-center" type="button">
                                         <i class="glyphicon glyphicon-remove"></i>
                                         删除
                                     </button>
@@ -66,7 +67,9 @@
     <div class="form-group">
         <label class="col-md-2 control-label">题目列表</label>
         <div class="col-md-10">
-            <form class="search-form" data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#question-table">
+            <form class="search-form" 
+                  data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace"
+                  data-ajax-update="#question-table" data-ajax-success="on_question_page_loaded()">
                 @Html.AntiForgeryToken()
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     @Html.TextBox("name", "", new { @class = "form-control input-sm", placeholder = "标题..." })
@@ -112,6 +115,11 @@
                 var $form = $(form);
                 $form.valid();
             }
+
+            prototype.remove_question_item = function (item) {
+                this.items.remove(item);
+                refresh_question_list();
+            }
         }
 
         function QuestionItem() {
@@ -125,7 +133,7 @@
             this.order = ko.observable(0);
         }
 
-        function handle_add_question() {
+        function add_question_item() {
             var that = $(this);
 
             var id = that.data('id');
@@ -138,12 +146,10 @@
             item.author(author);
 
             vm.items.push(item);
-            that.remove();
+            refresh_question_list();
         }
 
-        $(".add-question-button").click(handle_add_question);
-
-        function on_question_page_loaded() {
+        function refresh_question_list() {
             var ids = ko.utils.arrayMap(vm.items(), function (item) {
                 return item.questionId();
             });
@@ -152,12 +158,16 @@
                 var that = $(element);
                 var thatId = that.data('id');
 
-                if ($.inArray(thatId, ids) != -1) {
-                    $(element).remove();
+                if (ids.indexOf(thatId) !== -1) {
+                    $(element).hide();
+                } else {
+                    $(element).show();
                 }
             });
+        }
 
-            $(".add-question-button").click(handle_add_question);
+        function on_question_page_loaded() {
+            refresh_question_list();
         }
 
         var vm = new ViewModel();

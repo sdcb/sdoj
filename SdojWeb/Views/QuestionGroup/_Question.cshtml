@@ -1,11 +1,10 @@
 ﻿@using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
-@using PagedList.Mvc
 @model IEnumerable<QuestionSummaryBasicViewModel>
 @{
     var paged = Model as SortablePagedList<QuestionSummaryBasicViewModel>;
     var route = (RouteValueDictionary)ViewData["QuestionRoute"];
-    var thb = paged.GetAjaxUpdateBuilder(Html, "Question", route, "#question-table");
+    var thb = paged.GetAjaxUpdateBuilder(Html, "Question", route, "#question-table", "on_question_page_loaded()");
 }
 
 <div class="col-xs-12">
@@ -15,6 +14,9 @@
                 <tr>
                     <th>
                         @thb.AjaxUpdateHeader(x => x.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Creator)
@@ -43,6 +45,9 @@
                 {
                     <tr>
                         <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
                             @Html.ActionLink(item.Name, "Details", "Question", new { id = item.Id })
                         </td>
                         <td>
@@ -60,6 +65,7 @@
                             </a>
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.AcceptedCount) /
                             @Html.DisplayFor(modelItem => item.SolutionCount)
                         </td>
                         <td>
@@ -68,7 +74,7 @@
                             </a>
                         </td>
                         <td>
-                            <button class="btn btn-success btn-xs btn-block add-question-button"
+                            <button class="btn btn-success btn-xs btn-block add-question-button" onclick="add_question_item.bind(this)()"
                                     data-id="@item.Id" data-name="@item.Name" data-creator="@item.Creator">
                                 <i class="glyphicon glyphicon-plus"></i>
                                 添加
@@ -81,4 +87,4 @@
     </div>
 </div>
 
-@Html.Partial("_AjaxPager", thb, new ViewDataDictionary { { "OnSuccessCallback", "on_question_page_loaded()" } })
+@Html.Partial("_AjaxPager", thb)

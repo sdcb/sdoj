@@ -185,7 +185,9 @@ namespace SdojWeb.Models
             configuration.CreateMap<Question, QuestionSummaryBasicViewModel>()
                 .ForMember(s => s.Creator, d => d.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(s => s.DataCount, d => d.MapFrom(x => x.Datas.Count))
-                .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count));
+                .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(m => m.MemoryLimitMb)))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(m => m.TimeLimit)));
         }
     }
 

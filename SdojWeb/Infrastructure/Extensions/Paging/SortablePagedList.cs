@@ -56,9 +56,9 @@ namespace SdojWeb.Infrastructure.Extensions
             return builder;
         }
 
-        public AjaxUpdateBuilder<T> GetAjaxUpdateBuilder(HtmlHelper htmlHelper, string actionName, RouteValueDictionary route, string targetElement)
+        public AjaxUpdateBuilder<T> GetAjaxUpdateBuilder(HtmlHelper htmlHelper, string actionName, RouteValueDictionary route, string targetElement, string onSuccess = null)
         {
-            var builder = new AjaxUpdateBuilder<T>(htmlHelper, this, actionName, route, targetElement);
+            var builder = new AjaxUpdateBuilder<T>(htmlHelper, this, actionName, route, targetElement, onSuccess);
             return builder;
         }
     }

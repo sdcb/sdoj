@@ -65,11 +65,13 @@ namespace SdojWeb.Infrastructure.Html
         IPagedList GetPagedList();
 
         string AjaxPagerUrl(int page);
+
+        string OnSuccessCallback { get; }
     }
 
     public class AjaxUpdateBuilder<TModel> : SortableThBuilder<TModel>, IAjaxPagerContext where TModel : class
     {
-        internal AjaxUpdateBuilder(HtmlHelper html, SortablePagedList<TModel> paged, string action, RouteValueDictionary route, string updateTarget)
+        internal AjaxUpdateBuilder(HtmlHelper html, SortablePagedList<TModel> paged, string action, RouteValueDictionary route, string updateTarget, string onSuccess)
             : base(html, paged, action, route)
         {
             if (updateTarget == null)
@@ -86,6 +88,7 @@ namespace SdojWeb.Infrastructure.Html
             };
 
             _paged = paged;
+            OnSuccessCallback = onSuccess;
         }
 
         public MvcHtmlString AjaxUpdateHeader<TValue>(Expression<Func<TModel, TValue>> expression)
@@ -143,5 +146,7 @@ namespace SdojWeb.Infrastructure.Html
         public readonly string _updateTarget;
 
         private readonly SortablePagedList<TModel> _paged;
+
+        public string OnSuccessCallback { get; private set; }
     }
 }
