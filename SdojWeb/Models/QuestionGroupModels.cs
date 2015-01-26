@@ -53,7 +53,7 @@ namespace SdojWeb.Models
         public int Id { get; set; }
 
         [DisplayName("名称")]
-        [MaxLength(20), Required]
+        [MaxLength(20), Required, Remote("CheckName", "QuestionGroup", HttpMethod = "POST")]
         public string Name { get; set; }
 
         [DisplayName("描述")]

@@ -196,13 +196,12 @@ namespace SdojWeb.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        public async Task<ActionResult> CheckName(string name)
         {
-            if (disposing)
-            {
-                _db.Dispose();
-            }
-            base.Dispose(disposing);
+            name = name.Trim();
+            var exist = await _manager.ExistName(name);
+            return Json(!exist);
         }
     }
 }

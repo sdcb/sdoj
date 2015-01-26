@@ -157,10 +157,12 @@ namespace SdojWeb.Controllers
             return RedirectToAction("Index").WithSuccess("题目删除成功。");
         }
 
+        [HttpPost]
         public async Task<ActionResult> CheckName(string name)
         {
+            name = name.Trim();
             var exist = await _manager.ExistName(name);
-            return Json(!exist, JsonRequestBehavior.AllowGet);
+            return Json(!exist);
         }
 
         // GET: /Question/5/Data/

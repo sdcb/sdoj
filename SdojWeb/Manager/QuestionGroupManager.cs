@@ -6,6 +6,7 @@ using System.Web;
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using System.Data.Entity;
 
 namespace SdojWeb.Manager
 {
@@ -74,6 +75,11 @@ namespace SdojWeb.Manager
 
             _db.QuestionGroups.Add(questionGroup);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistName(string name)
+        {
+            return await _db.QuestionGroups.AnyAsync(x => x.Name == name);
         }
     }
 }

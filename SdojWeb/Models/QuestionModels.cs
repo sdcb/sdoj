@@ -53,7 +53,7 @@ namespace SdojWeb.Models
 
     public class QuestionCreateModel : IHaveCustomMapping
     {
-        [Display(Name = "标题"), Required, Remote("CheckName", "Question"), MaxLength(30)]
+        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", HttpMethod = "POST")]
         public string Name { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
@@ -97,7 +97,7 @@ namespace SdojWeb.Models
         [Editable(false)]
         public int Id { get; set; }
 
-        [Display(Name = "标题"), Required, MaxLength(30)]
+        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", HttpMethod = "POST")]
         public string Name { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
