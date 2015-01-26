@@ -32,7 +32,7 @@
                     animation: $(element).data('animation') || true,
                     html: $(element).data('html') || false,
                     placement: $(element).data('placement') || 'top',
-                    selector: $(element).data('animation') && true,
+                    selector: $(element).data('animation') || false,
                     title: $(element).attr('title') || message,
                     trigger: $.trim('manual ' + ($(element).data('trigger') || '')),
                     delay: $(element).data('delay') || 0,

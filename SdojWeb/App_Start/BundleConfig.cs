@@ -16,7 +16,7 @@ namespace SdojWeb
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate.js",
-                        "~/Scripts/jquery.validate.unobstrusive.js",
+                        "~/Scripts/jquery.validate.unobtrusive.js",
                         "~/Scripts/jquery.validate-localization.js",
                         "~/Scripts/jquery-validate.bootstrap-tooltip.js").ForceOrdered());
 
