@@ -58,7 +58,6 @@ namespace SdojWeb.Manager
             {
                 await ModifyQuestionGroup(toSave);
             }
-            throw new NotImplementedException();
         }
 
         private Task ModifyQuestionGroup(QuestionGroupEditModel toSave)

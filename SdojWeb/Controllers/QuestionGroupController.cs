@@ -125,7 +125,7 @@ namespace SdojWeb.Controllers
             if (ModelState.IsValid)
             {
                 await _manager.Save(questionGroup);
-                return RedirectToAction("Index");
+                return this.JavascriptRedirectToAction("Index");
             }
 
             return View(questionGroup);
