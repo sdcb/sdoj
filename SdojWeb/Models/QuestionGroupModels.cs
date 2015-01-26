@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using SdojWeb.Infrastructure.ModelMetadata.Attributes;
+using System.Web;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Models
 {
@@ -67,29 +69,19 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionGroup, QuestionGroupEditModel>()
                 .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions));
 
-            configuration.CreateMap<QuestionGroupEditModel, QuestionGroup>();
+            configuration.CreateMap<QuestionGroupEditModel, QuestionGroup>()
+                .ForMember(s => s.ModifyTime, d => d.MapFrom(x => DateTime.Now))
+                .ForMember(s => s.CreateUserId, d => d.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()));
         }
-    }
-
-    public class QuestionGroupItemEditSaveModel
-    {
-        public int Id { get; set; }
-
-        public int QuestionId { get; set; }
-
-        [MaxLength(20)]
-        public string Alias { get; set; }
-
-        public int Order { get; set; }
     }
 
     public class QuestionGroupItemEditModel : IHaveCustomMapping
     {
         [HiddenInput]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [DisplayName("问题ID")]
-        public string QuestionId { get; set; }
+        public int QuestionId { get; set; }
 
         [MaxLength(20)]
         [DisplayName("别名")]
@@ -106,6 +98,9 @@ namespace SdojWeb.Models
 
         public void CreateMappings(IConfiguration configuration)
         {
+            configuration.CreateMap<QuestionGroupItemEditModel, QuestionGroupItem>()
+                .ForMember(s => s.QuestionGroupId, d => d.MapFrom(x => x.Id ?? 0))
+                .ForMember(s => s.QuestionName, d => d.MapFrom(x => x.Alias));
         }
     }
 

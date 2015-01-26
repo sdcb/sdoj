@@ -119,12 +119,12 @@ namespace SdojWeb.Controllers
         // POST: QuestionGroup/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup, QuestionGroupItemEditSaveModel[] ids)
+        public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup)
         {
+            var x = ModelState;
             if (ModelState.IsValid)
             {
-                //_db.QuestionGroups.Add(questionGroup);
-                //await _db.SaveChangesAsync();
+                await _manager.Save(questionGroup);
                 return RedirectToAction("Index");
             }
 

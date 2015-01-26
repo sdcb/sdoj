@@ -3,6 +3,9 @@ using SdojWeb.Models;
 using SdojWeb.Models.DbModels;
 using System.Linq;
 using System.Web;
+using System;
+using System.Threading.Tasks;
+using AutoMapper;
 
 namespace SdojWeb.Manager
 {
@@ -43,6 +46,35 @@ namespace SdojWeb.Manager
             }
 
             return query;
+        }
+
+        public async Task Save(QuestionGroupEditModel toSave)
+        {
+            if (toSave.Id == 0)
+            {
+                await CreateQuestionGroup(toSave);
+            }
+            else
+            {
+                await ModifyQuestionGroup(toSave);
+            }
+            throw new NotImplementedException();
+        }
+
+        private Task ModifyQuestionGroup(QuestionGroupEditModel toSave)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task CreateQuestionGroup(QuestionGroupEditModel toSave)
+        {
+            var questionGroup = Mapper.Map<QuestionGroup>(toSave);
+            questionGroup.CreateTime = DateTime.Now;
+
+            var items = toSave.Questions.Select(x => Mapper.Map<QuestionGroupItem>(x)).ToList();
+
+            _db.QuestionGroups.Add(questionGroup);
+            await _db.SaveChangesAsync();
         }
     }
 }
