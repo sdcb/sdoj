@@ -1,0 +1,21 @@
+﻿@using SdojWeb.Infrastructure.Html
+@using PagedList.Mvc;
+
+@model  IAjaxPagerContext
+@{
+    var options = PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions
+    {
+        UpdateTargetId = Model.GetUpdateTargetId(),
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    });
+}
+
+<div class="col-xs-6">
+    第 @Model.GetPagedList().PageNumber 页，共 @Model.GetPagedList().PageCount 页
+</div>
+<div class="col-xs-6">
+    <div class="pull-right">
+        @Html.PagedListPager(Model.GetPagedList(), page => Model.AjaxPagerUrl(page), options)
+    </div>
+</div>
