@@ -1,0 +1,8 @@
+﻿@model dynamic
+
+@foreach (var prop in ViewData.ModelMetadata.Properties
+                            .Where(p => p.ShowForDisplay))
+{
+    <dt>@Html.DisplayName(prop.PropertyName)</dt>
+    <dd>@Html.Display(prop.PropertyName)</dd>
+}

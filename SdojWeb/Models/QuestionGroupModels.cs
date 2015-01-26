@@ -101,23 +101,50 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionGroupItemEditModel, QuestionGroupItem>()
                 .ForMember(s => s.QuestionGroupId, d => d.MapFrom(x => x.Id ?? 0))
                 .ForMember(s => s.QuestionName, d => d.MapFrom(x => x.Alias));
+
+            configuration.CreateMap<QuestionGroupItem, QuestionGroupItemEditModel>()
+                .ForMember(s => s.Id, d => d.MapFrom(x => x.QuestionGroupId))
+                .ForMember(s => s.Alias, d => d.MapFrom(x => x.QuestionName))
+                .ForMember(s => s.Name, d => d.MapFrom(x => x.Question.Name));
         }
     }
 
-    public class QuestionGroupItemQuestionModel : IHaveCustomMapping
+    public class QuestionGroupDetailModel : IHaveCustomMapping
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Author { get; set; }
+        public string Description { get; set; }
 
-        public DateTime UpdateTime { get; set; }
+        public List<QuestionGroupDetailItemModel> Questions { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
         {
-            configuration.CreateMap<Question, QuestionGroupItemQuestionModel>()
-                .ForMember(s => s.Author, d => d.MapFrom(x => x.CreateUser.UserName));
+            configuration.CreateMap<QuestionGroup, QuestionGroupDetailModel>()
+                .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions.OrderByDescending(t => t.Order)));
+
+            configuration.CreateMap<QuestionGroupDetailModel, QuestionGroup>()
+                .ForMember(s => s.ModifyTime, d => d.MapFrom(x => DateTime.Now))
+                .ForMember(s => s.CreateUserId, d => d.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()));
+        }
+    }
+
+    public class QuestionGroupDetailItemModel : IHaveCustomMapping
+    {
+        [DisplayName("别名")]
+        public string Alias { get; set; }
+
+        public int Order { get; set; }
+
+        public QuestionSummaryBasicViewModel Question { get; set; }
+        
+        public void CreateMappings(IConfiguration configuration)
+        {
+            configuration.CreateMap<QuestionGroupItem, QuestionGroupDetailItemModel>()
+                .ForMember(s => s.Alias, s => s.MapFrom(x => x.QuestionName))
+                .ForMember(s => s.Order, s => s.MapFrom(x => x.Order))
+                .ForMember(s => s.Question, s => s.MapFrom(x => x.Question));
         }
     }
 }

@@ -60,14 +60,20 @@ namespace SdojWeb.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
-            QuestionGroup questionGroup = await _db.QuestionGroups.FindAsync(id);
-            if (questionGroup == null)
+
+            var model = await _db.QuestionGroups
+                .Where(x => x.Id == id)
+                .Project().To<QuestionGroupDetailModel>()
+                .FirstOrDefaultAsync();
+
+            if (model == null)
             {
                 return HttpNotFound();
             }
-            return View(questionGroup);
+
+            return View(model);
         }
 
         // GET: QuestionGroup/Create

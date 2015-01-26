@@ -1,0 +1,80 @@
+﻿@using SdojWeb.Models
+@model IEnumerable<QuestionGroupDetailItemModel>
+<div class="col-xs-12">
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(x => x.Question.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(x => x.Alias)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.Creator)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.MemoryLimitMb)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.TimeLimit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.DataCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.SolutionCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Question.UpdateTime)
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Alias)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.Question.Name, "Details", "Question", new { id = item.Question.Id }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question.Creator)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question.MemoryLimitMb)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question.TimeLimit)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Data", "Question", new {id=item.Question.Id}, null)">
+                                @Html.DisplayFor(x => item.Question.DataCount)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.Question.AcceptedCount.ToString(), "Index", "Solution", new { question = item.Question.Name, state = SolutionState.Accepted }, null)
+                            /
+                            @Html.ActionLink(item.Question.SolutionCount.ToString(), "Index", "Solution", new { question = item.Question.Name }, null)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Question", new {id=item.Question.Id})">
+                                @Html.DisplayFor(modelItem => item.Question.UpdateTime)
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

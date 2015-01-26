@@ -1,58 +1,20 @@
-﻿@model SdojWeb.Models.DbModels.QuestionGroup
+﻿@model SdojWeb.Models.QuestionGroupDetailModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Name;
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
+<span class="pull-right">@Model.Id</span>
 
 <div>
-    <h4>QuestionGroup</h4>
+    <h4>@Model.Description</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateUser.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateUser.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifyTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ModifyTime)
-        </dd>
-
-    </dl>
 </div>
+
+@Html.Partial("_DetailQuestion", Model.Questions)
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("返回列表", "Index")
 </p>

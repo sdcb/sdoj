@@ -445,7 +445,6 @@
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\Identity\Users.cshtml" />
     <Content Include="Views\Identity\Edit.cshtml" />
-    <Content Include="Views\Question\_List.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Shared\_PerformanceCounter.cshtml" />
     <Content Include="Views\Home\Rect.cshtml" />
@@ -462,6 +461,8 @@
     <Content Include="Views\QuestionGroup\Index.cshtml" />
     <Content Include="Views\QuestionGroup\_Question.cshtml" />
     <Content Include="Views\Shared\_AjaxPager.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Object.cshtml" />
+    <Content Include="Views\QuestionGroup\_DetailQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

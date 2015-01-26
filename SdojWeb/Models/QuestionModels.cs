@@ -186,6 +186,7 @@ namespace SdojWeb.Models
                 .ForMember(s => s.Creator, d => d.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(s => s.DataCount, d => d.MapFrom(x => x.Datas.Count))
                 .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count))
+                .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Where(s => s.State == SolutionState.Accepted).Count()))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(m => m.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(m => m.TimeLimit)));
         }

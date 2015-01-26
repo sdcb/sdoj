@@ -48,7 +48,7 @@
                             @Html.DisplayFor(modelItem => item.Id)
                         </td>
                         <td>
-                            @Html.ActionLink(item.Name, "Details", "Question", new { id = item.Id })
+                            @Html.ActionLink(item.Name, "Details", "Question", new { id = item.Id }, null)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Creator)
@@ -65,8 +65,9 @@
                             </a>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.AcceptedCount) /
-                            @Html.DisplayFor(modelItem => item.SolutionCount)
+                            @Html.ActionLink(item.AcceptedCount.ToString(), "Index", "Solution", new { question = item.Name, state = SolutionState.Accepted }, null)
+                            /
+                            @Html.ActionLink(item.SolutionCount.ToString(), "Index", "Solution", new { question = item.Name }, null)
                         </td>
                         <td>
                             <a href="@Url.Action("Edit", "Question", new {id=item.Id})">
