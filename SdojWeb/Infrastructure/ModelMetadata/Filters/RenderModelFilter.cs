@@ -9,10 +9,10 @@ namespace SdojWeb.Infrastructure.ModelMetadata.Filters
     {
         public void TransformMetadata(System.Web.Mvc.ModelMetadata metadata, IEnumerable<Attribute> attributes)
         {
-            var renderModelAttribute = attributes.OfType<RenderModeAttribute>();
-            if (renderModelAttribute.Any())
+            var renderModelAttribute = attributes.OfType<RenderModeAttribute>().FirstOrDefault();
+            if (renderModelAttribute != null)
             {
-                var renderMode = renderModelAttribute.First().RenderMode;
+                var renderMode = renderModelAttribute.RenderMode;
                 switch (renderMode)
                 {
                     case RenderMode.DisplayModeOnly:
