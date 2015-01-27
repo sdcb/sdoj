@@ -75,7 +75,8 @@ namespace SdojWeb.Infrastructure.Html
             : base(html, paged, action, route)
         {
             if (updateTarget == null)
-                throw new ArgumentNullException(nameof(updateTarget));
+                // nameof
+                throw new ArgumentNullException("updateTarget");
 
             _updateTarget = updateTarget;
 
