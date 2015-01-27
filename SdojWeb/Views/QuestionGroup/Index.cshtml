@@ -74,7 +74,6 @@
                         <th>
                             @Html.DisplayNameFor(model => model.ModifyTime)
                         </th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,15 +97,6 @@
                             </td>
                             <td>
                                 @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })
-                            </td>
-                            <td>
-                                @if (User.Identity.GetUserId<int>() == item.CreateUserId)
-                                {
-                                    <a class="btn btn-xs btn-danger btn-block" href="@Url.Action("Delete", new { id = item.Id })">
-                                        <i class="glyphicon glyphicon-remove"></i>
-                                        删除
-                                    </a>
-                                }
                             </td>
                         </tr>
                     }

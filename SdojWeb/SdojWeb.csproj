@@ -455,7 +455,6 @@
     <Content Include="Views\Shared\EditorTemplates\Markdown.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Markdown.cshtml" />
     <Content Include="Views\QuestionGroup\Create.cshtml" />
-    <Content Include="Views\QuestionGroup\Delete.cshtml" />
     <Content Include="Views\QuestionGroup\Details.cshtml" />
     <Content Include="Views\QuestionGroup\Edit.cshtml" />
     <Content Include="Views\QuestionGroup\Index.cshtml" />

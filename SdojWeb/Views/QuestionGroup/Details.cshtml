@@ -14,12 +14,36 @@
 
 @Html.Partial("_DetailQuestion", Model.Questions)
 
-<p>
-    @if (User.Identity.GetUserId<int>() == Model.CreateUserId)
-    {
-        <text>
-            @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
-        </text>
-    }
-    @Html.ActionLink("返回列表", "Index")
-</p>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="pull-right">
+            @if (User.Identity.GetUserId<int>() == Model.CreateUserId)
+            {
+                <form id="delete-form" action="@Url.Action("Delete", new { id = Model.Id })" method="post">
+                    @Html.AntiForgeryToken()
+                    <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        编辑
+                    </a>
+                    <button class="btn btn-danger" type="submit">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        删除
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.ActionLink("返回列表", "Index")
+
+@section scripts
+{
+    <script>
+        $("#delete-form").submit(function (e) {
+            if (!confirm("确定要删除吗？")) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}
