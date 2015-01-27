@@ -1,7 +1,7 @@
-﻿@using SdojWeb.Models;
-@using SdojWeb.Infrastructure.Extensions;
-@using PagedList.Mvc;
-@using SdojWeb.Infrastructure.Extensions;
+﻿@using SdojWeb.Models
+@using SdojWeb.Infrastructure.Extensions
+@using PagedList.Mvc
+@using Microsoft.AspNet.Identity
 
 @model IEnumerable<QuestionGroupListModel>
 
@@ -97,11 +97,16 @@
                                 @Html.DisplayFor(modelItem => item.CreateTime)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ModifyTime)
+                                @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })
                             </td>
                             <td>
-                                @Html.ActionLink("编辑", "Edit", new { id = item.Id }) |
-                                @Html.ActionLink("删除", "Delete", new { id = item.Id })
+                                @if (User.Identity.GetUserId<int>() == item.CreateUserId)
+                                {
+                                    <a class="btn btn-xs btn-danger btn-block" href="@Url.Action("Delete", new { id = item.Id })">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        删除
+                                    </a>
+                                }
                             </td>
                         </tr>
                     }

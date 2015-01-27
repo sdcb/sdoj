@@ -1,11 +1,11 @@
-﻿@model SdojWeb.Models.QuestionGroupDetailModel
+﻿@using Microsoft.AspNet.Identity
+@model SdojWeb.Models.QuestionGroupDetailModel
 
 @{
     ViewBag.Title = Model.Name;
 }
 
 <h2>@ViewBag.Title</h2>
-<span class="pull-right">@Model.Id</span>
 
 <div>
     <h4>@Model.Description</h4>
@@ -15,6 +15,11 @@
 @Html.Partial("_DetailQuestion", Model.Questions)
 
 <p>
-    @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+    @if (User.Identity.GetUserId<int>() == Model.CreateUserId)
+    {
+        <text>
+            @Html.ActionLink("编辑", "Edit", new { id = Model.Id }) |
+        </text>
+    }
     @Html.ActionLink("返回列表", "Index")
 </p>

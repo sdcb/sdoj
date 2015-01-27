@@ -10,6 +10,7 @@ using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Manager;
 using System.Linq;
 using Microsoft.AspNet.Identity;
+using SdojWeb.Infrastructure.Identity;
 
 namespace SdojWeb.Controllers
 {
@@ -65,14 +66,8 @@ namespace SdojWeb.Controllers
             }
 
             var model = await _db.QuestionGroups
-                .Where(x => x.Id == id)
                 .Project().To<QuestionGroupDetailModel>()
-                .FirstOrDefaultAsync();
-
-            if (model.CreateUserId == User.Identity.GetUserId<int>())
-            {
-                // TODO ...
-            }
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (model == null)
             {
@@ -83,6 +78,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: QuestionGroup/Create
+        [SdojAuthorize(EmailConfirmed = true)]
         public ActionResult Create()
         {
             var route = new RouteValueDictionary
@@ -131,6 +127,7 @@ namespace SdojWeb.Controllers
         // POST: QuestionGroup/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [SdojAuthorize(EmailConfirmed = true)]
         public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup)
         {
             var x = ModelState;

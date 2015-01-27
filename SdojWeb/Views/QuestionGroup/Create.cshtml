@@ -65,10 +65,10 @@
                   data-ajax-update="#question-table" data-ajax-success="on_question_page_loaded()">
                 @Html.AntiForgeryToken()
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    @Html.TextBox("name", "", new { @class = "form-control input-sm", placeholder = "标题..." })
+                    <input class="form-control input-sm" name="name" placeholder="标题..." />
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    @Html.TextBox("creator", "", new { @class = "form-control input-sm", placeholder = "作者..." })
+                    <input class="form-control input-sm" name="creator" placeholder="作者..." />
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <button class="btn btn-default btn-sm" type="submit">过滤</button>
