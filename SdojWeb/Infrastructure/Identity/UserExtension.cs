@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Security.Principal;
-using SdojWeb.Infrastructure.Extensions;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Infrastructure.Identity
 {
@@ -10,7 +10,7 @@ namespace SdojWeb.Infrastructure.Identity
         public static bool IsUserOrRole(this IPrincipal user, int userId, string role)
         {
             return
-                user.Identity.GetIntUserId() == userId ||
+                user.Identity.GetUserId<int>() == userId ||
                 user.IsInRole(role);
         }
 

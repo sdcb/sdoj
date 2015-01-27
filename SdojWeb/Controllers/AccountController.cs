@@ -158,7 +158,7 @@ namespace SdojWeb.Controllers
         // GET: /Account/ReSendConfirmEmail
         public async Task<ActionResult> ReSendConfirmEmail()
         {
-            var userId = User.Identity.GetIntUserId();
+            var userId = User.Identity.GetUserId<int>();
             var user = DbContext.Users.Find(userId);
             if (user.EmailConfirmed)
             {
@@ -180,11 +180,11 @@ namespace SdojWeb.Controllers
                     .WithInfo("您的用户已经通过邮件验证，不需要再次验证。");
             }
 
-            var userid = User.Identity.GetIntUserId();
+            var userid = User.Identity.GetUserId<int>();
             var email = User.Identity.GetUserName();
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(userid);
             var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = userid, code = code }, protocol: Request.Url.Scheme);
-            await UserManager.SendEmailAsync(User.Identity.GetIntUserId(), "确认你的账户",
+            await UserManager.SendEmailAsync(User.Identity.GetUserId<int>(), "确认你的账户",
                 "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的账号");
 
 
@@ -295,10 +295,10 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
             ManageMessageId? message;
-            IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetIntUserId(), new UserLoginInfo(loginProvider, providerKey));
+            IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId<int>(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetIntUserId());
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 await SignInAsync(user, isPersistent: false);
                 message = ManageMessageId.RemoveLoginSuccess;
             }
@@ -337,10 +337,10 @@ namespace SdojWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetIntUserId(), model.OldPassword, model.NewPassword);
+                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId<int>(), model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        var user = await UserManager.FindByIdAsync(User.Identity.GetIntUserId());
+                        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                         await SignInAsync(user, isPersistent: false);
                         return this.RedirectToAction(x => Manage(ManageMessageId.ChangePasswordSuccess));
                     }
@@ -361,7 +361,7 @@ namespace SdojWeb.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetIntUserId(), model.NewPassword);
+                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId<int>(), model.NewPassword);
                     if (result.Succeeded)
                     {
                         return this.RedirectToAction(x => Manage(ManageMessageId.SetPasswordSuccess));
@@ -428,7 +428,7 @@ namespace SdojWeb.Controllers
             {
                 return this.RedirectToAction(x => Manage(ManageMessageId.Error));
             }
-            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetIntUserId(), loginInfo.Login);
+            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId<int>(), loginInfo.Login);
             if (result.Succeeded)
             {
                 ManageMessageId? nouse = null;
@@ -504,7 +504,7 @@ namespace SdojWeb.Controllers
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
-            var linkedAccounts = UserManager.GetLogins(User.Identity.GetIntUserId());
+            var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId<int>());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return PartialView("_RemoveAccountPartial", linkedAccounts);
         }
@@ -532,7 +532,7 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMe()
         {
-            var userId = User.Identity.GetIntUserId();
+            var userId = User.Identity.GetUserId<int>();
             if (await DbContext.Questions.AnyAsync(x => x.CreateUserId == userId))
             {
                 return RedirectToAction("Manage", "Account").WithError(
@@ -577,7 +577,7 @@ namespace SdojWeb.Controllers
 
         private bool HasPassword()
         {
-            var user = UserManager.FindById(User.Identity.GetIntUserId());
+            var user = UserManager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 return user.PasswordHash != null;

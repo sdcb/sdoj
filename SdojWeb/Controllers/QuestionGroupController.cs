@@ -9,6 +9,7 @@ using System.Web.Routing;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Manager;
 using System.Linq;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Controllers
 {
@@ -67,6 +68,11 @@ namespace SdojWeb.Controllers
                 .Where(x => x.Id == id)
                 .Project().To<QuestionGroupDetailModel>()
                 .FirstOrDefaultAsync();
+
+            if (model.CreateUserId == User.Identity.GetUserId<int>())
+            {
+                // TODO ...
+            }
 
             if (model == null)
             {

@@ -3,6 +3,7 @@
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
+@using Microsoft.AspNet.Identity
 @model IEnumerable<SolutionSummaryModel>
 @{
     ViewBag.Title = "解答列表";
@@ -11,7 +12,7 @@
     {
         IPrincipal user = User;
         IIdentity identity = user.Identity;
-        int userId = identity.GetIntUserId();
+        int userId = identity.GetUserId<int>();
 
         if (userId == authorId ||
             userId == questionCreatorId ||

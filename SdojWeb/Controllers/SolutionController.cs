@@ -16,6 +16,7 @@ using SdojWeb.Models;
 using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
 using SdojWeb.Models.DbModels;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Controllers
 {
@@ -34,7 +35,7 @@ namespace SdojWeb.Controllers
         public ActionResult Index(int? id, bool? onlyMe, string question, string username, Languages? language, SolutionState? state, 
             int? page, string orderBy, bool? asc)
         {
-            int currentUserId = User.Identity.GetIntUserId();
+            int currentUserId = User.Identity.GetUserId<int>(); 
             var route = new RouteValueDictionary
             {
                 {"id", id }, 
@@ -240,7 +241,7 @@ namespace SdojWeb.Controllers
         {
             IPrincipal user = User;
             IIdentity identity = user.Identity;
-            int userId = identity.GetIntUserId();
+            int userId = identity.GetUserId<int>();
 
             if (userId == authorId ||
                 userId == questionCreatorId ||

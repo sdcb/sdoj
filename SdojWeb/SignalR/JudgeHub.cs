@@ -13,6 +13,7 @@ using System.Threading;
 using SdojWeb.Models.JudgePush;
 using Timer = System.Timers.Timer;
 using SdojWeb.Models.DbModels;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.SignalR
 {
@@ -97,7 +98,7 @@ namespace SdojWeb.SignalR
         public async Task<SolutionFullModel> Lock(int solutionId)
         {
             var db = GetDbContext();
-            var userId = Context.User.Identity.GetIntUserId();
+            var userId = Context.User.Identity.GetUserId<int>();
 
             var detail = await db.Solutions
                 .Where(x =>
@@ -143,7 +144,7 @@ namespace SdojWeb.SignalR
 
         public async Task<SolutionPushModel[]> GetAll()
         {
-            var userId = Context.User.Identity.GetIntUserId();
+            var userId = Context.User.Identity.GetUserId<int>();
             var db = GetDbContext();
 
             var models = await db.Solutions
@@ -162,7 +163,7 @@ namespace SdojWeb.SignalR
         public async Task<QuestionDataFullModel[]> GetDatas(int[] dataId)
         {
             var db = GetDbContext();
-            var userId = Context.User.Identity.GetIntUserId();
+            var userId = Context.User.Identity.GetUserId<int>();
 
             var datas = await db.QuestionDatas
                 .Where(x =>

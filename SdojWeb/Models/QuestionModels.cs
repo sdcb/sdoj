@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using SdojWeb.Models.DbModels;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Models
 {
@@ -81,7 +82,7 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<QuestionCreateModel, Question>()
                 .ForMember(source => source.CreateTime, dest => dest.MapFrom(x => DateTime.Now))
-                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => HttpContext.Current.User.Identity.GetIntUserId()))
+                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()))
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
             configuration.CreateMap<QuestionCreateModel, QuestionData>()
                 .ForMember(s => s.Input, d => d.MapFrom(x => x.SampleInput))

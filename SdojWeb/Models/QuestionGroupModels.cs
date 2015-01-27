@@ -117,6 +117,8 @@ namespace SdojWeb.Models
 
         public string Description { get; set; }
 
+        public int CreateUserId { get; set; }
+
         public List<QuestionGroupDetailItemModel> Questions { get; set; }
 
         public void CreateMappings(IConfiguration configuration)

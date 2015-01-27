@@ -7,6 +7,7 @@ using AutoMapper;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Mapping;
 using SdojWeb.Models.DbModels;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Models
 {
@@ -29,7 +30,7 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<SolutionCreateModel, Solution>()
                 .ForMember(dest => dest.SubmitTime, source => source.MapFrom(x => DateTime.Now))
-                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => HttpContext.Current.User.Identity.GetIntUserId()))
+                .ForMember(dest => dest.CreateUserId, source => source.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()))
                 .ForMember(dest => dest.State, source => source.MapFrom(x => SolutionState.Queuing))
                 .ForMember(dest => dest.QuestionId, source => source.MapFrom(x => x.QuestionId));
         }
