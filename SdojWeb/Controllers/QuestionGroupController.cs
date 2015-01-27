@@ -11,6 +11,9 @@ using SdojWeb.Manager;
 using System.Linq;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Identity;
+using AutoMapper;
+using SdojWeb.Infrastructure.Alerts;
+using SdojWeb.Infrastructure;
 
 namespace SdojWeb.Controllers
 {
@@ -81,20 +84,10 @@ namespace SdojWeb.Controllers
         [SdojAuthorize(EmailConfirmed = true)]
         public ActionResult Create()
         {
-            var route = new RouteValueDictionary
-            {
-                { "name", "" },
-                { "creator", "" },
-                { "page", 1 },
-                { "orderBy", "Id" },
-                { "asc", false }
-            };
-            ViewData["QuestionRoute"] = route;
-
-            var questions = _questionManager.BasicList(null, null).ToSortedPagedList(1, "Id", false);
-            ViewData["Question"] = questions;
+            SetQuestionRoutes();
 
             var model = new QuestionGroupEditModel();
+            ViewData["EditMode"] = false;
             return View(model);
         }
 
@@ -133,44 +126,61 @@ namespace SdojWeb.Controllers
             var x = ModelState;
             if (ModelState.IsValid)
             {
-                await _manager.Save(questionGroup);
+                await _manager.Create(questionGroup);
                 return this.JavascriptRedirectToAction("Index");
             }
 
+            ViewData["EditMode"] = false;
             return View(questionGroup);
         }
 
         // GET: QuestionGroup/Edit/5
+        [SdojAuthorize(EmailConfirmed = true)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionGroup questionGroup = await _db.QuestionGroups.FindAsync(id);
+
+            var questionGroup = await _db.QuestionGroups
+                .Project().To<QuestionGroupEditModel>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            SetQuestionRoutes();
+
             if (questionGroup == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CreateUserId = new SelectList(_db.Users, "Id", "Email", questionGroup.CreateUserId);
-            return View(questionGroup);
+
+            ViewData["EditMode"] = true;
+            return View("Create", questionGroup);
         }
 
         // POST: QuestionGroup/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,CreateTime,ModifyTime,CreateUserId")] QuestionGroup questionGroup)
+        [SdojAuthorize(EmailConfirmed = true)]
+        public async Task<ActionResult> Edit(QuestionGroupEditModel questionGroup)
         {
             if (ModelState.IsValid)
             {
-                _db.Entry(questionGroup).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
+                var owner = await _db.QuestionGroups
+                    .Where(x => x.Id == questionGroup.Id)
+                    .Select(x => x.CreateUserId)
+                    .FirstOrDefaultAsync();
+                if (owner != User.Identity.GetUserId<int>())
+                {
+                    return RedirectToAction("Index").WithError("只能修改自己的题目组。");
+                }
+
+                await _manager.Save(questionGroup); 
+
                 return RedirectToAction("Index");
             }
-            ViewBag.CreateUserId = new SelectList(_db.Users, "Id", "Email", questionGroup.CreateUserId);
-            return View(questionGroup);
+            ViewData["EditMode"] = true;
+            return View("Create", questionGroup);
         }
 
         // GET: QuestionGroup/Delete/5
@@ -200,11 +210,36 @@ namespace SdojWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CheckName(string name)
+        public async Task<ActionResult> CheckName(string name, int id)
         {
-            name = name.Trim();
-            var exist = await _manager.ExistName(name);
-            return Json(!exist);
+            bool valid;
+            if (id != 0) // Only Check Name in Create model.
+            {
+                valid = true;
+            }
+            else
+            {
+                name = name.Trim();
+                var exist = await _manager.ExistName(name);
+                valid = !exist;
+            }
+            return Json(valid);
+        }
+
+        private void SetQuestionRoutes()
+        {
+            var route = new RouteValueDictionary
+            {
+                { "name", "" },
+                { "creator", "" },
+                { "page", 1 },
+                { "orderBy", "Id" },
+                { "asc", false }
+            };
+            ViewData["QuestionRoute"] = route;
+
+            var questions = _questionManager.BasicList(null, null).ToSortedPagedList(1, "Id", false);
+            ViewData["Question"] = questions;
         }
     }
 }

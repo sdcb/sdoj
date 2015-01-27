@@ -225,6 +225,7 @@
     <Compile Include="Controllers\QuestionGroupController.cs" />
     <Compile Include="Infrastructure\Extensions\ControllerExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\EnumExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\SimplePagedList.cs" />
     <Compile Include="Infrastructure\Html\SortableThBuilder.cs" />

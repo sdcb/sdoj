@@ -53,7 +53,7 @@ namespace SdojWeb.Models
         public int Id { get; set; }
 
         [DisplayName("名称")]
-        [MaxLength(20), Required, Remote("CheckName", "QuestionGroup", HttpMethod = "POST")]
+        [MaxLength(20), Required, Remote("CheckName", "QuestionGroup", HttpMethod = "POST", AdditionalFields = "Id")]
         public string Name { get; set; }
 
         [DisplayName("描述")]
@@ -105,7 +105,8 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionGroupItem, QuestionGroupItemEditModel>()
                 .ForMember(s => s.Id, d => d.MapFrom(x => x.QuestionGroupId))
                 .ForMember(s => s.Alias, d => d.MapFrom(x => x.QuestionName))
-                .ForMember(s => s.Name, d => d.MapFrom(x => x.Question.Name));
+                .ForMember(s => s.Name, d => d.MapFrom(x => x.Question.Name))
+                .ForMember(s => s.Author, d => d.MapFrom(x => x.Question.CreateUser.UserName));
         }
     }
 

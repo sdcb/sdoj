@@ -1,6 +1,8 @@
-﻿@model SdojWeb.Models.QuestionGroupEditModel
+﻿@using SdojWeb.Infrastructure.Extensions
+@model SdojWeb.Models.QuestionGroupEditModel
 @{
     ViewBag.Title = "新题目组";
+    var editMode = (bool)ViewData["EditMode"];
 }
 <h2>@ViewBag.Title</h2>
 <div class="form-horizontal">
@@ -60,7 +62,7 @@
     <div class="form-group">
         <label class="col-md-2 control-label">题目列表</label>
         <div class="col-md-10">
-            <form class="search-form" 
+            <form class="search-form"
                   data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace"
                   data-ajax-update="#question-table" data-ajax-success="on_question_page_loaded()">
                 @Html.AntiForgeryToken()
@@ -83,7 +85,20 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="button" value="创建" data-bind="click: save" id="create-button" class="btn btn-default" />
+            @if (editMode)
+            {
+                <button data-bind="click: save, css: {'disabled': state() == StateBusy}" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-save"></i>
+                    保存
+                </button>
+            }
+            else
+            {
+                <button data-bind="click: save, css: {'disabled': state() == StateBusy}" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    创建
+                </button>
+            }
         </div>
     </div>
 
@@ -96,13 +111,28 @@
     @Scripts.Render("~/bundles/ko")
     @Scripts.Render("~/bundles/jqueryajax")
     <script>
+        var StateIdle = 0;
+        var StateBusy = 1;
+
         function ViewModel() {
             var self = this;
             var prototype = ViewModel.prototype;
+            this.state = ko.observable(StateIdle);
+            this.id = @Model.Id;
 
-            this.items = ko.observableArray([]);
+            var injson = @Html.Json(Model.Questions);
+            this.items = ko.observableArray(ko.utils.arrayMap(injson, function(item){
+                var target = new QuestionItem();
+                target.questionId = item.questionId;
+                target.id = item.id;
+                target.name = item.name;
+                target.author = item.author;
+                target.alias = ko.observable(item.alias);
+                target.order = ko.observable(item.order);
+                return target;
+            }));
 
-            prototype.save = function () {
+            prototype.save = function() {
                 var $form1 = $("#main-form");
                 var $form2 = $("#question-group-form");
                 if ($form1.valid() && $form2.valid()) {
@@ -110,13 +140,14 @@
                     $form1.serializeArray().map(function (x) { data[x.name] = x.value });
                     data['questions'] = ko.toJS(self.items());
 
-                    $("#create-button").addClass("disabled");
-                    $.ajax('@Url.Action("Create")', {
-                        type: "POST", 
+                    self.state(StateBusy);
+                    var url = '@Html.Raw(editMode ? Url.Action("Edit") : Url.Action("Create"))';
+                    $.ajax(url, {
+                        type: "POST",
                         data: data,
-                        tranditional: true, 
+                        tranditional: true,
                         complete: function() {
-                            $("#create-button").removeClass("disabled");
+                            self.state(StateIdle);
                         }
                     });
                 }
@@ -147,6 +178,7 @@
             var author = that.data('creator');
 
             var item = new QuestionItem();
+            item.id = vm.id;
             item.questionId = id;
             item.name = name;
             item.author = author;
