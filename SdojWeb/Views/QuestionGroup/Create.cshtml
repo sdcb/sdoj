@@ -12,10 +12,36 @@
         @Html.AntiForgeryToken()
         @Html.EditorForModel()
     </form>
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label">题目列表</label>
+        <div class="col-md-10">
+            <form class="search-form"
+                  data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace"
+                  data-ajax-update="#question-table" data-ajax-success="on_question_page_loaded()">
+                @Html.AntiForgeryToken()
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <input class="form-control input-sm" name="name" placeholder="标题..." />
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <input class="form-control input-sm" name="creator" placeholder="作者..." />
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <button class="btn btn-default btn-sm" type="submit">过滤</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+            <div class="row" id="question-table">
+                @Html.Partial("_Question", ViewData["Question"], ViewData)
+            </div>
+        </div>
+    </div>
+
     <form id="question-group-form">
         <div class="row">
             <label class="col-md-2 control-label">题目组</label>
-            <div class="col-md-10">                
+            <div class="col-md-10">
                 <button type="button" class="btn btn-info btn-xs" style="margin-bottom:5px;" data-bind="click: arrange_order">
                     <i class="glyphicon glyphicon-adjust"></i>
                     整理顺序
@@ -63,30 +89,7 @@
             </div>
         </div>
     </form>
-    <div class="form-group">
-        <label class="col-md-2 control-label">题目列表</label>
-        <div class="col-md-10">
-            <form class="search-form"
-                  data-ajax="true" data-ajax-url="@Url.Action("Question")" data-ajax-method="POST" data-ajax-mode="replace"
-                  data-ajax-update="#question-table" data-ajax-success="on_question_page_loaded()">
-                @Html.AntiForgeryToken()
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <input class="form-control input-sm" name="name" placeholder="标题..." />
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <input class="form-control input-sm" name="creator" placeholder="作者..." />
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <button class="btn btn-default btn-sm" type="submit">过滤</button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-offset-2 col-md-10">
-            <div class="row" id="question-table">
-                @Html.Partial("_Question", ViewData["Question"], ViewData)
-            </div>
-        </div>
-    </div>
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             @if (editMode)
@@ -95,6 +98,7 @@
                     <i class="glyphicon glyphicon-save"></i>
                     保存
                 </button>
+                <span id="save-ok" style="display: none;">保存成功！</span>
             }
             else
             {
@@ -165,6 +169,9 @@
                         tranditional: true,
                         complete: function() {
                             self.state(StateIdle);
+                            $("#save-ok").fadeIn(300, function(){
+                                $("#save-ok").fadeOut(3000);
+                            });
                         }
                     });
                 }
