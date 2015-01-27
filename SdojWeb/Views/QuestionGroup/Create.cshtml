@@ -15,7 +15,11 @@
     <form id="question-group-form">
         <div class="row">
             <label class="col-md-2 control-label">题目组</label>
-            <div class="col-md-10">
+            <div class="col-md-10">                
+                <button type="button" class="btn btn-info btn-xs" style="margin-bottom:5px;" data-bind="click: arrange_order">
+                    <i class="glyphicon glyphicon-adjust"></i>
+                    整理顺序
+                </button>
                 <div class="table-responsive">
                     <table class="table table-bordered table-condensed table-hover table-striped">
                         <thead>
@@ -132,6 +136,19 @@
                 return target;
             }));
 
+            this.maxOrder = ko.computed(function() {
+                var items = self.items();
+                if (items.length == 0) {
+                    return 0;
+                } else {
+                    var max = items[0].order();
+                    for (var i = 1; i < items.length; ++i) {
+                        max = Math.max(items[i].order(), max);
+                    }
+                    return max;
+                }
+            });
+
             prototype.save = function() {
                 var $form1 = $("#main-form");
                 var $form2 = $("#question-group-form");
@@ -151,6 +168,35 @@
                         }
                     });
                 }
+            }
+
+            prototype.arrange_order = function() {
+                console.log(ko.toJS(self.items));
+                self.items.sort(function(item1, item2) {
+                    return item1.order() - item2.order();
+                });
+                console.log(ko.toJS(self.items));
+                for (var i = 0; i < self.items().length; ++i) {
+                    self.items()[i].order(i+1);
+                }
+                console.log(ko.toJS(self.items));
+            }
+
+            prototype.refresh_question_list = function() {
+                var ids = ko.utils.arrayMap(self.items(), function (item) {
+                    return item.questionId;
+                });
+
+                $(".add-question-button").each(function (id, element) {
+                    var that = $(element);
+                    var thatId = that.data('id');
+
+                    if (ids.indexOf(thatId) !== -1) {
+                        $(element).hide();
+                    } else {
+                        $(element).show();
+                    }
+                });
             }
 
             prototype.remove_question_item = function (item) {
@@ -182,33 +228,20 @@
             item.questionId = id;
             item.name = name;
             item.author = author;
+            item.order(vm.maxOrder()+1);
 
             vm.items.push(item);
-            refresh_question_list();
+            vm.refresh_question_list();
         }
 
-        function refresh_question_list() {
-            var ids = ko.utils.arrayMap(vm.items(), function (item) {
-                return item.questionId;
-            });
-
-            $(".add-question-button").each(function (id, element) {
-                var that = $(element);
-                var thatId = that.data('id');
-
-                if (ids.indexOf(thatId) !== -1) {
-                    $(element).hide();
-                } else {
-                    $(element).show();
-                }
-            });
-        }
+        
 
         function on_question_page_loaded() {
-            refresh_question_list();
+            vm.refresh_question_list();
         }
 
         var vm = new ViewModel();
         ko.applyBindings(vm);
+        vm.refresh_question_list();
     </script>
 }

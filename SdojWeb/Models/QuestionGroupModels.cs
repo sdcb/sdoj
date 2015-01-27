@@ -125,7 +125,7 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionGroup, QuestionGroupDetailModel>()
-                .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions.OrderByDescending(t => t.Order)));
+                .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions.OrderBy(t => t.Order)));
 
             configuration.CreateMap<QuestionGroupDetailModel, QuestionGroup>()
                 .ForMember(s => s.ModifyTime, d => d.MapFrom(x => DateTime.Now))
