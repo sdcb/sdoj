@@ -98,7 +98,7 @@
                     <i class="glyphicon glyphicon-save"></i>
                     保存
                 </button>
-                <span id="save-ok" style="display: none;">保存成功！</span>
+                <span id="save-state" style="display: none;" data-bind="text: state() == StateIdle ? '保存成功!' : '保存失败!'"></span>
             }
             else
             {
@@ -113,6 +113,11 @@
 </div>
 <div>
     @Html.ActionLink("返回列表", "Index")
+    @if (editMode)
+    {
+        @Html.Raw(" | ")
+        @Html.ActionLink("查看详情", "Details", new { id = Model.Id }, new { target = "_black" })
+    }
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -121,6 +126,7 @@
     <script>
         var StateIdle = 0;
         var StateBusy = 1;
+        var StateError = 2;
 
         function ViewModel() {
             var self = this;
@@ -168,10 +174,15 @@
                         data: data,
                         tranditional: true,
                         complete: function() {
-                            self.state(StateIdle);
-                            $("#save-ok").fadeIn(300, function(){
-                                $("#save-ok").fadeOut(3000);
+                            $("#save-state").fadeIn(300, function() {
+                                $("#save-state").fadeOut(3000);
                             });
+                        }, 
+                        success: function() {
+                            self.state(StateIdle);
+                        }, 
+                        error: function() {
+                            self.state(StateError);
                         }
                     });
                 }
@@ -208,7 +219,7 @@
 
             prototype.remove_question_item = function (item) {
                 this.items.remove(item);
-                refresh_question_list();
+                this.refresh_question_list();
             }
         }
 

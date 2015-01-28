@@ -162,6 +162,7 @@ namespace SdojWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SdojAuthorize(EmailConfirmed = true)]
+        [ValidateInput(false)]
         public async Task<ActionResult> Edit(QuestionGroupEditModel questionGroup)
         {
             if (ModelState.IsValid)
