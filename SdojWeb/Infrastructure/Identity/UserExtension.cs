@@ -20,6 +20,8 @@ namespace SdojWeb.Infrastructure.Identity
             if (claimsPrincipal == null) return false;
 
             var claim = claimsPrincipal.FindFirst(CustomClaims.EmailConfirmed);
+            if (claim == null) return false;
+
             var confirmed = Convert.ToBoolean(claim.Value);
             return confirmed;
         }
