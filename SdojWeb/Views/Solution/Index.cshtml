@@ -181,7 +181,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    源代码
+                    源代码<span data-bind="text: ' - ' + id()"></span>
                 </h4>
             </div>
             <div class="modal-body">
@@ -207,7 +207,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="compiler-modal-label">编译器输出</h4>
+                <h4 class="modal-title" id="compiler-modal-label">编译器输出<span data-bind="text: ' - ' + id()"></span></h4>
             </div>
             <div class="modal-body">
                 <pre data-bind="text: compilerOutput"></pre>
@@ -253,17 +253,19 @@
         self.onlyMe = '@route["onlyMe"]';
         self.code = ko.observable();
         self.compilerOutput = ko.observable();
+        self.id = ko.observable();
 
         self.loadcode = function(id) {
             self.code('加载中...');
-            self.id = null;
+            self.id(id);
+
             $.get("@Url.Action("Source")" + "/" + id, function (data) {
                     self.code(data.replace(new RegExp("\t", "g"), "    "));
-                    self.id = id;
+                    self.id(id);
                 });
             };
             self.rawCode = function() {
-                var url = '@Url.Action("Source", "Solution")' + '/' + self.id;
+                var url = '@Url.Action("Source", "Solution")' + '/' + self.id();
                 window.open(url);
             };
             self.deleteMe = function(id) {
@@ -284,6 +286,7 @@
             self.showCompilerOutput = function(id) {
                 $("#compiler-modal").modal();
                 self.compilerOutput('加载中...');
+                self.id(id);
                 $.post("@Url.Action("CompilerOutput")" + "/" + id, function (data) {
                 self.compilerOutput(data);
             });
