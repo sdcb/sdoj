@@ -1,7 +1,7 @@
 ﻿@using SdojWeb.Models
 @using SdojWeb.Infrastructure.Extensions
 @using PagedList.Mvc
-@using Microsoft.AspNet.Identity
+@using SdojWeb.Infrastructure.Identity
 @model IEnumerable<QuestionGroupListModel>
 @{
     ViewBag.Title = "题目组";
@@ -10,7 +10,7 @@
     var thb = paged.GetThBuilder(Html, "Index", route);
 }
 <h2>题目组</h2>
-@if (User.Identity.IsAuthenticated)
+@if (User.EmailConfirmed() && (User.IsInRole(SystemRoles.QuestionGroupAdmin) || User.IsInRole(SystemRoles.QuestionGroupCreator)))
 {
     <div class="clearfix">
         <div class="form-tools pull-right">
@@ -84,7 +84,7 @@
                                 @Html.DisplayFor(modelItem => item.CreateUserName)
                             </td>
                             <td>
-                                @if (User.Identity.GetUserId<int>() == item.CreateUserId)
+                                @if (User.IsUserOrRole(item.CreateUserId, SystemRoles.QuestionGroupAdmin))
                                 {
                                     @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })
                                 }

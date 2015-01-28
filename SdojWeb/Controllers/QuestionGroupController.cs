@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using System.Threading.Tasks;
-using System.Net;
 using System.Web.Mvc;
 using SdojWeb.Models;
 using SdojWeb.Models.DbModels;
@@ -9,11 +8,8 @@ using System.Web.Routing;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Manager;
 using System.Linq;
-using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Identity;
-using AutoMapper;
 using SdojWeb.Infrastructure.Alerts;
-using SdojWeb.Infrastructure;
 
 namespace SdojWeb.Controllers
 {
@@ -81,7 +77,7 @@ namespace SdojWeb.Controllers
         }
 
         // GET: QuestionGroup/Create
-        [SdojAuthorize(EmailConfirmed = true)]
+        [SdojAuthorize(EmailConfirmed = true, Roles = SystemRoles.QuestionGroupAdminOrCreator)]
         public ActionResult Create()
         {
             SetQuestionRoutes();
@@ -119,7 +115,7 @@ namespace SdojWeb.Controllers
         // POST: QuestionGroup/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [SdojAuthorize(EmailConfirmed = true)]
+        [SdojAuthorize(EmailConfirmed = true, Roles = SystemRoles.QuestionGroupAdminOrCreator)]
         public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup)
         {
             var x = ModelState;
@@ -134,11 +130,16 @@ namespace SdojWeb.Controllers
 
         // GET: QuestionGroup/Edit/5
         [SdojAuthorize(EmailConfirmed = true)]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (id == null)
+            var owner = await _db.QuestionGroups
+                .Where(x => x.Id == id)
+                .Select(x => x.CreateUserId)
+                .FirstOrDefaultAsync();
+
+            if (!User.IsUserOrRole(owner, SystemRoles.QuestionGroupAdmin))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index").WithError("只有作者才能修改此题目组。");
             }
 
             var questionGroup = await _db.QuestionGroups
@@ -146,11 +147,6 @@ namespace SdojWeb.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             SetQuestionRoutes();
-
-            if (questionGroup == null)
-            {
-                return HttpNotFound();
-            }
 
             return View("Create", questionGroup);
         }
@@ -169,9 +165,9 @@ namespace SdojWeb.Controllers
                     .Select(x => x.CreateUserId)
                     .FirstOrDefaultAsync();
 
-                if (owner != User.Identity.GetUserId<int>())
+                if (!User.IsUserOrRole(owner, SystemRoles.QuestionGroupAdmin))
                 {
-                    return this.JavascriptRedirectToAction("Index").WithJavascriptAlert("只能修改自己创建的题目组。");
+                    return this.JavascriptRedirectToAction("Index").WithJavascriptAlert("只有作者才能修改此题目组。");
                 }
 
                 await _manager.Save(questionGroup);
@@ -180,30 +176,21 @@ namespace SdojWeb.Controllers
             return View("Create", questionGroup);
         }
 
-        // GET: QuestionGroup/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            QuestionGroup questionGroup = await _db.QuestionGroups.FindAsync(id);
-            if (questionGroup == null)
-            {
-                return HttpNotFound();
-            }
-            return View(questionGroup);
-        }
-
         // POST: QuestionGroup/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             QuestionGroup questionGroup = await _db.QuestionGroups.FindAsync(id);
+
+            if (!User.IsUserOrRole(questionGroup.CreateUserId, SystemRoles.QuestionGroupAdmin))
+            {
+                return RedirectToAction("Index").WithError("只有作者才能修改此题目组。");
+            }
+
             _db.QuestionGroups.Remove(questionGroup);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index").WithSuccess("题目组 " + questionGroup.Name + "删除成功！");
         }
 
         [HttpPost]
