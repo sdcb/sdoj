@@ -1,18 +1,15 @@
 ﻿@using SdojWeb.Models
 @using SdojWeb.Infrastructure.Extensions
 @using PagedList.Mvc
-
+@using Microsoft.AspNet.Identity
 @model IEnumerable<QuestionGroupListModel>
-
 @{
     ViewBag.Title = "题目组";
     var route = (RouteValueDictionary)ViewData["Route"];
     var paged = (SortablePagedList<QuestionGroupListModel>)Model;
     var thb = paged.GetThBuilder(Html, "Index", route);
 }
-
 <h2>题目组</h2>
-
 @if (User.Identity.IsAuthenticated)
 {
     <div class="clearfix">
@@ -24,7 +21,6 @@
         </div>
     </div>
 }
-
 <form class="search-form">
     @if (User.Identity.IsAuthenticated)
     {
@@ -48,7 +44,6 @@
         <button type="submit" class="btn btn-default btn-sm">过滤</button>
     </div>
 </form>
-
 <div class="row">
     <div class="col-xs-12">
         <div class="table-responsive">
@@ -89,7 +84,14 @@
                                 @Html.DisplayFor(modelItem => item.CreateUserName)
                             </td>
                             <td>
-                                @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })
+                                @if (User.Identity.GetUserId<int>() == item.CreateUserId)
+                                {
+                                    @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.ModifyTime)
+                                }
                             </td>
                         </tr>
                     }
@@ -98,7 +100,6 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-xs-6">
         第 @paged.PageNumber 页，共 @paged.PageCount 页
@@ -109,7 +110,6 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
     <script>

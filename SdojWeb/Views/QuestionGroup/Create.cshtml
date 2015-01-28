@@ -2,7 +2,8 @@
 @model SdojWeb.Models.QuestionGroupEditModel
 @{
     ViewBag.Title = "新题目组";
-    var editMode = (bool)ViewData["EditMode"];
+    var editMode = Model.Id != 0;
+    ViewBag.Title = editMode ? "编辑题目组" : "新题目组";
 }
 <h2>@ViewBag.Title</h2>
 <div class="form-horizontal">
@@ -98,10 +99,10 @@
                     <i class="glyphicon glyphicon-save"></i>
                     保存
                 </button>
-                <span id="save-state" style="display: none;" data-bind="text: state() == StateIdle ? '保存成功!' : '保存失败!'"></span>
-            }
-            else
-            {
+                <span id="save-state" style="display: none;" data-bind="text: stateName"></span>
+}
+else
+{
                 <button data-bind="click: save, css: {'disabled': state() == StateBusy}" class="btn btn-primary">
                     <i class="glyphicon glyphicon-plus"></i>
                     创建
@@ -127,6 +128,7 @@
         var StateIdle = 0;
         var StateBusy = 1;
         var StateError = 2;
+        var StateValidError = 3;
 
         function ViewModel() {
             var self = this;
@@ -159,6 +161,18 @@
                 }
             });
 
+            prototype.stateName = ko.computed(function() {
+                switch(self.state())
+                {
+                    case StateIdle:
+                        return "保存成功。";
+                    case StateError:
+                        return "保存失败！";
+                    case StateValidError:
+                        return "验证失败，请修正表单信息！";
+                }
+            });
+
             prototype.save = function() {
                 var $form1 = $("#main-form");
                 var $form2 = $("#question-group-form");
@@ -173,11 +187,7 @@
                         type: "POST",
                         data: data,
                         tranditional: true,
-                        complete: function() {
-                            $("#save-state").fadeIn(300, function() {
-                                $("#save-state").fadeOut(3000);
-                            });
-                        }, 
+                        complete: self.show_state(), 
                         success: function() {
                             self.state(StateIdle);
                         }, 
@@ -185,7 +195,17 @@
                             self.state(StateError);
                         }
                     });
+                } else {
+                    // valid failed.
+                    self.state(StateValidError);
+                    self.show_state();
                 }
+            }
+
+            prototype.show_state = function() {
+                $("#save-state").fadeIn(300, function() {
+                    $("#save-state").fadeOut(3000);
+                });
             }
 
             prototype.arrange_order = function() {
@@ -261,5 +281,10 @@
         var vm = new ViewModel();
         ko.applyBindings(vm);
         vm.refresh_question_list();
+
+        $(document).ready(function(){
+            $("#main-form").validate();
+            $("#question-group-form").validate();
+        })
     </script>
 }

@@ -78,9 +78,10 @@ namespace SdojWeb.Manager
             await _db.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistName(string name)
+        public async Task<bool> CheckName(string name, int id)
         {
-            return await _db.QuestionGroups.AnyAsync(x => x.Name == name);
+            var exist = await _db.QuestionGroups.AnyAsync(x => x.Name == name && x.Id != id);
+            return !exist;
         }
 
         public async Task Save(QuestionGroupEditModel questionGroup)

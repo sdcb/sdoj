@@ -36,5 +36,11 @@ namespace SdojWeb.Infrastructure.Alerts
         {
             return new AlertDecoratorResult(result, "alert-danger", text);
         }
+
+        public static JavaScriptResult WithJavascriptAlert(this JavaScriptResult result, string text)
+        {
+            result.Script = "alert('" + text + "');" + result.Script;
+            return result;
+        }
     }
 }

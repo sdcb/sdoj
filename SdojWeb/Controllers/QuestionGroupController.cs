@@ -87,7 +87,6 @@ namespace SdojWeb.Controllers
             SetQuestionRoutes();
 
             var model = new QuestionGroupEditModel();
-            ViewData["EditMode"] = false;
             return View(model);
         }
 
@@ -130,7 +129,6 @@ namespace SdojWeb.Controllers
                 return this.JavascriptRedirectToAction("Index");
             }
 
-            ViewData["EditMode"] = false;
             return View(questionGroup);
         }
 
@@ -154,7 +152,6 @@ namespace SdojWeb.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["EditMode"] = true;
             return View("Create", questionGroup);
         }
 
@@ -171,16 +168,15 @@ namespace SdojWeb.Controllers
                     .Where(x => x.Id == questionGroup.Id)
                     .Select(x => x.CreateUserId)
                     .FirstOrDefaultAsync();
+
                 if (owner != User.Identity.GetUserId<int>())
                 {
-                    return RedirectToAction("Index").WithError("只能修改自己的题目组。");
+                    return this.JavascriptRedirectToAction("Index").WithJavascriptAlert("只能修改自己创建的题目组。");
                 }
 
-                await _manager.Save(questionGroup); 
-
-                return RedirectToAction("Index");
+                await _manager.Save(questionGroup);
+                return Json(true);
             }
-            ViewData["EditMode"] = true;
             return View("Create", questionGroup);
         }
 
@@ -213,17 +209,9 @@ namespace SdojWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> CheckName(string name, int id)
         {
-            bool valid;
-            if (id != 0) // Only Check Name in Create model.
-            {
-                valid = true;
-            }
-            else
-            {
-                name = name.Trim();
-                var exist = await _manager.ExistName(name);
-                valid = !exist;
-            }
+            name = name.Trim();
+
+            var valid = await _manager.CheckName(name, id);
             return Json(valid);
         }
 
