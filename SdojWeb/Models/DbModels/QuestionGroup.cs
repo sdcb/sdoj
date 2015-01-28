@@ -11,14 +11,14 @@ namespace SdojWeb.Models.DbModels
         public int Id { get; set; }
 
         [MaxLength(20)]
+        [Index(IsUnique = true)]
         [Required]
         public string Name { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }
 
-        public DateTime CreateTime { get; set; }
-
+        [Index]
         public DateTime ModifyTime { get; set; }
 
         public int CreateUserId { get; set; }

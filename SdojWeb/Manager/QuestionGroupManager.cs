@@ -71,7 +71,6 @@ namespace SdojWeb.Manager
         private async Task CreateQuestionGroup(QuestionGroupEditModel toSave)
         {
             var questionGroup = Mapper.Map<QuestionGroup>(toSave);
-            questionGroup.CreateTime = DateTime.Now;
 
             var items = toSave.Questions.Select(x => Mapper.Map<QuestionGroupItem>(x)).ToList();
 

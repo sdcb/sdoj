@@ -1,7 +1,6 @@
 ﻿@using SdojWeb.Models
 @using SdojWeb.Infrastructure.Extensions
 @using PagedList.Mvc
-@using Microsoft.AspNet.Identity
 
 @model IEnumerable<QuestionGroupListModel>
 
@@ -69,10 +68,7 @@
                             @Html.DisplayNameFor(model => model.CreateUserName)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.CreateTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ModifyTime)
+                            @thb.BuildA(x => x.ModifyTime)
                         </th>
                     </tr>
                 </thead>
@@ -91,9 +87,6 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.CreateUserName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreateTime)
                             </td>
                             <td>
                                 @Html.ActionLink(Html.DisplayFor(modelItem => item.ModifyTime).ToString(), "Edit", new { id = item.Id })

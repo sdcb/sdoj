@@ -23,9 +23,6 @@ namespace SdojWeb.Models
         [DisplayName("题目数量")]
         public int QuestionCount { get; set; }
 
-        [DisplayName("创建时间")]
-        public DateTime CreateTime { get; set; }
-
         [DisplayName("修改时间")]
         public DateTime ModifyTime { get; set; }
 

@@ -52,7 +52,7 @@ namespace SdojWeb.Controllers
             var models = query.Project().To<QuestionGroupListModel>();
             if (orderBy == null)
             {
-                orderBy = "Id";
+                orderBy = "ModifyTime";
                 asc = false;
             }
             var paged = models.ToSortedPagedList(page, orderBy, asc);

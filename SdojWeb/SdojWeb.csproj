@@ -238,6 +238,10 @@
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.Designer.cs">
       <DependentUpon>201501190340143_QuestionGroupMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501280224076_QuestionGroupDropColumnAddIndex.cs" />
+    <Compile Include="Migrations\201501280224076_QuestionGroupDropColumnAddIndex.Designer.cs">
+      <DependentUpon>201501280224076_QuestionGroupDropColumnAddIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
@@ -475,6 +479,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201501190340143_QuestionGroupMigration.resx">
       <DependentUpon>201501190340143_QuestionGroupMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501280224076_QuestionGroupDropColumnAddIndex.resx">
+      <DependentUpon>201501280224076_QuestionGroupDropColumnAddIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
