@@ -13,7 +13,7 @@
         @Html.AntiForgeryToken()
         @Html.EditorForModel()
     </form>
-    
+
     <div class="form-group">
         <label class="col-md-2 control-label">题目列表</label>
         <div class="col-md-10">
@@ -38,7 +38,6 @@
             </div>
         </div>
     </div>
-
     <form id="question-group-form">
         <div class="row">
             <label class="col-md-2 control-label">题目组</label>
@@ -90,7 +89,6 @@
             </div>
         </div>
     </form>
-
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             @if (editMode)
@@ -99,18 +97,17 @@
                     <i class="glyphicon glyphicon-save"></i>
                     保存
                 </button>
-                <span id="save-state" style="display: none;" data-bind="text: stateName"></span>
-}
-else
-{
+            }
+            else
+            {
                 <button data-bind="click: save, css: {'disabled': state() == StateBusy}" class="btn btn-primary">
                     <i class="glyphicon glyphicon-plus"></i>
                     创建
                 </button>
             }
+            <span id="save-state" style="display: none;" data-bind="text: stateName"></span>
         </div>
     </div>
-
 </div>
 <div>
     @Html.ActionLink("返回列表", "Index")
@@ -162,12 +159,13 @@ else
             });
 
             prototype.stateName = ko.computed(function() {
+                var prefix = '@Html.Raw(editMode ? "保存" : "创建")';
                 switch(self.state())
                 {
                     case StateIdle:
-                        return "保存成功。";
+                        return prefix + "成功。";
                     case StateError:
-                        return "保存失败！";
+                        return prefix + "失败！";
                     case StateValidError:
                         return "验证失败，请修正表单信息！";
                 }
@@ -187,10 +185,10 @@ else
                         type: "POST",
                         data: data,
                         tranditional: true,
-                        complete: self.show_state(), 
+                        complete: self.show_state(),
                         success: function() {
                             self.state(StateIdle);
-                        }, 
+                        },
                         error: function() {
                             self.state(StateError);
                         }
@@ -272,7 +270,7 @@ else
             vm.refresh_question_list();
         }
 
-        
+
 
         function on_question_page_loaded() {
             vm.refresh_question_list();

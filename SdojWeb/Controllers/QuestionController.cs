@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using EntityFramework.Extensions;
-using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure;
 using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Identity;
@@ -87,7 +86,7 @@ namespace SdojWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                if (await _manager.ExistName(createModel.Name))
+                if (!await _manager.CheckName(createModel.Name))
                 {
                     ModelState.AddModelError("Name", "已有同名的题目。");
                 }
@@ -158,11 +157,11 @@ namespace SdojWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CheckName(string name)
+        public async Task<ActionResult> CheckName(string name, int? id)
         {
             name = name.Trim();
-            var exist = await _manager.ExistName(name);
-            return Json(!exist);
+            var valid = await _manager.CheckName(name, id);
+            return Json(valid);
         }
 
         // GET: /Question/5/Data/

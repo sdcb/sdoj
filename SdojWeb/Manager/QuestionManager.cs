@@ -127,10 +127,11 @@ namespace SdojWeb.Manager
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> ExistName(string name)
+        public async Task<bool> CheckName(string name, int? id = null)
         {
-            return await _db.Questions
-                .AnyAsync(x => x.Name == name);
+            var exist = await _db.Questions
+                .AnyAsync(x => x.Name == name && x.Id != id);
+            return !exist;
         }
 
         public async Task DeleteData(int id)

@@ -98,7 +98,7 @@ namespace SdojWeb.Models
         [Editable(false)]
         public int Id { get; set; }
 
-        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", HttpMethod = "POST")]
+        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", AdditionalFields = "Id", HttpMethod = "POST")]
         public string Name { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
