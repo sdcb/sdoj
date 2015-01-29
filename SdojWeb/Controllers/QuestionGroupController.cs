@@ -58,21 +58,23 @@ namespace SdojWeb.Controllers
         }
 
         // GET: QuestionGroup/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id, int? page, bool? passed)
         {
-            if (id == null)
-            {
-                return RedirectToAction("Index");
-            }
-
             var model = await _db.QuestionGroups
-                .Project().To<QuestionGroupDetailModel>(new { currentUserId = User.Identity.GetUserId<int>() })
+                .Project().To<QuestionGroupDetailModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (model == null)
+            var query = _db.QuestionGroupItems
+                .Where(x => x.QuestionGroupId == id)
+                .OrderBy(x => x.Order)
+                .Project().To<QuestionGroupDetailItemModel>(new { currentUserId = User.Identity.GetUserId<int>() });
+
+            if (passed != null)
             {
-                return HttpNotFound();
+                query = query.Where(x => x.Question.Complished == passed);
             }
+            var items = query.ToSortedPagedList(page, null, null);
+            ViewData["QuestionItems"] = items;
 
             return View(model);
         }

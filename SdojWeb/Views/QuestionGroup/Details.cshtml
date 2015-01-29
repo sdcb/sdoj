@@ -12,7 +12,7 @@
     <hr />
 </div>
 
-@Html.Partial("_DetailQuestion", Model.Questions)
+@Html.Partial("_DetailQuestion", ViewData["QuestionItems"], new ViewDataDictionary { { "id", Model.Id } })
 
 <div class="row">
     <div class="col-xs-12">

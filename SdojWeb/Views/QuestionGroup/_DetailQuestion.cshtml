@@ -1,5 +1,13 @@
 ﻿@using SdojWeb.Models
+@using PagedList.Mvc
+@using SdojWeb.Infrastructure.Extensions
 @model IEnumerable<QuestionGroupDetailItemModel>
+@{
+    var paged = (SortablePagedList<QuestionGroupDetailItemModel>)Model;
+    var id = ViewData["id"];
+    var route = new RouteValueDictionary{ { "id", id } };
+}
+
 <div class="col-xs-12">
     <div class="table-responsive">
         <table class="table table-bordered table-condensed table-hover table-striped">
@@ -99,4 +107,14 @@
             </tbody>
         </table>
     </div>
+
+    <div class="col-xs-6">
+        第 @paged.PageNumber 页，共 @paged.PageCount 页
+    </div>
+    <div class="col-xs-6">
+        <div class="pull-right">
+            @Html.PagedListPager(paged, page => Url.Action("Details", route.CopySetPaged(page, paged.OrderBy, paged.Asc)))
+        </div>
+    </div>
+
 </div>

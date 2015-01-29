@@ -119,7 +119,7 @@ namespace SdojWeb.Models
         }
     }
 
-    public class QuestionGroupDetailModel : IHaveCustomMapping
+    public class QuestionGroupDetailModel : IMapFrom<QuestionGroup>, IHaveCustomMapping
     {
         public int Id { get; set; }
 
@@ -129,13 +129,8 @@ namespace SdojWeb.Models
 
         public int CreateUserId { get; set; }
 
-        public List<QuestionGroupDetailItemModel> Questions { get; set; }
-
         public void CreateMappings(IConfiguration configuration)
         {
-            configuration.CreateMap<QuestionGroup, QuestionGroupDetailModel>()
-                .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions.OrderBy(t => t.Order)));
-
             configuration.CreateMap<QuestionGroupDetailModel, QuestionGroup>()
                 .ForMember(s => s.ModifyTime, d => d.MapFrom(x => DateTime.Now))
                 .ForMember(s => s.CreateUserId, d => d.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()));
