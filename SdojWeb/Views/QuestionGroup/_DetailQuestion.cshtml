@@ -5,9 +5,12 @@
         <table class="table table-bordered table-condensed table-hover table-striped">
             <thead>
                 <tr>
-                    <th>
-                        Id
-                    </th>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <th>
+                            @Html.DisplayNameFor(x => x.Question.Complished)
+                        </th>
+                    }
                     <th>
                         @Html.DisplayNameFor(x => x.Alias)
                     </th>
@@ -36,14 +39,31 @@
             </thead>
 
             <tbody>
-                @{ var i = 0; }
                 @foreach (var item in Model)
                 {
-                    ++i;
                     <tr>
-                        <td>
-                            @i
-                        </td>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <td>
+                                @if (item.Question.Started)
+                                {
+                                    if (item.Question.Complished)
+                                    {
+                                        <span class="text-success">
+                                            <i class="glyphicon glyphicon-ok">
+                                            </i>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-warning">
+                                            <i class="glyphicon glyphicon-arrow-right">
+                                            </i>
+                                        </span>
+                                    }
+                                }
+                            </td>
+                        }
                         <td>
                             @Html.DisplayFor(modelItem => item.Alias)
                         </td>

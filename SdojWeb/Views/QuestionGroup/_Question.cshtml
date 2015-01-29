@@ -1,8 +1,8 @@
 ﻿@using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Models
-@model IEnumerable<QuestionSummaryBasicViewModel>
+@model IEnumerable<QuestionSummaryViewModel>
 @{
-    var paged = Model as SortablePagedList<QuestionSummaryBasicViewModel>;
+    var paged = Model as SortablePagedList<QuestionSummaryViewModel>;
     var route = (RouteValueDictionary)ViewData["QuestionRoute"];
     var thb = paged.GetAjaxUpdateBuilder(Html, "Question", route, "#question-table", "on_question_page_loaded()");
 }
@@ -14,6 +14,9 @@
                 <tr>
                     <th>
                         @thb.AjaxUpdateHeader(x => x.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(x => x.Complished)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Name)
@@ -47,6 +50,26 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Id)
                         </td>
+                        <td>
+                            @if (item.Started)
+                            {
+                                if (item.Complished)
+                                {
+                                    <span class="text-success">
+                                        <i class="glyphicon glyphicon-ok">
+                                        </i>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning">
+                                        <i class="glyphicon glyphicon-arrow-right">
+                                        </i>
+                                    </span>
+                                }
+                            }
+                        </td>
+
                         <td>
                             @Html.ActionLink(item.Name, "Details", "Question", new { id = item.Id }, null)
                         </td>

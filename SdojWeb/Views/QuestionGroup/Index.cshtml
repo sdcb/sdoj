@@ -59,6 +59,15 @@
                         <th>
                             @Html.DisplayNameFor(x => x.QuestionCount)
                         </th>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <th>
+                                @Html.DisplayNameFor(x => x.InProgressCount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.ComplishedCount)
+                            </th>
+                        }
                         <th>
                             @Html.DisplayNameFor(model => model.CreateUserName)
                         </th>
@@ -80,6 +89,15 @@
                             <td>
                                 @Html.DisplayFor(x => item.QuestionCount)
                             </td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <td>
+                                    @Html.DisplayFor(x => item.InProgressCount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(x => item.ComplishedCount)
+                                </td>
+                            }
                             <td>
                                 @Html.DisplayFor(modelItem => item.CreateUserName)
                             </td>

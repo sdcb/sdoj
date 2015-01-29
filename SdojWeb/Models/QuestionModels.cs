@@ -153,7 +153,7 @@ namespace SdojWeb.Models
         public QuestionData SampleData { get; set; }
     }
 
-    public class QuestionSummaryBasicViewModel : IHaveCustomMapping
+    public class QuestionSummaryViewModel : IHaveCustomMapping
     {
         [HiddenInput]
         public int Id { get; set; }
@@ -181,9 +181,18 @@ namespace SdojWeb.Models
         [Display(Name = "时间限制(ms)")]
         public int TimeLimit { get; set; }
 
+        [Display(Name = "通过")]
+        public bool Complished { get; set; }
+
+        public bool Started { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
-            configuration.CreateMap<Question, QuestionSummaryBasicViewModel>()
+            var currentUserId = 0;
+
+            configuration.CreateMap<Question, QuestionSummaryViewModel>()
+                .ForMember(s => s.Complished, d => d.MapFrom(x => x.Solutions.Any(s => s.CreateUserId == currentUserId && s.State == SolutionState.Accepted)))
+                .ForMember(s => s.Started, d => d.MapFrom(x => x.Solutions.Any(s => s.CreateUserId == currentUserId)))
                 .ForMember(s => s.Creator, d => d.MapFrom(x => x.CreateUser.UserName))
                 .ForMember(s => s.DataCount, d => d.MapFrom(x => x.Datas.Count))
                 .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count))
@@ -191,13 +200,5 @@ namespace SdojWeb.Models
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(m => m.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(m => m.TimeLimit)));
         }
-    }
-
-    public class QuestionSummaryViewModel : QuestionSummaryBasicViewModel
-    {
-        [Display(Name = "通过")]
-        public bool Complished { get; set; }
-
-        public bool Started { get; set; }
     }
 }

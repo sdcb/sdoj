@@ -20,7 +20,7 @@ namespace SdojWeb.Models
         [DisplayName("名称")]
         public string Name { get; set; }
 
-        [DisplayName("题目数量")]
+        [DisplayName("题目数")]
         public int QuestionCount { get; set; }
 
         [DisplayName("修改时间")]
@@ -31,11 +31,23 @@ namespace SdojWeb.Models
         [DisplayName("作者")]
         public string CreateUserName { get; set; }
 
+        [DisplayName("进行数")]
+        public int InProgressCount { get; set; }
+
+        [DisplayName("完成数")]
+        public int ComplishedCount { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
+            var currentUserId = 0;
+
             configuration.CreateMap<QuestionGroup, QuestionGroupListModel>()
                 .ForMember(d => d.QuestionCount, s => s.MapFrom(x => x.Questions.Count))
-                .ForMember(d => d.CreateUserName, s => s.MapFrom(x => x.CreateUser.UserName));
+                .ForMember(d => d.CreateUserName, s => s.MapFrom(x => x.CreateUser.UserName))
+                .ForMember(d => d.InProgressCount, s => s.MapFrom(
+                    x => x.Questions.Count(q => q.Question.Solutions.Any(a => a.CreateUserId == currentUserId))))
+                .ForMember(d => d.ComplishedCount, s => s.MapFrom(
+                    x => x.Questions.Count(q => q.Question.Solutions.Any(a => a.CreateUserId == currentUserId && a.State == SolutionState.Accepted))));
         }
     }
 
@@ -137,7 +149,7 @@ namespace SdojWeb.Models
 
         public int Order { get; set; }
 
-        public QuestionSummaryBasicViewModel Question { get; set; }
+        public QuestionSummaryViewModel Question { get; set; }
         
         public void CreateMappings(IConfiguration configuration)
         {

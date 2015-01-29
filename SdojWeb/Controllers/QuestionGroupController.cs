@@ -10,6 +10,7 @@ using SdojWeb.Manager;
 using System.Linq;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Infrastructure.Alerts;
+using Microsoft.AspNet.Identity;
 
 namespace SdojWeb.Controllers
 {
@@ -45,7 +46,7 @@ namespace SdojWeb.Controllers
             ViewData["Route"] = route;
 
             var query = _manager.List(id, onlyMe, name, author);
-            var models = query.Project().To<QuestionGroupListModel>();
+            var models = query.Project().To<QuestionGroupListModel>(new { currentUserId = User.Identity.GetUserId<int>() });
             if (orderBy == null)
             {
                 orderBy = "ModifyTime";
@@ -65,7 +66,7 @@ namespace SdojWeb.Controllers
             }
 
             var model = await _db.QuestionGroups
-                .Project().To<QuestionGroupDetailModel>()
+                .Project().To<QuestionGroupDetailModel>(new { currentUserId = User.Identity.GetUserId<int>() })
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (model == null)
@@ -106,7 +107,7 @@ namespace SdojWeb.Controllers
                 asc = false;
             }
 
-            var questions = _questionManager.BasicList(name, creator)
+            var questions = _questionManager.List(name, creator)
                 .ToSortedPagedList(page, orderBy, asc);
 
             return PartialView("_Question", questions);
@@ -214,7 +215,7 @@ namespace SdojWeb.Controllers
             };
             ViewData["QuestionRoute"] = route;
 
-            var questions = _questionManager.BasicList(null, null).ToSortedPagedList(1, "Id", false);
+            var questions = _questionManager.List(null, null).ToSortedPagedList(1, "Id", false);
             ViewData["Question"] = questions;
         }
     }
