@@ -12,8 +12,8 @@ namespace SdojWeb
         {
             ConfigureAuth(app);
             // SignalR Scale Out。
-            var connection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            GlobalHost.DependencyResolver.UseSqlServer(connection);
+            //var connection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            //GlobalHost.DependencyResolver.UseSqlServer(connection);
 
             app.MapSignalR();
         }
