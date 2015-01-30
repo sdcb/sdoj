@@ -1,0 +1,9 @@
+﻿@model bool?
+
+@{ 
+    var output =
+        Model == null ? "未知" :
+        Model.Value ? "是" : "否";
+
+    @output
+}

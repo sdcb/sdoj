@@ -72,7 +72,7 @@ namespace SdojWeb.Controllers
         [SdojAuthorize(Roles = SystemRoles.QuestionAdminOrCreator)]
         public ActionResult Create()
         {
-            return View();
+            return View(new QuestionCreateModel());
         }
 
         // POST: Questions/Create
@@ -243,7 +243,28 @@ namespace SdojWeb.Controllers
         // POST: /question/5/data/save/3
         [Route("Question/{questionId}/Data/Save")]
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> DataSave(int questionId, bool delete, int? id, string input, string output, int time, float memory)
+        public async Task<ActionResult> DataSave(int questionId, int? id, string input, string output, int time, float memory, bool isSample)
+        {
+            // 此处Save表示可以添加或者更新，但不能删除（删除使用DataDelete）。
+            // id == null: 添加；
+            // id != null: 更新。
+            TransactionInRequest.EnsureTransaction();
+
+            var owns = await _manager.IsUserOwnsQuestion(questionId);
+            if (!owns)
+            {
+                return NonOwnerReturn(questionId);
+            }
+
+            await _manager.SaveData(questionId, id, input, output, time, memory, isSample);
+
+            return RedirectToAction("Data", new {id = questionId});
+        }
+
+        // POST: /question/5/data/save/3
+        [Route("Question/{questionId}/Data/Delete")]
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> DataDelete(int questionId, int id)
         {
             TransactionInRequest.EnsureTransaction();
 
@@ -253,17 +274,9 @@ namespace SdojWeb.Controllers
                 return NonOwnerReturn(questionId);
             }
 
-            if (delete)
-            {
-                if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                await _manager.DeleteData(id.Value);
-            }
-            else
-            {
-                await _manager.SaveData(questionId, id, input, output, time, memory);
-            }
+            await _manager.DeleteData(id);
 
-            return RedirectToAction("Data", new {id = questionId});
+            return RedirectToAction("Data", new { id = questionId });
         }
 
         private ActionResult NonOwnerReturn(int questionId)

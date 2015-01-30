@@ -8,6 +8,10 @@
 }
 
 <h2>@ViewBag.Title</h2>
+@if (Model.All(x => !x.IsSample))
+{
+    <h4>警告：此题目没有示例数据</h4>
+}
 
 @if (owns)
 {
@@ -44,6 +48,9 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.UpdateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsSample)
                         </th>
                         <th>操作</th>
                     </tr>
@@ -89,6 +96,9 @@
                                 @Html.DisplayFor(x => item.UpdateTime)
                             </td>
                             <td>
+                                @Html.DisplayFor(model => item.IsSample)
+                            </td>
+                            <td>
                                 @if (owns)
                                 {
                                     if (item.InputLength + item.OutputLength > 128*1024)
@@ -100,7 +110,7 @@
                                         <button class="btn btn-info btn-block btn-xs" 
                                                 data-toggle="modal" 
                                                 data-target="#data-modal"
-                                                data-bind="click: view.bind($data, @item.Id, @(item.IsSampleData?"true":"false"))">
+                                                data-bind="click: view.bind($data, @item.Id, @(item.IsSample?"true":"false"))">
                                             <i class="glyphicon glyphicon-edit"></i>
                                             编辑
                                         </button>
@@ -119,7 +129,7 @@
 <div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="data-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="@Url.Action("DataSave", new {questionId=questionId})" method="POST" id="data-modal-form">
+            <form action="" method="POST" id="data-modal-form">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" data-bind="value: id"/>
                 <input type="hidden" name="delete" data-bind="value: deleteMe"/>
@@ -147,18 +157,27 @@
                                 <label>内存限制(MB)</label>
                                 <input type="text" class="form-control input-sm" name="memory" data-bind="value: memory" />
                             </div>
+                            <div class="form-group">
+                                <label>示例数据：</label>
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary" data-bind="css: {'active': isSample}">
+                                        <input type="radio" name="isSample" value="true" data-bind="attr: {'checked': isSample}" />是
+                                    </label>
+                                    <label class="btn btn-primary" data-bind="css: {'active': !isSample()}">
+                                        <input type="radio" name="isSample" value="false" data-bind="attr: {'checked': !isSample()}" />否
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <!-- ko if: showDelete() && !isSample() -->
                     <button type="button" class="btn btn-danger" data-bind="click: trydelete">
                         <i class="glyphicon glyphicon-remove"></i>
                         删除
                     </button>
-                    <!-- /ko -->
-                    <button type="submit" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" data-bind="click: save">
                         <i class="glyphicon glyphicon-save"></i>
                         保存
                     </button>
@@ -224,7 +243,7 @@
             self.view = function(id, isSample) {
                 self.clear();
 
-                $.getJSON('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function(data) {
+                $.post('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function(data) {
                     self.id(id);
                     self.isSample(isSample);
                     self.showDelete(true);
@@ -238,19 +257,25 @@
 
             self.clear = function() {
                 self.id(null);
-                self.isSample(null);
+                self.isSample(false);
                 self.deleteMe(false);
                 self.showDelete(false);
 
                 self.input(null);
                 self.output(null);
-                self.time(null);
-                self.memory(null);
+                self.time(1000);
+                self.memory(64);
             };
 
-            self.trydelete = function(vm, e) {
+            self.save = function () {
+                $("#data-modal-form").attr('action', "@Url.Action("DataSave", new { questionId = questionId })");
+                $("#data-modal-form").submit();
+            };
+
+            self.trydelete = function() {
                 if (confirm("确实要删除此测试数据吗？")) {
                     self.deleteMe(true);
+                    $("#data-modal-form").attr('action', "@Url.Action("DataDelete", new { questionId = questionId })");
                     $("#data-modal-form").submit();
                 };
             };

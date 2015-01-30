@@ -25,16 +25,7 @@ namespace SdojWeb.Manager
         public async Task Create(QuestionCreateModel model)
         {
             var question = Mapper.Map<Question>(model);
-            _db.Questions.Add(question);
-            await _db.SaveChangesAsync();
-
-            var data = Mapper.Map<QuestionData>(model);
-            data.QuestionId = question.Id;
-            _db.QuestionDatas.Add(data);
-            await _db.SaveChangesAsync();
-
-            // TODO:
-            // question.SampleDataId = data.Id;
+            _db.Entry(question).State = EntityState.Added;
             await _db.SaveChangesAsync();
         }
 
@@ -111,7 +102,7 @@ namespace SdojWeb.Manager
                 .DeleteAsync();
         }
 
-        public async Task SaveData(int questionId, int? id, string input, string output, int time, float memory)
+        public async Task SaveData(int questionId, int? id, string input, string output, int time, float memory, bool isSample)
         {
             var state = id == null ? EntityState.Added : EntityState.Modified;
 
@@ -132,6 +123,7 @@ namespace SdojWeb.Manager
             data.TimeLimit = time;
             data.MemoryLimitMb = memory;
             data.UpdateTime = DateTime.Now;
+            data.IsSample = isSample;
 
             _db.Entry(data).State = state;
             await _db.SaveChangesAsync();

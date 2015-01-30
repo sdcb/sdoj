@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
+using SdojWeb.Infrastructure.ModelMetadata.Attributes;
 
 namespace SdojWeb.Models
 {
@@ -55,11 +56,26 @@ namespace SdojWeb.Models
 
     public class QuestionCreateModel : IHaveCustomMapping
     {
+        public QuestionCreateModel()
+        {
+            TimeLimit = 1000;
+            MemoryLimitMb = 64.0f;
+        }
+
+        [RenderMode(RenderMode.Neither)]
+        public int Id { get; set; }
+
         [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", HttpMethod = "POST")]
         public string Name { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
         public string Description { get; set; }
+
+        [Display(Name = "时间限制(ms)"), Required]
+        public int TimeLimit { get; set; }
+
+        [Display(Name = "内存限制(MB)"), Required]
+        public float MemoryLimitMb { get; set; }
 
         [Display(Name = "输入说明"), MaxLength(1000), DataType("Markdown")]
         public string InputExplain { get; set; }
@@ -67,30 +83,29 @@ namespace SdojWeb.Models
         [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
 
+        [Display(Name = "题目类型")]
+        public QuestionTypes QuestionType { get; set; }
+
         [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }
 
         [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
 
-        [Display(Name = "内存限制(MB)"), Required]
-        public float MemoryLimitMb { get; set; }
-
-        [Display(Name = "时间限制(ms)"), Required]
-        public int TimeLimit { get; set; }
-
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionCreateModel, Question>()
-                .ForMember(source => source.CreateTime, dest => dest.MapFrom(x => DateTime.Now))
-                .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()))
-                .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
+                .ForMember(s => s.CreateTime, d => d.MapFrom(x => DateTime.Now))
+                .ForMember(s => s.CreateUserId, d => d.MapFrom(x => HttpContext.Current.User.Identity.GetUserId<int>()))
+                .ForMember(s => s.UpdateTime, d => d.MapFrom(x => DateTime.Now))
+                .ForMember(s => s.Datas, d => d.MapFrom(x => new[] { Mapper.Map<QuestionData>(x) }));
             configuration.CreateMap<QuestionCreateModel, QuestionData>()
                 .ForMember(s => s.Input, d => d.MapFrom(x => x.SampleInput))
                 .ForMember(s => s.Output, d => d.MapFrom(x => x.SampleOutput))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.MemoryLimitMb))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.TimeLimit))
-                .ForMember(s => s.UpdateTime, d => d.MapFrom(x => DateTime.Now));
+                .ForMember(s => s.UpdateTime, d => d.MapFrom(x => DateTime.Now))
+                .ForMember(s => s.IsSample, d => d.UseValue(true));
         }
     }
 

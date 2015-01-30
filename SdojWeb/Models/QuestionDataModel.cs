@@ -32,13 +32,12 @@ namespace SdojWeb.Models
         [Display(Name = "时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
-        public bool IsSampleData { get; set; }
+        [Display(Name = "示例数据")]
+        public bool IsSample { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionData, QuestionDataSummaryModel>()
-                // TODO:
-                //.ForMember(d => d.IsSampleData, s => s.MapFrom(x => x.Question.SampleDataId == x.Id))
                 .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.MemoryLimitMb))
                 .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.TimeLimit));
         }
