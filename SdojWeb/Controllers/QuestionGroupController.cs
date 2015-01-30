@@ -74,6 +74,12 @@ namespace SdojWeb.Controllers
                 query = query.Where(x => x.Question.Complished == passed);
             }
             var items = query.ToSortedPagedList(page, null, null);
+            ViewData["QuestionItemRoute"] = new RouteValueDictionary
+            {
+                { "id", id },
+                { "page", page },
+                { "passed", passed }
+            };
             ViewData["QuestionItems"] = items;
 
             return View(model);

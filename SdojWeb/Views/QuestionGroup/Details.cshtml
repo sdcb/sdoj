@@ -12,7 +12,7 @@
     <hr />
 </div>
 
-@Html.Partial("_DetailQuestion", ViewData["QuestionItems"], new ViewDataDictionary { { "id", Model.Id } })
+@Html.Partial("_DetailQuestion", ViewData["QuestionItems"], ViewData)
 
 <div class="row">
     <div class="col-xs-12">
@@ -44,6 +44,9 @@
             if (!confirm("确定要删除吗？")) {
                 e.preventDefault();
             }
+        });
+        $(".search-form select").each(function () {
+            $(this).val($(this).data('value'));
         });
     </script>
 }

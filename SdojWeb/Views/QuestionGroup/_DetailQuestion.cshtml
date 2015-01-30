@@ -4,9 +4,21 @@
 @model IEnumerable<QuestionGroupDetailItemModel>
 @{
     var paged = (SortablePagedList<QuestionGroupDetailItemModel>)Model;
-    var id = ViewData["id"];
-    var route = new RouteValueDictionary{ { "id", id } };
+    var route = (RouteValueDictionary)ViewData["QuestionItemRoute"];
 }
+
+<form class="search-form">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <select class="form-control input-sm" data-value="@route["passed"]" name="passed">
+            <option value="">所有...</option>
+            <option value="True">通过</option>
+            <option value="False">未通过</option>
+        </select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <button type="submit" class="btn btn-default btn-sm">过滤</button>
+    </div>
+</form>
 
 <div class="col-xs-12">
     <div class="table-responsive">
