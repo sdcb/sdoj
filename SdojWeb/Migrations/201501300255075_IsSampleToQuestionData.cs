@@ -10,12 +10,24 @@ namespace SdojWeb.Migrations
             DropForeignKey("dbo.Questions", "SampleDataId", "dbo.QuestionDatas");
             DropIndex("dbo.Questions", new[] { "SampleDataId" });
             AddColumn("dbo.QuestionDatas", "IsSample", c => c.Boolean(nullable: false));
+            AddColumn("dbo.Questions", "QuestionType", c => c.Byte(nullable: false));
+            Sql("UPDATE                                                            " +
+                "    [dbo.QuestionDatas]                                           " +
+                "SET                                                               " +
+                "    [IsSample] = 1                                                " +
+                "FROM                                                              " +
+                "    [dbo.QuestionDatas] data                                      " +
+                "JOIN                                                              " +
+                "    [dbo.Questions] question ON data.[QuestionId] = question.[Id] " +
+                "WHERE                                                             " +
+                "    question.[SampleDataId] = data.[Id]                           ");
             DropColumn("dbo.Questions", "SampleDataId");
         }
         
         public override void Down()
         {
             AddColumn("dbo.Questions", "SampleDataId", c => c.Int());
+            DropColumn("dbo.Questions", "QuestionType");
             DropColumn("dbo.QuestionDatas", "IsSample");
             CreateIndex("dbo.Questions", "SampleDataId");
             AddForeignKey("dbo.Questions", "SampleDataId", "dbo.QuestionDatas", "Id");

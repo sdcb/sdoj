@@ -39,7 +39,7 @@ namespace SdojWeb.Models.DbModels
         public ICollection<QuestionGroupItem> QuestionGroups { get; set; }
     }
 
-    public enum QuestionTypes : ushort
+    public enum QuestionTypes : byte
     {
         [Display(Name = "数据驱动")]
         DataDrive = 0
