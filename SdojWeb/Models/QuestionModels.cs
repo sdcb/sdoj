@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.ModelMetadata.Attributes;
+using System.Collections.Generic;
 
 namespace SdojWeb.Models
 {
@@ -35,20 +36,14 @@ namespace SdojWeb.Models
         [Display(Name = "总时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
-        [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
-        public string SampleInput { get; set; }
-
-        [Display(Name = "输出样例"), DataType(DataType.MultilineText)]
-        public string SampleOutput { get; set; }
+        public List<QuestionDataSampleModel> Samples { get; set; }
 
         public int CreateUserId { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
-                // TODO:
-                //.ForMember(s => s.SampleInput, d => d.MapFrom(x => x.SampleData.Input))
-                //.ForMember(s => s.SampleOutput, d => d.MapFrom(x => x.SampleData.Output))
+                .ForMember(s => s.Samples, d => d.MapFrom(x => x.Datas.Where(data => data.IsSample)))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
         }

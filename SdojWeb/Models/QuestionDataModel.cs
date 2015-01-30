@@ -43,6 +43,15 @@ namespace SdojWeb.Models
         }
     }
 
+    public class QuestionDataSampleModel : IMapFrom<QuestionData>
+    {
+        [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
+        public string Input { get; set; }
+
+        [Display(Name = "输出样例"), DataType(DataType.MultilineText)]
+        public string Output { get; set; }
+    }
+
     public class QuestionDataEditModel : IHaveCustomMapping
     {
         [HiddenInput]
