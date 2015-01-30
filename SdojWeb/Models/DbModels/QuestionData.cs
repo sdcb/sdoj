@@ -21,5 +21,7 @@ namespace SdojWeb.Models.DbModels
         public int TimeLimit { get; set; }
 
         public DateTime UpdateTime { get; set; }
+
+        public bool IsSample { get; set; }
     }
 }

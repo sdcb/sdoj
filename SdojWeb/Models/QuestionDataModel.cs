@@ -37,7 +37,8 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<QuestionData, QuestionDataSummaryModel>()
-                .ForMember(d => d.IsSampleData, s => s.MapFrom(x => x.Question.SampleDataId == x.Id))
+                // TODO:
+                //.ForMember(d => d.IsSampleData, s => s.MapFrom(x => x.Question.SampleDataId == x.Id))
                 .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.MemoryLimitMb))
                 .ForMember(d => d.TimeLimit, s => s.MapFrom(x => x.TimeLimit));
         }

@@ -45,8 +45,9 @@ namespace SdojWeb.Models
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
-                .ForMember(s => s.SampleInput, d => d.MapFrom(x => x.SampleData.Input))
-                .ForMember(s => s.SampleOutput, d => d.MapFrom(x => x.SampleData.Output))
+                // TODO:
+                //.ForMember(s => s.SampleInput, d => d.MapFrom(x => x.SampleData.Input))
+                //.ForMember(s => s.SampleOutput, d => d.MapFrom(x => x.SampleData.Output))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
         }
@@ -133,9 +134,10 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionEditModel, Question>()
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
             configuration.CreateMap<Question, QuestionEditModel>()
-                .ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
-                .ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
-                .ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId))
+                // TODO:
+                //.ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
+                //.ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
+                //.ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId))
                 .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit))); 

@@ -33,7 +33,8 @@ namespace SdojWeb.Manager
             _db.QuestionDatas.Add(data);
             await _db.SaveChangesAsync();
 
-            question.SampleDataId = data.Id;
+            // TODO:
+            // question.SampleDataId = data.Id;
             await _db.SaveChangesAsync();
         }
 
@@ -63,14 +64,15 @@ namespace SdojWeb.Manager
             Mapper.Map(model, question);
             Mapper.Map(secretModel, question);
 
-            if (question.SampleData.Input != model.SampleInput ||
-                question.SampleData.Output != model.SampleOutput)
-            {
-                question.SampleData.UpdateTime = DateTime.Now;
-            }
-            question.SampleData.Input = model.SampleInput;
-            question.SampleData.Output = model.SampleOutput;
-            
+            // TODO:
+            //if (question.SampleData.Input != model.SampleInput ||
+            //    question.SampleData.Output != model.SampleOutput)
+            //{
+            //    question.SampleData.UpdateTime = DateTime.Now;
+            //}
+            //question.SampleData.Input = model.SampleInput;
+            //question.SampleData.Output = model.SampleOutput;
+
             question.UpdateTime = DateTime.Now;
 
             _db.Entry(question).State = EntityState.Modified;
