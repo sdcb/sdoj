@@ -42,6 +42,9 @@ namespace SdojWeb.Models.DbModels
     public enum QuestionTypes : byte
     {
         [Display(Name = "数据驱动")]
-        DataDrive = 0
+        DataDrive = 0, 
+
+        [Display(Name = "第二进程驱动")]
+        Process2Drive = 1, 
     }
 }
