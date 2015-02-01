@@ -2,6 +2,7 @@
 using System;
 using System.Data.Entity;
 using SdojWeb.Models.DbModels;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace SdojWeb.Models
 {
@@ -14,6 +15,8 @@ namespace SdojWeb.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
             modelBuilder.Properties<DateTime>().Configure(x => x.HasColumnType("datetime2"));
 
             modelBuilder.Entity<Question>()

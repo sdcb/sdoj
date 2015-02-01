@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SdojWeb.Models.DbModels
 {
-    [Table("QuestionGroup")]
     public class QuestionGroup
     {
         public int Id { get; set; }
@@ -28,7 +27,6 @@ namespace SdojWeb.Models.DbModels
         public ICollection<QuestionGroupItem> Questions { get; set; }
     }
 
-    [Table("QuestionGroupItem")]
     public class QuestionGroupItem
     {
         [Column(Order = 1)]

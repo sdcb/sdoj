@@ -246,6 +246,10 @@
     <Compile Include="Migrations\201501300255075_IsSampleToQuestionData.Designer.cs">
       <DependentUpon>201501300255075_IsSampleToQuestionData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502010232233_GetRidOfPluralizingTableNameConvention.cs" />
+    <Compile Include="Migrations\201502010232233_GetRidOfPluralizingTableNameConvention.Designer.cs">
+      <DependentUpon>201502010232233_GetRidOfPluralizingTableNameConvention.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
@@ -490,6 +494,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501300255075_IsSampleToQuestionData.resx">
       <DependentUpon>201501300255075_IsSampleToQuestionData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502010232233_GetRidOfPluralizingTableNameConvention.resx">
+      <DependentUpon>201502010232233_GetRidOfPluralizingTableNameConvention.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
