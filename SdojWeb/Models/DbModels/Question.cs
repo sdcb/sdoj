@@ -37,6 +37,8 @@ namespace SdojWeb.Models.DbModels
         public ICollection<Solution> Solutions { get; set; }
 
         public ICollection<QuestionGroupItem> QuestionGroups { get; set; }
+
+        public QuestionProcessJudgeCode ProcessJudgeCode { get; set; }
     }
 
     public enum QuestionTypes : byte

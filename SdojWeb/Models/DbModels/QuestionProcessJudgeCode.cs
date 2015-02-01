@@ -4,18 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SdojWeb.Models.DbModels
 {
-    public class Question2ndProcessDriveCode
+    public class QuestionProcessJudgeCode
     {
+        [ForeignKey("Question")]
         [Key]
-        public int Id { get; set; }
-
-        [Index(IsClustered = true)]
-        public int QuestionId { get; set; }
+        public int QuestoinId { get; set; }
 
         [Required]
         public string Code { get; set; }
 
         public Languages Language { get; set; }
+
+        public short RunTimes { get; set; }
 
         public int TimeLimitMs { get; set; }
 

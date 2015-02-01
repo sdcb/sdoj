@@ -250,6 +250,10 @@
     <Compile Include="Migrations\201502010232233_GetRidOfPluralizingTableNameConvention.Designer.cs">
       <DependentUpon>201502010232233_GetRidOfPluralizingTableNameConvention.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502011348440_Question2ndProcessDriveCode.cs" />
+    <Compile Include="Migrations\201502011348440_Question2ndProcessDriveCode.Designer.cs">
+      <DependentUpon>201502011348440_Question2ndProcessDriveCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
@@ -268,7 +272,7 @@
     <Compile Include="Models\JudgePush\SolutionPushModel.cs" />
     <Compile Include="Models\DbModels\QuestionGroup.cs" />
     <Compile Include="Models\QuestionGroupModels.cs" />
-    <Compile Include="Models\DbModels\Question2ndProcessDriveCode.cs" />
+    <Compile Include="Models\DbModels\QuestionProcessJudgeCode.cs" />
     <Compile Include="SignalR\SolutionHub.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -496,6 +500,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502010232233_GetRidOfPluralizingTableNameConvention.resx">
       <DependentUpon>201502010232233_GetRidOfPluralizingTableNameConvention.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502011348440_Question2ndProcessDriveCode.resx">
+      <DependentUpon>201502011348440_Question2ndProcessDriveCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
