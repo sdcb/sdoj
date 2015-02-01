@@ -109,17 +109,17 @@ namespace SdojWeb.Models
         [Editable(false)]
         public int Id { get; set; }
 
-        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", AdditionalFields = "Id", HttpMethod = "POST")]
-        public string Name { get; set; }
-
-        [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
-        public string Description { get; set; }
-
         [Display(Name = "内存限制(MB)"), Editable(false)]
         public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)"), Editable(false)]
         public int TimeLimit { get; set; }
+
+        [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", AdditionalFields = "Id", HttpMethod = "POST")]
+        public string Name { get; set; }
+
+        [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
+        public string Description { get; set; }        
 
         [HiddenInput]
         public int? QuestionDataId { get; set; }
@@ -130,12 +130,6 @@ namespace SdojWeb.Models
         [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
 
-        [Display(Name = "输入样例"), DataType(DataType.MultilineText)]
-        public string SampleInput { get; set; }
-
-        [Display(Name = "输出样例"), Required, DataType(DataType.MultilineText)]
-        public string SampleOutput { get; set; }
-
         [HiddenInput]
         public int CreateUserId { get; set; }
 
@@ -144,10 +138,6 @@ namespace SdojWeb.Models
             configuration.CreateMap<QuestionEditModel, Question>()
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
             configuration.CreateMap<Question, QuestionEditModel>()
-                // TODO:
-                //.ForMember(source => source.SampleInput, dest => dest.MapFrom(x => x.SampleData.Input))
-                //.ForMember(source => source.SampleOutput, dest => dest.MapFrom(x => x.SampleData.Output))
-                //.ForMember(source => source.QuestionDataId, dest => dest.MapFrom(x => x.SampleDataId))
                 .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit))); 
