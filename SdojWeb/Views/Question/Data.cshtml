@@ -159,14 +159,12 @@
                             </div>
                             <div class="form-group">
                                 <label>示例数据：</label>
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-primary" data-bind="css: {'active': isSample}">
-                                        <input type="radio" name="isSample" value="true" data-bind="attr: {'checked': isSample}" />是
-                                    </label>
-                                    <label class="btn btn-primary" data-bind="css: {'active': !isSample()}">
-                                        <input type="radio" name="isSample" value="false" data-bind="attr: {'checked': !isSample()}" />否
-                                    </label>
-                                </div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="isSample" value="true" data-bind="attr: {checked: isSample}" />是
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="isSample" value="false" data-bind="attr: {checked: !isSample()}" />否
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -229,7 +227,7 @@
         function ViewModel() {
             var self = this;
 
-            self.isSample = ko.observable();
+            self.isSample = ko.observable(false);
             self.id = ko.observable();
 
             self.deleteMe = ko.observable(false);
