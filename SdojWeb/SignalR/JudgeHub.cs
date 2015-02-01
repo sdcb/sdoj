@@ -14,18 +14,23 @@ using SdojWeb.Models.JudgePush;
 using Timer = System.Timers.Timer;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 
 namespace SdojWeb.SignalR
 {
     [Microsoft.AspNet.SignalR.Authorize(Roles = SystemRoles.Judger)]
     public class JudgeHub : Hub
     {
+        public JudgeHub()
+        {
+            _db = ApplicationDbContext.Create();
+        }
+
         // Hub API
 
         public async Task<bool> UpdateInLock(int solutionId, SolutionState stateId)
         {
-            var db = GetDbContext();
-            var slock = await db.SolutionLocks.FindAsync(solutionId);
+            var slock = await _db.SolutionLocks.FindAsync(solutionId);
 
             // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
             if (slock == null || slock.LockClientId != Guid.Parse(Context.ConnectionId) || slock.LockEndTime < DateTime.Now)
@@ -34,13 +39,12 @@ namespace SdojWeb.SignalR
             }
 
             // 锁住，允许操作。
-            var solution = await db.Solutions.FindAsync(solutionId);
+            var solution = await _db.Solutions.FindAsync(solutionId);
             solution.State = stateId;
 
             // 保存数据。
-            db.Entry(solution).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-            Commit();
+            _db.Entry(solution).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
 
             SolutionHub.PushChange(solution.Id, solution.State, 0, 0.0f);
 
@@ -51,8 +55,7 @@ namespace SdojWeb.SignalR
             SolutionState stateId, int runTimeMs, float usingMemoryMb, 
             string compilerOutput)
         {
-            var db = GetDbContext();
-            var solutionLock = await db.SolutionLocks.FindAsync(solutionId);
+            var solutionLock = await _db.SolutionLocks.FindAsync(solutionId);
 
             // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
             if (solutionLock == null)
@@ -61,13 +64,13 @@ namespace SdojWeb.SignalR
             }
             if (solutionLock.LockClientId != Guid.Parse(Context.ConnectionId) || solutionLock.LockEndTime < DateTime.Now)
             {
-                db.Entry(solutionLock).State = EntityState.Deleted;
-                await db.SaveChangesAsync();
+                _db.Entry(solutionLock).State = EntityState.Deleted;
+                await _db.SaveChangesAsync();
                 return false;
             }
 
             // 锁住，允许操作，然后改变状态。
-            var solution = await db.Solutions.FindAsync(solutionId);
+            var solution = await _db.Solutions.FindAsync(solutionId);
             solution.State = stateId;
             solution.RunTime = runTimeMs;
             solution.UsingMemoryMb = usingMemoryMb;
@@ -85,10 +88,9 @@ namespace SdojWeb.SignalR
             solution.Lock = null;
 
             // 删除锁，保存数据。
-            db.Entry(solution).State = EntityState.Modified;
-            db.Entry(solutionLock).State = EntityState.Deleted;
-            await db.SaveChangesAsync();
-            Commit();
+            _db.Entry(solution).State = EntityState.Modified;
+            _db.Entry(solutionLock).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
 
             SolutionHub.PushChange(solution.Id, solution.State, runTimeMs, usingMemoryMb);
 
@@ -97,10 +99,9 @@ namespace SdojWeb.SignalR
 
         public async Task<SolutionFullModel> Lock(int solutionId)
         {
-            var db = GetDbContext();
             var userId = Context.User.Identity.GetUserId<int>();
 
-            var detail = await db.Solutions
+            var detail = await _db.Solutions
                 .Where(x =>
                     //x.Question.CreateUserId == userId &&
                     solutionId == x.Id &&
@@ -124,54 +125,49 @@ namespace SdojWeb.SignalR
             slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
 
             detail.Solution.State = SolutionState.Compiling;
-            db.Entry(detail.Solution).State = EntityState.Modified;
+            _db.Entry(detail.Solution).State = EntityState.Modified;
 
-            db.Entry(slock).State = detail.Lock == null
+            _db.Entry(slock).State = detail.Lock == null
                 ? EntityState.Added
                 : EntityState.Modified;
 
-            await db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
-            var result = await db.Solutions
+            var result = await _db.Solutions
                 .Where(x => x.Id == solutionId)
                 .Project().To<SolutionFullModel>()
                 .FirstOrDefaultAsync();
 
-            Commit();
             SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
             return result;
         }
 
-        public async Task<SolutionPushModel[]> GetAll()
+        public async Task<List<SolutionPushModel>> GetAll()
         {
             var userId = Context.User.Identity.GetUserId<int>();
-            var db = GetDbContext();
 
-            var models = await db.Solutions
+            var models = await _db.Solutions
                 .Where(x =>
                     //x.Question.CreateUserId == userId &&
                     x.State < SolutionState.Completed &&
                     (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没锁或者锁已经过期，允许操作。
                 .Project().To<SolutionPushModel>()
                 .Take(DispatchLimit)
-                .ToArrayAsync();
-            Commit();
+                .ToListAsync();
 
             return models;
         }
 
-        public async Task<QuestionDataFullModel[]> GetDatas(int[] dataId)
+        public async Task<List<QuestionDataFullModel>> GetDatas(int[] dataId)
         {
-            var db = GetDbContext();
             var userId = Context.User.Identity.GetUserId<int>();
 
-            var datas = await db.QuestionDatas
+            var datas = await _db.QuestionDatas
                 .Where(x =>
                     //x.Question.CreateUserId == userId &&
                     dataId.Contains(x.Id))
                 .Project().To<QuestionDataFullModel>()
-                .ToArrayAsync();
-            Commit();
+                .ToListAsync();
 
             return datas;
         }
@@ -205,27 +201,9 @@ namespace SdojWeb.SignalR
             return base.OnDisconnected(stopCalled);
         }
 
-        public void Commit()
-        {
-            if (DbLazy.IsValueCreated && !Commited)
-            {
-                Transaction.Commit();
-                Commited = true;
-            }
-        }
-
-        public void Rollback()
-        {
-            if (DbLazy.IsValueCreated && !Commited)
-            {
-                Transaction.Rollback();
-                Commited = true;
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
-            Rollback();
+            _db.Dispose();
             base.Dispose(disposing);
         }
 
@@ -258,7 +236,7 @@ namespace SdojWeb.SignalR
                             (x.Lock == null || x.Lock.LockEndTime < DateTime.Now))
                         .Project().To<SolutionPushModel>()
                         .Take(DispatchLimit)
-                        .ToArrayAsync();
+                        .ToListAsync();
 
                     foreach (var model in models)
                     {
@@ -273,31 +251,6 @@ namespace SdojWeb.SignalR
             Interlocked.CompareExchange(ref InScan, 0, 1);
         }
 
-        // Field & Properties
-
-        public ApplicationDbContext GetDbContext()
-        {
-            var firstTimeRunning = !DbLazy.IsValueCreated;
-            var db = DbLazy.Value;
-
-            if (firstTimeRunning)
-            {
-                Transaction = db.Database.BeginTransaction(IsolationLevel.Serializable);
-            }
-
-            return db;
-        }
-
-        public Lazy<ApplicationDbContext> DbLazy = new Lazy<ApplicationDbContext>(() =>
-        {
-            var db = ApplicationDbContext.Create();
-            return db;
-        });
-
-        public DbContextTransaction Transaction { get; set; }
-
-        public bool Commited { get; set; }
-
         public static int DbScanTaskRunning = 0;
 
         public static int InScan = 0;
@@ -311,5 +264,7 @@ namespace SdojWeb.SignalR
         public const int DbScanIntervalSeconds = 10;
 
         public const int DispatchLimit = 20;
+
+        private readonly ApplicationDbContext _db;
     }
 }
