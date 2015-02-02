@@ -22,7 +22,6 @@ namespace SdojWeb.Migrations
                 .PrimaryKey(t => t.QuestionId)
                 .ForeignKey("dbo.Question", t => t.QuestionId)
                 .Index(t => t.QuestionId);
-            
         }
         
         public override void Down()
