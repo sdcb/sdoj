@@ -61,7 +61,7 @@ namespace SdojWeb.Models
 
         public DbSet<QuestionGroupItem> QuestionGroupItems { get; set; }
 
-        public DbSet<QuestionProcessJudgeCode> QuestionProcessJudgeCodes { get; set; }
+        public DbSet<Process2JudgeCode> Process2JudgeCode { get; set; }
 
         public static ApplicationDbContext Create()
         {

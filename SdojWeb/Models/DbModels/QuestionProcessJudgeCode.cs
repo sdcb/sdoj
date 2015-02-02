@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SdojWeb.Models.DbModels
 {
-    public class QuestionProcessJudgeCode
+    public class Process2JudgeCode
     {
         [ForeignKey("Question")]
         [Key]
-        public int QuestoinId { get; set; }
+        public int QuestionId { get; set; }
 
         [Required]
         public string Code { get; set; }
