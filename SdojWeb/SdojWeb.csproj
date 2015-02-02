@@ -272,7 +272,7 @@
     <Compile Include="Models\JudgePush\SolutionPushModel.cs" />
     <Compile Include="Models\DbModels\QuestionGroup.cs" />
     <Compile Include="Models\QuestionGroupModels.cs" />
-    <Compile Include="Models\DbModels\QuestionProcessJudgeCode.cs" />
+    <Compile Include="Models\DbModels\Process2JudgeCode.cs" />
     <Compile Include="SignalR\SolutionHub.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
