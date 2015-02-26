@@ -191,6 +191,9 @@ namespace SdojWeb.Models
         [Display(Name = "作者")]
         public string Creator { get; set; }
 
+        [Display(Name = "类型")]
+        public QuestionTypes QuestionType { get; set; }
+
         [Display(Name = "更新时间")]
         public DateTime UpdateTime { get; set; }
 

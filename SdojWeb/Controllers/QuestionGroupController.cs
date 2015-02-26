@@ -115,7 +115,7 @@ namespace SdojWeb.Controllers
                 asc = false;
             }
 
-            var questions = _questionManager.List(name, creator)
+            var questions = _questionManager.List(name, creator, type: null, onlyMe:null)
                 .ToSortedPagedList(page, orderBy, asc);
 
             return PartialView("_Question", questions);
@@ -223,7 +223,7 @@ namespace SdojWeb.Controllers
             };
             ViewData["QuestionRoute"] = route;
 
-            var questions = _questionManager.List(null, null).ToSortedPagedList(1, "Id", false);
+            var questions = _questionManager.List(null, null, null, null).ToSortedPagedList(1, "Id", false);
             ViewData["Question"] = questions;
         }
     }

@@ -47,7 +47,7 @@ namespace SdojWeb.Infrastructure.Extensions
             for (var i = 1; i < selectList.Count; ++i)
             {
                 var item = selectList[i];
-                if (item.Value == value.ToString())
+                if (item.Value == Convert.ToInt32(value).ToString())
                 {
                     item.Selected = true;
                     finded = true;

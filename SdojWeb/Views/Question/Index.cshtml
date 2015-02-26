@@ -3,6 +3,7 @@
 @using SdojWeb.Infrastructure.Extensions
 @using SdojWeb.Infrastructure.Identity
 @using SdojWeb.Models
+@using SdojWeb.Models.DbModels
 @model IEnumerable<QuestionSummaryViewModel>
 @{
     ViewBag.Title = "题目列表";
@@ -23,6 +24,15 @@
     </div>
 }
 <form class="search-form">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select class="form-control input-sm" data-value="@route["me"]" name="me">
+                <option value="">所有...</option>
+                <option value="True">仅我创建</option>
+            </select>
+        </div>
+    }
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         @Html.TextBox("name", route["name"], new { @class = "form-control input-sm", placeholder = "标题..." })
     </div>
@@ -30,10 +40,12 @@
         @Html.TextBox("creator", route["creator"], new { @class = "form-control input-sm", placeholder = "作者..." })
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        @Html.EnumDropDownList("type", (QuestionTypes?)route["type"], "题目类型...", new { @class = "form-control input-sm" })
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <button class="btn btn-default btn-sm" type="submit">过滤</button>
     </div>
 </form>
-
 <div class="row">
     <div class="col-xs-12">
         <div class="table-responsive">
@@ -97,6 +109,10 @@
                             }
                             <td>
                                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                                @if (item.QuestionType == SdojWeb.Models.DbModels.QuestionTypes.Process2Drive)
+                                {
+                                    <sup>2</sup>
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Creator)
@@ -125,7 +141,6 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-xs-6">
         第 @paged.PageNumber 页，共 @paged.PageCount 页
@@ -136,3 +151,11 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script>
+        $(".search-form select").each(function () {
+            $(this).val($(this).data('value'));
+        });
+    </script>
+}

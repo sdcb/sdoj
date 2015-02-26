@@ -42,12 +42,19 @@ namespace SdojWeb.Manager
             await _db.SaveChangesAsync();
         }
 
-        public IQueryable<QuestionSummaryViewModel> List(string name, string creator)
+        public IQueryable<QuestionSummaryViewModel> List(string name, string creator, QuestionTypes? type, bool? onlyMe)
         {
             var uid = _user.Identity.GetUserId<int>();
+            IQueryable<Question> dbModels = _db.Questions;
+            var userId = HttpContext.Current.User.Identity.GetUserId<int>();
 
-            var query = _db.Questions
-                .Project().To<QuestionSummaryViewModel>(new { currentUserId = HttpContext.Current.User.Identity.GetUserId<int>() });
+            if (onlyMe != null)
+            {
+                dbModels = dbModels.Where(x => x.CreateUserId == userId);
+            }
+
+            var query = dbModels
+                .Project().To<QuestionSummaryViewModel>(new { currentUserId = userId });
 
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -57,6 +64,10 @@ namespace SdojWeb.Manager
             if (!string.IsNullOrWhiteSpace(creator))
             {
                 query = query.Where(x => x.Creator == creator.Trim());
+            }
+            if (type != null)
+            {
+                query = query.Where(x => x.QuestionType == type.Value);
             }
 
             return query;

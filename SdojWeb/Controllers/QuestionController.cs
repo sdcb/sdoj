@@ -30,7 +30,7 @@ namespace SdojWeb.Controllers
 
         // GET: Questions
         [AllowAnonymous]
-        public ActionResult Index(string name, string creator, 
+        public ActionResult Index(string name, string creator, QuestionTypes? type,bool? me,
             int? page, string orderBy, bool? asc)
         {
             if (orderBy == null)
@@ -42,10 +42,12 @@ namespace SdojWeb.Controllers
             var route = new RouteValueDictionary
             {
                 {"name", name},
-                {"creator",creator}
+                {"creator",creator},
+                {"type",type},
+                {"me",me}
             };
 
-            var query = _manager.List(name, creator);
+            var query = _manager.List(name, creator, type, me);
             var models = query.ToSortedPagedList(page, orderBy, asc);
             ViewBag.Route = route;
             return View(models);
