@@ -34,4 +34,54 @@
     @Scripts.Render("~/bundles/marked")
     @Scripts.Render("~/bundles/bootstrap-markdown")
     @Styles.Render("~/bundles/bootstrap-markdown-css")
+
+    <script>
+        var createForm = $("#create-form");
+        var modeElements = [];
+
+        var Mode = {
+            DataDriven: 0, 
+            Process2Driven: 1
+        };
+
+        function initElements() {
+            modeElements[Mode.DataDriven] = [
+            createForm.find("[name='SampleInput']"),
+            createForm.find("[name='SampleOutput']")
+            ];
+            modeElements[Mode.Process2Driven] = [
+                createForm.find("[name='Language']"),
+                createForm.find("[name='Source']")
+            ];
+
+            for (var i = 0; i < modeElements.length; ++i) {
+                for (var j = 0; j < modeElements[i].length; ++j) {
+                    modeElements[i][j] = modeElements[i][j].closest(".form-group");
+                }
+            }
+        }
+
+        function hideAll() {
+            for (var i = 0; i < modeElements.length; ++i) {
+                for (var j = 0; j < modeElements[i].length; ++j) {
+                    modeElements[i][j].hide();
+                }
+            }
+        }
+
+        function switch_display_mode(mode) {
+            hideAll();
+            for (var i = 0; i < modeElements[mode].length; ++i) {
+                modeElements[mode][i].show();
+            }
+        }
+
+        createForm.find("select[name='QuestionType']").change(function () {
+            switch_display_mode($(this).val());
+        });
+
+        // Entry point: 
+        initElements();
+        switch_display_mode(Mode.DataDriven);
+    </script>
 }
