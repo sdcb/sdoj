@@ -36,6 +36,15 @@ namespace SdojWeb.Models
         [Display(Name = "总时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
         public int TimeLimit { get; set; }
 
+        [Display(Name = "解答数")]
+        public int SolutionCount { get; set; }
+
+        [Display(Name = "通过数")]
+        public int AcceptedCount { get; set; }
+
+        [Display(Name = "题目类型")]
+        public QuestionTypes QuestionType { get; set; }
+
         public List<QuestionDataSampleModel> Samples { get; set; }
 
         public int CreateUserId { get; set; }
@@ -45,7 +54,9 @@ namespace SdojWeb.Models
             configuration.CreateMap<Question, QuestionDetailModel>()
                 .ForMember(s => s.Samples, d => d.MapFrom(x => x.Datas.Where(data => data.IsSample)))
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)));
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)))
+                .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count()))
+                .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Count(v => v.State == SolutionState.Accepted)));
         }
     }
 
@@ -55,6 +66,7 @@ namespace SdojWeb.Models
         {
             TimeLimit = 1000;
             MemoryLimitMb = 64.0f;
+            RunTimes = 1;
         }
 
         [RenderMode(RenderMode.Neither)]
@@ -77,21 +89,26 @@ namespace SdojWeb.Models
 
         [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
+        
+        [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
+        public string SampleInput { get; set; }
+
+        [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        public string SampleOutput { get; set; }
+        
 
         [Display(Name = "题目类型")]
         public QuestionTypes QuestionType { get; set; }
-
-        // 仅在QuestionType = DataDrive时显示。
-        [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleInput { get; set; }
-        
-        [Display(Name = "示例输出"), MaxLength(4000), DataType(DataType.MultilineText)]
-        public string SampleOutput { get; set; }
 
         // 仅在QuestionType = Process2Drive时显示。
         [Display(Name = "语言")]
         public Languages Language { get; set; }
 
+        // 仅在QuestionType = Process2Drive时显示。
+        [Display(Name = "运行次数", Prompt = "请输入1~10以内的整数。"), Range(1, 10)]
+        public short RunTimes { get; set; }
+
+        // 仅在QuestionType = Process2Drive时显示。
         [Display(Name = "代码"), DataType(DataType.MultilineText)]
         public string Source { get; set; }
 

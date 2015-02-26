@@ -26,6 +26,19 @@ namespace SdojWeb.Manager
         {
             var question = Mapper.Map<Question>(model);
             _db.Entry(question).State = EntityState.Added;
+
+            if (question.QuestionType == QuestionTypes.Process2Drive)
+            {
+                question.Process2JudgeCode = new Process2JudgeCode
+                {
+                    Code = model.Source, 
+                    Language = model.Language, 
+                    MemoryLimitMb = model.MemoryLimitMb, 
+                    TimeLimitMs = model.TimeLimit,
+                    RunTimes = model.RunTimes, 
+                    UpdateTime = DateTime.Now, 
+                };
+            }
             await _db.SaveChangesAsync();
         }
 

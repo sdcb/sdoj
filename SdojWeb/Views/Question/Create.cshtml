@@ -46,12 +46,11 @@
 
         function initElements() {
             modeElements[Mode.DataDriven] = [
-            createForm.find("[name='SampleInput']"),
-            createForm.find("[name='SampleOutput']")
             ];
             modeElements[Mode.Process2Driven] = [
                 createForm.find("[name='Language']"),
-                createForm.find("[name='Source']")
+                createForm.find("[name='Source']"),
+                createForm.find("[name='RunTimes']")
             ];
 
             for (var i = 0; i < modeElements.length; ++i) {

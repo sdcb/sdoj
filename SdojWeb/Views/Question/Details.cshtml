@@ -6,10 +6,24 @@
 }
 <h2 class="text-center">@ViewBag.Title</h2>
 <div class="text-center">
-    <strong>@Html.DisplayNameFor(model => model.MemoryLimitMb):</strong>
-    @Html.DisplayFor(model => model.MemoryLimitMb)
-    <strong>@Html.DisplayNameFor(model => model.TimeLimit):</strong>
-    @Html.DisplayFor(model => model.TimeLimit)
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.MemoryLimitMb)</th>
+                <th>@Html.DisplayNameFor(model => model.TimeLimit)</th>
+                <th>@Html.DisplayNameFor(x => x.QuestionType)</th>
+                <th>通过/解答数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-left">@Html.DisplayFor(model => model.MemoryLimitMb)</td>
+                <td class="text-left">@Html.DisplayFor(model => model.TimeLimit)</td>
+                <td class="text-left">@Html.DisplayFor(model => model.QuestionType)</td>
+                <td class="text-left">@Model.AcceptedCount / @Model.SolutionCount</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <hr />
 <h4>@Html.DisplayNameFor(model => model.Description)</h4>
