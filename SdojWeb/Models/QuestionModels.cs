@@ -81,11 +81,19 @@ namespace SdojWeb.Models
         [Display(Name = "题目类型")]
         public QuestionTypes QuestionType { get; set; }
 
+        // 仅在QuestionType = DataDrive时显示。
         [Display(Name = "示例输入"), MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleInput { get; set; }
-
-        [Display(Name = "示例输出"), Required, MaxLength(4000), DataType(DataType.MultilineText)]
+        
+        [Display(Name = "示例输出"), MaxLength(4000), DataType(DataType.MultilineText)]
         public string SampleOutput { get; set; }
+
+        // 仅在QuestionType = Process2Drive时显示。
+        [Display(Name = "语言")]
+        public Languages Language { get; set; }
+
+        [Display(Name = "代码"), DataType(DataType.MultilineText)]
+        public string Source { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
         {

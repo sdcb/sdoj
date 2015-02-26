@@ -84,7 +84,11 @@ namespace SdojWeb.Infrastructure.Extensions
                 BindingFlags.DeclaredOnly | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static;
             foreach (FieldInfo field in checkedType.GetFields(bindingFlags))
             {
-                selectList.Add(new SelectListItem { Text = GetDisplayName(field), Value = field.Name, });
+                selectList.Add(new SelectListItem
+                {
+                    Text = GetDisplayName(field),
+                    Value = field.GetRawConstantValue().ToString(),
+                });
             }
 
             return selectList;
