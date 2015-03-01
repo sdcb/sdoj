@@ -178,7 +178,7 @@ namespace SdojWeb.Controllers
 
             ViewBag.QuestionId = id;
             ViewBag.IsUserOwnsQuestion = await _manager.IsUserOwnsQuestion(id);
-            ViewBag.QuestionName = questionDatas.First().QuestionName;
+			ViewBag.QuestionName = (await _db.Questions.FindAsync(id)).Name;
 
             return View(questionDatas);
         }

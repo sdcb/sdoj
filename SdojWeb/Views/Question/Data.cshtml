@@ -1,285 +1,281 @@
 ﻿@model IEnumerable<SdojWeb.Models.QuestionDataSummaryModel>
-
 @{
-    int questionId = ViewBag.QuestionId;
-    var owns = (bool)ViewBag.IsUserOwnsQuestion;
-    var questionName = (string) ViewBag.QuestionName;
-    ViewBag.Title = questionName + "-测试数据";
+	int questionId = ViewBag.QuestionId;
+	var owns = (bool)ViewBag.IsUserOwnsQuestion;
+	var questionName = (string)ViewBag.QuestionName;
+	ViewBag.Title = questionName + "-测试数据";
 }
-
-<h2>@ViewBag.Title</h2>
+<h2>
+	@ViewBag.Title
+</h2>
 @if (Model.All(x => !x.IsSample))
 {
-    <h4>警告：此题目没有示例数据</h4>
+	<label>(此题目没有示例数据)</label>
 }
+
 
 @if (owns)
 {
-    <div class="form-tools clearfix">
-        <div class="pull-right">
-            <button class="btn btn-xs btn-default" data-toggle="modal" data-target="#data-modal" data-bind="click: clear">
-                <i class="glyphicon glyphicon-plus"></i>
-                新增测试数据
-            </button>
-        </div>
-    </div>
+	<div class="form-tools clearfix">
+		<div class="pull-right">
+			<button class="btn btn-xs btn-default" data-toggle="modal" data-target="#data-modal" data-bind="click: clear">
+				<i class="glyphicon glyphicon-plus"></i>
+				新增测试数据
+			</button>
+		</div>
+	</div>
 }
-
 <div class="row">
-    <div class="col-xs-12">
-        <div class="table-responsive">
-            <table class="table table-bordered table-condensed table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(x => x.Id)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.InputLength)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.OutputLength)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.MemoryLimitMb)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.TimeLimit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UpdateTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.IsSample)
-                        </th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(x => item.Id)
-                            </td>
-                            <td>
-                                @if (owns)
-                                {
-                                    <a href="@Url.Action("DownloadInputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
-                                        @Html.DisplayFor(modelItem => item.InputLength)
-                                    </a>
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.InputLength)
-                                }                                
-                            </td>
-                            <td>
-                                @if (owns)
-                                {
-                                    <a href="@Url.Action("DownloadOutputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
-                                        @Html.DisplayFor(modelItem => item.OutputLength)
-                                    </a>
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.OutputLength)
-                                }
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MemoryLimitMb)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TimeLimit)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(x => item.UpdateTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.IsSample)
-                            </td>
-                            <td>
-                                @if (owns)
-                                {
-                                    if (item.InputLength + item.OutputLength > 128*1024)
-                                    {
-                                        <span title="数据量太大，请点击输入、输出的长度进行下载。">请下载</span>                                        
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-info btn-block btn-xs" 
-                                                data-toggle="modal" 
-                                                data-target="#data-modal"
-                                                data-bind="click: view.bind($data, @item.Id, @(item.IsSample?"true":"false"))">
-                                            <i class="glyphicon glyphicon-edit"></i>
-                                            编辑
-                                        </button>
-                                    }
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="col-xs-12">
+		<div class="table-responsive">
+			<table class="table table-bordered table-condensed table-hover table-striped">
+				<thead>
+					<tr>
+						<th>
+							@Html.DisplayNameFor(x => x.Id)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.InputLength)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.OutputLength)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.MemoryLimitMb)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.TimeLimit)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.UpdateTime)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.IsSample)
+						</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>
+								@Html.DisplayFor(x => item.Id)
+							</td>
+							<td>
+								@if (owns)
+								{
+									<a href="@Url.Action("DownloadInputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
+										@Html.DisplayFor(modelItem => item.InputLength)
+									</a>
+								}
+								else
+								{
+									@Html.DisplayFor(modelItem => item.InputLength)
+								}
+							</td>
+							<td>
+								@if (owns)
+								{
+									<a href="@Url.Action("DownloadOutputData", "Question", new { id = item.Id, questionId = questionId })" target="_blank">
+										@Html.DisplayFor(modelItem => item.OutputLength)
+									</a>
+								}
+								else
+								{
+									@Html.DisplayFor(modelItem => item.OutputLength)
+								}
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.MemoryLimitMb)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.TimeLimit)
+							</td>
+							<td>
+								@Html.DisplayFor(x => item.UpdateTime)
+							</td>
+							<td>
+								@Html.DisplayFor(model => item.IsSample)
+							</td>
+							<td>
+								@if (owns)
+								{
+									if (item.InputLength + item.OutputLength > 128 * 1024)
+									{
+										<span title="数据量太大，请点击输入、输出的长度进行下载。">请下载</span>
+}
+									else
+									{
+										<button class="btn btn-info btn-block btn-xs"
+												data-toggle="modal"
+												data-target="#data-modal"
+												data-bind="click: view.bind($data, @item.Id, @(item.IsSample?"true":"false"))">
+											<i class="glyphicon glyphicon-edit"></i>
+											编辑
+										</button>
+									}
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
-
 
 <div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="data-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form action="" method="POST" id="data-modal-form">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="id" data-bind="value: id"/>
-                <input type="hidden" name="delete" data-bind="value: deleteMe"/>
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="data-modal-label">测试数据</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="clearfix">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>输入数据</label>
-                                <textarea rows="5" class="form-control input-sm" name="input" data-bind="value: input"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>输出数据</label>
-                                <textarea rows="5" class="form-control input-sm" name="output" data-bind="value: output"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>时间限制(ms)</label>
-                                <input type="text" class="form-control input-sm" name="time" data-bind="value: time"/>
-                            </div>
-                            <div class="form-group">
-                                <label>内存限制(MB)</label>
-                                <input type="text" class="form-control input-sm" name="memory" data-bind="value: memory" />
-                            </div>
-                            <div class="form-group">
-                                <label>示例数据：</label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="isSample" value="true" data-bind="attr: {checked: isSample}" />是
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="isSample" value="false" data-bind="attr: {checked: !isSample()}" />否
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-danger" data-bind="click: trydelete">
-                        <i class="glyphicon glyphicon-remove"></i>
-                        删除
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bind="click: save">
-                        <i class="glyphicon glyphicon-save"></i>
-                        保存
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<form action="" method="POST" id="data-modal-form">
+				@Html.AntiForgeryToken()
+				<input type="hidden" name="id" data-bind="value: id" />
+				<input type="hidden" name="delete" data-bind="value: deleteMe" />
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="data-modal-label">测试数据</h4>
+				</div>
+				<div class="modal-body">
+					<div class="clearfix">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label>输入数据</label>
+								<textarea rows="5" class="form-control input-sm" name="input" data-bind="value: input"></textarea>
+							</div>
+							<div class="form-group">
+								<label>输出数据</label>
+								<textarea rows="5" class="form-control input-sm" name="output" data-bind="value: output"></textarea>
+							</div>
+							<div class="form-group">
+								<label>时间限制(ms)</label>
+								<input type="text" class="form-control input-sm" name="time" data-bind="value: time" />
+							</div>
+							<div class="form-group">
+								<label>内存限制(MB)</label>
+								<input type="text" class="form-control input-sm" name="memory" data-bind="value: memory" />
+							</div>
+							<div class="form-group">
+								<label>示例数据：</label>
+								<label class="radio-inline">
+									<input type="radio" name="isSample" value="true" data-bind="attr: {checked: isSample}" />是
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="isSample" value="false" data-bind="attr: {checked: !isSample()}" />否
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-danger" data-bind="click: trydelete">
+						<i class="glyphicon glyphicon-remove"></i>
+						删除
+					</button>
+					<button type="button" class="btn btn-primary" data-bind="click: save">
+						<i class="glyphicon glyphicon-save"></i>
+						保存
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
-
 
 @Html.ActionLink("返回题目", "Details", "Question", new { id = questionId }, null) |
 @Html.ActionLink("返回列表", "Index", "Question")
-
 @section scripts
 {
-    @Scripts.Render("~/bundles/ko")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jquerystyle")
-    <script>
-        function deleteMe(id) {
-            if (confirm('确定要删除此数据吗？')) {
-                $("#delete-form input[name='id']").val(id);
-                $("#delete-form").submit();
-            }
-        }
+	@Scripts.Render("~/bundles/ko")
+	@Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/jquerystyle")
+	<script>
+		function deleteMe(id) {
+			if (confirm('确定要删除此数据吗？')) {
+				$("#delete-form input[name='id']").val(id);
+				$("#delete-form").submit();
+			}
+		}
 
-        $.ajaxSetup({ cache: false });
+		$.ajaxSetup({ cache: false });
 
-        $("#data-modal-form").validate({
-            rules: {
-                output: {
-                    required: true
-                },
-                time: {
-                    required: true,
-                    digits: true,
-                    min: 1,
-                    max: 50000
-                },
-                memory: {
-                    required: true,
-                    digits: true,
-                    min: 1,
-                    max: 1000
-                }
-            }
-        });
+		$("#data-modal-form").validate({
+			rules: {
+				output: {
+					required: true
+				},
+				time: {
+					required: true,
+					digits: true,
+					min: 1,
+					max: 50000
+				},
+				memory: {
+					required: true,
+					digits: true,
+					min: 1,
+					max: 1000
+				}
+			}
+		});
 
-        function ViewModel() {
-            var self = this;
+		function ViewModel() {
+			var self = this;
 
-            self.isSample = ko.observable(false);
-            self.id = ko.observable();
+			self.isSample = ko.observable(false);
+			self.id = ko.observable();
 
-            self.deleteMe = ko.observable(false);
-            self.showDelete = ko.observable(true);
+			self.deleteMe = ko.observable(false);
+			self.showDelete = ko.observable(true);
 
-            self.input = ko.observable();
-            self.output = ko.observable();
-            self.time = ko.observable();
-            self.memory = ko.observable();
+			self.input = ko.observable();
+			self.output = ko.observable();
+			self.time = ko.observable();
+			self.memory = ko.observable();
 
-            self.view = function(id, isSample) {
-                self.clear();
+			self.view = function (id, isSample) {
+				self.clear();
 
-                $.post('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function(data) {
-                    self.id(id);
-                    self.isSample(isSample);
-                    self.showDelete(true);
+				$.post('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function (data) {
+					self.id(id);
+					self.isSample(isSample);
+					self.showDelete(true);
 
-                    self.input(data.Input);
-                    self.output(data.Output);
-                    self.time(data.Time);
-                    self.memory(data.Memory);
-                });
-            };
+					self.input(data.Input);
+					self.output(data.Output);
+					self.time(data.Time);
+					self.memory(data.Memory);
+				});
+			};
 
-            self.clear = function() {
-                self.id(null);
-                self.isSample(false);
-                self.deleteMe(false);
-                self.showDelete(false);
+			self.clear = function () {
+				self.id(null);
+				self.isSample(false);
+				self.deleteMe(false);
+				self.showDelete(false);
 
-                self.input(null);
-                self.output(null);
-                self.time(1000);
-                self.memory(64);
-            };
+				self.input(null);
+				self.output(null);
+				self.time(1000);
+				self.memory(64);
+			};
 
-            self.save = function () {
-                $("#data-modal-form").attr('action', "@Url.Action("DataSave", new { questionId = questionId })");
-                $("#data-modal-form").submit();
-            };
+			self.save = function () {
+				$("#data-modal-form").attr('action', "@Url.Action("DataSave", new { questionId = questionId })");
+				$("#data-modal-form").submit();
+			};
 
-            self.trydelete = function() {
-                if (confirm("确实要删除此测试数据吗？")) {
-                    self.deleteMe(true);
-                    $("#data-modal-form").attr('action', "@Url.Action("DataDelete", new { questionId = questionId })");
-                    $("#data-modal-form").submit();
-                };
-            };
-        }
+			self.trydelete = function () {
+				if (confirm("确实要删除此测试数据吗？")) {
+					self.deleteMe(true);
+					$("#data-modal-form").attr('action', "@Url.Action("DataDelete", new { questionId = questionId })");
+					$("#data-modal-form").submit();
+				};
+			};
+		}
 
-        var vm = new ViewModel();
-        ko.applyBindings(vm);
-    </script>
+		var vm = new ViewModel();
+		ko.applyBindings(vm);
+	</script>
 }

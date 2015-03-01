@@ -12,9 +12,6 @@ namespace SdojWeb.Models
         [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Display(Name = "题目")]
-        public string QuestionName { get; set; }
-
         public int QuestionId { get; set; }
 
         [Display(Name = "输入字符数"), DisplayFormat(NullDisplayText = "0")]

@@ -31,10 +31,10 @@ namespace SdojWeb.Models
         public string OutputExplain { get; set; }
 
         [Display(Name = "总内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
-        public float MemoryLimitMb { get; set; }
+        public float? MemoryLimitMb { get; set; }
 
         [Display(Name = "总时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
-        public int TimeLimit { get; set; }
+        public int? TimeLimit { get; set; }
 
         [Display(Name = "解答数")]
         public int SolutionCount { get; set; }
@@ -53,8 +53,8 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
                 .ForMember(s => s.Samples, d => d.MapFrom(x => x.Datas.Where(data => data.IsSample)))
-                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit)))
+				.ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Max(m => m.MemoryLimitMb) : x.Process2JudgeCode.MemoryLimitMb))
+				.ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs))
                 .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count()))
                 .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Count(v => v.State == SolutionState.Accepted)));
         }
@@ -135,10 +135,10 @@ namespace SdojWeb.Models
         public int Id { get; set; }
 
         [Display(Name = "内存限制(MB)"), Editable(false)]
-        public float MemoryLimitMb { get; set; }
+        public float? MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)"), Editable(false)]
-        public int TimeLimit { get; set; }
+        public int? TimeLimit { get; set; }
 
         [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", AdditionalFields = "Id", HttpMethod = "POST")]
         public string Name { get; set; }
@@ -155,7 +155,10 @@ namespace SdojWeb.Models
         [Display(Name = "输出说明"), MaxLength(1000), DataType("Markdown")]
         public string OutputExplain { get; set; }
 
-        [HiddenInput]
+		[Display(Name = "题目类型")]
+		public QuestionTypes QuestionType { get; set; }
+
+		[HiddenInput]
         public int CreateUserId { get; set; }
 
         public void CreateMappings(IConfiguration configuration)
@@ -164,8 +167,8 @@ namespace SdojWeb.Models
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
             configuration.CreateMap<Question, QuestionEditModel>()
                 .ForMember(source => source.CreateUserId, dest => dest.MapFrom(x => x.CreateUserId))
-                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(v => v.MemoryLimitMb)))
-                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(v => v.TimeLimit))); 
+				.ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Max(m => m.MemoryLimitMb) : x.Process2JudgeCode.MemoryLimitMb))
+				.ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs)); 
         }
     }
 
@@ -206,10 +209,10 @@ namespace SdojWeb.Models
         public int AcceptedCount { get; set; }
 
         [Display(Name = "内存限制(MB)")]
-        public float MemoryLimitMb { get; set; }
+        public float? MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)")]
-        public int TimeLimit { get; set; }
+        public int? TimeLimit { get; set; }
 
         [Display(Name = "通过")]
         public bool Complished { get; set; }
@@ -227,8 +230,8 @@ namespace SdojWeb.Models
                 .ForMember(s => s.DataCount, d => d.MapFrom(x => x.Datas.Count))
                 .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count))
                 .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Where(s => s.State == SolutionState.Accepted).Count()))
-                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.Datas.Max(m => m.MemoryLimitMb)))
-                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.Datas.Sum(m => m.TimeLimit)));
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Max(m => m.MemoryLimitMb) : x.Process2JudgeCode.MemoryLimitMb))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs));
         }
     }
 }
