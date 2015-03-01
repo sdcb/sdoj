@@ -158,10 +158,10 @@
 							<div class="form-group">
 								<label>示例数据：</label>
 								<label class="radio-inline">
-									<input type="radio" name="isSample" value="true" data-bind="attr: {checked: isSample}" />是
+									<input type="radio" name="isSample" value="true" data-bind="checked: isSample" />是
 								</label>
 								<label class="radio-inline">
-									<input type="radio" name="isSample" value="false" data-bind="attr: {checked: !isSample()}" />否
+									<input type="radio" name="isSample" value="false" data-bind="checked: isSample" />否
 								</label>
 							</div>
 						</div>
@@ -223,7 +223,7 @@
 		function ViewModel() {
 			var self = this;
 
-			self.isSample = ko.observable(false);
+			self.isSample = ko.observable('false');
 			self.id = ko.observable();
 
 			self.deleteMe = ko.observable(false);
@@ -239,7 +239,7 @@
 
 				$.post('@Url.Action("GetData", new {questionId = questionId})', { id: id }, function (data) {
 					self.id(id);
-					self.isSample(isSample);
+					self.isSample(isSample?'true':'false');
 					self.showDelete(true);
 
 					self.input(data.Input);
@@ -251,7 +251,7 @@
 
 			self.clear = function () {
 				self.id(null);
-				self.isSample(false);
+				self.isSample('false');
 				self.deleteMe(false);
 				self.showDelete(false);
 
