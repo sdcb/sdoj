@@ -17,6 +17,7 @@ using SdojWeb.SignalR;
 using SdojWeb.Models.DbModels;
 using System.Text;
 using System;
+using AutoMapper;
 
 namespace SdojWeb.Controllers
 {
@@ -286,6 +287,34 @@ namespace SdojWeb.Controllers
             }
 
             return RedirectToAction("Data", new { id = questionId });
+        }
+
+        // GET: /question/5/code
+        [Route("Question/{questionId}/Code")]
+        public async Task<ActionResult> Code(int questionId)
+        {
+            var model = await _db.Process2JudgeCode.Where(x => x.QuestionId == questionId)
+                .Project().To<QuestionProcess2CodeEditModel>()
+                .FirstOrDefaultAsync();
+            
+            return View(model);
+        }
+
+        // POST: /question/5/code
+        [Route("Question/{questionId}/Code")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Code")]
+        public async Task<ActionResult> SaveCode(int questionId, QuestionProcess2CodeEditModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var dbModel = Mapper.Map<Process2JudgeCode>(model);
+                dbModel.UpdateTime = DateTime.Now;
+                _db.Entry(dbModel).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
+            }
+            return View(model);
         }
 
         private ActionResult NonOwnerReturn(int questionId)

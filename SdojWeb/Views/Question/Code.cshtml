@@ -1,0 +1,33 @@
+﻿@model SdojWeb.Models.QuestionProcess2CodeEditModel
+@{
+    ViewBag.Title = Model.QuestionName + "-题目代码";
+}
+
+<h2>
+	@ViewBag.Title
+</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.EditorForModel()
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@Html.ActionLink("返回题目", "Details", "Question", new { id = Model.QuestionId }, null) |
+@Html.ActionLink("返回列表", "Index", "Question")
+@section scripts
+{
+	@Scripts.Render("~/bundles/ko")
+	@Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/jquerystyle")
+}

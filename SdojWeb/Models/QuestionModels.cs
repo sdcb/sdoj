@@ -234,4 +234,29 @@ namespace SdojWeb.Models
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs));
         }
     }
+
+    public class QuestionProcess2CodeEditModel : IMapFrom<Process2JudgeCode>
+    {
+        [HiddenInput]
+        public int QuestionId { get; set; }
+
+        [Editable(false)]
+        [Display(Name = "题目名")]
+        public string QuestionName { get; set; }
+
+        [Display(Name = "语言")]
+        public Languages Language { get; set; }
+
+        [Display(Name = "代码"), Required, DataType(DataType.MultilineText)]
+        public string Code { get; set; }
+
+        [Display(Name = "运行次数"), Range(1, 10)]
+        public short RunTimes { get; set; }
+
+        [Display(Name = "时间限制(ms)"), Range(1, 10000)]
+        public int TimeLimitMs { get; set; }
+
+        [Display(Name = "内存限制(MB)"), Range(0.01, 1024)]
+        public float MemoryLimitMb { get; set; }
+    }
 }

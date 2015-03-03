@@ -477,6 +477,7 @@
     <Content Include="Views\QuestionGroup\_DetailQuestion.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int16.cshtml" />
+    <Content Include="Views\Question\Code.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

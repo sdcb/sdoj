@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SdojWeb.Infrastructure.Mapping;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SdojWeb.Models.DbModels
 {
-    public class Process2JudgeCode
+    public class Process2JudgeCode : IMapFrom<QuestionProcess2CodeEditModel>
     {
         [ForeignKey("Question")]
         [Key]
