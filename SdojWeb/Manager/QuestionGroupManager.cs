@@ -86,18 +86,20 @@ namespace SdojWeb.Manager
 
         public async Task Save(QuestionGroupEditModel questionGroup)
         {
-            TransactionInRequest.EnsureTransaction();
-
-            var entity = Mapper.Map<QuestionGroup>(questionGroup);
-            await _db.QuestionGroupItems.Where(x => x.QuestionGroupId == entity.Id).DeleteAsync();
-            
-            _db.Entry(entity).State = EntityState.Modified;
-
-            foreach (var item in entity.Questions)
+            using (var tran = TransactionInRequest.BeginTransaction())
             {
-                _db.Entry(item).State = EntityState.Added;
+                var entity = Mapper.Map<QuestionGroup>(questionGroup);
+                await _db.QuestionGroupItems.Where(x => x.QuestionGroupId == entity.Id).DeleteAsync();
+
+                _db.Entry(entity).State = EntityState.Modified;
+
+                foreach (var item in entity.Questions)
+                {
+                    _db.Entry(item).State = EntityState.Added;
+                }
+                await _db.SaveChangesAsync();
+                tran.Complete();
             }
-            await _db.SaveChangesAsync();
         }
     }
 }

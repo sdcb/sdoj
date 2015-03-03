@@ -16,6 +16,7 @@ using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
 using SdojWeb.Models.DbModels;
 using System.Text;
+using System;
 
 namespace SdojWeb.Controllers
 {
@@ -30,7 +31,7 @@ namespace SdojWeb.Controllers
 
         // GET: Questions
         [AllowAnonymous]
-        public ActionResult Index(string name, string creator, QuestionTypes? type,bool? me,
+        public ActionResult Index(string name, string creator, QuestionTypes? type, bool? me,
             int? page, string orderBy, bool? asc)
         {
             if (orderBy == null)
@@ -84,18 +85,20 @@ namespace SdojWeb.Controllers
         [ValidateInput(false)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
-            TransactionInRequest.EnsureTransaction();
-
             if (ModelState.IsValid)
             {
-                if (!await _manager.CheckName(createModel.Name))
+                using (var tran = TransactionInRequest.BeginTransaction())
                 {
-                    ModelState.AddModelError("Name", "已有同名的题目。");
-                }
-                else
-                {
-                    await _manager.Create(createModel);
-                    return RedirectToAction("Index");
+                    if (!await _manager.CheckName(createModel.Name))
+                    {
+                        ModelState.AddModelError("Name", "已有同名的题目。");
+                    }
+                    else
+                    {
+                        await _manager.Create(createModel);
+                        return RedirectToAction("Index");
+                    }
+                    tran.Complete();
                 }
             }
 
@@ -137,7 +140,7 @@ namespace SdojWeb.Controllers
                 }
 
                 await _manager.Update(secretModel, model);
-                return RedirectToAction("Details", new {id = model.Id});
+                return RedirectToAction("Details", new { id = model.Id });
             }
             return View(model);
         }
@@ -178,11 +181,11 @@ namespace SdojWeb.Controllers
 
             ViewBag.QuestionId = id;
             ViewBag.IsUserOwnsQuestion = await _manager.IsUserOwnsQuestion(id);
-			ViewBag.QuestionName = (await _db.Questions.FindAsync(id)).Name;
+            ViewBag.QuestionName = (await _db.Questions.FindAsync(id)).Name;
 
             return View(questionDatas);
         }
-        
+
         // GET: /question/5/data/3
         [Route("Question/{questionId}/Data/Get")]
         public async Task<ActionResult> GetData(int questionId, int id)
@@ -250,17 +253,19 @@ namespace SdojWeb.Controllers
             // 此处Save表示可以添加或者更新，但不能删除（删除使用DataDelete）。
             // id == null: 添加；
             // id != null: 更新。
-            TransactionInRequest.EnsureTransaction();
-
-            var owns = await _manager.IsUserOwnsQuestion(questionId);
-            if (!owns)
+            using (var tran = TransactionInRequest.BeginTransaction())
             {
-                return NonOwnerReturn(questionId);
+                var owns = await _manager.IsUserOwnsQuestion(questionId);
+                if (!owns)
+                {
+                    return NonOwnerReturn(questionId);
+                }
+
+                await _manager.SaveData(questionId, id, input, output, time, memory, isSample);
+                tran.Complete();
             }
 
-            await _manager.SaveData(questionId, id, input, output, time, memory, isSample);
-
-            return RedirectToAction("Data", new {id = questionId});
+            return RedirectToAction("Data", new { id = questionId });
         }
 
         // POST: /question/5/data/save/3
@@ -268,15 +273,17 @@ namespace SdojWeb.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> DataDelete(int questionId, int id)
         {
-            TransactionInRequest.EnsureTransaction();
-
-            var owns = await _manager.IsUserOwnsQuestion(questionId);
-            if (!owns)
+            using (var tran = TransactionInRequest.BeginTransaction())
             {
-                return NonOwnerReturn(questionId);
-            }
+                var owns = await _manager.IsUserOwnsQuestion(questionId);
+                if (!owns)
+                {
+                    return NonOwnerReturn(questionId);
+                }
 
-            await _manager.DeleteData(id);
+                await _manager.DeleteData(id);
+                tran.Complete();
+            }
 
             return RedirectToAction("Data", new { id = questionId });
         }
@@ -289,38 +296,41 @@ namespace SdojWeb.Controllers
 
         public async Task<ActionResult> ReJudge(int id)
         {
-            TransactionInRequest.EnsureTransaction();
-
-            var creator = await _db.Questions
+            using (var tran = TransactionInRequest.BeginTransaction())
+            {
+                var creator = await _db.Questions
                 .Where(x => x.Id == id)
                 .Select(x => x.CreateUserId)
                 .FirstAsync();
 
-            if (!User.IsUserOrRole(creator, SystemRoles.QuestionAdmin))
-            {
-                return RedirectToAction("Details", new {id = id})
-                    .WithError("只有创建者才能重新评测该题目。");
+                if (!User.IsUserOrRole(creator, SystemRoles.QuestionAdmin))
+                {
+                    return RedirectToAction("Details", new { id = id })
+                        .WithError("只有创建者才能重新评测该题目。");
+                }
+
+                await _db.Solutions
+                    .Where(x => x.QuestionId == id)
+                    .Select(x => x.Id)
+                    .ForEachAsync(x => SolutionHub.PushChange(x, SolutionState.Queuing, 0, 0.0f));
+
+                await _db.Solutions
+                    .Where(x => x.QuestionId == id)
+                    .UpdateAsync(x => new Solution { State = SolutionState.Queuing });
+                await _db.SolutionLocks
+                    .Where(x => x.Solution.QuestionId == id)
+                    .DeleteAsync();
+
+                var solutions = _db.Solutions
+                    .Where(x => x.QuestionId == id)
+                    .Project().To<SolutionPushModel>();
+
+                await solutions.ForEachAsync(JudgeHub.Judge);
+
+                tran.Complete();
             }
 
-            await _db.Solutions
-                .Where(x => x.QuestionId == id)
-                .Select(x => x.Id)
-                .ForEachAsync(x => SolutionHub.PushChange(x, SolutionState.Queuing, 0, 0.0f));
-
-            await _db.Solutions
-                .Where(x => x.QuestionId == id)
-                .UpdateAsync(x => new Solution{State = SolutionState.Queuing});
-            await _db.SolutionLocks
-                .Where(x => x.Solution.QuestionId == id)
-                .DeleteAsync();
-
-            var solutions = _db.Solutions
-                .Where(x => x.QuestionId == id)
-                .Project().To<SolutionPushModel>();
-
-            await solutions.ForEachAsync(JudgeHub.Judge);
-
-            return RedirectToAction("Details", new {id = id})
+            return RedirectToAction("Details", new { id = id })
                 .WithSuccess("该题目重新评测已经开始。");
         }
 

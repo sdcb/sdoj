@@ -109,26 +109,29 @@ namespace SdojWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            TransactionInRequest.EnsureTransaction();
-
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.UserName, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                using (var tran = TransactionInRequest.BeginTransaction())
                 {
-                    await SignInAsync(user, isPersistent: false);
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await SignInAsync(user, isPersistent: false);
 
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "确认你的账户",
-                        "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
+                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        var callbackUrl = Url.Action("ConfirmUser", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        await UserManager.SendEmailAsync(user.Id, "确认你的账户",
+                            "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
 
-                    return this.RedirectToAction<HomeController>(x => x.Index())
-                        .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
+                        return this.RedirectToAction<HomeController>(x => x.Index())
+                            .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
+                    }
+
+                    AddErrors(result);
+
+                    tran.Complete();
                 }
-
-                AddErrors(result);
             }
 
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
