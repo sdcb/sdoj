@@ -109,7 +109,7 @@ namespace SdojWeb.Models
         public short RunTimes { get; set; }
 
         // 仅在QuestionType = Process2Drive时显示。
-        [Display(Name = "代码"), DataType(DataType.MultilineText)]
+        [Display(Name = "代码"), Required, DataType(DataType.MultilineText)]
         public string Source { get; set; }
 
         public void CreateMappings(IConfiguration configuration)

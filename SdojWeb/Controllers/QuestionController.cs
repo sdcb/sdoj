@@ -86,6 +86,8 @@ namespace SdojWeb.Controllers
         [ValidateInput(false)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
+            if (createModel.QuestionType == QuestionTypes.DataDrive) createModel.Source = " ";
+
             if (ModelState.IsValid)
             {
                 using (var tran = TransactionInRequest.BeginTransaction())
