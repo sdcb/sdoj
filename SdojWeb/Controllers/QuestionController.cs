@@ -314,7 +314,7 @@ namespace SdojWeb.Controllers
                 _db.Entry(dbModel).State = EntityState.Modified;
                 await _db.SaveChangesAsync();
             }
-            return View(model);
+            return View(model).WithSuccess("成功保存，服务器时间：" + DateTime.Now);
         }
 
         private ActionResult NonOwnerReturn(int questionId)

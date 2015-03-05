@@ -82,6 +82,13 @@
                 <i class="glyphicon glyphicon-edit"></i>
                 编辑
             </a>
+            if (Model.QuestionType == SdojWeb.Models.DbModels.QuestionTypes.Process2Drive)
+            {
+                <a class="btn btn-success" href="@Url.Action("Code", new {questionId=Model.Id})">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    评测代码
+                </a>
+            }
             <button type="button" class="btn btn-warning" onclick="rejudge(@Model.Id)">
                 <i class="glyphicon glyphicon-repeat"></i>
                 重新评测

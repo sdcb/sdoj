@@ -29,8 +29,15 @@
             <div class="col-md-offset-2 col-md-10">
                 <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
                     <i class="glyphicon glyphicon-edit"></i>
-                    编辑测试数据
+                    测试数据
                 </a>
+                @if (Model.QuestionType == SdojWeb.Models.DbModels.QuestionTypes.Process2Drive)
+                {
+                    <a class="btn btn-default" href="@Url.Action("Code", new {questionId=Model.Id})">
+                        <i class="glyphicon glyphicon-file"></i>
+                        评测代码
+                    </a>
+                }
             </div>
         </div>
     </div>
