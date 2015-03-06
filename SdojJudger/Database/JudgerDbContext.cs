@@ -11,11 +11,11 @@ using System;
 
 namespace SdojJudger.Database
 {
-    public class JudgerDbContext
+    public class JudgerDbContext : IDisposable
     {
-        private JudgerDbContext()
+        public JudgerDbContext()
         {
-            _db = GetDbConnection();
+            _db = new SqlCeConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
         }
 
         public async Task<IEnumerable<QuestionData>> FindDatasByIds(int[] ids)
@@ -64,7 +64,7 @@ namespace SdojJudger.Database
             }
         }
 
-        private void EnsureConnectionOpen()
+        protected void EnsureConnectionOpen()
         {
             if (_db.State == ConnectionState.Broken)
             {
@@ -76,44 +76,88 @@ namespace SdojJudger.Database
             }
         }
 
-        public async Task Initialize()
+        protected SqlCeConnection _db;
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
         {
-            EnsureDatabase();
-
-            const string tableName = "QuestionDatas";
-
-            bool tableExist = await TableExist(tableName);
-
-            if (tableExist)
+            if (!disposedValue)
             {
-                return;
-            }
+                if (disposing)
+                {
+                    // dispose managed state (managed objects).          
+                }
 
-            await CreateTableNoCheck();
+                // free unmanaged resources (unmanaged objects) and override a finalizer below.
+                _db.Dispose();
+                // set large fields to null.
+                _db = null;
+
+                disposedValue = true;
+            }
         }
 
-        private void EnsureDatabase()
+        // override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources. 
+        ~JudgerDbContext()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+    }
+
+    public class DbInitializer : JudgerDbContext
+    {
+        public async Task Initialize()
         {
             if (!File.Exists(_db.Database))
             {
                 var engine = new SqlCeEngine(_db.ConnectionString);
                 engine.CreateDatabase();
             }
+
+            EnsureConnectionOpen();
+            if (!await TableExist("QuestionDatas"))
+            {
+                await CreateTableQuestionData();
+            }
+            if (!await TableExist("QuestionP2Code"))
+            {
+                await CreateTableP2Code();
+            }
         }
 
-        private async Task CreateTableNoCheck()
+        private async Task<bool> TableExist(string tableName)
         {
-            EnsureConnectionOpen();
-            
-            var createSql = 
-                "CREATE TABLE [QuestionDatas] (    \r\n" +
-                "  [Id] int NOT NULL               \r\n" +
-                ", [Input] ntext NULL              \r\n" +
-                ", [Output] ntext NOT NULL         \r\n" +
-                ", [MemoryLimitMb] real NOT NULL   \r\n" +
-                ", [TimeLimit] int NOT NULL        \r\n" +
-                ", [UpdateTicks] bigint NOT NULL   \r\n" +
-                ");                                \r\n";
+            var sql = "SELECT 1                       " +
+                      "FROM INFORMATION_SCHEMA.TABLES " +
+                      "WHERE TABLE_NAME = @tableName  ";
+            var exist = await _db.ExecuteScalarAsync<bool>(sql, new { tableName = tableName });
+            return exist;
+        }
+
+        private async Task CreateTableQuestionData()
+        {
+            var createSql =
+                "CREATE TABLE [QuestionDatas] (  \r\n" +
+                "  [Id] int NOT NULL             \r\n" +
+                ", [Input] ntext NULL            \r\n" +
+                ", [Output] ntext NOT NULL       \r\n" +
+                ", [MemoryLimitMb] real NOT NULL \r\n" +
+                ", [TimeLimit] int NOT NULL      \r\n" +
+                ", [UpdateTicks] bigint NOT NULL \r\n" +
+                ");                              \r\n";
 
             var alterSql =
                 "ALTER TABLE [QuestionDatas] ADD CONSTRAINT [PK_dbo.QuestionDatas] PRIMARY KEY ([Id]);";
@@ -128,28 +172,30 @@ namespace SdojJudger.Database
             }
         }
 
-        private async Task<bool> TableExist(string tableName)
+        private async Task CreateTableP2Code()
         {
-            var sql = "SELECT 1                       " +
-                      "FROM INFORMATION_SCHEMA.TABLES " +
-                      "WHERE TABLE_NAME = @tableName  ";
-            var exist = await _db.ExecuteScalarAsync<bool>(sql, new { tableName = tableName });
-            return exist;
-        }
+            var createSql =
+                "CREATE TABLE [QuestionP2Code] ( \r\n" +
+                "  [QuestionId] int NOT NULL     \r\n" +
+                ", [Code] ntext NOT NULL         \r\n" +
+                ", [Language] int NOT NULL       \r\n" +
+                ", [RunTimes] smallint NOT NULL  \r\n" +
+                ", [TimeLimitMs] int NOT NULL    \r\n" +
+                ", [MemoryLimitMb] real NOT NULL \r\n" +
+                ", [UpdateTicks] bigint NOT NULL \r\n" +
+                ");                              \r\n";
 
-        private SqlCeConnection GetDbConnection()
-        {
-            var db = new SqlCeConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-            return db;
-        }
+            var alterSql =
+                "ALTER TABLE [QuestionP2Code] ADD CONSTRAINT [PK_dbo.QuestionP2Code] PRIMARY KEY ([QuestionId]);";
 
-        private SqlCeConnection _db;
+            using (IDbTransaction tran = _db.BeginTransaction())
+            {
+                await _db.ExecuteAsync(createSql);
 
-        public static JudgerDbContext Create()
-        {
-            var db = new JudgerDbContext();
-            var log = LogManager.GetLogger(typeof(JudgerDbContext));
-            return db;
+                await _db.ExecuteAsync(alterSql);
+
+                tran.Commit();
+            }
         }
     }
 }

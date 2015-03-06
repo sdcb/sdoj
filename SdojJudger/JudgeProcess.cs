@@ -18,7 +18,7 @@ namespace SdojJudger
         public JudgeProcess(SolutionPushModel spush)
         {
             _spush = spush;
-            _log = LogManager.GetLogger(typeof (JudgeProcess));
+            _log = LogManager.GetLogger(typeof(JudgeProcess));
             _client = App.Starter.GetClient();
         }
 
@@ -27,18 +27,18 @@ namespace SdojJudger
             // 获取并锁定解答的详情。
             if (!CompilerProvider.IsLanguageAvailable(_spush))
             {
-                _log.InfoExt(() => string.Format("Skipped compiling {0}, Because {1} compiler is not availabel.", 
+                _log.InfoExt(() => string.Format("Skipped compiling {0}, Because {1} compiler is not availabel.",
                         _spush.Id, _spush.Language));
                 return;
             }
             {
                 var info = new ComputerInfo();
-                if (info.AvailablePhysicalMemory < _spush.FullMemoryLimitMb*1024*1024)
+                if (info.AvailablePhysicalMemory < _spush.FullMemoryLimitMb * 1024 * 1024)
                 {
                     _log.InfoExt(
                         () =>
                             string.Format("Skipped judging {0}, because system memory running low(Req {1}/ Need {2}).",
-                                _spush.Id, info.AvailablePhysicalMemory, _spush.FullMemoryLimitMb*1024*1024)
+                                _spush.Id, info.AvailablePhysicalMemory, _spush.FullMemoryLimitMb * 1024 * 1024)
                         );
                     return;
                 }
@@ -65,10 +65,13 @@ namespace SdojJudger
                 await _client.UpdateInLock(_spush.Id, SolutionState.Judging);
             }
 
-            var db = JudgerDbContext.Create();
-            var dataIds = _sfull.QuestionDatas
-                .Select(x => x.Id).ToArray();
-            var datas = await db.FindDatasByIds(dataIds);
+            IEnumerable<QuestionData> datas;
+            using (var db = new JudgerDbContext())
+            {
+                var dataIds = _sfull.QuestionDatas
+                    .Select(x => x.Id).ToArray();
+                datas = await db.FindDatasByIds(dataIds);
+            }
 
             // Judging
             using (compiler)
@@ -145,30 +148,32 @@ namespace SdojJudger
                 .ToArray();
             var ids = _sfull.QuestionDatas.Select(x => x.Id);
 
-            var db = JudgerDbContext.Create();
-            var dbItems = await db.FindDataSummarysByIdsInOrder(ids);
-            var except = serverItems.Except(dbItems).ToArray();
-
-            // 将旧数据或者没有的数据更新。
-            if (except.Length > 0)
+            using (var db = new JudgerDbContext())
             {
-                _log.InfoFormat("Found dirty datas, try get {0} data from server.", except.Length);
-                var hubDatas = await _client.GetDatas(except.Select(x => x.Id).ToArray());
-                var dbDatas = hubDatas.Select(hubData => new QuestionData
-                {
-                    Id = hubData.Id,
-                    Input = hubData.Input,
-                    Output = hubData.Output,
-                    MemoryLimitMb = hubData.MemoryLimitMb,
-                    TimeLimit = hubData.TimeLimit,
-                    UpdateTicks = serverItems.First(x => x.Id == hubData.Id).UpdateTicks
-                }).ToArray();
-                await db.DeleteAndCreateData(dbDatas);
+                var dbItems = await db.FindDataSummarysByIdsInOrder(ids);
+                var except = serverItems.Except(dbItems).ToArray();
 
-                _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
-                if (hubDatas.Length != except.Length)
+                // 将旧数据或者没有的数据更新。
+                if (except.Length > 0)
                 {
-                    _log.Warn("Server returned less data than excepted.");
+                    _log.InfoFormat("Found dirty datas, try get {0} data from server.", except.Length);
+                    var hubDatas = await _client.GetDatas(except.Select(x => x.Id).ToArray());
+                    var dbDatas = hubDatas.Select(hubData => new QuestionData
+                    {
+                        Id = hubData.Id,
+                        Input = hubData.Input,
+                        Output = hubData.Output,
+                        MemoryLimitMb = hubData.MemoryLimitMb,
+                        TimeLimit = hubData.TimeLimit,
+                        UpdateTicks = serverItems.First(x => x.Id == hubData.Id).UpdateTicks
+                    }).ToArray();
+                    await db.DeleteAndCreateData(dbDatas);
+
+                    _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
+                    if (hubDatas.Length != except.Length)
+                    {
+                        _log.Warn("Server returned less data than excepted.");
+                    }
                 }
             }
         }

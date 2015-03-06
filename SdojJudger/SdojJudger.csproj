@@ -130,6 +130,7 @@
     <Compile Include="Database\JudgerDbContext.cs" />
     <Compile Include="Database\QuestionDataSummary.cs" />
     <Compile Include="Database\QuestionData.cs" />
+    <Compile Include="Database\QuestionP2Code.cs" />
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
     <Compile Include="JudgeScheduler.cs" />

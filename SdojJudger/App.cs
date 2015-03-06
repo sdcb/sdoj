@@ -63,8 +63,10 @@ namespace SdojJudger
 
         static void InitializeDatabase()
         {
-            var db = JudgerDbContext.Create();
-            db.Initialize().Wait();
+            using (var db = new DbInitializer())
+            {
+                db.Initialize().Wait();
+            }
         }
 
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)

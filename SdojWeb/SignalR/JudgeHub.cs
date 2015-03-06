@@ -133,8 +133,6 @@ namespace SdojWeb.SignalR
 
 		public async Task<List<SolutionPushModel>> GetAll()
 		{
-			var userId = Context.User.Identity.GetUserId<int>();
-
 			var models = await JudgeHubManager.GetPushModelFromDb(_db);
 
 			return models;
