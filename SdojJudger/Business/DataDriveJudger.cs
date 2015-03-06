@@ -1,49 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using log4net;
+﻿using log4net;
 using log4net.Util;
-using Microsoft.VisualBasic.Devices;
 using SdojJudger.Compiler.Infrastructure;
 using SdojJudger.Database;
 using SdojJudger.Models;
 using SdojJudger.Runner;
 using SdojJudger.SandboxDll;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace SdojJudger
+namespace SdojJudger.Business
 {
-    public class JudgeProcess
+    public class DataDriveJudger : JudgeDriver
     {
-        public JudgeProcess(SolutionPushModel spush)
+        public DataDriveJudger(SolutionPushModel spush)
         {
-            _spush = spush;
             _log = LogManager.GetLogger(typeof(JudgeProcess));
             _client = App.Starter.GetClient();
+            _spush = spush;
         }
 
-        public async Task ExecuteAsync()
+        public override async Task ExecuteAsync()
         {
             // 获取并锁定解答的详情。
-            if (!CompilerProvider.IsLanguageAvailable(_spush))
-            {
-                _log.InfoExt(() => string.Format("Skipped compiling {0}, Because {1} compiler is not availabel.",
-                        _spush.Id, _spush.Language));
-                return;
-            }
-            {
-                var info = new ComputerInfo();
-                if (info.AvailablePhysicalMemory < _spush.FullMemoryLimitMb * 1024 * 1024)
-                {
-                    _log.InfoExt(
-                        () =>
-                            string.Format("Skipped judging {0}, because system memory running low(Req {1}/ Need {2}).",
-                                _spush.Id, info.AvailablePhysicalMemory, _spush.FullMemoryLimitMb * 1024 * 1024)
-                        );
-                    return;
-                }
-            }
-
             _sfull = await _client.Lock(_spush.Id);
             if (_sfull == null)
             {
@@ -96,7 +76,6 @@ namespace SdojJudger
                 };
 
                 _log.DebugExt("NativeDll Juding...");
-                //var result = NativeDll.Judge(info);
                 var result = Sandbox.Judge(info);
                 _log.DebugExt("NativeDll Judged...");
 
@@ -178,12 +157,9 @@ namespace SdojJudger
             }
         }
 
-        private readonly SolutionPushModel _spush;
-
-        private SolutionFullModel _sfull;
-
-        private readonly ILog _log;
-
         private readonly HubClient _client;
+        private readonly ILog _log;
+        private readonly SolutionPushModel _spush;
+        private SolutionFullModel _sfull;
     }
 }

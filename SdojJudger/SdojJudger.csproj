@@ -116,6 +116,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Business\DataDriveJudger.cs" />
+    <Compile Include="Business\JudgeDriver.cs" />
     <Compile Include="Compiler\Infrastructure\CompileResult.cs" />
     <Compile Include="Compiler\Infrastructure\CompilerProvider.cs" />
     <Compile Include="Compiler\CppCompiler.cs" />
@@ -130,9 +132,10 @@
     <Compile Include="Database\QuestionData.cs" />
     <Compile Include="Database\QuestionP2Code.cs" />
     <Compile Include="HubClient.cs" />
-    <Compile Include="JudgeProcess.cs" />
+    <Compile Include="Business\JudgeProcess.cs" />
     <Compile Include="JudgeScheduler.cs" />
     <Compile Include="Models\QuestionProcess2FullModel.cs" />
+    <Compile Include="Models\QuestionTypes.cs" />
     <Compile Include="Models\SolutionFullModel.cs" />
     <Compile Include="Models\SolutionProcess2CodeModel.cs" />
     <Compile Include="Models\SolutionPushModel.cs" />

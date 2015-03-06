@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using log4net;
 using log4net.Util;
 using SdojJudger.Models;
+using SdojJudger.Business;
 
 namespace SdojJudger
 {
