@@ -42,6 +42,9 @@ namespace SdojWeb.Models
         [Display(Name = "通过数")]
         public int AcceptedCount { get; set; }
 
+        [Display(Name = "运行次数")]
+        public int? RunTimes { get; set; }
+
         [Display(Name = "题目类型")]
         public QuestionTypes QuestionType { get; set; }
 
@@ -53,10 +56,11 @@ namespace SdojWeb.Models
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
                 .ForMember(s => s.Samples, d => d.MapFrom(x => x.Datas.Where(data => data.IsSample)))
-				.ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Max(m => m.MemoryLimitMb) : x.Process2JudgeCode.MemoryLimitMb))
-				.ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs))
+                .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Max(m => m.MemoryLimitMb) : x.Process2JudgeCode.MemoryLimitMb))
+                .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.QuestionType == QuestionTypes.DataDrive ? x.Datas.Sum(m => m.TimeLimit) : x.Process2JudgeCode.TimeLimitMs))
                 .ForMember(s => s.SolutionCount, d => d.MapFrom(x => x.Solutions.Count()))
-                .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Count(v => v.State == SolutionState.Accepted)));
+                .ForMember(s => s.AcceptedCount, d => d.MapFrom(x => x.Solutions.Count(v => v.State == SolutionState.Accepted)))
+                .ForMember(s => s.RunTimes, d => d.MapFrom(x => x.Process2JudgeCode.RunTimes));
         }
     }
 
