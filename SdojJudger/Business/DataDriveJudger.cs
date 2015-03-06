@@ -119,11 +119,7 @@ namespace SdojJudger.Business
             // 与本地数据库对比时间戳。
             var serverItems = _sfull.QuestionDatas
                 .OrderBy(x => x.Id)
-                .Select(x => new QuestionDataSummary
-                {
-                    Id = x.Id,
-                    UpdateTicks = x.UpdateTime.Ticks
-                })
+                .Select(x => (DbHashModel)x)
                 .ToArray();
             var ids = _sfull.QuestionDatas.Select(x => x.Id);
 
@@ -148,7 +144,7 @@ namespace SdojJudger.Business
                     }).ToArray();
                     await db.DeleteAndCreateData(dbDatas);
 
-                    _log.InfoFormat("Updated {0} datas from server.", hubDatas.Length);
+                    _log.Info($"Updated {hubDatas.Length} datas from server.");
                     if (hubDatas.Length != except.Length)
                     {
                         _log.Warn("Server returned less data than excepted.");

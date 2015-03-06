@@ -20,7 +20,7 @@ namespace SdojJudger.Models
         
         public float MemoryLimitMb { get; set; }
         
-        public DateTime UpdateTime { get; set; }
+        public long UpdateTicks { get; set; }
 
         public static explicit operator QuestionP2Code(QuestionProcess2FullModel b)
         {
@@ -31,8 +31,8 @@ namespace SdojJudger.Models
                 MemoryLimitMb = b.MemoryLimitMb, 
                 QuestionId = b.QuestionId, 
                 RunTimes = b.RunTimes, 
-                TimeLimitMs = b.TimeLimitMs, 
-                UpdateTime = b.UpdateTime, 
+                TimeLimitMs = b.TimeLimitMs,
+                UpdateTicks = b.UpdateTime.Ticks, 
             };
         }
 
@@ -46,7 +46,7 @@ namespace SdojJudger.Models
                 QuestionId = b.QuestionId,
                 RunTimes = b.RunTimes,
                 TimeLimitMs = b.TimeLimitMs, 
-                UpdateTime = b.UpdateTime, 
+                UpdateTime = new DateTime(b.UpdateTicks), 
             };
         }
     }

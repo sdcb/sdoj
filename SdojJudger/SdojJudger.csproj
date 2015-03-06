@@ -129,7 +129,7 @@
     <Compile Include="Database\Dapper\SqlMapper.cs" />
     <Compile Include="Database\Dapper\SqlMapperAsync.cs" />
     <Compile Include="Database\JudgerDbContext.cs" />
-    <Compile Include="Database\QuestionDataSummary.cs" />
+    <Compile Include="Database\DbHashModel.cs" />
     <Compile Include="Database\QuestionData.cs" />
     <Compile Include="Database\QuestionP2Code.cs" />
     <Compile Include="HubClient.cs" />
@@ -138,7 +138,7 @@
     <Compile Include="Models\QuestionProcess2FullModel.cs" />
     <Compile Include="Models\QuestionTypes.cs" />
     <Compile Include="Models\SolutionFullModel.cs" />
-    <Compile Include="Models\SolutionProcess2CodeModel.cs" />
+    <Compile Include="Models\Process2LockModel.cs" />
     <Compile Include="Models\SolutionPushModel.cs" />
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\QuestionDataFullModel.cs" />

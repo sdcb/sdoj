@@ -41,6 +41,10 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings["Python3Path"]; }
         }
 
+        public static string HubGetProcess2Code = "GetProcess2Code";
+
+        public static string HubLockProcess2 = "LockProcess2";
+
         public const string HubName = "JudgeHub";
 
         public const string HubJudge = "Judge";

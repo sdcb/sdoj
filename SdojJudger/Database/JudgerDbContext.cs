@@ -8,6 +8,7 @@ using Dapper;
 using log4net;
 using System.IO;
 using System;
+using SdojJudger.Models;
 
 namespace SdojJudger.Database
 {
@@ -25,13 +26,28 @@ namespace SdojJudger.Database
             return datas;
         }
 
-        public async Task<IEnumerable<QuestionDataSummary>> FindDataSummarysByIdsInOrder(IEnumerable<int> ids)
+        public async Task<IEnumerable<DbHashModel>> FindDataSummarysByIdsInOrder(IEnumerable<int> ids)
         {
             const string sql = "SELECT Id, UpdateTicks " +
                                "FROM QuestionDatas WHERE Id IN @Ids " +
                                "ORDER BY Id";
-            var datas = await _db.QueryAsync<QuestionDataSummary>(sql, new { Ids = ids });
+            var datas = await _db.QueryAsync<DbHashModel>(sql, new { Ids = ids });
             return datas;
+        }
+
+        public async Task<DbHashModel> FindProcess2HashById(int questionId)
+        {
+            const string sql = "SELECT Id, UpdateTicks " + 
+                               "FROM QuestionP2Code WHERE Id = @id ";
+            var data = await _db.ExecuteScalarAsync<DbHashModel>(sql, new { Id = questionId });
+            return data;
+        }
+
+        public async Task<QuestionP2Code> FindProcess2CodeById(int questionId)
+        {
+            const string sql = "SELECT * FROM QuestionP2Code WHERE Id = @id";
+            var data = await _db.ExecuteScalarAsync<QuestionP2Code>(sql, new { id = questionId });
+            return data;
         }
 
         public async Task DeleteAndCreateData(IEnumerable<QuestionData> datas)

@@ -2,7 +2,7 @@
 
 namespace SdojJudger.Models
 {
-    public class SolutionProcess2CodeModel
+    public class Process2LockModel
     {
         [JsonProperty("a")]
         public string Source { get; set; }

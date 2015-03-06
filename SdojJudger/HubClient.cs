@@ -35,6 +35,25 @@ namespace SdojJudger
             }
         }
 
+        public async Task<Process2LockModel> LockProcess2(int solutionId)
+        {
+            try
+            {
+                var result = await _server.Invoke<Process2LockModel>(
+                    AppSettings.HubLockProcess2, solutionId);
+                _log.DebugExt(() => JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (JsonReaderException)
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> Update(int solutionId, SolutionState statusId, 
             int runTimeMs, float usingMemoryMb, string compilerOutput = "")
         {
@@ -57,6 +76,14 @@ namespace SdojJudger
         {
             var result = await _server.Invoke<QuestionDataFullModel[]>(AppSettings.HubGetDatas, 
                 dataId);
+            _log.DebugExt(() => JsonConvert.SerializeObject(result));
+            return result;
+        }
+
+        public async Task<QuestionDataFullModel> GetProcess2Code(int questionId)
+        {
+            var result = await _server.Invoke<QuestionDataFullModel>(AppSettings.HubGetProcess2Code,
+                questionId);
             _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
         }
