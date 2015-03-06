@@ -31,10 +31,10 @@ namespace SdojWeb.Models
         public string OutputExplain { get; set; }
 
         [Display(Name = "总内存限制"), DisplayFormat(DataFormatString = "{0} MB")]
-        public float? MemoryLimitMb { get; set; }
+        public float MemoryLimitMb { get; set; }
 
         [Display(Name = "总时间限制"), DisplayFormat(DataFormatString = "{0} ms")]
-        public int? TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
 
         [Display(Name = "解答数")]
         public int SolutionCount { get; set; }
@@ -139,10 +139,10 @@ namespace SdojWeb.Models
         public int Id { get; set; }
 
         [Display(Name = "内存限制(MB)"), Editable(false)]
-        public float? MemoryLimitMb { get; set; }
+        public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)"), Editable(false)]
-        public int? TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
 
         [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", AdditionalFields = "Id", HttpMethod = "POST")]
         public string Name { get; set; }
@@ -185,6 +185,8 @@ namespace SdojWeb.Models
         public int? SampleDataId { get; set; }
 
         public QuestionData SampleData { get; set; }
+
+        public Process2JudgeCode Process2JudgeCode { get; set; }
     }
 
     public class QuestionSummaryViewModel : IHaveCustomMapping
@@ -213,10 +215,10 @@ namespace SdojWeb.Models
         public int AcceptedCount { get; set; }
 
         [Display(Name = "内存限制(MB)")]
-        public float? MemoryLimitMb { get; set; }
+        public float MemoryLimitMb { get; set; }
 
         [Display(Name = "时间限制(ms)")]
-        public int? TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
 
         [Display(Name = "通过")]
         public bool Complished { get; set; }

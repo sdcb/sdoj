@@ -240,13 +240,13 @@ namespace SdojWeb.SignalR
 
 		private static async Task<List<SolutionPushModel>> GetPushModelFromDb(ApplicationDbContext db)
 		{
-			return await db.Solutions
+			var data = await db.Solutions
 				.Where(x => x.State < SolutionState.Completed &&
-							x.Question.QuestionType == QuestionTypes.DataDrive &&
 							(x.Lock == null || x.Lock.LockEndTime < DateTime.Now))
 				.Project().To<SolutionPushModel>()
 				.Take(DispatchLimit)
 				.ToListAsync();
+            return data;
 		}
 
 		public static int DbScanTaskRunning = 0;

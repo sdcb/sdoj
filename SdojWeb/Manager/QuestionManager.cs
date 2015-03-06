@@ -82,7 +82,27 @@ namespace SdojWeb.Manager
 
             question.UpdateTime = DateTime.Now;
 
+            if (question.QuestionType == QuestionTypes.Process2Drive && question.Process2JudgeCode == null)
+            {
+                question.Process2JudgeCode = new Process2JudgeCode
+                {
+                    Code = "请尽快填写评测代码",
+                    Language = Languages.CSharp,
+                    TimeLimitMs = model.TimeLimit,
+                    MemoryLimitMb = model.MemoryLimitMb,
+                    QuestionId = model.Id,
+                    RunTimes = 0,
+                    UpdateTime = DateTime.Now
+                };
+                _db.Entry(question.Process2JudgeCode).State = EntityState.Added;
+            }
+
             _db.Entry(question).State = EntityState.Modified;
+            if (question.QuestionType == QuestionTypes.DataDrive && question.Process2JudgeCode != null)
+            {
+                _db.Entry(question.Process2JudgeCode).State = EntityState.Deleted;
+            }
+            
             await _db.SaveChangesAsync();
         }
 

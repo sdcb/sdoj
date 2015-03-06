@@ -107,7 +107,7 @@ namespace SdojWeb.Controllers
         {
             var question = await _db
                 .Questions
-                .Project().To<QuestionEditModel>()
+                .Project().To<QuestionEditModel>() 
                 .FirstAsync(x => x.Id == id);
 
             if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))
