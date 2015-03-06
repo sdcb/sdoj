@@ -1,5 +1,5 @@
-﻿using SdojJudger.Models;
-using System;
+﻿using log4net;
+using SdojJudger.Models;
 using System.Threading.Tasks;
 
 namespace SdojJudger.Business
@@ -16,9 +16,29 @@ namespace SdojJudger.Business
             }
             else if (spush.QuestionType == QuestionTypes.Process2Drive)
             {
-                throw new NotImplementedException();
+                return new Process2DriveJudger(spush);
             }
-            throw new NotImplementedException();
+            else
+            {
+                return new NothingJudgeDriver(spush);
+            }
         }
+    }
+
+    public class NothingJudgeDriver : JudgeDriver
+    {
+        public NothingJudgeDriver(SolutionPushModel spush)
+        {
+            _spush = spush;
+        }
+
+        public override Task ExecuteAsync()
+        {
+            log.Error($"No judger for {_spush.QuestionType}, {_spush.Id} failed.");
+            return Task.FromResult(0);
+        }
+
+        private ILog log = LogManager.GetLogger(typeof(NothingJudgeDriver));
+        private readonly SolutionPushModel _spush;
     }
 }

@@ -118,6 +118,7 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="Business\DataDriveJudger.cs" />
     <Compile Include="Business\JudgeDriver.cs" />
+    <Compile Include="Business\Process2DriveJudger.cs" />
     <Compile Include="Compiler\Infrastructure\CompileResult.cs" />
     <Compile Include="Compiler\Infrastructure\CompilerProvider.cs" />
     <Compile Include="Compiler\CppCompiler.cs" />
