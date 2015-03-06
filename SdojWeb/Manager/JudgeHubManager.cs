@@ -15,10 +15,9 @@ namespace SdojWeb.Manager
 {
     public class JudgeHubManager
     {
-        public JudgeHubManager(ApplicationDbContext db, int userId)
+        public JudgeHubManager(ApplicationDbContext db)
         {
             _db = db;
-            _userId = userId;
         }
 
         public static async Task<List<SolutionPushModel>> GetPushModelFromDb(ApplicationDbContext db)
@@ -117,7 +116,5 @@ namespace SdojWeb.Manager
         public const double LockTimeFactor = 4.0;
 
         private readonly ApplicationDbContext _db;
-
-        private readonly int _userId;
     }
 }

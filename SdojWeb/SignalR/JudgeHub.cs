@@ -25,7 +25,7 @@ namespace SdojWeb.SignalR
 		public JudgeHub()
 		{
 			_db = ApplicationDbContext.Create();
-            _manager = new JudgeHubManager(_db, Context.User.Identity.GetUserId<int>());
+            _manager = new JudgeHubManager(_db);
 		}
 
 		// Hub API
