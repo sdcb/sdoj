@@ -301,6 +301,7 @@ namespace SdojWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Code")]
+        [ValidateInput(false)]
         public async Task<ActionResult> SaveCode(int questionId, QuestionProcess2CodeEditModel model)
         {
             if (ModelState.IsValid)
