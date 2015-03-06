@@ -228,6 +228,7 @@
     <Compile Include="Infrastructure\ModelMetadata\Attributes\RenderModelAttribute.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\RenderModelFilter.cs" />
     <Compile Include="Manager\QuestionGroupManager.cs" />
+    <Compile Include="Manager\JudgeHubManager.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.Designer.cs">

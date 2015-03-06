@@ -9,6 +9,6 @@ namespace SdojJudger.Models
         public string Source { get; set; }
 
         [JsonProperty("b")]
-        public List<QuestionDataHashModel> QuestionDatas { get; set; }
+        public List<DataHashModel> QuestionDatas { get; set; }
     }
 }

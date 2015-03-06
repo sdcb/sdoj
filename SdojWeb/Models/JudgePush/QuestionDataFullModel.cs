@@ -23,7 +23,7 @@ namespace SdojWeb.Models
         public int TimeLimit { get; set; }
     }
 
-    public class QuestionProcess2CodeFullModel : IMapFrom<Process2JudgeCode>
+    public class QuestionProcess2FullModel : IMapFrom<Process2JudgeCode>
     {
         [JsonProperty("a")]
         public int QuestionId { get; set; }

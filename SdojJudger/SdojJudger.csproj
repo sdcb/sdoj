@@ -133,11 +133,13 @@
     <Compile Include="HubClient.cs" />
     <Compile Include="JudgeProcess.cs" />
     <Compile Include="JudgeScheduler.cs" />
+    <Compile Include="Models\QuestionProcess2FullModel.cs" />
     <Compile Include="Models\SolutionFullModel.cs" />
+    <Compile Include="Models\SolutionProcess2CodeModel.cs" />
     <Compile Include="Models\SolutionPushModel.cs" />
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\QuestionDataFullModel.cs" />
-    <Compile Include="Models\QuestionDataHashModel.cs" />
+    <Compile Include="Models\DataHashModel.cs" />
     <Compile Include="Models\SolutionState.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Runner\JudgeInfo.cs" />
