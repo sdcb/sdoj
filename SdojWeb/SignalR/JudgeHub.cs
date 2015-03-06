@@ -97,50 +97,37 @@ namespace SdojWeb.SignalR
 			return true;
 		}
 
-		public async Task<SolutionFullModel> Lock(int solutionId)
+		public async Task<SolutionDataModel> Lock(int solutionId)
 		{
-			var userId = Context.User.Identity.GetUserId<int>();
-
-			var detail = await _db.Solutions
-				.Where(x =>
-					//x.Question.CreateUserId == userId &&
-					solutionId == x.Id &&
-					x.State < SolutionState.Completed &&
-					(x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
-				.Select(x => new
-				{
-					Lock = x.Lock,
-					Time = x.Question.Datas.Sum(d => d.TimeLimit),
-					Solution = x
-				}).FirstOrDefaultAsync();
-
-			if (detail == null) return null; // 找不到符合条件的解答，返回失败。
-
-			// 锁定的时间，按题目的时间和，乘以一个倍数，再加上额外的传输时间为准。
-			var lockMilliseconds = detail.Time * LockTimeFactor + LockAdditionalSeconds * 1000;
-
-			// 添加或者更新锁。
-			var slock = detail.Lock ?? new SolutionLock { SolutionId = detail.Solution.Id };
-			slock.LockClientId = Guid.Parse(Context.ConnectionId);
-			slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
-
-			detail.Solution.State = SolutionState.Compiling;
-			_db.Entry(detail.Solution).State = EntityState.Modified;
-
-			_db.Entry(slock).State = detail.Lock == null
-				? EntityState.Added
-				: EntityState.Modified;
-
-			await _db.SaveChangesAsync();
+			if (!await LockInternal(solutionId))
+            {
+                return null;
+            }
 
 			var result = await _db.Solutions
 				.Where(x => x.Id == solutionId)
-				.Project().To<SolutionFullModel>()
+				.Project().To<SolutionDataModel>()
 				.FirstOrDefaultAsync();
 
 			SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
 			return result;
 		}
+
+        public async Task<SolutionProcess2CodeModel> LockProcess2(int solutionId)
+        {
+            if (!await LockInternal(solutionId))
+            {
+                return null;
+            }
+
+            var result = await _db.Solutions
+                .Where(x => x.Id == solutionId)
+                .Project().To<SolutionProcess2CodeModel>()
+                .FirstOrDefaultAsync();
+
+            SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
+            return result;
+        }
 
 		public async Task<List<SolutionPushModel>> GetAll()
 		{
@@ -153,17 +140,24 @@ namespace SdojWeb.SignalR
 
 		public async Task<List<QuestionDataFullModel>> GetDatas(int[] dataId)
 		{
-			var userId = Context.User.Identity.GetUserId<int>();
-
 			var datas = await _db.QuestionDatas
 				.Where(x =>
-					//x.Question.CreateUserId == userId &&
 					dataId.Contains(x.Id))
 				.Project().To<QuestionDataFullModel>()
 				.ToListAsync();
 
 			return datas;
 		}
+
+        public async Task<QuestionProcess2CodeFullModel> GetProcess2Code(int id)
+        {
+            var code = await _db.Process2JudgeCode
+                .Where(x => x.QuestionId == id)
+                .Project().To<QuestionProcess2CodeFullModel>()
+                .FirstOrDefaultAsync();
+
+            return code;
+        }
 
 		internal static void Judge(SolutionPushModel model)
 		{
@@ -248,6 +242,42 @@ namespace SdojWeb.SignalR
 				.ToListAsync();
             return data;
 		}
+
+        private async Task<bool> LockInternal(int solutionId)
+        {
+            var detail = await _db.Solutions
+                .Where(x =>
+                    //x.Question.CreateUserId == userId &&
+                    solutionId == x.Id &&
+                    x.State < SolutionState.Completed &&
+                    (x.Lock == null || x.Lock.LockEndTime < DateTime.Now)) // 没有锁或者锁已过期，允许操作。
+                .Select(x => new
+                {
+                    Lock = x.Lock,
+                    Time = x.Question.Datas.Sum(d => d.TimeLimit),
+                    Solution = x
+                }).FirstOrDefaultAsync();
+
+            if (detail == null) return false; // 找不到符合条件的解答，返回失败。
+
+            // 锁定的时间，按题目的时间和，乘以一个倍数，再加上额外的传输时间为准。
+            var lockMilliseconds = detail.Time * LockTimeFactor + LockAdditionalSeconds * 1000;
+
+            // 添加或者更新锁。
+            var slock = detail.Lock ?? new SolutionLock { SolutionId = detail.Solution.Id };
+            slock.LockClientId = Guid.Parse(Context.ConnectionId);
+            slock.LockEndTime = DateTime.Now.AddMilliseconds(lockMilliseconds);
+
+            detail.Solution.State = SolutionState.Compiling;
+            _db.Entry(detail.Solution).State = EntityState.Modified;
+
+            _db.Entry(slock).State = detail.Lock == null
+                ? EntityState.Added
+                : EntityState.Modified;
+
+            await _db.SaveChangesAsync();
+            return true;
+        }
 
 		public static int DbScanTaskRunning = 0;
 

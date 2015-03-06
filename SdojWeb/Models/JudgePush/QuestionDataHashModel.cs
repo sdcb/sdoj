@@ -5,7 +5,7 @@ using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models
 {
-    public class QuestionDataHashModel : IMapFrom<QuestionData>
+    public class DataHashModel : IMapFrom<QuestionData>, IMapFrom<Process2JudgeCode>
     {
         [JsonProperty("a")]
         public int Id { get; set; }
