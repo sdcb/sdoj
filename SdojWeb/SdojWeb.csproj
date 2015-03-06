@@ -249,6 +249,10 @@
     <Compile Include="Migrations\201502011348440_Question2ndProcessDriveCode.Designer.cs">
       <DependentUpon>201502011348440_Question2ndProcessDriveCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503060148486_CascadeOnDeleteProcess2JudgeCode.cs" />
+    <Compile Include="Migrations\201503060148486_CascadeOnDeleteProcess2JudgeCode.Designer.cs">
+      <DependentUpon>201503060148486_CascadeOnDeleteProcess2JudgeCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
@@ -503,6 +507,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502011348440_Question2ndProcessDriveCode.resx">
       <DependentUpon>201502011348440_Question2ndProcessDriveCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503060148486_CascadeOnDeleteProcess2JudgeCode.resx">
+      <DependentUpon>201503060148486_CascadeOnDeleteProcess2JudgeCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

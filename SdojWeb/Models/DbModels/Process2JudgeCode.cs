@@ -7,7 +7,6 @@ namespace SdojWeb.Models.DbModels
 {
     public class Process2JudgeCode : IMapFrom<QuestionProcess2CodeEditModel>
     {
-        [ForeignKey("Question")]
         [Key]
         public int QuestionId { get; set; }
 

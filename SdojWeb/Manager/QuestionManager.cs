@@ -11,6 +11,7 @@ using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
 using AutoMapper.QueryableExtensions;
 using System.Web;
+using SdojWeb.Infrastructure;
 
 namespace SdojWeb.Manager
 {
@@ -31,12 +32,12 @@ namespace SdojWeb.Manager
             {
                 question.Process2JudgeCode = new Process2JudgeCode
                 {
-                    Code = model.Source, 
-                    Language = model.Language, 
-                    MemoryLimitMb = model.MemoryLimitMb, 
+                    Code = model.Source,
+                    Language = model.Language,
+                    MemoryLimitMb = model.MemoryLimitMb,
                     TimeLimitMs = model.TimeLimit,
-                    RunTimes = model.RunTimes, 
-                    UpdateTime = DateTime.Now, 
+                    RunTimes = model.RunTimes,
+                    UpdateTime = DateTime.Now,
                 };
             }
             await _db.SaveChangesAsync();

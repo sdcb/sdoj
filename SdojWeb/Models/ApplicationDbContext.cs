@@ -29,6 +29,11 @@ namespace SdojWeb.Models
                 .WithRequired(l => l.Solution)
                 .WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<Question>()
+                .HasOptional(q => q.Process2JudgeCode)
+                .WithRequired(s => s.Question)
+                .WillCascadeOnDelete(true);
+
             modelBuilder.Entity<User>()
                 .HasMany(x => x.Roles).WithMany(x => x.Users)
                 .Map(x =>

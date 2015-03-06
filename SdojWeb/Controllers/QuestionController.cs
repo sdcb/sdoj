@@ -86,22 +86,16 @@ namespace SdojWeb.Controllers
         [ValidateInput(false)]
         public async Task<ActionResult> Create(QuestionCreateModel createModel)
         {
-            if (createModel.QuestionType == QuestionTypes.DataDrive) createModel.Source = " ";
-
             if (ModelState.IsValid)
             {
-                using (var tran = TransactionInRequest.BeginTransaction())
+                if (!await _manager.CheckName(createModel.Name))
                 {
-                    if (!await _manager.CheckName(createModel.Name))
-                    {
-                        ModelState.AddModelError("Name", "已有同名的题目。");
-                    }
-                    else
-                    {
-                        await _manager.Create(createModel);
-                        return RedirectToAction("Index");
-                    }
-                    tran.Complete();
+                    ModelState.AddModelError("Name", "已有同名的题目。");
+                }
+                else
+                {
+                    await _manager.Create(createModel);
+                    return RedirectToAction("Index");
                 }
             }
 
@@ -298,7 +292,7 @@ namespace SdojWeb.Controllers
             var model = await _db.Process2JudgeCode.Where(x => x.QuestionId == questionId)
                 .Project().To<QuestionProcess2CodeEditModel>()
                 .FirstOrDefaultAsync();
-            
+
             return View(model);
         }
 
