@@ -43,11 +43,45 @@ namespace SdojJudger.Database
             return data;
         }
 
+        public async Task<bool> ContainsProcess2Code(int questionId)
+        {
+            const string sql = "SELECT COUNT(*) FROM QuestionP2Code WHERE Id = @id ";
+            var count = await _db.ExecuteScalarAsync<int>(sql, new { Id = questionId });
+            return count > 0;
+        }
+
         public async Task<QuestionP2Code> FindProcess2CodeById(int questionId)
         {
             const string sql = "SELECT * FROM QuestionP2Code WHERE Id = @id";
             var data = await _db.ExecuteScalarAsync<QuestionP2Code>(sql, new { id = questionId });
             return data;
+        }
+
+        public async Task DeleteAndCreateProcess2Code(QuestionP2Code data)
+        {
+            const string deleteSql = "DELETE FROM QuestionP2Code WHERE Id = @id ";
+            const string insertSql = "INSERT INTO QuestionP2Code VALUES " + 
+                                     "(@QuestionId, @Code, @Language, @RunTimes, @TimeLimitMs, @MemoryLimitMb, @UpdateTicks)";
+
+            EnsureConnectionOpen();
+
+            using (var tran = _db.BeginTransaction())
+            {
+                await _db.ExecuteAsync(deleteSql, new { id = data.QuestionId });
+
+                var command = new SqlCeCommand(insertSql, _db, tran);
+                command.Parameters.AddWithValue("@QuestionId", data.QuestionId);
+                command.Parameters.AddWithValue("@Code", data.Code);
+                command.Parameters.AddWithValue("@Language", data.Language);
+                command.Parameters.AddWithValue("@RunTimes", data.RunTimes);
+                command.Parameters.AddWithValue("@TimeLimitMs", data.TimeLimitMs);
+                command.Parameters.AddWithValue("@MemoryLimitMb", data.MemoryLimitMb);
+                command.Parameters.AddWithValue("@UpdateTicks", data.UpdateTicks);
+
+                await command.ExecuteNonQueryAsync();
+
+                tran.Commit();
+            }
         }
 
         public async Task DeleteAndCreateData(IEnumerable<QuestionData> datas)
@@ -59,13 +93,13 @@ namespace SdojJudger.Database
 
             EnsureConnectionOpen();
 
-            using (var tran = (SqlCeTransaction)_db.BeginTransaction())
+            using (var tran = _db.BeginTransaction())
             {
                 await _db.ExecuteAsync(deleteSql, new { Ids = dataList.Select(x => x.Id) }, tran);
 
                 foreach (var data in dataList)
                 {
-                    var command = new SqlCeCommand(insertSql, (SqlCeConnection)_db, tran);
+                    var command = new SqlCeCommand(insertSql, _db, tran);
                     command.Parameters.AddWithValue("@Id", data.Id);
                     command.Parameters.AddWithValue("@Input", data.Input ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Output", data.Output ?? (object)DBNull.Value);

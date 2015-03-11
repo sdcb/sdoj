@@ -1,7 +1,7 @@
 ﻿using log4net;
 using log4net.Util;
+using SdojJudger.Database;
 using SdojJudger.Models;
-using System;
 using System.Threading.Tasks;
 
 namespace SdojJudger.Business
@@ -26,9 +26,39 @@ namespace SdojJudger.Business
             await UpdateQuestionProcess2Code();
         }
 
-        private Task UpdateQuestionProcess2Code()
+        private async Task UpdateQuestionProcess2Code()
         {
-            throw new NotImplementedException();
+            var questionId = _spush.Id;
+
+            using (var db = new JudgerDbContext())
+            {
+                var contains = await db.ContainsProcess2Code(questionId);
+                
+                bool needUpdate = true;
+                if (contains)
+                {
+                    var item = (DbHashModel)_lockM.JudgeCode;
+                    var dbItem = await db.FindProcess2HashById(questionId);
+
+                    if (dbItem.UpdateTicks == item.UpdateTicks)
+                    {
+                        needUpdate = false;
+                    }
+                }
+
+                if (needUpdate)
+                {
+                    // 数据过期，需要执行更新操作。
+                    if (contains)
+                        _log.Info("P2Code expired, updating from server.");
+                    else
+                        _log.Info("P2Code not exist, fetching from server.");
+
+                    var hubItem = await _client.GetProcess2Code(questionId);
+                    var toDbItem = (QuestionP2Code)hubItem;
+                    await db.DeleteAndCreateProcess2Code(toDbItem);
+                }
+            }
         }
 
         private readonly ILog _log;

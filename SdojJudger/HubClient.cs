@@ -80,9 +80,9 @@ namespace SdojJudger
             return result;
         }
 
-        public async Task<QuestionDataFullModel> GetProcess2Code(int questionId)
+        public async Task<QuestionProcess2FullModel> GetProcess2Code(int questionId)
         {
-            var result = await _server.Invoke<QuestionDataFullModel>(AppSettings.HubGetProcess2Code,
+            var result = await _server.Invoke<QuestionProcess2FullModel>(AppSettings.HubGetProcess2Code,
                 questionId);
             _log.DebugExt(() => JsonConvert.SerializeObject(result));
             return result;
