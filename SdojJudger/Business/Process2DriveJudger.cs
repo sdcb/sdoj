@@ -56,7 +56,7 @@ namespace SdojJudger.Business
 
         private async Task Judge(CompileResult res1, CompileResult res2)
         {
-            int runTimeMs = 0;
+            int peakRunTimeMs = 0;
             float peakMemoryMb = 0;
 
             var info = new Process2JudgeInfo
@@ -73,24 +73,28 @@ namespace SdojJudger.Business
                 Process2JudgeResult result = Sandbox.Process2Judge(info);
                 _log.DebugExt("NativeDll Judged.");
 
+                peakRunTimeMs = Math.Max(peakRunTimeMs, result.TimeMs);
+                peakMemoryMb = Math.Max(peakMemoryMb, result.MemoryMb);
+
                 if (!result.Process1Ok)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb);
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb);
                     return;
                 }
                 if (!result.Process2Ok)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb);
+                    await _client.Update(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb);
                     return;
                 }
 
                 if (!result.Accepted)
                 {
-                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb, result.Process1Output);
+                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, peakRunTimeMs, peakMemoryMb, result.Process1Output);
+                    return;
                 }
             }
 
-            await _client.Update(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb);
+            await _client.Update(_spush.Id, SolutionState.Accepted, peakRunTimeMs, peakMemoryMb);
         }
 
         private async Task UpdateQuestionProcess2Code()

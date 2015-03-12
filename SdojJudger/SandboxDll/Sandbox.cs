@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using SdojJudger.Runner;
+using System.Threading;
+using System.Diagnostics;
 
 namespace SdojJudger.SandboxDll
 {
@@ -44,9 +46,9 @@ namespace SdojJudger.SandboxDll
             // 1、启动评测
             var info1 = new SandboxRunInfo
             {
-                LimitProcessCount = 1, 
-                MemoryLimitMb = 512.0f, 
-                TimeLimitMs = 10, 
+                LimitProcessCount = 1,
+                MemoryLimitMb = 512.0f,
+                TimeLimitMs = 10000,
                 Path = p2info.Path1
             };
             SandboxIoResult io1 = BeginRun(info1);
@@ -61,9 +63,9 @@ namespace SdojJudger.SandboxDll
 
             var info2 = new SandboxRunInfo
             {
-                LimitProcessCount = 1, 
-                MemoryLimitMb = p2info.MemoryLimitMb, 
-                TimeLimitMs = p2info.TimeLimitMs, 
+                LimitProcessCount = 1,
+                MemoryLimitMb = p2info.MemoryLimitMb,
+                TimeLimitMs = p2info.TimeLimitMs,
                 Path = p2info.Path2
             };
             SandboxIoResult io2 = BeginRun(info2);
@@ -77,36 +79,48 @@ namespace SdojJudger.SandboxDll
             }
 
             // 2、将两个进程的输入输出重定向。
-            Func<FileStream, FileStream, Task> transformFunc = async (toRead, toWrite) =>
+            Func<FileStream, FileStream, CancellationToken, Task> transformFunc = async (toRead, toWrite, cancel) =>
             {
                 var buffer = new char[4096];
                 using (var reader = new StreamReader(toRead, Encoding.Default))
                 using (var writer = new StreamWriter(toWrite))
                 {
-                    while (true)
+                    while (!cancel.IsCancellationRequested)
                     {
                         var c = await reader.ReadAsync(buffer, 0, buffer.Length);
-                        if (c == 0) break;
-                        await writer.WriteAsync(buffer, 0, c);
+
+                        if (c != 0)
+                        {
+                            await writer.WriteAsync(buffer, 0, c);
+                            Debug.WriteLine($"{Task.CurrentId}: {new string(buffer, 0, c)}");
+                            await writer.FlushAsync();
+                        }
+                        else
+                        {
+                            await Task.Delay(10);
+                        }
                     }
                 }
             };
-            var transform12 = transformFunc(io1.OutputReadStream, io2.InputWriteStream);
-            var transform21 = transformFunc(io2.OutputReadStream, io1.InputWriteStream);
+
+            var cancelToken = new CancellationTokenSource();
+            var transform12 = transformFunc(io1.OutputReadStream, io2.InputWriteStream, cancelToken.Token);
+            var transform21 = transformFunc(io2.OutputReadStream, io1.InputWriteStream, cancelToken.Token);
             var stdErrorTask = ReadToEndFrom(io1.ErrorReadStream);
             io2.ErrorReadStream.Dispose();
 
             // 3、等待程序运行完成
             var run1 = EndRun(io1.InstanceHandle);
             var run2 = EndRun(io2.InstanceHandle);
-            transform12.Wait();
+            cancelToken.Cancel(throwOnFirstException: false);
             transform21.Wait();
+            transform12.Wait();
             stdErrorTask.Wait();
 
             // 4、返回运行结果。
             var toReturn = new Process2JudgeResult
             {
-                P1Result = (JudgeResult)run1, 
+                P1Result = (JudgeResult)run1,
                 P2Result = (JudgeResult)run2
             };
             toReturn.P1Result.Output = stdErrorTask.Result;

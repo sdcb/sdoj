@@ -90,6 +90,28 @@ namespace SdojJudger.Runner
             }
         }
 
+        public int TimeMs
+        {
+            get
+            {
+                if (P2Result != null)
+                    return P2Result.TimeMs;
+                /* else */
+                return 0;
+            }
+        }
+
+        public float MemoryMb
+        {
+            get
+            {
+                if (P2Result != null)
+                    return P2Result.MemoryMb;
+                /* else */
+                return 0;
+            }
+        }
+
         private static bool TargetOk(JudgeResult r)
         {
             return r != null && r.IsDone && r.ErrorCode == 0;
