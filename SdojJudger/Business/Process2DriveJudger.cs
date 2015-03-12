@@ -54,9 +54,14 @@ namespace SdojJudger.Business
                     else
                         _log.Info("P2Code not exist, fetching from server.");
 
-                    var hubItem = await _client.GetProcess2Code(questionId);
-                    var toDbItem = (QuestionP2Code)hubItem;
+                    _fullM = await _client.GetProcess2Code(questionId);
+                    var toDbItem = (QuestionP2Code)_fullM;
                     await db.DeleteAndCreateProcess2Code(toDbItem);
+                }
+                else
+                {
+                    var dbItem = await db.FindProcess2CodeById(questionId);
+                    _fullM = (QuestionProcess2FullModel)dbItem;
                 }
             }
         }
