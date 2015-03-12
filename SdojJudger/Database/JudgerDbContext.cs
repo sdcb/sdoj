@@ -53,8 +53,8 @@ namespace SdojJudger.Database
         public async Task<QuestionP2Code> FindProcess2CodeById(int questionId)
         {
             const string sql = "SELECT * FROM QuestionP2Code WHERE QuestionId = @id";
-            var data = await _db.ExecuteScalarAsync<QuestionP2Code>(sql, new { id = questionId });
-            return data;
+            var data = await _db.QueryAsync<QuestionP2Code>(sql, new { id = questionId });
+            return data.FirstOrDefault();
         }
 
         public async Task DeleteAndCreateProcess2Code(QuestionP2Code data)
