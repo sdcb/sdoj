@@ -28,7 +28,7 @@ namespace SdojJudger.Business
 
         private async Task UpdateQuestionProcess2Code()
         {
-            var questionId = _spush.Id;
+            var questionId = _spush.QuestionId;
 
             using (var db = new JudgerDbContext())
             {

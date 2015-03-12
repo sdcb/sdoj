@@ -30,6 +30,9 @@ namespace SdojWeb.Models
         [JsonProperty("b")]
         public DataHashModel JudgeCode { get; set; }
 
+        [JsonProperty("c")]
+        public int QuestionId { get; set; }
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Solution, SolutionProcess2CodeModel>()

@@ -15,5 +15,8 @@ namespace SdojJudger.Models
 
         [JsonProperty("d")]
         public QuestionTypes QuestionType { get; set; }
+
+        [JsonProperty("e")]
+        public int QuestionId { get; set; }
     }
 }

@@ -37,29 +37,29 @@ namespace SdojJudger.Database
 
         public async Task<DbHashModel> FindProcess2HashById(int questionId)
         {
-            const string sql = "SELECT Id, UpdateTicks " + 
-                               "FROM QuestionP2Code WHERE Id = @id ";
-            var data = await _db.ExecuteScalarAsync<DbHashModel>(sql, new { Id = questionId });
-            return data;
+            const string sql = "SELECT QuestionId AS Id, UpdateTicks " + 
+                               "FROM QuestionP2Code WHERE QuestionId = @id ";
+            var data = await _db.QueryAsync<DbHashModel>(sql, new { id = questionId });
+            return data.FirstOrDefault();
         }
 
         public async Task<bool> ContainsProcess2Code(int questionId)
         {
-            const string sql = "SELECT COUNT(*) FROM QuestionP2Code WHERE Id = @id ";
-            var count = await _db.ExecuteScalarAsync<int>(sql, new { Id = questionId });
+            const string sql = "SELECT COUNT(*) FROM QuestionP2Code WHERE QuestionId = @id ";
+            var count = await _db.ExecuteScalarAsync<int>(sql, new { id = questionId });
             return count > 0;
         }
 
         public async Task<QuestionP2Code> FindProcess2CodeById(int questionId)
         {
-            const string sql = "SELECT * FROM QuestionP2Code WHERE Id = @id";
+            const string sql = "SELECT * FROM QuestionP2Code WHERE QuestionId = @id";
             var data = await _db.ExecuteScalarAsync<QuestionP2Code>(sql, new { id = questionId });
             return data;
         }
 
         public async Task DeleteAndCreateProcess2Code(QuestionP2Code data)
         {
-            const string deleteSql = "DELETE FROM QuestionP2Code WHERE Id = @id ";
+            const string deleteSql = "DELETE FROM QuestionP2Code WHERE QuestionId = @id ";
             const string insertSql = "INSERT INTO QuestionP2Code VALUES " + 
                                      "(@QuestionId, @Code, @Language, @RunTimes, @TimeLimitMs, @MemoryLimitMb, @UpdateTicks)";
 

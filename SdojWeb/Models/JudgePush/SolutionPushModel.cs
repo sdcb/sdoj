@@ -20,6 +20,9 @@ namespace SdojWeb.Models.JudgePush
         [JsonProperty("d")]
         public QuestionTypes QuestionType { get; set; }
 
+        [JsonProperty("e")]
+        public int QuestionId { get; set; }
+
         [JsonIgnore]
         public int QuestionCreateUserId { get; set; }
 

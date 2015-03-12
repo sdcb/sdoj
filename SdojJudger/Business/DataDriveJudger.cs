@@ -27,7 +27,7 @@ namespace SdojJudger.Business
             _sfull = await _client.Lock(_spush.Id);
             if (_sfull == null)
             {
-                _log.InfoExt(() => "Failed to lock " + _spush.Id + ", move next.");
+                _log.InfoExt(() => $"Failed to lock {_spush.Id}, move next.");
                 return;
             }
             await UpdateQuestionData();
