@@ -32,7 +32,7 @@ namespace SdojJudger.Business
             }
             await UpdateQuestionData();
 
-            var compiler = CompilerProvider.GetCompiler(_spush);
+            var compiler = CompilerProvider.GetCompiler(_spush.Language);
             var asm = compiler.Compile(_sfull.Source);
 
             if (asm.HasErrors)
@@ -82,7 +82,7 @@ namespace SdojJudger.Business
                 runTimeMs += result.TimeMs;
                 peakMemoryMb = Math.Max(peakMemoryMb, result.MemoryMb);
 
-                if (result.ErrorCode != 0 || !result.Succeed)
+                if (!result.IsDone)
                 {
                     await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // system error
                     return;
@@ -106,7 +106,7 @@ namespace SdojJudger.Business
                 var trimed = result.Output.TrimEnd();
                 if (trimed != data.Output)
                 {
-                    _log.DebugExt(() => string.Format("\r\nExpected: \r\n{0} \r\nActual: \r\n{1}", data.Output, result.Output));
+                    _log.DebugExt(() => $"\r\nExpected: \r\n{data.Output} \r\nActual: \r\n{result.Output}");
                     await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
                     return;
                 }

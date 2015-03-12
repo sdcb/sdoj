@@ -19,9 +19,12 @@ namespace SdojJudger.Compiler
 
         public override void Dispose()
         {
-            if (File.Exists(_asm.PathToAssembly))
+            if (_asm != null)
             {
-                File.Delete(_asm.PathToAssembly);
+                if (File.Exists(_asm.PathToAssembly))
+                {
+                    File.Delete(_asm.PathToAssembly);
+                }
             }
         }
 

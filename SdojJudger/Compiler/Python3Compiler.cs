@@ -39,13 +39,16 @@ namespace SdojJudger.Compiler
 
         public override void Dispose()
         {
-            if (File.Exists(_filename + ".py"))
+            if (_filename != null)
             {
-                File.Delete(_filename + ".py");
-            }
-            if (File.Exists(_filename + ".pyc"))
-            {
-                File.Delete(_filename + ".pyc");
+                if (File.Exists(_filename + ".py"))
+                {
+                    File.Delete(_filename + ".py");
+                }
+                if (File.Exists(_filename + ".pyc"))
+                {
+                    File.Delete(_filename + ".pyc");
+                }
             }
         }
 

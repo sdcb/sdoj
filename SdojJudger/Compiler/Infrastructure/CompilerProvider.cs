@@ -4,25 +4,25 @@ namespace SdojJudger.Compiler.Infrastructure
 {
     public abstract class CompilerProvider : IDisposable
     {
-        public static CompilerProvider GetCompiler(SolutionPushModel model)
+        public static CompilerProvider GetCompiler(Languages language)
         {
-            if (model.Language == Languages.CSharp)
+            if (language == Languages.CSharp)
             {
                 return new CSharpCompiler();
             }
-            if (model.Language == Languages.Cpp)
+            if (language == Languages.Cpp)
             {
                 return new CppCompiler(compileAsC: false);
             }
-            if (model.Language == Languages.Vb)
+            if (language == Languages.Vb)
             {
                 return new VisualBasicCompiler();
             }
-            if (model.Language == Languages.C)
+            if (language == Languages.C)
             {
                 return new CppCompiler(compileAsC: true);
             }
-            if (model.Language == Languages.Python3)
+            if (language == Languages.Python3)
             {
                 return new Python3Compiler();
             }

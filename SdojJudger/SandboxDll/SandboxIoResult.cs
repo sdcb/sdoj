@@ -5,7 +5,7 @@ namespace SdojJudger.SandboxDll
 {
     public class SandboxIoResult
     {
-        public bool Succeed { get; set; }
+        public bool IsDone { get; set; }
 
         public int ErrorCode { get; set; }
 
@@ -18,5 +18,10 @@ namespace SdojJudger.SandboxDll
         public FileStream OutputReadStream { get; set; }
 
         public FileStream ErrorReadStream { get; set; }
+
+        public bool Succeed
+        {
+            get { return IsDone && ErrorCode == 0; }
+        }
     }
 }

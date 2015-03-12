@@ -16,7 +16,7 @@ namespace SdojJudger.Runner
             {
                 var ok = Judge(ref aji, ref ajr);
                 var result = (JudgeResult)ajr;
-                result.Succeed = ok;
+                result.IsDone = ok;
                 return result;
             }
             finally
@@ -105,7 +105,7 @@ namespace SdojJudger.Runner
                 var result = new JudgeResult
                 {
                     ErrorCode = info.ErrorCode,
-                    ExceptionCode = info.ExceptionCode,
+                    //ExceptionCode = info.ExceptionCode,
                     TimeMs = info.TimeMs,
                     MemoryMb = info.MemoryMb,
                 };
@@ -117,7 +117,7 @@ namespace SdojJudger.Runner
 
                 if (info.ExceptionMessage != IntPtr.Zero)
                 {
-                    result.ExceptionMessage = Marshal.PtrToStringUni(info.ExceptionMessage);
+                    //result.ExceptionMessage = Marshal.PtrToStringUni(info.ExceptionMessage);
                 }
 
                 var win32Exception = new Win32Exception(info.ErrorCode);

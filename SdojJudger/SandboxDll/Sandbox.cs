@@ -33,6 +33,86 @@ namespace SdojJudger.SandboxDll
             return result;
         }
 
+        public static Process2JudgeResult Process2Judge(Process2JudgeInfo p2info)
+        {
+            // 步骤：
+            // 1、启动评测
+            // 2、将进程输入、输出重定向
+            // 3、等待程序运行完成
+            // 4、处理并返回程序运行结果。
+
+            // 1、启动评测
+            var info1 = new SandboxRunInfo
+            {
+                LimitProcessCount = 1, 
+                MemoryLimitMb = 512.0f, 
+                TimeLimitMs = 10, 
+                Path = p2info.Path1
+            };
+            SandboxIoResult io1 = BeginRun(info1);
+            if (!io1.Succeed)
+            {
+                EndRun(io1.InstanceHandle);
+                return new Process2JudgeResult
+                {
+                    P1Result = (JudgeResult)io1
+                };
+            }
+
+            var info2 = new SandboxRunInfo
+            {
+                LimitProcessCount = 1, 
+                MemoryLimitMb = p2info.MemoryLimitMb, 
+                TimeLimitMs = p2info.TimeLimitMs, 
+                Path = p2info.Path2
+            };
+            SandboxIoResult io2 = BeginRun(info2);
+            if (!io2.Succeed)
+            {
+                EndRun(io2.InstanceHandle);
+                return new Process2JudgeResult
+                {
+                    P2Result = (JudgeResult)io2
+                };
+            }
+
+            // 2、将两个进程的输入输出重定向。
+            Func<FileStream, FileStream, Task> transformFunc = async (toRead, toWrite) =>
+            {
+                var buffer = new char[4096];
+                using (var reader = new StreamReader(toRead, Encoding.Default))
+                using (var writer = new StreamWriter(toWrite))
+                {
+                    while (true)
+                    {
+                        var c = await reader.ReadAsync(buffer, 0, buffer.Length);
+                        if (c == 0) break;
+                        await writer.WriteAsync(buffer, 0, c);
+                    }
+                }
+            };
+            var transform12 = transformFunc(io1.OutputReadStream, io2.InputWriteStream);
+            var transform21 = transformFunc(io2.OutputReadStream, io1.InputWriteStream);
+            var stdErrorTask = ReadToEndFrom(io1.ErrorReadStream);
+            io2.ErrorReadStream.Dispose();
+
+            // 3、等待程序运行完成
+            var run1 = EndRun(io1.InstanceHandle);
+            var run2 = EndRun(io2.InstanceHandle);
+            transform12.Wait();
+            transform21.Wait();
+            stdErrorTask.Wait();
+
+            // 4、返回运行结果。
+            var toReturn = new Process2JudgeResult
+            {
+                P1Result = (JudgeResult)run1, 
+                P2Result = (JudgeResult)run2
+            };
+            toReturn.P1Result.Output = stdErrorTask.Result;
+            return toReturn;
+        }
+
         public static JudgeResult Judge(JudgeInfo ji)
         {
             var info = new SandboxRunInfo
@@ -45,15 +125,11 @@ namespace SdojJudger.SandboxDll
 
             SandboxIoResult ior = BeginRun(info);
 
-            if (!ior.Succeed || ior.ErrorCode != 0)
+            if (!ior.Succeed)
             {
                 EndRun(ior.InstanceHandle);
 
-                return new JudgeResult
-                {
-                    ErrorCode = ior.ErrorCode,
-                    ErrorMessage = ior.ErrorMessage,
-                };
+                return (JudgeResult)ior;
             }
             ior.ErrorReadStream.Dispose();
             var writeTask = Task.Run(async () =>
@@ -63,50 +139,43 @@ namespace SdojJudger.SandboxDll
                     await writer.WriteAsync(ji.Input);
                 }
             });
-            var readTask = Task.Run(async () =>
-            {
-                var buffer = new char[4096];
-                var result = new StringBuilder(4096);
-                using (var reader = new StreamReader(ior.OutputReadStream, Encoding.Default))
-                {
-                    while (true)
-                    {
-                        var c = await reader.ReadAsync(buffer, 0, buffer.Length);
-                        if (c > 0)
-                        {
-                            result.Append(buffer, 0, c);
-                            if (result.Length > LimitedSize)
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                return result.ToString();
-            });
+            var readTask = ReadToEndFrom(ior.OutputReadStream);
 
             SandboxRunResult res = EndRun(ior.InstanceHandle);
 
             writeTask.Wait();
             readTask.Wait();
 
-            var jr = new JudgeResult
-            {
-                ErrorCode = res.ErrorCode,
-                ErrorMessage = res.ErrorMessage,
-                ExceptionCode = 0,
-                ExceptionMessage = null,
-                ExitCode = res.ExitCode,
-                MemoryMb = res.MemoryMb,
-                Output = readTask.Result,
-                Succeed = res.Succeed,
-                TimeMs = res.TimeMs,
-            };
+            var jr = (JudgeResult)res;
+            jr.Output = readTask.Result;
+
             return jr;
+        }
+
+        private static async Task<string> ReadToEndFrom(FileStream stream)
+        {
+            var buffer = new char[4096];
+            var result = new StringBuilder(4096);
+            using (var reader = new StreamReader(stream, Encoding.Default))
+            {
+                while (true)
+                {
+                    var c = await reader.ReadAsync(buffer, 0, buffer.Length);
+                    if (c > 0)
+                    {
+                        result.Append(buffer, 0, c);
+                        if (result.Length > LimitedSize)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return result.ToString();
         }
 
         private const int LimitedSize = 20 * 1024 * 1024;
@@ -174,7 +243,7 @@ namespace SdojJudger.SandboxDll
             {
                 var result = new SandboxIoResult
                 {
-                    Succeed = apiResult.Succeed,
+                    IsDone = apiResult.Succeed,
                     ErrorCode = apiResult.ErrorCode,
                     InstanceHandle = apiResult.InstanceHandle,
                 };

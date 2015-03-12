@@ -21,7 +21,7 @@ namespace SdojJudger.Compiler
 
         public override CompileResult Compile(string source)
         {
-            _logger.DebugExt(() => "Start compiling");
+            _logger.InfoExt(() => "C/C++ Start compiling");
 
 
             var filename = GetTempFileNameWithoutExtension();
@@ -50,21 +50,24 @@ namespace SdojJudger.Compiler
 
         public override void Dispose()
         {
-            if (File.Exists(_fullpath + _fileExtension))
+            if (_fullpath != null)
             {
-                File.Delete(_fullpath + _fileExtension);
-            }
-            if (File.Exists(_fullpath + ".obj"))
-            {
-                File.Delete(_fullpath + ".obj");
-            }
-            if (File.Exists(_fullpath + ".exe"))
-            {
-                File.Delete(_fullpath + ".exe");
-            }
-            if (File.Exists(_fullpath + ".txt"))
-            {
-                File.Delete(_fullpath + ".txt");
+                if (File.Exists(_fullpath + _fileExtension))
+                {
+                    File.Delete(_fullpath + _fileExtension);
+                }
+                if (File.Exists(_fullpath + ".obj"))
+                {
+                    File.Delete(_fullpath + ".obj");
+                }
+                if (File.Exists(_fullpath + ".exe"))
+                {
+                    File.Delete(_fullpath + ".exe");
+                }
+                if (File.Exists(_fullpath + ".txt"))
+                {
+                    File.Delete(_fullpath + ".txt");
+                }
             }
         }
 
