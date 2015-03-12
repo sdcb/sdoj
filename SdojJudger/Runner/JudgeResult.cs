@@ -72,7 +72,7 @@ namespace SdojJudger.Runner
         {
             get
             {
-                if (P1Result != null && P1Result.ExitCode == 0 && P1Result.Output == "OK")
+                if (P1Result != null && P1Result.ExitCode == 0 && P1Result.Output.EndsWith("OK!\r\n"))
                     return true;
                 /* else */
                 return false;
