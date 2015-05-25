@@ -124,13 +124,13 @@ namespace SdojWeb.Controllers
                         await UserManager.SendEmailAsync(user.Id, "确认你的账户",
                             "请通过单击 <a href=\"" + callbackUrl + "\">此处</a>来确认你的帐号");
 
+                        tran.Complete();
+
                         return this.RedirectToAction<HomeController>(x => x.Index())
                             .WithInfo("已经向你的邮箱" + user.Email + "发送了验证邮件，请前往并点击该邮件中的链接以验证您的帐户。");
                     }
 
                     AddErrors(result);
-
-                    tran.Complete();
                 }
             }
 
