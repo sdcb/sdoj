@@ -148,7 +148,7 @@ namespace SdojJudger.SandboxDll
             ior.ErrorReadStream.Dispose();
             var writeTask = Task.Run(async () =>
             {
-                using (var writer = new StreamWriter(ior.InputWriteStream))
+                using (var writer = new StreamWriter(ior.InputWriteStream, Encoding.Default))
                 {
                     await writer.WriteAsync(ji.Input);
                 }
