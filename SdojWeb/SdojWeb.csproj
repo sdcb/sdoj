@@ -376,6 +376,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\aliyun.pubxml" />
+    <None Include="Properties\PublishProfiles\allyun2.pubxml" />
     <None Include="Properties\PublishProfiles\oj-demo2.pubxml" />
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -557,7 +558,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1433</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
