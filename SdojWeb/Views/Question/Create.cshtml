@@ -36,6 +36,7 @@
     @Styles.Render("~/bundles/bootstrap-markdown-css")
 
     <script>
+        $("select[name='QuestionType']").hide();
         var createForm = $("#create-form");
         createForm.find("[name='Source']").attr('required', true);
         var modeElements = [];
