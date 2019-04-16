@@ -33,6 +33,7 @@
     <TargetFrameworkProfile />
     <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -373,6 +374,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Properties\PublishProfiles\aliyun.pubxml" />
     <None Include="Properties\PublishProfiles\allyun2.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\oj-demo2.pubxml" />
     <Content Include="Scripts\bootstrap-markdown.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
