@@ -21,10 +21,7 @@ namespace SdojJudger.Compiler
         {
             if (_asm != null)
             {
-                if (File.Exists(_asm.PathToAssembly))
-                {
-                    File.Delete(_asm.PathToAssembly);
-                }
+                RetryDelete(_asm.PathToAssembly);
             }
         }
 

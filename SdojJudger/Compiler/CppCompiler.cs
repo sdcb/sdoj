@@ -52,22 +52,10 @@ namespace SdojJudger.Compiler
         {
             if (_fullpath != null)
             {
-                if (File.Exists(_fullpath + _fileExtension))
-                {
-                    File.Delete(_fullpath + _fileExtension);
-                }
-                if (File.Exists(_fullpath + ".obj"))
-                {
-                    File.Delete(_fullpath + ".obj");
-                }
-                if (File.Exists(_fullpath + ".exe"))
-                {
-                    File.Delete(_fullpath + ".exe");
-                }
-                if (File.Exists(_fullpath + ".txt"))
-                {
-                    File.Delete(_fullpath + ".txt");
-                }
+                RetryDelete(_fullpath + _fileExtension);
+                RetryDelete(_fullpath + ".obj");
+                RetryDelete(_fullpath + ".exe");
+                RetryDelete(_fullpath + ".txt");
             }
         }
 

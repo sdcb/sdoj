@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Threading;
+using log4net;
 using SdojJudger.Models;
 namespace SdojJudger.Compiler.Infrastructure
 {
@@ -44,5 +47,22 @@ namespace SdojJudger.Compiler.Infrastructure
         public abstract CompileResult Compile(string source);
 
         public abstract void Dispose();
+
+        public static void RetryDelete(string filename)
+        {
+            for (var retry = 0; File.Exists(filename); ++retry)
+            {
+                try
+                {
+                    File.Delete(filename);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    ILog logger = LogManager.GetLogger(typeof(CompilerProvider));
+                    logger.Warn($"Delete {filename} failed, retry {retry + 1}...");
+                    Thread.Sleep(100);
+                }
+            }
+        }
     }
 }
