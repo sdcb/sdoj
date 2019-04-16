@@ -34,13 +34,13 @@ namespace SdojWeb.Migrations
 
             // 添加预定义用户。
 
-            userManager.Create(new User { UserName="qa", Email = "sdoj-question-admin@sdcb.in", EmailConfirmed = true}, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User { UserName = "ua", Email = "sdoj-user-admin@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User { UserName = "qc", Email = "sdoj-question-creator@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User { UserName = "j", Email = "sdoj-judger@sdcb.in", EmailConfirmed = true }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName="qa", Email = "sdoj-question-admin@sdcb.in", EmailConfirmed = true}, ***REMOVED***);
+            userManager.Create(new User { UserName = "ua", Email = "sdoj-user-admin@sdcb.in", EmailConfirmed = true }, ***REMOVED***);
+            userManager.Create(new User { UserName = "qc", Email = "sdoj-question-creator@sdcb.in", EmailConfirmed = true }, ***REMOVED***);
+            userManager.Create(new User { UserName = "j", Email = "sdoj-judger@sdcb.in", EmailConfirmed = true }, ***REMOVED***);
 
-            userManager.Create(new User { UserName = "uc", Email = "sdoj-user-confirmed@sdcb.in", EmailConfirmed =  true }, "A-Pa5sword-That:Never8eenUsed");
-            userManager.Create(new User { UserName = "u", Email = "sdoj-user@sdcb.in", EmailConfirmed = false }, "A-Pa5sword-That:Never8eenUsed");
+            userManager.Create(new User { UserName = "uc", Email = "sdoj-user-confirmed@sdcb.in", EmailConfirmed =  true }, ***REMOVED***);
+            userManager.Create(new User { UserName = "u", Email = "sdoj-user@sdcb.in", EmailConfirmed = false }, ***REMOVED***);
             
             // 将预定义用户添加到角色
 
