@@ -163,3 +163,5 @@ $RECYCLE.BIN/
 /.vs/config/applicationhost.config
 /.vs/Sdoj
 /.vs
+*.js.map
+*.js
