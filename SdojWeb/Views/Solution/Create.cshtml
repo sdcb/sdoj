@@ -27,5 +27,13 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     @Html.Partial("_LanguageTemplate")
+    <script src="https://cdn.bootcss.com/ace/1.4.3/ace.js"></script>
     <script src="~/Scripts/app/solution/create.js"></script>
+}
+@section styles {
+    <style>
+        .code {
+            height: 500px;
+        }
+    </style>
 }

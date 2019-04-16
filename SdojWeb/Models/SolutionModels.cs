@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
-using SdojWeb.Infrastructure.Extensions;
 using SdojWeb.Infrastructure.Mapping;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
@@ -22,7 +20,7 @@ namespace SdojWeb.Models
         [Display(Name = "语言"), Required]
         public Languages Language { get; set; }
 
-        [Display(Name = "源代码"), Required, DataType(DataType.MultilineText)]
+        [Display(Name = "源代码"), Required, DataType("Code")]
         [MaxLength(32*1024)]
         public string Source { get; set; }
 

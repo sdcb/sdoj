@@ -483,6 +483,7 @@
     <Content Include="Views\Shared\EditorTemplates\Int16.cshtml" />
     <Content Include="Views\Question\Code.cshtml" />
     <Content Include="Views\Solution\_LanguageTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Code.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
