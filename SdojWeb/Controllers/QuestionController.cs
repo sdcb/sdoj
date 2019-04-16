@@ -40,6 +40,10 @@ namespace SdojWeb.Controllers
                 orderBy = "Id";
                 asc = false;
             }
+            if (type == null)
+            {
+                type = QuestionTypes.DataDrive;
+            }
 
             var route = new RouteValueDictionary
             {
