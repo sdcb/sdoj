@@ -7,5 +7,6 @@
         Cpp = 3,
         C = 4, 
         Python3 = 5, 
+        Java = 6, 
     }
 }

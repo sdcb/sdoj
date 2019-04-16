@@ -125,15 +125,17 @@ namespace SdojWeb.Models
 
     public enum Languages
     {
-        [Display(Name = "C#")]
+        [Display(Name = "C# 7.3")]
         CSharp = 1,
-        [Display(Name = "Visual Basic")]
+        [Display(Name = "Visual Basic 16.0")]
         Vb = 2, 
-        [Display(Name = "C++")]
+        [Display(Name = "MSVC C++ 19.20.27508.1")]
         Cpp = 3,
-        [Display(Name = "C")]
+        [Display(Name = "MSVC C 19.20.27508.1")]
         C = 4, 
-        [Display(Name = "Python")]
+        [Display(Name = "Python 3.7")]
         Python3 = 5, 
+        [Display(Name = "Java 11")]
+        Java = 6, 
     }
 }

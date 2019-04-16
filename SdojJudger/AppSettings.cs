@@ -41,6 +41,11 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings["Python3Path"]; }
         }
 
+        public static string JdkBinPath
+        {
+            get { return ConfigurationManager.AppSettings[nameof(JdkBinPath)]; }
+        }
+
         public static string HubGetProcess2Code = "GetProcess2Code";
 
         public static string HubLockProcess2 = "LockProcess2";

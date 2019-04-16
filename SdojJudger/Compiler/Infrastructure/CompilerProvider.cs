@@ -6,28 +6,16 @@ namespace SdojJudger.Compiler.Infrastructure
     {
         public static CompilerProvider GetCompiler(Languages language)
         {
-            if (language == Languages.CSharp)
+            return language switch
             {
-                return new CSharpCompiler();
-            }
-            if (language == Languages.Cpp)
-            {
-                return new CppCompiler(compileAsC: false);
-            }
-            if (language == Languages.Vb)
-            {
-                return new VisualBasicCompiler();
-            }
-            if (language == Languages.C)
-            {
-                return new CppCompiler(compileAsC: true);
-            }
-            if (language == Languages.Python3)
-            {
-                return new Python3Compiler();
-            }
-
-            return null;
+                Languages.CSharp  => (CompilerProvider)new CSharpCompiler(),
+                Languages.Cpp     => new CppCompiler(compileAsC: false),
+                Languages.C       => new CppCompiler(compileAsC: true),
+                Languages.Vb      => new VisualBasicCompiler(), 
+                Languages.Python3 => new Python3Compiler(), 
+                Languages.Java    => new JavaCompiler(), 
+                _                 => throw new NotImplementedException($"{nameof(language)}: {language}")
+            };
         }
 
         public static bool IsLanguageAvailable(SolutionPushModel model)
@@ -44,6 +32,10 @@ namespace SdojJudger.Compiler.Infrastructure
             if (model.Language == Languages.CSharp || model.Language == Languages.Vb)
             {
                 return true;
+            }
+            if (model.Language == Languages.Java)
+            {
+                return AppSettings.JdkBinPath != null;
             }
             // else
             return false;
