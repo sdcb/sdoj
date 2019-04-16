@@ -26,13 +26,11 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    @{
-        var preferedLang = Request.Cookies[SolutionController.PreferredLanguage];
-        if (preferedLang != null)
-        {
-            <script>
-                $("select[name='Language']").val('@preferedLang.Value');
-            </script>
-        }
-    }
+    <script>
+        var selector = $("select[name='Language']");
+        selector.val(localStorage.perferedLanguage || 1);
+        selector.change(function () {
+            localStorage.perferedLanguage = selector.val();
+        });
+    </script>
 }

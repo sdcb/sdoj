@@ -561,7 +561,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1433</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:12345/</IISUrl>
+          <IISUrl>https://localhost:44300</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
