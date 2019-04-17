@@ -13,11 +13,5 @@ namespace SdojWeb.Controllers
         {
             return View();
         }
-
-        [ActionName("Rect")]
-        public ActionResult Rectangle()
-        {
-            return View();
-        }
     }
 }
