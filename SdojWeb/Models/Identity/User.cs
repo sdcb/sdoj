@@ -69,5 +69,7 @@ namespace SdojWeb.Models
         public virtual ICollection<Solution> Solutions { get; set; }
 
         public virtual ICollection<Role> Roles { get; set; }
+
+        public virtual ICollection<ContestUser> Contests { get; set; }
     }
 }
