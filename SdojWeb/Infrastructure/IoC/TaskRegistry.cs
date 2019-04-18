@@ -1,5 +1,5 @@
 ﻿using SdojWeb.Infrastructure.Tasks;
-using StructureMap.Configuration.DSL;
+using StructureMap;
 
 namespace SdojWeb.Infrastructure.IoC
 {

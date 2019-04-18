@@ -1,4 +1,4 @@
-﻿using StructureMap.Configuration.DSL;
+﻿using StructureMap;
 using System.Web.Mvc;
 
 namespace SdojWeb.Infrastructure.ModelMetadata

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 using SdojWeb.Models;
-using StructureMap.Configuration.DSL;
+using StructureMap;
 using System.Security.Principal;
 using System.Web;
 
