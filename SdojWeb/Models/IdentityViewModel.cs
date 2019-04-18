@@ -21,7 +21,7 @@ namespace SdojWeb.Models
         [Display(Name="角色")]
         public ICollection<Role> Roles { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<User, UserSummaryViewModel>()
                 .ForMember(source => source.Roles, dest => dest.MapFrom(u => u.Roles));

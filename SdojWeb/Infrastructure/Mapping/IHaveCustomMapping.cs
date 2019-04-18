@@ -4,6 +4,6 @@ namespace SdojWeb.Infrastructure.Mapping
 {
     interface IHaveCustomMapping
     {
-        void CreateMappings(IConfiguration configuration);
+        void CreateMappings(IMapperConfigurationExpression configuration);
     }
 }

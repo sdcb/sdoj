@@ -32,7 +32,7 @@ namespace SdojWeb.Models
         [Display(Name = "示例数据")]
         public bool IsSample { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionData, QuestionDataSummaryModel>()
                 .ForMember(d => d.MemoryLimitMb, s => s.MapFrom(x => x.MemoryLimitMb))
@@ -75,10 +75,10 @@ namespace SdojWeb.Models
         [HiddenInput]
         public int CreateUserId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionDataEditModel, QuestionData>()
-                .ForMember(dest => dest.UpdateTime, source => source.UseValue(DateTime.Now));
+                .ForMember(dest => dest.UpdateTime, source => source.MapFrom(x => DateTime.Now));
             configuration.CreateMap<QuestionData, QuestionDataEditModel>()
                 .ForMember(d => d.CreateUserId, s => s.MapFrom(x => x.Question.CreateUserId))
                 .ForMember(d => d.QuestionName, s => s.MapFrom(x => x.Question.Name));

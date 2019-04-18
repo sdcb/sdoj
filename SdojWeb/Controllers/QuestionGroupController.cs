@@ -46,7 +46,7 @@ namespace SdojWeb.Controllers
             ViewData["Route"] = route;
 
             var query = _manager.List(id, onlyMe, name, author);
-            var models = query.Project().To<QuestionGroupListModel>(new { currentUserId = User.Identity.GetUserId<int>() });
+            var models = query.ProjectTo<QuestionGroupListModel>(new { currentUserId = User.Identity.GetUserId<int>() });
             if (orderBy == null)
             {
                 orderBy = "ModifyTime";
@@ -61,13 +61,13 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Details(int id, int? page, bool? passed)
         {
             var model = await _db.QuestionGroups
-                .Project().To<QuestionGroupDetailModel>()
+                .ProjectTo<QuestionGroupDetailModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             var query = _db.QuestionGroupItems
                 .Where(x => x.QuestionGroupId == id)
                 .OrderBy(x => x.Order)
-                .Project().To<QuestionGroupDetailItemModel>(new { currentUserId = User.Identity.GetUserId<int>() });
+                .ProjectTo<QuestionGroupDetailItemModel>(new { currentUserId = User.Identity.GetUserId<int>() });
 
             if (passed != null)
             {
@@ -152,7 +152,7 @@ namespace SdojWeb.Controllers
             }
 
             var questionGroup = await _db.QuestionGroups
-                .Project().To<QuestionGroupEditModel>()
+                .ProjectTo<QuestionGroupEditModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             SetQuestionRoutes();

@@ -108,7 +108,7 @@ namespace SdojWeb.SignalR
 
 			var result = await _db.Solutions
 				.Where(x => x.Id == solutionId)
-				.Project().To<SolutionDataModel>()
+                .ProjectTo<SolutionDataModel>()
 				.FirstOrDefaultAsync();
 
 			SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
@@ -124,7 +124,7 @@ namespace SdojWeb.SignalR
 
             var result = await _db.Solutions
                 .Where(x => x.Id == solutionId)
-                .Project().To<SolutionProcess2CodeModel>()
+                .ProjectTo<SolutionProcess2CodeModel>()
                 .FirstOrDefaultAsync();
 
             SolutionHub.PushChange(solutionId, SolutionState.Compiling, 0, 0.0f);
@@ -143,7 +143,7 @@ namespace SdojWeb.SignalR
 			var datas = await _db.QuestionDatas
 				.Where(x =>
 					dataId.Contains(x.Id))
-				.Project().To<QuestionDataFullModel>()
+                .ProjectTo<QuestionDataFullModel>()
 				.ToListAsync();
 
 			return datas;
@@ -153,7 +153,7 @@ namespace SdojWeb.SignalR
         {
             var code = await _db.Process2JudgeCode
                 .Where(x => x.QuestionId == id)
-                .Project().To<QuestionProcess2FullModel>()
+                .ProjectTo<QuestionProcess2FullModel>()
                 .FirstOrDefaultAsync();
 
             return code;

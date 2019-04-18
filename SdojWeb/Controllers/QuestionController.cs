@@ -64,7 +64,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var question = await _db.Questions
-                .Project().To<QuestionDetailModel>()
+                .ProjectTo<QuestionDetailModel>()
                 .FirstAsync(x => x.Id == id);
 
             if (question == null)
@@ -111,7 +111,7 @@ namespace SdojWeb.Controllers
         {
             var question = await _db
                 .Questions
-                .Project().To<QuestionEditModel>() 
+                .ProjectTo<QuestionEditModel>() 
                 .FirstAsync(x => x.Id == id);
 
             if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))
@@ -132,7 +132,7 @@ namespace SdojWeb.Controllers
             {
                 var secretModel = await _db.Questions
                     .Where(x => x.Id == model.Id)
-                    .Project().To<QuestionNotMappedEditModel>()
+                    .ProjectTo<QuestionNotMappedEditModel>()
                     .FirstOrDefaultAsync();
 
                 if (!User.IsUserOrRole(secretModel.CreateUserId, SystemRoles.QuestionAdmin))
@@ -176,7 +176,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Data(int id)
         {
             var questionDatas = await _db.QuestionDatas.Where(x => x.QuestionId == id)
-                .Project().To<QuestionDataSummaryModel>()
+                .ProjectTo<QuestionDataSummaryModel>()
                 .OrderBy(x => x.Id)
                 .ToArrayAsync();
 
@@ -294,7 +294,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Code(int questionId)
         {
             var model = await _db.Process2JudgeCode.Where(x => x.QuestionId == questionId)
-                .Project().To<QuestionProcess2CodeEditModel>()
+                .ProjectTo<QuestionProcess2CodeEditModel>()
                 .FirstOrDefaultAsync();
 
             return View(model);
@@ -353,7 +353,7 @@ namespace SdojWeb.Controllers
 
                 var solutions = _db.Solutions
                     .Where(x => x.QuestionId == id)
-                    .Project().To<SolutionPushModel>();
+                    .ProjectTo<SolutionPushModel>();
 
                 await solutions.ForEachAsync(JudgeHub.Judge);
 

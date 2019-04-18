@@ -24,7 +24,7 @@ namespace SdojWeb.Models
         [MaxLength(32*1024)]
         public string Source { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<SolutionCreateModel, Solution>()
                 .ForMember(dest => dest.SubmitTime, source => source.MapFrom(x => DateTime.Now))
@@ -89,7 +89,7 @@ namespace SdojWeb.Models
         [Display(Name = "提交时间")]
         public DateTime SubmitTime { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Solution, SolutionSummaryModel>()
                 .ForMember(dest => dest.CreateUserName, source => source.MapFrom(x => x.CreateUser.UserName))

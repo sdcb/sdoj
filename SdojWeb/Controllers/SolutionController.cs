@@ -50,7 +50,7 @@ namespace SdojWeb.Controllers
 
             var query = _db.Solutions
                 .OrderByDescending(x => x.SubmitTime)
-                .Project().To<SolutionSummaryModel>();
+                .ProjectTo<SolutionSummaryModel>();
             
             if (id != null)
             {
@@ -130,7 +130,7 @@ namespace SdojWeb.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var solution = await _db.Solutions
-                .Project().To<SolutionDetailModel>()
+                .ProjectTo<SolutionDetailModel>()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (solution == null)
             {
@@ -166,7 +166,7 @@ namespace SdojWeb.Controllers
                 await _db.SaveChangesAsync();
 
                 var judgeModel = await _db.Solutions
-                    .Project().To<SolutionPushModel>()
+                    .ProjectTo<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == solution.Id);
                 JudgeHub.Judge(judgeModel);
 
@@ -227,7 +227,7 @@ namespace SdojWeb.Controllers
                 .DeleteAsync();
 
             var judgeModel = await _db.Solutions
-                    .Project().To<SolutionPushModel>()
+                    .ProjectTo<SolutionPushModel>()
                     .FirstOrDefaultAsync(x => x.Id == id);
             SolutionHub.PushChange(judgeModel.Id, SolutionState.Queuing, 0, 0.0f);
             JudgeHub.Judge(judgeModel);

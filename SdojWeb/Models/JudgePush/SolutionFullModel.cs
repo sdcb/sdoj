@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using Newtonsoft.Json;
 using SdojWeb.Infrastructure.Mapping;
@@ -15,7 +14,7 @@ namespace SdojWeb.Models
         [JsonProperty("b")]
         public List<DataHashModel> QuestionDatas { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Solution, SolutionDataModel>()
                 .ForMember(s => s.QuestionDatas, d => d.MapFrom(x => x.Question.Datas));
@@ -33,7 +32,7 @@ namespace SdojWeb.Models
         [JsonProperty("c")]
         public int QuestionId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Solution, SolutionProcess2CodeModel>()
                 .ForMember(s => s.JudgeCode, d => d.MapFrom(x => x.Question.Process2JudgeCode));

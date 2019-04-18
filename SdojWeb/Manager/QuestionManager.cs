@@ -55,7 +55,7 @@ namespace SdojWeb.Manager
             }
 
             var query = dbModels
-                .Project().To<QuestionSummaryViewModel>(new { currentUserId = userId });
+                .ProjectTo<QuestionSummaryViewModel>(new { currentUserId = userId });
 
             if (!string.IsNullOrWhiteSpace(name))
             {

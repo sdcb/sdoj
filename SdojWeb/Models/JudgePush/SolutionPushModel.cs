@@ -26,7 +26,7 @@ namespace SdojWeb.Models.JudgePush
         [JsonIgnore]
         public int QuestionCreateUserId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Solution, SolutionPushModel>()
                 .ForMember(d => d.FullMemoryLimitMb, s => s.MapFrom(x => x.Question.QuestionType == QuestionTypes.DataDrive ?

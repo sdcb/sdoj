@@ -37,7 +37,7 @@ namespace SdojWeb.Models
         [DisplayName("完成数")]
         public int ComplishedCount { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             var currentUserId = 0;
 
@@ -73,7 +73,7 @@ namespace SdojWeb.Models
         [RenderMode(RenderMode.Neither)]
         public List<QuestionGroupItemEditModel> Questions { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionGroup, QuestionGroupEditModel>()
                 .ForMember(s => s.Questions, d => d.MapFrom(x => x.Questions));
@@ -105,7 +105,7 @@ namespace SdojWeb.Models
         [DisplayName("顺序")]
         public int Order { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionGroupItemEditModel, QuestionGroupItem>()
                 .ForMember(s => s.QuestionGroupId, d => d.MapFrom(x => x.Id ?? 0))
@@ -129,7 +129,7 @@ namespace SdojWeb.Models
 
         public int CreateUserId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionGroupDetailModel, QuestionGroup>()
                 .ForMember(s => s.ModifyTime, d => d.MapFrom(x => DateTime.Now))
@@ -146,7 +146,7 @@ namespace SdojWeb.Models
 
         public QuestionSummaryViewModel Question { get; set; }
         
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionGroupItem, QuestionGroupDetailItemModel>()
                 .ForMember(s => s.Alias, s => s.MapFrom(x => x.QuestionName))

@@ -52,7 +52,7 @@ namespace SdojWeb.Models
 
         public int CreateUserId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Question, QuestionDetailModel>()
                 .ForMember(s => s.Samples, d => d.MapFrom(x => x.Datas.Where(data => data.IsSample)))
@@ -116,7 +116,7 @@ namespace SdojWeb.Models
         [Display(Name = "代码"), DataType(DataType.MultilineText)]
         public string Source { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionCreateModel, Question>()
                 .ForMember(s => s.CreateTime, d => d.MapFrom(x => DateTime.Now))
@@ -129,7 +129,7 @@ namespace SdojWeb.Models
                 .ForMember(s => s.MemoryLimitMb, d => d.MapFrom(x => x.MemoryLimitMb))
                 .ForMember(s => s.TimeLimit, d => d.MapFrom(x => x.TimeLimit))
                 .ForMember(s => s.UpdateTime, d => d.MapFrom(x => DateTime.Now))
-                .ForMember(s => s.IsSample, d => d.UseValue(true));
+                .ForMember(s => s.IsSample, d => d.MapFrom(x => true));
         }
     }
 
@@ -165,7 +165,7 @@ namespace SdojWeb.Models
 		[HiddenInput]
         public int CreateUserId { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<QuestionEditModel, Question>()
                 .ForMember(source => source.UpdateTime, dest => dest.MapFrom(x => DateTime.Now));
@@ -225,7 +225,7 @@ namespace SdojWeb.Models
 
         public bool Started { get; set; }
 
-        public void CreateMappings(IConfiguration configuration)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             var currentUserId = 0;
 

@@ -53,7 +53,7 @@ namespace SdojWeb.Controllers
 
             var query = UserMgr.Users
                 .OrderByDescending(x => x.Id)
-                .Project().To<UserSummaryViewModel>();
+                .ProjectTo<UserSummaryViewModel>();
             
             if (!string.IsNullOrWhiteSpace(username))
                 query = query.Where(x => x.UserName == username);
@@ -79,7 +79,7 @@ namespace SdojWeb.Controllers
         public ActionResult Edit(int id)
         {
             var user = UserMgr.Users.Where(u => u.Id == id)
-                .Project().To<UserSummaryViewModel>()
+                .ProjectTo<UserSummaryViewModel>()
                 .FirstOrDefault();
             if (user == null)
             {

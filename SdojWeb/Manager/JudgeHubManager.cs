@@ -25,7 +25,7 @@ namespace SdojWeb.Manager
             var data = await db.Solutions
                 .Where(x => x.State < SolutionState.Completed &&
                             (x.Lock == null || x.Lock.LockEndTime < DateTime.Now))
-                .Project().To<SolutionPushModel>()
+                .ProjectTo<SolutionPushModel>()
                 .Take(DispatchLimit)
                 .ToListAsync();
             return data;
