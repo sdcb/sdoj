@@ -5,8 +5,7 @@
 }
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm())
-{
+<form id="codeForm" novalidate method="post">
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
@@ -19,7 +18,7 @@
             </div>
         </div>
     </div>
-}
+</form>
 <div>
     @Html.ActionLink("解答列表", "Index")
 </div>

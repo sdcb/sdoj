@@ -21,6 +21,7 @@ interface IAce {
 
 interface IAceSession {
     setMode(mode: string);
+    on(eventName: string, handler: () => void);
 }
 
 interface IAceOptions {
@@ -32,9 +33,13 @@ class Dom {
     private code = ace.edit($(".code")[0], {
         mode: "ace/mode/javascript"
     });
+    private hiddenCode = $("input[name='Source']");
+    private form = <HTMLFormElement>document.getElementById("codeForm");
 
     constructor() {
-        $(".code textarea").attr('name', 'Source');
+        this.form.addEventListener("submit", () => {
+            this.hiddenCode.val(this.code.getValue());
+        });
     }
 
     getSelectedLanguage() {
@@ -48,7 +53,6 @@ class Dom {
     setSourceCode(mode: string, text: string) {
         this.code.session.setMode(mode);
         this.code.setValue(text);
-        $(".code textarea").val(text).change();
     }
 
     onLanguageChange(onchange: () => void) {
@@ -67,17 +71,15 @@ class PerferedLanguageStore {
     }
 }
 
-(function () {
-    let dom = new Dom();
-    let store = new PerferedLanguageStore();
+let dom = new Dom();
+let store = new PerferedLanguageStore();
 
-    dom.setSelectedLanguage(localStorage.perferedLanguage || Languages.csharp);
-    dom.onLanguageChange(() => {
-        localStorage.perferedLanguage = store.get();
-        dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
-    });
+dom.setSelectedLanguage(localStorage.perferedLanguage || Languages.csharp);
+dom.onLanguageChange(() => {
+    localStorage.perferedLanguage = store.get();
     dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
-})();
+});
+dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
 
 function languageToAceMode(language: Languages) {
     switch (language) {
