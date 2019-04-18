@@ -32,8 +32,11 @@ namespace SdojWeb.Migrations
                         UpdateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         StartTime = c.DateTime(precision: 7, storeType: "datetime2"),
                         CompleteTime = c.DateTime(precision: 7, storeType: "datetime2"),
+                        CreateUserId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.User", t => t.CreateUserId, cascadeDelete: true)
+                .Index(t => t.CreateUserId);
             
             CreateTable(
                 "dbo.ContestQuestion",
@@ -42,6 +45,7 @@ namespace SdojWeb.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         ContestId = c.Int(nullable: false),
                         QuestionId = c.Int(nullable: false),
+                        Rank = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Contest", t => t.ContestId, cascadeDelete: true)
@@ -57,8 +61,10 @@ namespace SdojWeb.Migrations
             DropForeignKey("dbo.ContestUser", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.ContestQuestion", "QuestionId", "dbo.Question");
             DropForeignKey("dbo.ContestQuestion", "ContestId", "dbo.Contest");
+            DropForeignKey("dbo.Contest", "CreateUserId", "dbo.User");
             DropIndex("dbo.ContestQuestion", new[] { "QuestionId" });
             DropIndex("dbo.ContestQuestion", new[] { "ContestId" });
+            DropIndex("dbo.Contest", new[] { "CreateUserId" });
             DropIndex("dbo.ContestUser", new[] { "UserId" });
             DropIndex("dbo.ContestUser", new[] { "ContestId" });
             DropTable("dbo.ContestQuestion");

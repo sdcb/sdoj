@@ -34,6 +34,10 @@ namespace SdojWeb.Models.DbModels
         public ICollection<ContestQuestion> Questions { get; set; }
 
         public ICollection<ContestUser> Users { get; set; }
+
+        public int CreateUserId { get; set; }
+
+        public User CreateUser { get; set; }
     }
 
     public class ContestQuestion
@@ -43,6 +47,8 @@ namespace SdojWeb.Models.DbModels
         public int ContestId { get; set; }
 
         public int QuestionId { get; set; }
+
+        public int Rank { get; set; }
 
         public Contest Contest { get; set; }
 
