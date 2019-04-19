@@ -430,6 +430,9 @@
     <Content Include="Views\Solution\_LanguageTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Code.cshtml" />
     <Content Include="Views\Contest\Index.cshtml" />
+    <Content Include="Views\Contest\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TimeSpan.cshtml" />
+    <Content Include="Views\Contest\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
