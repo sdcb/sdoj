@@ -2,23 +2,26 @@
 @model IEnumerable<ContestListModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "我的考试";
 }
 
 <div class="row">
     <div class="col-xs-12">
-        <h2>Index</h2>
+        <h2>@ViewBag.Title</h2>
     </div>
-    <div class="col-xs-12">
-        <div class="clearfix">
-            <div class="form-tools pull-right">
-                <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    创建考试
-                </a>
+    @if (User.IsInRole(SystemRoles.ContestAuthor))
+    {
+        <div class="col-xs-12">
+            <div class="clearfix">
+                <div class="form-tools pull-right">
+                    <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        创建考试
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 
 <div class="row">
@@ -31,10 +34,9 @@
                         <th>@Html.DisplayNameFor(x => x.Name)</th>
                         <th>@Html.DisplayNameFor(x => x.Count)</th>
                         <th>@Html.DisplayNameFor(x => x.Duration)</th>
-                        <th>@Html.DisplayNameFor(x => x.Status)</th>
-                        <th>@Html.DisplayNameFor(x => x.CreateTime)</th>
                         <th>@Html.DisplayNameFor(x => x.StartTime)</th>
                         <th>@Html.DisplayNameFor(x => x.CompleteTime)</th>
+                        <th>@Html.DisplayNameFor(x => x.Status)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,10 +47,9 @@
                             <td>@Html.DisplayFor(x => item.Name)</td>
                             <td>@Html.DisplayFor(x => item.Count)</td>
                             <td>@Html.DisplayFor(x => item.Duration)</td>
-                            <td>@Html.DisplayFor(x => item.Status)</td>
-                            <td>@Html.DisplayFor(x => item.CreateTime)</td>
                             <td>@Html.DisplayFor(x => item.StartTime)</td>
                             <td>@Html.DisplayFor(x => item.CompleteTime)</td>
+                            <td>@Html.DisplayFor(x => item.Status)</td>
                         </tr>
                     }
                 </tbody>

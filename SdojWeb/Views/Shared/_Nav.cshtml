@@ -7,8 +7,11 @@
 }
 
 <ul class="nav navbar-nav">
-    <li class="@getControllerIsActiveClass("questiongroup")">
+    <li style="display: none" class="@getControllerIsActiveClass("questiongroup")">
         @Html.ActionLink("题目组", "Index", "QuestionGroup")
+    </li>
+    <li class="@getControllerIsActiveClass("contest")">
+        @Html.ActionLink("考试", "Index", "Contest")
     </li>
     <li class="@getControllerIsActiveClass("question")">
         @Html.ActionLink("所有题目", "Index", "Question")
