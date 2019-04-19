@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using SdojWeb.Models.DbModels;
 
-namespace SdojWeb.Manager
+namespace SdojWeb.Models.ContestModels
 {
     public class ContestListModel
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Display(Name = "名称")]
-        public string Name { get; }
+        public string Name { get; set; }
 
         [Display(Name = "题目数量")]
-        public int Count { get; }
+        public int Count { get; set; }
 
         [Display(Name = "时限")]
         public TimeSpan Duration { get; set; }
@@ -26,23 +26,13 @@ namespace SdojWeb.Manager
             ContestStatus.Started;
 
         [Display(Name = "创建时间")]
-        public System.DateTime CreateTime { get; }
+        public DateTime CreateTime { get; set; }
 
         [Display(Name = "开始时间")]
-        public System.DateTime? StartTime { get; }
+        public DateTime? StartTime { get; set; }
 
         [Display(Name = "结束时间")]
-        public System.DateTime? CompleteTime { get; }
-
-        public ContestListModel(int id, string name, int count, DateTime createTime, DateTime? startTime, System.DateTime? completeTime)
-        {
-            Id = id;
-            Name = name;
-            Count = count;
-            CreateTime = createTime;
-            StartTime = startTime;
-            CompleteTime = completeTime;
-        }
+        public DateTime? CompleteTime { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -51,6 +41,7 @@ namespace SdojWeb.Manager
                    Name == other.Name &&
                    Count == other.Count &&
                    CreateTime == other.CreateTime &&
+                   Duration == other.Duration &&
                    EqualityComparer<DateTime?>.Default.Equals(StartTime, other.StartTime) &&
                    EqualityComparer<DateTime?>.Default.Equals(CompleteTime, other.CompleteTime);
         }
@@ -62,6 +53,7 @@ namespace SdojWeb.Manager
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
             hashCode = hashCode * -1521134295 + Count.GetHashCode();
             hashCode = hashCode * -1521134295 + CreateTime.GetHashCode();
+            hashCode = hashCode * -1521134295 + Duration.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(StartTime);
             hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(CompleteTime);
             return hashCode;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SdojWeb.Manager
+namespace SdojWeb.Models.ContestModels
 {
     public class ContestCreateModel
     {

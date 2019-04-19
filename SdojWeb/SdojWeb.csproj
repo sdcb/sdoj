@@ -429,6 +429,7 @@
     <Content Include="Views\Question\Code.cshtml" />
     <Content Include="Views\Solution\_LanguageTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Code.cshtml" />
+    <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

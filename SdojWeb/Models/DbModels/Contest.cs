@@ -68,8 +68,11 @@ namespace SdojWeb.Models.DbModels
 
     public enum ContestStatus
     {
+        [Display(Name = "未开始")]
         NotStarted, 
+        [Display(Name = "进行中")]
         Started, 
+        [Display(Name = "已结束")]
         Completed, 
     }
 }

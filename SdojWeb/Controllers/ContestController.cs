@@ -1,10 +1,11 @@
-﻿using System.Security.Principal;
+﻿using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
-using SdojWeb.Models;
+using SdojWeb.Models.ContestModels;
 
 namespace SdojWeb.Controllers
 {
@@ -21,7 +22,8 @@ namespace SdojWeb.Controllers
         {
             int userId = _identity.Identity.GetUserId<int>();
             bool isManager = _identity.IsInRole(SystemRoles.ContestAuthor);
-            return View(_manager.List(userId, isManager));
+            IQueryable<ContestListModel> data = _manager.List(userId, isManager);
+            return View(data);
         }
 
         [SdojAuthorize(Roles = SystemRoles.ContestAuthor)]

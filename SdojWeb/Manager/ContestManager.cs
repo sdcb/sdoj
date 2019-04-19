@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
 using SdojWeb.Models;
+using SdojWeb.Models.ContestModels;
 
 namespace SdojWeb.Manager
 {
@@ -22,14 +21,16 @@ namespace SdojWeb.Manager
                     x.Public ||
                     x.CreateUserId == currentUserId ||
                     x.Users.Select(v => v.UserId).Contains(currentUserId))
-                .Select(c => new ContestListModel(
-                    c.Id,
-                    c.Name,
-                    c.Questions.Count,
-                    c.CreateTime,
-                    c.StartTime,
-                    c.CompleteTime
-                ))
+                .Select(c => new ContestListModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Count = c.Questions.Count,
+                    Duration = c.Duration, 
+                    CreateTime = c.CreateTime,
+                    StartTime = c.StartTime,
+                    CompleteTime = c.CompleteTime, 
+                })
                 .OrderByDescending(x => x.Id);
         }
 
@@ -39,7 +40,5 @@ namespace SdojWeb.Manager
         }
 
         private readonly ApplicationDbContext _db;
-
-        private readonly IPrincipal _user;
     }
 }

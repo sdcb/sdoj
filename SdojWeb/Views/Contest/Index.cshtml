@@ -1,0 +1,58 @@
+﻿@using SdojWeb.Models.ContestModels
+@model IEnumerable<ContestListModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Index</h2>
+    </div>
+    <div class="col-xs-12">
+        <div class="clearfix">
+            <div class="form-tools pull-right">
+                <a class="btn btn-default btn-xs" href="@Url.Action("Create")">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    创建考试
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(x => x.Id)</th>
+                        <th>@Html.DisplayNameFor(x => x.Name)</th>
+                        <th>@Html.DisplayNameFor(x => x.Count)</th>
+                        <th>@Html.DisplayNameFor(x => x.Duration)</th>
+                        <th>@Html.DisplayNameFor(x => x.Status)</th>
+                        <th>@Html.DisplayNameFor(x => x.CreateTime)</th>
+                        <th>@Html.DisplayNameFor(x => x.StartTime)</th>
+                        <th>@Html.DisplayNameFor(x => x.CompleteTime)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ContestListModel item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(x => item.Id)</td>
+                            <td>@Html.DisplayFor(x => item.Name)</td>
+                            <td>@Html.DisplayFor(x => item.Count)</td>
+                            <td>@Html.DisplayFor(x => item.Duration)</td>
+                            <td>@Html.DisplayFor(x => item.Status)</td>
+                            <td>@Html.DisplayFor(x => item.CreateTime)</td>
+                            <td>@Html.DisplayFor(x => item.StartTime)</td>
+                            <td>@Html.DisplayFor(x => item.CompleteTime)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
