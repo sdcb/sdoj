@@ -8,7 +8,7 @@ namespace SdojWeb.Models.DbModels
     {
         public int Id { get; set; }
 
-        [MaxLength(30)]
+        [MaxLength(30), Required]
         public string Name { get; set; }
 
         public bool Public { get; set; }

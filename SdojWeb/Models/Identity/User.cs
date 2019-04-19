@@ -70,6 +70,8 @@ namespace SdojWeb.Models
 
         public virtual ICollection<Role> Roles { get; set; }
 
-        public virtual ICollection<ContestUser> Contests { get; set; }
+        public virtual ICollection<ContestUser> VisibleContests { get; set; }
+
+        public virtual ICollection<Contest> OwnedContests { get; set; }
     }
 }

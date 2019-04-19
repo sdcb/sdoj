@@ -34,6 +34,11 @@ namespace SdojWeb.Models
                 .WithRequired(s => s.Question)
                 .WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<Contest>()
+                .HasRequired(x => x.CreateUser)
+                .WithMany(x => x.OwnedContests)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<User>()
                 .HasMany(x => x.Roles).WithMany(x => x.Users)
                 .Map(x =>

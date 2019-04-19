@@ -8,25 +8,11 @@ namespace SdojWeb.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.ContestUser",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        ContestId = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Contest", t => t.ContestId, cascadeDelete: true)
-                .ForeignKey("dbo.User", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.ContestId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
                 "dbo.Contest",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 30),
+                        Name = c.String(nullable: false, maxLength: 30),
                         Public = c.Boolean(nullable: false),
                         CreateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         UpdateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
@@ -35,7 +21,7 @@ namespace SdojWeb.Migrations
                         CreateUserId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.User", t => t.CreateUserId, cascadeDelete: true)
+                .ForeignKey("dbo.User", t => t.CreateUserId)
                 .Index(t => t.CreateUserId);
             
             CreateTable(
@@ -53,6 +39,20 @@ namespace SdojWeb.Migrations
                 .Index(t => t.ContestId)
                 .Index(t => t.QuestionId);
             
+            CreateTable(
+                "dbo.ContestUser",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ContestId = c.Int(nullable: false),
+                        UserId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Contest", t => t.ContestId, cascadeDelete: true)
+                .ForeignKey("dbo.User", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.ContestId)
+                .Index(t => t.UserId);
+            
         }
         
         public override void Down()
@@ -62,14 +62,14 @@ namespace SdojWeb.Migrations
             DropForeignKey("dbo.ContestQuestion", "QuestionId", "dbo.Question");
             DropForeignKey("dbo.ContestQuestion", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.Contest", "CreateUserId", "dbo.User");
+            DropIndex("dbo.ContestUser", new[] { "UserId" });
+            DropIndex("dbo.ContestUser", new[] { "ContestId" });
             DropIndex("dbo.ContestQuestion", new[] { "QuestionId" });
             DropIndex("dbo.ContestQuestion", new[] { "ContestId" });
             DropIndex("dbo.Contest", new[] { "CreateUserId" });
-            DropIndex("dbo.ContestUser", new[] { "UserId" });
-            DropIndex("dbo.ContestUser", new[] { "ContestId" });
+            DropTable("dbo.ContestUser");
             DropTable("dbo.ContestQuestion");
             DropTable("dbo.Contest");
-            DropTable("dbo.ContestUser");
         }
     }
 }
