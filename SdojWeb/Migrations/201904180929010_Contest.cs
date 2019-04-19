@@ -8,23 +8,6 @@ namespace SdojWeb.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Contest",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false, maxLength: 30),
-                        Public = c.Boolean(nullable: false),
-                        CreateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        UpdateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        StartTime = c.DateTime(precision: 7, storeType: "datetime2"),
-                        CompleteTime = c.DateTime(precision: 7, storeType: "datetime2"),
-                        CreateUserId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.User", t => t.CreateUserId)
-                .Index(t => t.CreateUserId);
-            
-            CreateTable(
                 "dbo.ContestQuestion",
                 c => new
                     {
@@ -38,6 +21,24 @@ namespace SdojWeb.Migrations
                 .ForeignKey("dbo.Question", t => t.QuestionId, cascadeDelete: true)
                 .Index(t => t.ContestId)
                 .Index(t => t.QuestionId);
+            
+            CreateTable(
+                "dbo.Contest",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false, maxLength: 30),
+                        Public = c.Boolean(nullable: false),
+                        Duration = c.Time(nullable: false, precision: 7),
+                        CreateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdateTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        StartTime = c.DateTime(precision: 7, storeType: "datetime2"),
+                        CompleteTime = c.DateTime(precision: 7, storeType: "datetime2"),
+                        CreateUserId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.User", t => t.CreateUserId)
+                .Index(t => t.CreateUserId);
             
             CreateTable(
                 "dbo.ContestUser",
@@ -57,19 +58,19 @@ namespace SdojWeb.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.ContestUser", "UserId", "dbo.User");
-            DropForeignKey("dbo.ContestUser", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.ContestQuestion", "QuestionId", "dbo.Question");
             DropForeignKey("dbo.ContestQuestion", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.Contest", "CreateUserId", "dbo.User");
+            DropForeignKey("dbo.ContestUser", "UserId", "dbo.User");
+            DropForeignKey("dbo.ContestUser", "ContestId", "dbo.Contest");
             DropIndex("dbo.ContestUser", new[] { "UserId" });
             DropIndex("dbo.ContestUser", new[] { "ContestId" });
+            DropIndex("dbo.Contest", new[] { "CreateUserId" });
             DropIndex("dbo.ContestQuestion", new[] { "QuestionId" });
             DropIndex("dbo.ContestQuestion", new[] { "ContestId" });
-            DropIndex("dbo.Contest", new[] { "CreateUserId" });
             DropTable("dbo.ContestUser");
-            DropTable("dbo.ContestQuestion");
             DropTable("dbo.Contest");
+            DropTable("dbo.ContestQuestion");
         }
     }
 }

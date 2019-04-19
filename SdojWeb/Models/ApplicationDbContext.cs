@@ -73,6 +73,12 @@ namespace SdojWeb.Models
 
         public DbSet<Process2JudgeCode> Process2JudgeCode { get; set; }
 
+        public DbSet<Contest> Contests { get; set; }
+
+        public DbSet<ContestUser> ContestUsers { get; set; }
+
+        public DbSet<ContestQuestion> ContestQuestions { get; set; }
+
         public static ApplicationDbContext Create()
         {
             var db = new ApplicationDbContext();

@@ -19,6 +19,8 @@
 
         public const string QuestionGroupAdminOrCreator = QuestionGroupAdmin + "," + QuestionGroupCreator;
 
+        public const string ContestAuthor = "考试作者";
+
         // judger.
         public const string Judger = "评测人员";
 

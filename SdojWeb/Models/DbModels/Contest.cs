@@ -13,15 +13,13 @@ namespace SdojWeb.Models.DbModels
 
         public bool Public { get; set; }
 
-        public ContestStatus Status
-        {
-            get
-            {
-                if (StartTime == null) return ContestStatus.NotStarted;
-                if (CompleteTime == null) return ContestStatus.Started;
-                return ContestStatus.Completed;
-            }
-        }
+        public TimeSpan Duration { get; set; }
+
+        public ContestStatus Status =>
+            CompleteTime != null ? ContestStatus.Completed :
+            StartTime == null ? ContestStatus.NotStarted :
+            StartTime + Duration > DateTime.Now ? ContestStatus.Completed :
+            ContestStatus.Started;
 
         public DateTime CreateTime { get; set; }
 

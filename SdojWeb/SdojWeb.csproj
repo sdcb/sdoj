@@ -189,6 +189,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\QuestionGroupController.cs" />
     <Compile Include="Infrastructure\Extensions\ControllerExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\EnumExtensions.cs" />
@@ -199,8 +200,11 @@
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Attributes\RenderModelAttribute.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\RenderModelFilter.cs" />
+    <Compile Include="Models\ContestModels\ContestCreateModel.cs" />
+    <Compile Include="Models\ContestModels\ContestListModel.cs" />
     <Compile Include="Manager\QuestionGroupManager.cs" />
     <Compile Include="Manager\JudgeHubManager.cs" />
+    <Compile Include="Manager\ContestManager.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.cs" />
     <Compile Include="Migrations\201501190340143_QuestionGroupMigration.Designer.cs">
