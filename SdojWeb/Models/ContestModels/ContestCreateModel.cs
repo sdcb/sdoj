@@ -77,14 +77,14 @@ namespace SdojWeb.Models.ContestModels
 
     public class NumberListAttribute : RegularExpressionAttribute
     {
-        public NumberListAttribute() : base(@"^(\d+)(,\s*\d+)+\s*$")
+        public NumberListAttribute() : base(@"^(\d+)(,\s*\d+)*\s*$")
         {
         }
     }
 
     public class OptionalNumberListAttribute : RegularExpressionAttribute
     {
-        public OptionalNumberListAttribute() : base(@"^(\d+)?(,\s*\d+)+\s*$")
+        public OptionalNumberListAttribute() : base(@"^(\d+)?(,\s*\d+)*\s*$")
         {
         }
     }
