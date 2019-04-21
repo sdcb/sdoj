@@ -256,7 +256,6 @@
     <Compile Include="Models\QuestionGroupModels.cs" />
     <Compile Include="Models\DbModels\Process2JudgeCode.cs" />
     <Compile Include="SignalR\SolutionHub.cs" />
-    <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
@@ -308,7 +307,6 @@
     <Compile Include="Models\SolutionModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalR\JudgeHub.cs" />
-    <Compile Include="SignalR\MoveShapeHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -409,7 +407,6 @@
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\Identity\Users.cshtml" />
     <Content Include="Views\Identity\Edit.cshtml" />
-    <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Shared\_PerformanceCounter.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
