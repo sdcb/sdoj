@@ -201,6 +201,7 @@
     <Compile Include="Infrastructure\ModelMetadata\Attributes\RenderModelAttribute.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\RenderModelFilter.cs" />
     <Compile Include="Models\ContestModels\ContestCreateModel.cs" />
+    <Compile Include="Models\ContestModels\ContestDetailsModel.cs" />
     <Compile Include="Models\ContestModels\ContestListModel.cs" />
     <Compile Include="Manager\QuestionGroupManager.cs" />
     <Compile Include="Manager\JudgeHubManager.cs" />

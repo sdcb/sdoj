@@ -31,7 +31,8 @@ namespace SdojWeb.Migrations
             roleManager.Create(new Role { Name = SystemRoles.SolutionViewer });
             roleManager.Create(new Role { Name = SystemRoles.QuestionGroupAdmin });
             roleManager.Create(new Role { Name = SystemRoles.QuestionGroupCreator });
-            roleManager.Create(new Role { Name = SystemRoles.ContestAuthor });
+            roleManager.Create(new Role { Name = SystemRoles.ContestCreator });
+            roleManager.Create(new Role { Name = SystemRoles.ContestAdmin });
 
             // 添加预定义用户。
 

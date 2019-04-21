@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
 using SdojWeb.Models;
@@ -25,12 +26,12 @@ namespace SdojWeb.Controllers
 
         public ActionResult Index()
         {
-            bool isManager = _identity.IsInRole(SystemRoles.ContestAuthor);
+            bool isManager = _identity.IsInRole(SystemRoles.ContestAdmin);
             IQueryable<ContestListModel> data = _manager.List(GetCurrentUserId(), isManager);
             return View(data);
         }
 
-        [SdojAuthorize(Roles = SystemRoles.ContestAuthor)]
+        [SdojAuthorize(Roles = SystemRoles.ContestAdminOrCreator)]
         [HttpGet]
         public ActionResult Create()
         {
@@ -38,7 +39,7 @@ namespace SdojWeb.Controllers
         }
 
         [ValidateAntiForgeryToken, HttpPost, ActionName(nameof(Create))]
-        [SdojAuthorize(Roles = SystemRoles.ContestAuthor)]
+        [SdojAuthorize(Roles = SystemRoles.ContestCreator)]
         public async Task<ActionResult> CreateConfirmed(ContestCreateModel model)
         {
             await model.Validate(_db, ModelState);
@@ -50,8 +51,12 @@ namespace SdojWeb.Controllers
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
+            if (!await _manager.CheckAccess(id, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
+            {
+                return RedirectToAction("Index").WithWarning("此考试不存在或你无权限访问。");
+            }
             return View();
         }
 

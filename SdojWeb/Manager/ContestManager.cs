@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SdojWeb.Models;
 using SdojWeb.Models.ContestModels;
 using SdojWeb.Models.DbModels;
+using System.Data.Entity;
 
 namespace SdojWeb.Manager
 {
@@ -59,6 +59,25 @@ namespace SdojWeb.Manager
             });
             await _db.SaveChangesAsync();
             return data.Id;
+        }
+
+        public async Task<bool> CheckAccess(int contestId, bool isManager, int currentUserId)
+        {
+            // 管理员有牛逼权限
+            if (isManager) return true;
+
+            var contest = await _db.Contests
+                .Where(x => x.Id == contestId)
+                .Select(x => new { x.CreateUserId, x.Public, UserIds = x.Users.Select(v => v.Id) })
+                .FirstOrDefaultAsync();
+            // 未找到该contest -> false
+            if (contest == null) return false;
+            // 自己是作者 -> true
+            if (contest.CreateUserId == currentUserId) return true;
+            // 公共contest -> true
+            if (contest.Public) return true;
+            // 最后：用户列表包含当前用户
+            return contest.UserIds.Contains(currentUserId);
         }
 
         private readonly ApplicationDbContext _db;
