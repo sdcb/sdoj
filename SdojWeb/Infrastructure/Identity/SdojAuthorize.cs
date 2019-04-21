@@ -21,12 +21,6 @@ namespace SdojWeb.Infrastructure.Identity
                 return httpContext.User.EmailConfirmed();
             }
 
-            // Judger的Cookie不能用于网站登录。
-            if (httpContext.User.IsInRole(SystemRoles.Judger))
-            {
-                return false;
-            }
-
             return true;
         }
 

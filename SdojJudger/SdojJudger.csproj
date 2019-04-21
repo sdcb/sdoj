@@ -137,6 +137,7 @@
     <Compile Include="HubClient.cs" />
     <Compile Include="Business\JudgeProcess.cs" />
     <Compile Include="JudgeScheduler.cs" />
+    <Compile Include="Models\ClientJudgeModel.cs" />
     <Compile Include="Models\QuestionProcess2FullModel.cs" />
     <Compile Include="Models\QuestionTypes.cs" />
     <Compile Include="Models\SolutionFullModel.cs" />

@@ -53,53 +53,37 @@ namespace SdojWeb.SignalR
 			return true;
 		}
 
-		public async Task<bool> Update(int solutionId,
-			SolutionState stateId, int runTimeMs, float usingMemoryMb,
-			string compilerOutput)
-		{
-			var solutionLock = await _db.SolutionLocks.FindAsync(solutionId);
+        public async Task<bool> Update(ClientJudgeModel model)
+        {
+            SolutionLock solutionLock = await _db.SolutionLocks.FindAsync(model.SolutionId);
 
-			// 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
-			if (solutionLock == null)
-			{
-				return false;
-			}
-			if (solutionLock.LockClientId != Guid.Parse(Context.ConnectionId) || solutionLock.LockEndTime < DateTime.Now)
-			{
-				_db.Entry(solutionLock).State = EntityState.Deleted;
-				await _db.SaveChangesAsync();
-				return false;
-			}
+            // 未被锁住，或者锁住的客户端不正确，或者锁已经过期，则不允许操作。
+            if (solutionLock == null)
+            {
+                return false;
+            }
+            if (solutionLock.LockClientId != Guid.Parse(Context.ConnectionId) || solutionLock.LockEndTime < DateTime.Now)
+            {
+                _db.Entry(solutionLock).State = EntityState.Deleted;
+                await _db.SaveChangesAsync();
+                return false;
+            }
 
-			// 锁住，允许操作，然后改变状态。
-			var solution = await _db.Solutions.FindAsync(solutionId);
-			solution.State = stateId;
-			solution.RunTime = runTimeMs;
-			solution.UsingMemoryMb = usingMemoryMb;
-			if (solution.State == SolutionState.CompileError)
-			{
-				if (compilerOutput.Length > Solution.CompilerOutputLength)
-				{
-					solution.CompilerOutput = compilerOutput.Substring(0, Solution.CompilerOutputLength);
-				}
-				else
-				{
-					solution.CompilerOutput = compilerOutput;
-				}
-			}
-			solution.Lock = null;
+            // 锁住，允许操作，然后改变状态。
+            Solution solution = await _db.Solutions.FindAsync(model.SolutionId);
+            model.UpdateSolution(solution);
 
-			// 删除锁，保存数据。
-			_db.Entry(solution).State = EntityState.Modified;
-			_db.Entry(solutionLock).State = EntityState.Deleted;
-			await _db.SaveChangesAsync();
+            // 删除锁，保存数据。
+            _db.Entry(solution).State = EntityState.Modified;
+            _db.Entry(solutionLock).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
 
-			SolutionHub.PushChange(solution.Id, solution.State, runTimeMs, usingMemoryMb);
+            SolutionHub.PushChange(solution.Id, solution.State, model.RunTimeMs, model.UsingMemoryMb);
 
-			return true;
-		}
+            return true;
+        }
 
-		public async Task<SolutionDataModel> Lock(int solutionId)
+        public async Task<SolutionDataModel> Lock(int solutionId)
 		{
 			if (!await _manager.LockInternal(solutionId, Context.ConnectionId))
             {

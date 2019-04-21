@@ -126,6 +126,34 @@ namespace SdojWeb.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
         }
 
+        // POST: Solution/WrongAnswer/5
+        [HttpPost]
+        public async Task<ActionResult> WrongAnswer(int id)
+        {
+            var model = await _db.Solutions
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    QuestionCreateUserId = x.Question.CreateUserId,
+                    AuthorId = x.CreateUserId,
+                    Exists = x.WrongAnswer != null, 
+                    WrongAnswerInput = x.WrongAnswer.Input.Input, 
+                    WrongAnswerOutput = x.WrongAnswer.Output, 
+                }).FirstAsync();
+
+            if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
+            {
+                return Json(new
+                {
+                    Exists = model.Exists, 
+                    Input = model.WrongAnswerInput, 
+                    Output = model.WrongAnswerOutput, 
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+        }
+
         // GET: Solution/Details/5
         public async Task<ActionResult> Details(int id)
         {

@@ -34,17 +34,17 @@ namespace SdojJudger.Business
             using (var compiler1 = CompilerProvider.GetCompiler(_fullM.Language))
             using (var compiler2 = CompilerProvider.GetCompiler(_spush.Language))
             {
-                var res1 = compiler1.Compile(_fullM.Code);
+                CompileResult res1 = compiler1.Compile(_fullM.Code);
                 if (res1.HasErrors)
                 {
-                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0, res1.Output); // 评测代码 编译失败，属系统错误
+                    await _client.Update(ClientJudgeModel.CreateCompileError(_spush.Id, res1.Output)); // 评测代码 编译失败，属系统错误
                     return;
                 }
 
-                var res2 = compiler2.Compile(_lockM.Source);
+                CompileResult res2 = compiler2.Compile(_lockM.Source);
                 if (res2.HasErrors)
                 {
-                    await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0, res2.Output); // 待评测代码 编译失败，属用户错误
+                    await _client.Update(ClientJudgeModel.CreateCompileError(_spush.Id, res2.Output)); // 待评测代码 编译失败，属用户错误
                     return;
                 }
 
@@ -78,23 +78,23 @@ namespace SdojJudger.Business
 
                 if (!result.Process1Ok)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb);
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb));
                     return;
                 }
                 if (!result.Process2Ok)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb);
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.RuntimeError, peakRunTimeMs, peakMemoryMb));
                     return;
                 }
 
                 if (!result.Accepted)
                 {
-                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, peakRunTimeMs, peakMemoryMb, result.Process1Output);
+                    await _client.Update(ClientJudgeModel.CreateProcess2WrongAnswer(_spush.Id, peakRunTimeMs, peakMemoryMb, result.P1Result.Output, result.P2Result.Output));
                     return;
                 }
             }
 
-            await _client.Update(_spush.Id, SolutionState.Accepted, peakRunTimeMs, peakMemoryMb);
+            await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.Accepted, peakRunTimeMs, peakMemoryMb));
         }
 
         private async Task UpdateQuestionProcess2Code()

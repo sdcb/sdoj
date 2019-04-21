@@ -120,13 +120,24 @@
                                 @Html.DisplayFor(modelItem => item.SourceLength)
                             </td>
                             <td id="state-@item.Id">
-                                @if (item.State == SolutionState.CompileError && checkAccess(item.CreateUserId, item.QuestionCreateUserId))
+                                @if (checkAccess(item.CreateUserId, item.QuestionCreateUserId))
                                 {
-                                    <text>
+                                    if (item.State == SolutionState.CompileError)
+                                    {
                                         <a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, @item.Id)">
                                             @Html.DisplayFor(x => item.State)
                                         </a>
-                                    </text>
+                                    }
+                                    else if (item.State == SolutionState.WrongAnswer)
+                                    {
+                                        <a href="javascript:void(0);" data-bind="click: showWrongAnswer.bind($data, @item.Id)">
+                                            @Html.DisplayFor(x => item.State)
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.State)
+                                    }
                                 }
                                 else
                                 {
@@ -293,6 +304,15 @@
                     self.compilerOutput(data);
                 });
             };
+            self.showWrongAnswer = function (id) {
+                $("#compiler-modal").modal();
+                self.compilerOutput('加载中...');
+                self.id(id);
+                $.post("@Url.Action("WrongAnswer")" + "/" + id, function (data) {
+                    if (data.Exists) self.compilerOutput("输入：" + data.Input + "\r\n" + "你的输出（错误）：" + data.Output);
+                    else self.compilerOutput("<数据不存在或已删除。>");
+                });
+            }
         };
 
         var shub = $.connection.solutionHub;

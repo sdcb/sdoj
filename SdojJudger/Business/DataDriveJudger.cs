@@ -33,11 +33,11 @@ namespace SdojJudger.Business
             await UpdateQuestionData();
 
             var compiler = CompilerProvider.GetCompiler(_spush.Language);
-            var asm = compiler.Compile(_sfull.Source);
+            CompileResult asm = compiler.Compile(_sfull.Source);
 
             if (asm.HasErrors)
             {
-                await _client.Update(_spush.Id, SolutionState.CompileError, 0, 0, asm.Output);
+                await _client.Update(ClientJudgeModel.CreateCompileError(_spush.Id, asm.Output));
                 return;
             }
             else
@@ -65,7 +65,7 @@ namespace SdojJudger.Business
             int runTimeMs = 0;
             float peakMemoryMb = 0;
 
-            foreach (var data in datas)
+            foreach (QuestionData data in datas)
             {
                 var info = new JudgeInfo
                 {
@@ -84,22 +84,22 @@ namespace SdojJudger.Business
 
                 if (!result.IsDone)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // system error
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb)); // system error
                     return;
                 }
                 if (result.TimeMs >= data.TimeLimit)
                 {
-                    await _client.Update(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, peakMemoryMb);
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.TimeLimitExceed, runTimeMs, peakMemoryMb));
                     return;
                 }
                 if (result.MemoryMb >= data.MemoryLimitMb)
                 {
-                    await _client.Update(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, peakMemoryMb);
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.MemoryLimitExceed, runTimeMs, peakMemoryMb));
                     return;
                 }
                 if (result.ExitCode != 0)
                 {
-                    await _client.Update(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb); // application error
+                    await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.RuntimeError, runTimeMs, peakMemoryMb)); // application error
                     return;
                 }
 
@@ -107,11 +107,11 @@ namespace SdojJudger.Business
                 if (trimed != data.Output)
                 {
                     _log.DebugExt(() => $"\r\nExpected: \r\n{data.Output} \r\nActual: \r\n{result.Output}");
-                    await _client.Update(_spush.Id, SolutionState.WrongAnswer, runTimeMs, peakMemoryMb);
+                    await _client.Update(ClientJudgeModel.CreateWrongAnswer(_spush.Id, runTimeMs, peakMemoryMb, data.Id, trimed));
                     return;
                 }
             }
-            await _client.Update(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb);
+            await _client.Update(ClientJudgeModel.Create(_spush.Id, SolutionState.Accepted, runTimeMs, peakMemoryMb));
         }
 
         private async Task UpdateQuestionData()

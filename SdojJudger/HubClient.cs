@@ -54,13 +54,17 @@ namespace SdojJudger
             }
         }
 
-        public async Task<bool> Update(int solutionId, SolutionState statusId, 
-            int runTimeMs, float usingMemoryMb, string compilerOutput = "")
+        public async Task<bool> Update(ClientJudgeModel model)
         {
-            var result = await _server.Invoke<bool>(AppSettings.HubUpdate,
-                solutionId, statusId, runTimeMs, usingMemoryMb, compilerOutput);
-            _log.DebugExt(() => JsonConvert.SerializeObject(result));
-            _log.InfoExt(() => string.Format("Commit {0}-{1}, {2}ms,{3}MB", solutionId, statusId, runTimeMs, usingMemoryMb));
+            var result = await _server.Invoke<bool>(AppSettings.HubUpdate, model);
+            if (_log.IsDebugEnabled)
+            {
+                _log.DebugExt(() => JsonConvert.SerializeObject(result));
+            }
+            else
+            {
+                _log.InfoExt(() => $"Commit {model.SolutionId}-{model.StateId}, {model.RunTimeMs}ms,{model.UsingMemoryMb}MB");
+            }
             return result;
         }
 

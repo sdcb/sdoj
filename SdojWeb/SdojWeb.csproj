@@ -249,6 +249,7 @@
     <Compile Include="Models\Identity\UserClaim.cs" />
     <Compile Include="Models\Identity\UserLogin.cs" />
     <Compile Include="Models\Identity\UserStore.cs" />
+    <Compile Include="Models\JudgePush\JugerUpdateModel.cs" />
     <Compile Include="Models\JudgePush\QuestionDataFullModel.cs" />
     <Compile Include="Models\JudgePush\QuestionDataHashModel.cs" />
     <Compile Include="Models\JudgePush\SolutionPushModel.cs" />

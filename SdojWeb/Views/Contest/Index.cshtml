@@ -9,7 +9,7 @@
     <div class="col-xs-12">
         <h2>@ViewBag.Title</h2>
     </div>
-    @if (User.IsInRole(SystemRoles.ContestAuthor))
+    @if (User.IsInRole(SystemRoles.ContestCreator) || User.IsInRole(SystemRoles.ContestAdmin))
     {
         <div class="col-xs-12">
             <div class="clearfix">

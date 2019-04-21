@@ -21,7 +21,7 @@ namespace SdojWeb.Models.DbModels
         [MaxLength(32 * 1024)]
         public string Source { get; set; }
 
-        [MaxLength(CompilerOutputLength)]
+        [MaxLength(CompilerOutputLimit)]
         public string CompilerOutput { get; set; }
 
         public SolutionState State { get; set; }
@@ -36,7 +36,7 @@ namespace SdojWeb.Models.DbModels
 
         public SolutionWrongAnswer WrongAnswer { get; set; }
 
-        public const int CompilerOutputLength = 500;
+        public const int CompilerOutputLimit = 500;
     }
 
     public class SolutionWrongAnswer
@@ -50,9 +50,9 @@ namespace SdojWeb.Models.DbModels
 
         public QuestionData Input { get; set; }
 
-        [Required, MaxLength(DataWrongLimit)]
+        [Required, MaxLength(WrongAnswerLimit)]
         public string Output { get; set; }
 
-        public const int DataWrongLimit = 1000;
+        public const int WrongAnswerLimit = 1000;
     }
 }
