@@ -36,6 +36,8 @@ namespace SdojWeb.Models.DbModels
         public int CreateUserId { get; set; }
 
         public User CreateUser { get; set; }
+
+        public ICollection<ContestSolution> Solutions { get; set; }
     }
 
     public class ContestQuestion
@@ -64,6 +66,19 @@ namespace SdojWeb.Models.DbModels
         public int UserId { get; set; }
 
         public User User { get; set; }
+    }
+
+    public class ContestSolution
+    {
+        public int Id { get; set; }
+
+        public int ContestId { get; set; }
+
+        public Contest Contest { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public Solution Solution { get; set; }
     }
 
     public enum ContestStatus

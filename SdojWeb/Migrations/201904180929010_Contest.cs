@@ -41,6 +41,20 @@ namespace SdojWeb.Migrations
                 .Index(t => t.CreateUserId);
             
             CreateTable(
+                "dbo.SolutionWrongAnswer",
+                c => new
+                    {
+                        SolutionId = c.Int(nullable: false),
+                        QuestionDataId = c.Int(nullable: false),
+                        Output = c.String(nullable: false, maxLength: 1000),
+                    })
+                .PrimaryKey(t => t.SolutionId)
+                .ForeignKey("dbo.QuestionData", t => t.QuestionDataId, cascadeDelete: true)
+                .ForeignKey("dbo.Solution", t => t.SolutionId)
+                .Index(t => t.SolutionId)
+                .Index(t => t.QuestionDataId);
+            
+            CreateTable(
                 "dbo.ContestUser",
                 c => new
                     {
@@ -54,21 +68,45 @@ namespace SdojWeb.Migrations
                 .Index(t => t.ContestId)
                 .Index(t => t.UserId);
             
+            CreateTable(
+                "dbo.ContestSolution",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ContestId = c.Int(nullable: false),
+                        SolutionId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Contest", t => t.ContestId, cascadeDelete: true)
+                .ForeignKey("dbo.Solution", t => t.SolutionId, cascadeDelete: true)
+                .Index(t => t.ContestId)
+                .Index(t => t.SolutionId);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.ContestQuestion", "QuestionId", "dbo.Question");
+            DropForeignKey("dbo.ContestSolution", "SolutionId", "dbo.Solution");
+            DropForeignKey("dbo.ContestSolution", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.ContestQuestion", "ContestId", "dbo.Contest");
             DropForeignKey("dbo.Contest", "CreateUserId", "dbo.User");
             DropForeignKey("dbo.ContestUser", "UserId", "dbo.User");
             DropForeignKey("dbo.ContestUser", "ContestId", "dbo.Contest");
+            DropForeignKey("dbo.SolutionWrongAnswer", "SolutionId", "dbo.Solution");
+            DropForeignKey("dbo.SolutionWrongAnswer", "QuestionDataId", "dbo.QuestionData");
+            DropIndex("dbo.ContestSolution", new[] { "SolutionId" });
+            DropIndex("dbo.ContestSolution", new[] { "ContestId" });
             DropIndex("dbo.ContestUser", new[] { "UserId" });
             DropIndex("dbo.ContestUser", new[] { "ContestId" });
+            DropIndex("dbo.SolutionWrongAnswer", new[] { "QuestionDataId" });
+            DropIndex("dbo.SolutionWrongAnswer", new[] { "SolutionId" });
             DropIndex("dbo.Contest", new[] { "CreateUserId" });
             DropIndex("dbo.ContestQuestion", new[] { "QuestionId" });
             DropIndex("dbo.ContestQuestion", new[] { "ContestId" });
+            DropTable("dbo.ContestSolution");
             DropTable("dbo.ContestUser");
+            DropTable("dbo.SolutionWrongAnswer");
             DropTable("dbo.Contest");
             DropTable("dbo.ContestQuestion");
         }

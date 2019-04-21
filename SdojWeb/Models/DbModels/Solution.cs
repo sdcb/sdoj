@@ -34,6 +34,25 @@ namespace SdojWeb.Models.DbModels
 
         public SolutionLock Lock { get; set; }
 
+        public SolutionWrongAnswer WrongAnswer { get; set; }
+
         public const int CompilerOutputLength = 500;
+    }
+
+    public class SolutionWrongAnswer
+    {
+        [Key]
+        public int SolutionId { get; set; }
+
+        public Solution Solution { get; set; }
+
+        public int QuestionDataId { get; set; }
+
+        public QuestionData Input { get; set; }
+
+        [Required, MaxLength(DataWrongLimit)]
+        public string Output { get; set; }
+
+        public const int DataWrongLimit = 1000;
     }
 }

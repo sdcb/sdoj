@@ -39,6 +39,10 @@ namespace SdojWeb.Models
                 .WithMany(x => x.OwnedContests)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Solution>()
+                .HasOptional(x => x.WrongAnswer)
+                .WithRequired(x => x.Solution);
+            
             modelBuilder.Entity<User>()
                 .HasMany(x => x.Roles).WithMany(x => x.Users)
                 .Map(x =>
@@ -54,6 +58,8 @@ namespace SdojWeb.Models
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Solution> Solutions { get; set; }
+
+        public DbSet<SolutionWrongAnswer> SolutionWrongAnswers { get; set; }
 
         public DbSet<QuestionData> QuestionDatas { get; set; }
 
@@ -78,6 +84,8 @@ namespace SdojWeb.Models
         public DbSet<ContestUser> ContestUsers { get; set; }
 
         public DbSet<ContestQuestion> ContestQuestions { get; set; }
+
+        public DbSet<ContestSolution> ContestSolutions { get; set; }
 
         public static ApplicationDbContext Create()
         {
