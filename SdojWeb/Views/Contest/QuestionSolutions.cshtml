@@ -20,13 +20,30 @@
                 <tr>
                     <td>@Html.DisplayFor(x => item.Language)</td>
                     <td>@Html.DisplayFor(x => item.SourceLength)</td>
-                    <td>@Html.DisplayFor(x => item.State)</td>
-                    <td>@Html.DisplayFor(x => item.RunTime)</td>
-                    <td>@Html.DisplayFor(x => item.UsingMemoryMb)</td>
+                    <td id="state-@item.Id">
+                        @if (item.State == SolutionState.CompileError)
+                        {
+                            <a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, @item.Id)">
+                                @Html.DisplayFor(x => item.State)
+                            </a>
+                        }
+                        else if (item.State == SolutionState.WrongAnswer)
+                        {
+                            <a href="javascript:void(0);" data-bind="click: showWrongAnswer.bind($data, @item.Id)">
+                                @Html.DisplayFor(x => item.State)
+                            </a>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.State)
+                        }
+                    </td>
+                    <td id="runtime-@item.Id">@Html.DisplayFor(x => item.RunTime)</td>
+                    <td id="memory-@item.Id">@Html.DisplayFor(x => item.UsingMemoryMb)</td>
                     <td>@Html.DisplayFor(x => item.SubmitTime)</td>
                     <td>
                         <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
-                           data-bind="click: loadcode.bind($data, @item.Id)">
+                           data-bind="click: loadCode.bind($data, @item.Id)">
                             <i class="glyphicon glyphicon-file"></i>
                             源码
                         </a>

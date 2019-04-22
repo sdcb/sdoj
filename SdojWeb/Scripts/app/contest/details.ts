@@ -51,6 +51,21 @@
 
         constructor() {
             this.loadSolutions();
+            var shub = $.connection.solutionHub;
+            shub.client.push = (id, name, runtime, memory) => {
+                $("#runtime-" + id).text(runtime);
+                $("#memory-" + id).text(memory.toFixed(2));
+                if (name === "答案错误") {
+                    $("#state-" + id).html(`<a href="javascript:void(0);" data-bind="click: showWrongAnswer.bind($data, ${id})">${name}</a>`);
+                    ko.applyBindingsToDescendants(this, $("#state-" + id)[0]);
+                } else if (name === "编译失败") {
+                    $("#state-" + id).html(`<a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, ${id})">${name}</a>`);
+                    ko.applyBindingsToDescendants(this, $("#state-" + id)[0]);
+                } else {
+                    $("#state-" + id).text(name);
+                }
+            };
+            $.connection.hub.start();
         }
 
         submit() {
@@ -58,8 +73,8 @@
             let code = dom.getSourceCode();
             if (code.length > 32 * 1024) return;
             $.post(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/submit`, {
-                language: language, 
-                source: code, 
+                language: language,
+                source: code,
             }).then(data => {
                 this.loadSolutions();
             });
@@ -68,7 +83,7 @@
         loadSolutions() {
             const $solutionDiv = $("#solutions");
             $solutionDiv.load(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`, null, () => {
-                ko.applyBindingsToNode($solutionDiv[0], this);
+                ko.applyBindingsToDescendants(this, $solutionDiv[0]);
             });
         }
 
@@ -88,7 +103,7 @@
             $("#compiler-modal").modal();
             this.compilerOutput('加载中...');
             this.solutionId(solutionId);
-            $.post(`/solution/compilerOutput/${solutionId}`, function (data) {
+            $.post(`/solution/compilerOutput/${solutionId}`).then((data) => {
                 this.compilerOutput(data);
             });
         }
@@ -103,4 +118,8 @@
             });
         }
     }
+}
+
+interface JQueryStatic {
+    connection: any;
 }
