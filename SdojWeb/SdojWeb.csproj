@@ -433,6 +433,7 @@
     <Content Include="Views\Shared\EditorTemplates\TimeSpan.cshtml" />
     <Content Include="Views\Contest\Details.cshtml" />
     <Content Include="Views\Question\_Details.cshtml" />
+    <Content Include="Views\Contest\QuestionSolutions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

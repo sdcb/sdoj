@@ -29,6 +29,10 @@
         getContestId(): number {
             return $(".navbar-brand").data("id");
         }
+
+        getSourceCode() {
+            return this.code.getValue();
+        }
     }
 
     const dom = new Dom();
@@ -41,12 +45,24 @@
     dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
 
     export class DetailsModel {
-        solutions = ko.observableArray();
-
         constructor() {
-            $.post(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`).then(data => {
-                this.solutions(data);
+            this.loadSolutions();
+        }
+
+        submit() {
+            let language = dom.getSelectedLanguage();
+            let code = dom.getSourceCode();
+            if (code.length > 32 * 1024) return;
+            $.post(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/submit`, {
+                language: language, 
+                source: code, 
+            }).then(data => {
+                this.loadSolutions();
             });
+        }
+
+        loadSolutions() {
+            $("#solutions").load(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`);
         }
     }
 }

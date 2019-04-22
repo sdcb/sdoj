@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.Alerts;
 using SdojWeb.Infrastructure.Identity;
 using SdojWeb.Manager;
 using SdojWeb.Models;
 using SdojWeb.Models.ContestModels;
+using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Controllers
 {
@@ -74,7 +78,27 @@ namespace SdojWeb.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(await _manager.GetQuestionSolutions(questionId));
+            List<SolutionSummaryModel> data = await _manager.GetQuestionSolutions(questionId);
+            return PartialView(data);
+        }
+
+        [Route("details/{contestId}/question-{questionId}/submit")]
+        [HttpPost]
+        public async Task<ActionResult> Submit(int contestId, int questionId, SolutionCreateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new HttpStatusCodeResult(400, String.Join("\n", ModelState.Select(x => $"{x.Key}:{x.Value}")));
+            }
+
+            if (!await _manager.CheckAccess(contestId, questionId, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            int solutionId = await _manager.CreateSolution(contestId, model);
+            await _manager.PushSolutionJudge(solutionId);
+            return new HttpStatusCodeResult(201, solutionId.ToString());
         }
 
         private int GetCurrentUserId()

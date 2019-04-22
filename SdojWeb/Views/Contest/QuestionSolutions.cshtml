@@ -1,0 +1,32 @@
+﻿@using SdojWeb.Models
+@using System.Web.Mvc.Html
+@model IEnumerable<SolutionSummaryModel>
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(x => x.Id)</th>
+                <th>@Html.DisplayNameFor(x => x.Language)</th>
+                <th>@Html.DisplayNameFor(x => x.SourceLength)</th>
+                <th>@Html.DisplayNameFor(x => x.State)</th>
+                <th>@Html.DisplayNameFor(x => x.RunTime)</th>
+                <th>@Html.DisplayNameFor(x => x.UsingMemoryMb)</th>
+                <th>@Html.DisplayNameFor(x => x.SubmitTime)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(x => item.Id)</td>
+                    <td>@Html.DisplayFor(x => item.Language)</td>
+                    <td>@Html.DisplayFor(x => item.SourceLength)</td>
+                    <td>@Html.DisplayFor(x => item.State)</td>
+                    <td>@Html.DisplayFor(x => item.RunTime)</td>
+                    <td>@Html.DisplayFor(x => item.UsingMemoryMb)</td>
+                    <td>@Html.DisplayFor(x => item.SubmitTime)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

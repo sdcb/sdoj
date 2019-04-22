@@ -55,7 +55,7 @@
             </div>
             <!-- 编辑代码 -->
             <div class="col-xs-4">
-                <form id="codeForm">
+                <form id="codeForm" data-bind="submit: submit">
                     <div class="form-group">
                         @Html.EnumDropDownListFor(x => language, new { @class = "form-control" })
                     </div>
@@ -67,7 +67,14 @@
             </div>
             <!-- 提交列表 -->
             <div class="col-xs-4">
-                <strong>提交列表</strong><hr />
+                <div class="clearfix">
+                    <strong>提交列表</strong>
+                    <button class="btn btn-xs btn-default pull-right" data-bind="click: loadSolutions">
+                        <i class="glyphicon glyphicon-refresh"></i>
+                        重新加载
+                    </button>
+                </div>
+                <div id="solutions"></div>
             </div>
         </div>
         <hr />

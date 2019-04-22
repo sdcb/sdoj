@@ -7,6 +7,9 @@ using SdojWeb.Models.DbModels;
 using System.Data.Entity;
 using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
+using AutoMapper;
+using SdojWeb.Models.JudgePush;
+using SdojWeb.SignalR;
 
 namespace SdojWeb.Manager
 {
@@ -91,7 +94,9 @@ namespace SdojWeb.Manager
         public async Task<List<SolutionSummaryModel>> GetQuestionSolutions(int questionId)
         {
             return await _db.ContestSolutions
+                .Where(x => x.Solution.QuestionId == questionId)
                 .OrderByDescending(x => x.Id)
+                .Select(x => x.Solution)
                 .ProjectTo<SolutionSummaryModel>()
                 .Take(100)
                 .ToListAsync();
@@ -104,6 +109,26 @@ namespace SdojWeb.Manager
                 .Select(x => x.Question)
                 .ProjectTo<QuestionDetailModel>()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task PushSolutionJudge(int solutionId)
+        {
+            SolutionPushModel pushModel = await _db.Solutions
+                .ProjectTo<SolutionPushModel>()
+                .FirstOrDefaultAsync(x => x.Id == solutionId);
+            JudgeHub.Judge(pushModel);
+        }
+
+        public async Task<int> CreateSolution(int contestId, SolutionCreateModel model)
+        {
+            Solution solution = Mapper.Map<Solution>(model);
+            _db.ContestSolutions.Add(new ContestSolution
+            {
+                ContestId = contestId, 
+                Solution = solution
+            });
+            await _db.SaveChangesAsync();
+            return solution.Id;
         }
 
         public async Task<bool> CheckAccess(int contestId, bool isManager, int currentUserId)
