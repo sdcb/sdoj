@@ -71,7 +71,7 @@
                     <strong>提交列表</strong>
                     <button class="btn btn-xs btn-default pull-right" data-bind="click: loadSolutions">
                         <i class="glyphicon glyphicon-refresh"></i>
-                        重新加载
+                        刷新
                     </button>
                 </div>
                 <div id="solutions"></div>
@@ -85,6 +85,8 @@
         </footer>
     </div>
     @Html.Partial("../Solution/_LanguageTemplate")
+    @Html.Partial("../Solution/_SourceModal")
+    @Html.Partial("../Solution/_CompilerOutputModal")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/marked")
     @Scripts.Render("~/bundles/ko")

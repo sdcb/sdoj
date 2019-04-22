@@ -189,51 +189,8 @@
     </div>
 </div>
 
-<!-- 源代码 Modal -->
-<div class="modal fade" id="source-code-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">
-                    源代码<span data-bind="text: ' - ' + id()"></span>
-                </h4>
-            </div>
-            <div class="modal-body">
-                <pre data-bind="text: code"></pre>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bind="click: rawCode">
-                    <i class="glyphicon glyphicon-file"></i>
-                    地址
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    关闭
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 编译信息 Modal -->
-<div class="modal fade" id="compiler-modal" tabindex="-1" role="dialog" aria-labelledby="compiler-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="compiler-modal-label">编译器输出<span data-bind="text: ' - ' + id()"></span></h4>
-            </div>
-            <div class="modal-body">
-                <pre data-bind="text: compilerOutput"></pre>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    关闭
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_SourceModal")
+@Html.Partial("_CompilerOutputModal")
 
 <div class="row">
     <div class="col-xs-6">
@@ -266,19 +223,19 @@
             self.onlyMe = '@route["onlyMe"]';
             self.code = ko.observable();
             self.compilerOutput = ko.observable();
-            self.id = ko.observable();
+            self.solutionId = ko.observable();
 
             self.loadcode = function (id) {
                 self.code('加载中...');
-                self.id(id);
+                self.solutionId(id);
 
                 $.get("@Url.Action("Source")" + "/" + id, function (data) {
                     self.code(data.replace(new RegExp("\t", "g"), "    "));
-                    self.id(id);
+                    self.solutionId(id);
                 });
             };
             self.rawCode = function () {
-                var url = '@Url.Action("Source", "Solution")' + '/' + self.id();
+                var url = '@Url.Action("Source", "Solution")' + '/' + self.solutionId();
                 window.open(url);
             };
             self.deleteMe = function (id) {
@@ -299,7 +256,7 @@
             self.showCompilerOutput = function (id) {
                 $("#compiler-modal").modal();
                 self.compilerOutput('加载中...');
-                self.id(id);
+                self.solutionId(id);
                 $.post("@Url.Action("CompilerOutput")" + "/" + id, function (data) {
                     self.compilerOutput(data);
                 });
@@ -307,7 +264,7 @@
             self.showWrongAnswer = function (id) {
                 $("#compiler-modal").modal();
                 self.compilerOutput('加载中...');
-                self.id(id);
+                self.solutionId(id);
                 $.post("@Url.Action("WrongAnswer")" + "/" + id, function (data) {
                     if (data.Exists) self.compilerOutput("输入：" + data.Input + "\r\n" + "你的输出（错误）：" + data.Output);
                     else self.compilerOutput("<数据不存在或已删除。>");

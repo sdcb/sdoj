@@ -45,6 +45,10 @@
     dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
 
     export class DetailsModel {
+        code = ko.observable<string>();
+        compilerOutput = ko.observable<string>();
+        solutionId = ko.observable<number>();
+
         constructor() {
             this.loadSolutions();
         }
@@ -62,7 +66,41 @@
         }
 
         loadSolutions() {
-            $("#solutions").load(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`);
+            const $solutionDiv = $("#solutions");
+            $solutionDiv.load(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`, null, () => {
+                ko.applyBindingsToNode($solutionDiv[0], this);
+            });
+        }
+
+        loadCode(solutionId: number) {
+            this.code("加载中...");
+            this.solutionId(solutionId);
+            $.get(`/solution/source/${solutionId}`).then(data => {
+                this.code(data.replace(new RegExp("\t", "g"), "    "));
+            });
+        }
+
+        rawCode() {
+            open(`/solution/source/${this.solutionId()}`);
+        }
+
+        showCompilerOutput(solutionId: number) {
+            $("#compiler-modal").modal();
+            this.compilerOutput('加载中...');
+            this.solutionId(solutionId);
+            $.post(`/solution/compilerOutput/${solutionId}`, function (data) {
+                this.compilerOutput(data);
+            });
+        }
+
+        showWrongAnswer(solutionId: number) {
+            $("#compiler-modal").modal();
+            this.compilerOutput('加载中...');
+            this.solutionId(solutionId);
+            $.post(`/solution/wrongAnswer/${solutionId}`).then(data => {
+                if (data.Exists) this.compilerOutput("输入：" + data.Input + "\r\n" + "你的输出（错误）：" + data.Output);
+                else this.compilerOutput("<数据不存在或已删除。>");
+            });
         }
     }
 }
