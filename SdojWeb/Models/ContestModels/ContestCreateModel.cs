@@ -17,7 +17,7 @@ namespace SdojWeb.Models.ContestModels
         public bool Public { get; set; }
 
         [Display(Name = "限时")]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration { get; set; } = TimeSpan.FromHours(1);
 
         [Display(Name = "题目列表", Description = "填入题目Id, 多个题目逗号(,)分隔...")]
         [NumberList, Required]

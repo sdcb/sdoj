@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models.ContestModels
@@ -35,6 +34,15 @@ namespace SdojWeb.Models.ContestModels
         [Display(Name = "结束时间")]
         public DateTime? CompleteTime { get; set; }
 
-        public List<string> Questions { get; set; }
+        public List<QuestionBriefModel> Questions { get; set; }
+    }
+
+    public class QuestionBriefModel
+    {
+        public int Id { get; set; }
+
+        public int Rank { get; set; }
+
+        public string Name { get; set; }
     }
 }

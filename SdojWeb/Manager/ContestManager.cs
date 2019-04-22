@@ -28,10 +28,10 @@ namespace SdojWeb.Manager
                     Id = c.Id,
                     Name = c.Name,
                     Count = c.Questions.Count,
-                    Duration = c.Duration, 
+                    Duration = c.Duration,
                     CreateTime = c.CreateTime,
                     StartTime = c.StartTime,
-                    CompleteTime = c.CompleteTime, 
+                    CompleteTime = c.CompleteTime,
                 })
                 .OrderByDescending(x => x.Id);
         }
@@ -50,7 +50,7 @@ namespace SdojWeb.Manager
                 Questions = model.GetQuestionIds().Select((x, i) => new ContestQuestion
                 {
                     QuestionId = x,
-                    Rank = i,
+                    Rank = i + 1,
                 }).ToList(),
                 Users = model.GetUserIds()?.Select(x => new ContestUser
                 {
@@ -59,6 +59,31 @@ namespace SdojWeb.Manager
             });
             await _db.SaveChangesAsync();
             return data.Id;
+        }
+
+        public Task<ContestDetailsModel> Get(int contestId, int rank)
+        {
+            return _db.Contests
+                .Where(x => x.Id == contestId)
+                .Select(x => new ContestDetailsModel
+                {
+                    Id = x.Id,
+                    CompleteTime = x.CompleteTime,
+                    Count = x.Questions.Count,
+                    Questions = x.Questions
+                        .Select(q => new QuestionBriefModel
+                        {
+                            Id = q.QuestionId,
+                            Rank = q.Rank, 
+                            Name = q.Question.Name
+                        })
+                        .ToList(),
+                    Name = x.Name,
+                    CreateTime = x.CreateTime,
+                    Duration = x.Duration,
+                    StartTime = x.StartTime,
+                })
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> CheckAccess(int contestId, bool isManager, int currentUserId)

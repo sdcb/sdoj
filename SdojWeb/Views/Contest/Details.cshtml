@@ -1,7 +1,54 @@
-﻿
+﻿@using SdojWeb.Models.ContestModels
+@model ContestDetailsModel
 @{
-    ViewBag.Title = "Details";
+    Layout = null;
 }
-
-<h2>Details</h2>
-
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Name - sdoj</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink(@Model.Name, "Details", new { area = "", id = Model.Id }, new { @class = "navbar-brand" })
+                <ul class="nav navbar-nav">
+                    @foreach (QuestionBriefModel question in Model.Questions)
+                    {
+                        <li class="@(question.Rank == ViewBag.Rank ? "active" : "")">
+                            <a href="~/contest/details/@Model.Id/question/@question.Rank">
+                                @question.Rank.<strong>@question.Name</strong>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+                &nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid body-content">
+        @Html.Partial("_Alerts")
+        Details here
+        <hr />
+        <footer>
+            <p>
+                &copy; @DateTime.Now.Year - sdoj
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -12,6 +12,7 @@ using SdojWeb.Models.ContestModels;
 namespace SdojWeb.Controllers
 {
     [SdojAuthorize]
+    [RoutePrefix("contest")]
     public class ContestController : Controller
     {
         public ContestController(
@@ -39,7 +40,7 @@ namespace SdojWeb.Controllers
         }
 
         [ValidateAntiForgeryToken, HttpPost, ActionName(nameof(Create))]
-        [SdojAuthorize(Roles = SystemRoles.ContestCreator)]
+        [SdojAuthorize(Roles = SystemRoles.ContestAdminOrCreator)]
         public async Task<ActionResult> CreateConfirmed(ContestCreateModel model)
         {
             await model.Validate(_db, ModelState);
@@ -51,13 +52,17 @@ namespace SdojWeb.Controllers
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        public async Task<ActionResult> Details(int id)
+        [Route("details/{id}")]
+        [Route("details/{id}/question/{rank}")]
+        public async Task<ActionResult> Details(int id, int rank = 1)
         {
             if (!await _manager.CheckAccess(id, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
             {
                 return RedirectToAction("Index").WithWarning("此考试不存在或你无权限访问。");
             }
-            return View();
+            ContestDetailsModel details = await _manager.Get(id, rank);
+            ViewBag.Rank = rank;
+            return View(details);
         }
 
         private int GetCurrentUserId()
