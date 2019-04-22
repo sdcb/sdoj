@@ -44,7 +44,7 @@
         @Html.Partial("_Alerts")
         <div class="row">
             <div class="col-xs-4">
-                @Html.Partial("../Question/_Details", Model.CurrentQuestion)
+                @Html.Partial("../Question/_Details", Model.CurrentQuestion, new ViewDataDictionary { { "FullScreen", true } })
             </div>
         </div>
         <hr />
