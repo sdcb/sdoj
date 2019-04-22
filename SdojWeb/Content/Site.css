@@ -35,3 +35,7 @@ div.well:not(.markdown) {
 .well .markdown blockquote {
     font-size: 15px;
 }
+
+.center-header th {
+    text-align: center;
+}

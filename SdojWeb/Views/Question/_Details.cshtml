@@ -5,7 +5,7 @@
 }
 
 <div class="text-center">
-    <table class="table table-condensed">
+    <table class="table table-condensed center-header">
         <thead>
             <tr>
                 @*<th>@Html.DisplayNameFor(x => x.QuestionType)</th>*@
@@ -16,7 +16,7 @@
                     <th>@Html.DisplayNameFor(x => x.RunTimes)</th>
                 }
                 <th>@Html.DisplayNameFor(model => model.AcceptedCount)</th>
-                <th>@Html.DisplayNameFor(model => model.SolutionCount)</th>
+                <th>通过率</th>
             </tr>
         </thead>
         <tbody>
@@ -28,8 +28,8 @@
                 {
                     <td>@Html.DisplayFor(x => x.RunTimes)</td>
                 }
-                <td>@Model.AcceptedCount</td>
-                <td>@Model.SolutionCount</td>
+                <td>@Model.AcceptedCount / @Model.SolutionCount</td>
+                <td>@((1.0 * Model.AcceptedCount / (Model.SolutionCount + Double.Epsilon)).ToString("P2"))</td>
             </tr>
         </tbody>
     </table>
@@ -42,12 +42,12 @@
     {
         <div class="col-xs-12 @cls">
             <h4>@Html.DisplayNameFor(x => x.InputExplain)</h4>
-            <div class="well">@Html.DisplayFor(x => x.InputExplain)</div>
+            <div class="well markdown">@Html.DisplayFor(x => x.InputExplain)</div>
         </div>
 
         <div class="col-xs-12 @cls">
             <h4>@Html.DisplayNameFor(x => x.OutputExplain)</h4>
-            <div class="well">@Html.DisplayFor(x => x.OutputExplain)</div>
+            <div class="well markdown">@Html.DisplayFor(x => x.OutputExplain)</div>
         </div>
     }
 </div>
