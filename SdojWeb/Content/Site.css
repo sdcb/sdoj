@@ -27,7 +27,7 @@ select.form-control {
 .form-tools {
     margin-bottom: 10px;
 }
-div.well {
+div.well:not(.markdown) {
     white-space:pre;
     word-wrap: break-word;
 }
