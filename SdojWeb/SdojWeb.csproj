@@ -432,6 +432,7 @@
     <Content Include="Views\Contest\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TimeSpan.cshtml" />
     <Content Include="Views\Contest\Details.cshtml" />
+    <Content Include="Views\Question\_Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

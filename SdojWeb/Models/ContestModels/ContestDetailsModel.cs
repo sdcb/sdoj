@@ -35,6 +35,10 @@ namespace SdojWeb.Models.ContestModels
         public DateTime? CompleteTime { get; set; }
 
         public List<QuestionBriefModel> Questions { get; set; }
+
+        public QuestionDetailModel CurrentQuestion { get; set; }
+
+        public int Rank { get; set; }
     }
 
     public class QuestionBriefModel

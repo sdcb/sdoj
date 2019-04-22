@@ -1,5 +1,4 @@
-﻿@using SdojWeb.Infrastructure.Identity
-@using SdojWeb.Models
+﻿@using SdojWeb.Models
 @model QuestionDetailModel
 @{
     ViewBag.Title = Model.Name;
@@ -12,81 +11,7 @@
 </style>
 
 <h2 class="text-center">@ViewBag.Title</h2>
-<div class="text-center">
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                @*<th>@Html.DisplayNameFor(x => x.QuestionType)</th>*@
-                <th>@Html.DisplayNameFor(model => model.MemoryLimitMb)</th>
-                <th>@Html.DisplayNameFor(model => model.TimeLimit)</th>
-                @if (Model.QuestionType == SdojWeb.Models.DbModels.QuestionTypes.Process2Drive)
-                {
-                    <th>@Html.DisplayNameFor(x => x.RunTimes)</th>
-                }
-                <th>@Html.DisplayNameFor(model => model.AcceptedCount)</th>
-                <th>@Html.DisplayNameFor(model => model.SolutionCount)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @*<td>@Html.DisplayFor(model => model.QuestionType)</td>*@
-                <td>@Html.DisplayFor(model => model.MemoryLimitMb)</td>
-                <td>@Html.DisplayFor(model => model.TimeLimit)</td>
-                @if (Model.QuestionType == SdojWeb.Models.DbModels.QuestionTypes.Process2Drive)
-                {
-                    <td>@Html.DisplayFor(x => x.RunTimes)</td>
-                }
-                <td>@Model.AcceptedCount</td>
-                <td>@Model.SolutionCount</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<hr />
-<h4>@Html.DisplayNameFor(model => model.Description)</h4>
-<div class="well">@Html.DisplayFor(model => model.Description)</div>
-<div class="row">
-    @if (Model.InputExplain != null || Model.OutputExplain != null)
-    {
-        <div class="col-xs-12 col-sm-6">
-            <h4>@Html.DisplayNameFor(x => x.InputExplain)</h4>
-            <div class="well">@Html.DisplayFor(x => x.InputExplain)</div>
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-            <h4>@Html.DisplayNameFor(x => x.OutputExplain)</h4>
-            <div class="well">@Html.DisplayFor(x => x.OutputExplain)</div>
-        </div>
-    }
-</div>
-@for (var i = 0; i < Model.Samples.Count; ++i)
-{
-    var sample = Model.Samples[i];
-    var id = Model.Samples.Count > 1 ? (i + 1).ToString() : "";
-    if (string.IsNullOrEmpty(sample.Input))
-    {
-        <div class="row">
-            <div class="col-xs-12">
-                <h4>@Html.DisplayNameFor(model => sample.Output) @id</h4>
-                <div class="well">@Html.DisplayFor(model => sample.Output)</div>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <h4>@Html.DisplayNameFor(model => sample.Input) @id</h4>
-                <div class="well">@Html.DisplayFor(model => sample.Input)</div>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-                <h4>@Html.DisplayNameFor(model => sample.Output) @id</h4>
-                <div class="well">@Html.DisplayFor(model => sample.Output)</div>
-            </div>
-        </div>
-    }
-}
-
+@Html.Partial("_Details", Model)
 <div class="clearfix">
     <a class="btn btn-primary" href="@Url.Action("Create", "Solution", new {id=Model.Id,name=Model.Name})">
         <i class="glyphicon glyphicon-plus-sign"></i>
@@ -122,11 +47,6 @@
     </div>
 </div>
 <hr />
-@Html.ActionLink("返回列表", "Index")
-<div class="pull-right clearfix">
-    @Html.ActionLink("查看通过解答", "Index", "Solution", new { question = Model.Name, state = SolutionState.Accepted }, null) |
-    @Html.ActionLink("查看所有解答", "Index", "Solution", new { question = Model.Name }, null)
-</div>
 
 @using (Html.BeginForm("Delete", "Question", FormMethod.Post, new { id = "delete-form" }))
 {

@@ -60,8 +60,9 @@ namespace SdojWeb.Controllers
             {
                 return RedirectToAction("Index").WithWarning("此考试不存在或你无权限访问。");
             }
-            ContestDetailsModel details = await _manager.Get(id, rank);
-            ViewBag.Rank = rank;
+            ContestDetailsModel details = await _manager.Get(id);
+            details.CurrentQuestion = await _manager.GetQuestion(id, rank);
+            details.Rank = rank;
             return View(details);
         }
 

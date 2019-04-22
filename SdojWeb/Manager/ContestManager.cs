@@ -5,6 +5,7 @@ using SdojWeb.Models;
 using SdojWeb.Models.ContestModels;
 using SdojWeb.Models.DbModels;
 using System.Data.Entity;
+using AutoMapper.QueryableExtensions;
 
 namespace SdojWeb.Manager
 {
@@ -61,7 +62,7 @@ namespace SdojWeb.Manager
             return data.Id;
         }
 
-        public Task<ContestDetailsModel> Get(int contestId, int rank)
+        public Task<ContestDetailsModel> Get(int contestId)
         {
             return _db.Contests
                 .Where(x => x.Id == contestId)
@@ -83,6 +84,15 @@ namespace SdojWeb.Manager
                     Duration = x.Duration,
                     StartTime = x.StartTime,
                 })
+                .FirstOrDefaultAsync();
+        }
+
+        public Task<QuestionDetailModel> GetQuestion(int contestId, int rank)
+        {
+            return _db.ContestQuestions
+                .Where(x => x.ContestId == contestId && x.Rank == rank)
+                .Select(x => x.Question)
+                .ProjectTo<QuestionDetailModel>()
                 .FirstOrDefaultAsync();
         }
 
