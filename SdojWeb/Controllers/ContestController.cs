@@ -52,18 +52,29 @@ namespace SdojWeb.Controllers
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        [Route("details/{id}")]
-        [Route("details/{id}/question/{rank}")]
-        public async Task<ActionResult> Details(int id, int rank = 1)
+        [Route("details/{contestId}")]
+        [Route("details/{contestId}/question/{rank}")]
+        public async Task<ActionResult> Details(int contestId, int rank = 1)
         {
-            if (!await _manager.CheckAccess(id, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
+            if (!await _manager.CheckAccess(contestId, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
             {
                 return RedirectToAction("Index").WithWarning("此考试不存在或你无权限访问。");
             }
-            ContestDetailsModel details = await _manager.Get(id);
-            details.CurrentQuestion = await _manager.GetQuestion(id, rank);
+            ContestDetailsModel details = await _manager.Get(contestId);
+            details.CurrentQuestion = await _manager.GetQuestion(contestId, rank);
             details.Rank = rank;
             return View(details);
+        }
+
+        [Route("details/{contestId}/question-{questionId}/solutions")]
+        public async Task<ActionResult> QuestionSolutions(int contestId, int questionId)
+        {
+            if (!await _manager.CheckAccess(contestId, questionId, User.IsInRole(SystemRoles.ContestAdmin), GetCurrentUserId()))
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            return Json(await _manager.GetQuestionSolutions(questionId));
         }
 
         private int GetCurrentUserId()

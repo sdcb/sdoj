@@ -6,6 +6,7 @@ using SdojWeb.Models.ContestModels;
 using SdojWeb.Models.DbModels;
 using System.Data.Entity;
 using AutoMapper.QueryableExtensions;
+using System.Collections.Generic;
 
 namespace SdojWeb.Manager
 {
@@ -87,6 +88,15 @@ namespace SdojWeb.Manager
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<SolutionSummaryModel>> GetQuestionSolutions(int questionId)
+        {
+            return await _db.ContestSolutions
+                .OrderByDescending(x => x.Id)
+                .ProjectTo<SolutionSummaryModel>()
+                .Take(100)
+                .ToListAsync();
+        }
+
         public Task<QuestionDetailModel> GetQuestion(int contestId, int rank)
         {
             return _db.ContestQuestions
@@ -113,6 +123,19 @@ namespace SdojWeb.Manager
             if (contest.Public) return true;
             // 最后：用户列表包含当前用户
             return contest.UserIds.Contains(currentUserId);
+        }
+
+        public async Task<bool> CheckAccess(int contestId, int questionId, bool isManager, int currentUserId)
+        {
+            if (await CheckAccess(contestId, isManager, currentUserId))
+            {
+                return await _db.Contests
+                    .Where(x => x.Id == contestId)
+                    .SelectMany(x => x.Questions.Select(v => v.QuestionId))
+                    .ContainsAsync(questionId);
+            }
+
+            return false;
         }
 
         private readonly ApplicationDbContext _db;

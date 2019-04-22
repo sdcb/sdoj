@@ -1,5 +1,4 @@
-﻿@using SdojWeb.Controllers
-@model SdojWeb.Models.SolutionCreateModel
+﻿@model SdojWeb.Models.SolutionCreateModel
 @{
     ViewBag.Title = "新解答";
 }
@@ -27,6 +26,7 @@
 
     @Html.Partial("_LanguageTemplate")
     <script src="https://cdn.bootcss.com/ace/1.4.3/ace.js"></script>
+    <script src="~/Scripts/app/lang-common.js"></script>
     <script src="~/Scripts/app/solution/create.js"></script>
 }
 @section styles {

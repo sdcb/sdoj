@@ -1,7 +1,9 @@
 ﻿@using SdojWeb.Models.ContestModels
+@using SdojWeb.Models
 @model ContestDetailsModel
 @{
     Layout = null;
+    var language = Languages.CSharp;
 }
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -12,6 +14,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.Name - sdoj</title>
     @Styles.Render("~/Content/css")
+    <style>
+        .code {height: 500px;}
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,11 +27,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(@Model.Name, "Details", new { area = "", id = Model.Id }, new { @class = "navbar-brand" })
+                @Html.ActionLink(@Model.Name, "Details", new { }, new { @class = "navbar-brand", data_id = Model.Id })
                 <ul class="nav navbar-nav">
                     @foreach (QuestionBriefModel question in Model.Questions)
                     {
-                        <li class="@(question.Rank == Model.Rank ? "active" : "")">
+                        <li data-id="@question.Id" class="@(question.Rank == Model.Rank ? "active" : "")">
                             <a href="~/contest/details/@Model.Id/question/@question.Rank">
                                 @question.Rank.<strong>@question.Name</strong>
                             </a>
@@ -42,9 +47,27 @@
     </div>
     <div class="container-fluid body-content">
         @Html.Partial("_Alerts")
+        &nbsp;
         <div class="row">
+            <!-- 问题描述 -->
             <div class="col-xs-4">
-                @Html.Partial("../Question/_Details", Model.CurrentQuestion, new ViewDataDictionary { { "FullScreen", true } })
+                @Html.Partial("../Question/_Details", Model.CurrentQuestion)
+            </div>
+            <!-- 编辑代码 -->
+            <div class="col-xs-4">
+                <form id="codeForm">
+                    <div class="form-group">
+                        @Html.EnumDropDownListFor(x => language, new { @class = "form-control" })
+                    </div>
+                    <div class="code"></div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+            <!-- 提交列表 -->
+            <div class="col-xs-4">
+                <strong>提交列表</strong><hr />
             </div>
         </div>
         <hr />
@@ -54,8 +77,10 @@
             </p>
         </footer>
     </div>
+    @Html.Partial("../Solution/_LanguageTemplate")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/marked")
+    @Scripts.Render("~/bundles/ko")
     <script>
         $(".markdown").each(function (i, ee) {
             var e = $(ee);
@@ -64,6 +89,13 @@
             e.html(m);
             e.closest('.well').css({ "padding-bottom": "0" });
         });
+    </script>
+    <script src="https://cdn.bootcss.com/ace/1.4.3/ace.js"></script>
+    <script src="~/Scripts/app/lang-common.js"></script>
+    <script src="~/Scripts/app/contest/details.js"></script>
+    <script>
+        var vm = new Contest.DetailsModel();
+        ko.applyBindings(vm);
     </script>
 </body>
 </html>

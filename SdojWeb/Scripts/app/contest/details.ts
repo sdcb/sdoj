@@ -1,17 +1,9 @@
-﻿namespace solution {
+﻿namespace Contest {
     class Dom {
-        private languageSelect = $("select[name='Language']");
         private code = ace.edit($(".code")[0], {
-            mode: "ace/mode/javascript"
+            mode: "ace/mode/csharp"
         });
-        private hiddenCode = $("input[name='Source']");
-        private form = <HTMLFormElement>document.getElementById("codeForm");
-
-        constructor() {
-            this.form.addEventListener("submit", () => {
-                this.hiddenCode.val(this.code.getValue());
-            });
-        }
+        private languageSelect = $("#language");
 
         getSelectedLanguage() {
             return <Languages>parseInt(this.languageSelect.val());
@@ -29,15 +21,32 @@
         onLanguageChange(onchange: () => void) {
             this.languageSelect.change(() => onchange());
         }
+
+        getQuestionId(): number {
+            return $(".nav li.active").data("id");
+        }
+
+        getContestId(): number {
+            return $(".navbar-brand").data("id");
+        }
     }
 
-    let dom = new Dom();
-    let store = new PerferedLanguageStore();
-
+    const dom = new Dom();
+    const store = new PerferedLanguageStore();
     dom.setSelectedLanguage(localStorage.perferedLanguage || Languages.csharp);
     dom.onLanguageChange(() => {
         localStorage.perferedLanguage = store.get();
         dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
     });
     dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
+
+    export class DetailsModel {
+        solutions = ko.observableArray();
+
+        constructor() {
+            $.post(`/contest/details/${dom.getContestId()}/question-${dom.getQuestionId()}/solutions`).then(data => {
+                this.solutions(data);
+            });
+        }
+    }
 }
