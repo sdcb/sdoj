@@ -33,6 +33,10 @@
         getSourceCode() {
             return this.code.getValue();
         }
+
+        getRestTimeInSeconds(): number {
+            return $(document.body).data("restTime");
+        }
     }
 
     const dom = new Dom();
@@ -48,9 +52,36 @@
         code = ko.observable<string>();
         compilerOutput = ko.observable<string>();
         solutionId = ko.observable<number>();
+        restTime = ko.observable<number>();
+
+        restTimeText = ko.pureComputed(() => {
+            let rt = this.restTime();
+            let hours = Math.floor(rt / (60 * 60));
+            let minutes = Math.floor(rt / 60);
+            let seconds = Math.floor(rt % 60);
+            return `${hours}:${pad2(minutes)}:${pad2(seconds)}`;
+
+            function pad2(v: number) {
+                if (v < 10) return `0${v}`;
+                return v;
+            }
+        });
 
         constructor() {
             this.loadSolutions();
+            this.initSignalR();
+            this.initRestTime();
+        }
+
+        initRestTime() {
+            this.restTime(dom.getRestTimeInSeconds());
+            const intervalId = setInterval(() => {
+                this.restTime(this.restTime() - 1);
+                if (this.restTime() <= 0) clearInterval(intervalId);
+            }, 1000);
+        }
+
+        initSignalR() {
             var shub = $.connection.solutionHub;
             shub.client.push = (id, name, runtime, memory) => {
                 $("#runtime-" + id).text(runtime);

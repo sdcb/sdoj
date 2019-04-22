@@ -18,7 +18,7 @@
         .code {height: 500px;}
     </style>
 </head>
-<body>
+<body data-rest-time="@((Model.Duration - (DateTime.Now - Model.StartTime)).Value.TotalSeconds)">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -56,7 +56,7 @@
             <!-- 编辑代码 -->
             <div class="col-xs-4">
                 <form id="codeForm" data-bind="submit: submit">
-                    <div class="form-group">
+                    <div class="form-group clearfix">
                         @Html.EnumDropDownListFor(x => language, new { @class = "form-control" })
                     </div>
                     <div class="code"></div>
@@ -73,6 +73,7 @@
                         <i class="glyphicon glyphicon-refresh"></i>
                         刷新
                     </button>
+                    <label class="pull-right">剩余时间: <strong data-bind="text: restTimeText"></strong></label>
                 </div>
                 <div id="solutions"></div>
             </div>
