@@ -21,7 +21,7 @@ namespace SdojJudger.Compiler
                 {
                     HasErrors = false, 
                     Output = info,
-                    PathToAssembly = $"{GetJavaPath(AppSettings.JdkBinPath)} -cp {Path.GetDirectoryName(_filename)} Program"
+                    PathToAssembly = $"{GetJavaPath(AppSettings.JdkBinPath)} -Xms1m -cp {Path.GetDirectoryName(_filename)} Program"
                 };
             }
             else
