@@ -46,6 +46,9 @@ namespace SdojJudger
             get { return ConfigurationManager.AppSettings[nameof(JdkBinPath)]; }
         }
 
+        public static float JavaGivenMemoryMb 
+            => int.Parse(ConfigurationManager.AppSettings[nameof(JavaGivenMemoryMb)]);
+
         public static string HubGetProcess2Code = "GetProcess2Code";
 
         public static string HubLockProcess2 = "LockProcess2";

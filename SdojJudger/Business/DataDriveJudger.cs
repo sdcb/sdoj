@@ -67,6 +67,10 @@ namespace SdojJudger.Business
 
             foreach (var data in datas)
             {
+                if (_spush.Language == Languages.Java)
+                {
+                    data.MemoryLimitMb += AppSettings.JavaGivenMemoryMb;
+                }
                 var info = new JudgeInfo
                 {
                     Input = data.Input,
