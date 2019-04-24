@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SdojWeb.Infrastructure.Mapping;
 using SdojWeb.Models.DbModels;
 
 namespace SdojWeb.Models.ContestModels
@@ -35,7 +36,10 @@ namespace SdojWeb.Models.ContestModels
         public DateTime? CompleteTime { get; set; }
 
         public List<QuestionBriefModel> Questions { get; set; }
+    }
 
+    public class ContestDetailsInQuestionModel : ContestDetailsModel, IMapFrom<ContestDetailsModel>
+    {
         public QuestionDetailModel CurrentQuestion { get; set; }
 
         public int Rank { get; set; }

@@ -431,7 +431,7 @@
     <Content Include="Views\Contest\Index.cshtml" />
     <Content Include="Views\Contest\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TimeSpan.cshtml" />
-    <Content Include="Views\Contest\Details.cshtml" />
+    <Content Include="Views\Contest\DetailsInQuestion.cshtml" />
     <Content Include="Views\Question\_Details.cshtml" />
     <Content Include="Views\Contest\QuestionSolutions.cshtml" />
     <Content Include="Views\Solution\_SourceModal.cshtml" />

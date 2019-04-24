@@ -79,7 +79,7 @@ namespace SdojWeb.Manager
                         .Select(q => new QuestionBriefModel
                         {
                             Id = q.QuestionId,
-                            Rank = q.Rank, 
+                            Rank = q.Rank,
                             Name = q.Question.Name
                         })
                         .ToList(),
@@ -89,6 +89,62 @@ namespace SdojWeb.Manager
                     StartTime = x.StartTime,
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> StartContest(int contestId)
+        {
+            Contest contest = await _db.Contests.FindAsync(contestId);
+
+            // 必须是*未开始*状态，才允许更新
+            if (contest.Status == ContestStatus.NotStarted)
+            {
+                contest.StartTime = DateTime.Now;
+                contest.UpdateTime = DateTime.Now;
+                await _db.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> CompleteContest(int contestId)
+        {
+            Contest contest = await _db.Contests.FindAsync(contestId);
+
+            // 必须是*已开始*状态，或已结束但无结束时间，才允许标注结束时间
+            bool completedButNoCompleteTime = contest.Status == ContestStatus.Completed && contest.CompleteTime == null;
+            if (contest.Status == ContestStatus.Started || completedButNoCompleteTime)
+            {
+                if (completedButNoCompleteTime)
+                {
+                    // 已结束但无结束时间: 设置为“准时”结束
+                    contest.CompleteTime = contest.StartTime + contest.Duration;
+                }
+                else
+                {
+                    // 已开始（但没有结束）：强制提前结束
+                    contest.CompleteTime = DateTime.Now;
+                }
+                await _db.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> CheckComplete(int contestId)
+        {
+            Contest contest = await _db.Contests.FindAsync(contestId);
+
+            bool completedButNoCompleteTime = contest.Status == ContestStatus.Completed && contest.CompleteTime == null;
+            if (completedButNoCompleteTime)
+            {
+                // 已结束但无结束时间: 设置为“准时”结束
+                contest.CompleteTime = contest.StartTime + contest.Duration;
+                await _db.SaveChangesAsync();
+            }
+
+            return completedButNoCompleteTime;
         }
 
         public async Task<List<SolutionSummaryModel>> GetQuestionSolutions(int questionId)
@@ -124,14 +180,20 @@ namespace SdojWeb.Manager
             Solution solution = Mapper.Map<Solution>(model);
             _db.ContestSolutions.Add(new ContestSolution
             {
-                ContestId = contestId, 
+                ContestId = contestId,
                 Solution = solution
             });
             await _db.SaveChangesAsync();
             return solution.Id;
         }
 
-        public async Task<bool> CheckAccess(int contestId, bool isManager, int currentUserId)
+        public async Task<bool> IsContestStarted(int contestId)
+        {
+            Contest contest = await _db.Contests.FindAsync(contestId);
+            return contest.Status == ContestStatus.Started;
+        }
+
+        public async Task<bool> HasAccess(int contestId, bool isManager, int currentUserId)
         {
             // 管理员有牛逼权限
             if (isManager) return true;
@@ -150,9 +212,26 @@ namespace SdojWeb.Manager
             return contest.UserIds.Contains(currentUserId);
         }
 
-        public async Task<bool> CheckAccess(int contestId, int questionId, bool isManager, int currentUserId)
+        public async Task<bool> IsOwner(int contestId, bool isManager, int currentUserId)
         {
-            if (await CheckAccess(contestId, isManager, currentUserId))
+            // 管理员有牛逼权限
+            if (isManager) return true;
+
+            var contest = await _db.Contests
+                .Where(x => x.Id == contestId)
+                .Select(x => new { x.CreateUserId })
+                .FirstOrDefaultAsync();
+
+            // 未找到该contest -> false
+            if (contest == null) return false;
+
+            // 最后判断：自己是否是作者
+            return contest.CreateUserId == currentUserId;
+        }
+
+        public async Task<bool> HasAccess(int contestId, int questionId, bool isManager, int currentUserId)
+        {
+            if (await HasAccess(contestId, isManager, currentUserId))
             {
                 return await _db.Contests
                     .Where(x => x.Id == contestId)
