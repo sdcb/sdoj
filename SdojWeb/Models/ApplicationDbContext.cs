@@ -39,6 +39,10 @@ namespace SdojWeb.Models
                 .WithMany(x => x.OwnedContests)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Contest>()
+                .HasIndex(x => x.Name)
+                .IsUnique(true);
+
             modelBuilder.Entity<Solution>()
                 .HasOptional(x => x.WrongAnswer)
                 .WithRequired(x => x.Solution);
