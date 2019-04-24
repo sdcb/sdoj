@@ -17,6 +17,7 @@ using SdojWeb.Models.JudgePush;
 using SdojWeb.SignalR;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace SdojWeb.Controllers
 {
@@ -32,7 +33,7 @@ namespace SdojWeb.Controllers
 
         // GET: Solution
         [AllowAnonymous]
-        public ActionResult Index(int? id, bool? onlyMe, string question, string username, Languages? language, SolutionState? state, 
+        public ActionResult Index(int? id, bool? onlyMe, string question, string username, Languages? language, SolutionState? state, string contest,
             int? page, string orderBy, bool? asc)
         {
             int currentUserId = User.Identity.GetUserId<int>(); 
@@ -43,14 +44,14 @@ namespace SdojWeb.Controllers
                 {"question", question},
                 {"username", username}, 
                 {"language", language}, 
-                {"state", state}, 
+                {"state", state},
+                {"contest", contest },
                 {"orderBy", orderBy}, 
                 {"asc", asc}
             };
 
-            var query = _db.Solutions
-                .OrderByDescending(x => x.SubmitTime)
-                .ProjectTo<SolutionSummaryModel>();
+            IQueryable<Solution> query = _db.Solutions
+                .OrderByDescending(x => x.SubmitTime);
             
             if (id != null)
             {
@@ -62,11 +63,11 @@ namespace SdojWeb.Controllers
             }
             if (!string.IsNullOrWhiteSpace(question))
             {
-                query = query.Where(x => x.QuestionName == question.Trim());
+                query = query.Where(x => x.Question.Name == question.Trim());
             }
             if (!string.IsNullOrWhiteSpace(username))
             {
-                query = query.Where(x => x.CreateUserName == username.Trim());
+                query = query.Where(x => x.CreateUser.UserName == username.Trim());
             }
             if (language != null)
             {
@@ -76,8 +77,13 @@ namespace SdojWeb.Controllers
             {
                 query = query.Where(x => x.State == state.Value);
             }
+            if (!string.IsNullOrWhiteSpace(contest))
+            {
+                query = query.Where(x => x.Contests.Any(v => v.Contest.Name == contest));
+            }
 
-            var model = query.ToSortedPagedList(page, orderBy, asc);
+            IQueryable<SolutionSummaryModel> modeledQuery = query.ProjectTo<SolutionSummaryModel>();
+            IPagedList<SolutionSummaryModel> model = modeledQuery.ToSortedPagedList(page, orderBy, asc);
 
             ViewBag.OnlyMe = onlyMe;
             ViewBag.Route = route;

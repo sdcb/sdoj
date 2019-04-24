@@ -112,10 +112,9 @@ namespace SdojWeb.Manager
             Contest contest = await _db.Contests.FindAsync(contestId);
 
             // 必须是*已开始*状态，或已结束但无结束时间，才允许标注结束时间
-            bool completedButNoCompleteTime = contest.Status == ContestStatus.Completed && contest.CompleteTime == null;
-            if (contest.Status == ContestStatus.Started || completedButNoCompleteTime)
+            if (contest.Status == ContestStatus.Started || contest.CompletedButNoCompleteTime)
             {
-                if (completedButNoCompleteTime)
+                if (contest.CompletedButNoCompleteTime)
                 {
                     // 已结束但无结束时间: 设置为“准时”结束
                     contest.CompleteTime = contest.StartTime + contest.Duration;

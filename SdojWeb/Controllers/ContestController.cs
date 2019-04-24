@@ -69,6 +69,7 @@ namespace SdojWeb.Controllers
                 return RedirectToAction(nameof(DetailsInQuestion), new { rank = details.Questions?[0].Rank ?? 1 });
             }
 
+            ViewBag.IsOwner = await IsOwner(contestId);
             return View(details);
         }
 
@@ -123,13 +124,13 @@ namespace SdojWeb.Controllers
             }
             if (!await _manager.IsContestStarted(contestId))
             {
-                return RedirectToAction(nameof(Details), new { contestId }).WithWarning("考试未开始。");
+                return RedirectToAction(nameof(Details), new { contestId }).WithWarning("考试未开始或已结束。");
             }
             ContestDetailsModel details = await _manager.Get(contestId);
             ContestDetailsInQuestionModel vm = Mapper.Map<ContestDetailsInQuestionModel>(details);
             vm.CurrentQuestion = await _manager.GetQuestion(contestId, rank);
             vm.Rank = rank;
-            return View(details);
+            return View(vm);
         }
 
         [Route("details/{contestId}/question-{questionId}/solutions")]
@@ -175,7 +176,7 @@ namespace SdojWeb.Controllers
 
         private async Task<bool> IsOwner(int contestId)
         {
-            return !await _manager.IsOwner(
+            return await _manager.IsOwner(
                 contestId,
                 User.IsInRole(SystemRoles.ContestAdmin),
                 GetCurrentUserId());
@@ -183,7 +184,7 @@ namespace SdojWeb.Controllers
 
         private async Task<bool> HasAccess(int contestId)
         {
-            return !await _manager.HasAccess(
+            return await _manager.HasAccess(
                 contestId,
                 User.IsInRole(SystemRoles.ContestAdmin),
                 GetCurrentUserId());
@@ -191,7 +192,7 @@ namespace SdojWeb.Controllers
 
         private async Task<bool> HasAccess(int contestId, int questionId)
         {
-            return !await _manager.HasAccess(
+            return await _manager.HasAccess(
                 contestId, questionId, 
                 User.IsInRole(SystemRoles.ContestAdmin),
                 GetCurrentUserId());

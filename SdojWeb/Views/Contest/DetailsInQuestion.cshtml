@@ -76,6 +76,9 @@
                     <label class="pull-right">剩余时间: <strong data-bind="text: restTimeText"></strong></label>
                 </div>
                 <div id="solutions"></div>
+                <form id="timeoutForm" action="/contest/details/@Model.Id/checkComplete" method="post">
+                    @Html.AntiForgeryToken()
+                </form>
             </div>
         </div>
         <hr />

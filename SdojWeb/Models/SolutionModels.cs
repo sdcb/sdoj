@@ -6,6 +6,7 @@ using AutoMapper;
 using SdojWeb.Infrastructure.Mapping;
 using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 
 namespace SdojWeb.Models
 {

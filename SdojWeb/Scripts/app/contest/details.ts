@@ -37,6 +37,10 @@
         getRestTimeInSeconds(): number {
             return $(document.body).data("restTime");
         }
+
+        submitTimeout() {
+            $("#timeoutForm").submit();
+        }
     }
 
     const dom = new Dom();
@@ -53,6 +57,7 @@
         compilerOutput = ko.observable<string>();
         solutionId = ko.observable<number>();
         restTime = ko.observable<number>();
+        dom = dom;
 
         restTimeText = ko.pureComputed(() => {
             let rt = this.restTime();
@@ -77,7 +82,10 @@
             this.restTime(dom.getRestTimeInSeconds());
             const intervalId = setInterval(() => {
                 this.restTime(this.restTime() - 1);
-                if (this.restTime() <= 0) clearInterval(intervalId);
+                if (this.restTime() <= 0) {
+                    clearInterval(intervalId);
+                    dom.submitTimeout();
+                }
             }, 1000);
         }
 

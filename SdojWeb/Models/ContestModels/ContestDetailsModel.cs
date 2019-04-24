@@ -26,6 +26,9 @@ namespace SdojWeb.Models.ContestModels
             StartTime + Duration > DateTime.Now ? ContestStatus.Completed :
             ContestStatus.Started;
 
+        public bool CompletedButNoCompleteTime =>
+            Status == ContestStatus.Completed && CompleteTime == null;
+
         [Display(Name = "创建时间")]
         public DateTime CreateTime { get; set; }
 

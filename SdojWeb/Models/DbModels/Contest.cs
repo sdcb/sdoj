@@ -18,8 +18,11 @@ namespace SdojWeb.Models.DbModels
         public ContestStatus Status =>
             CompleteTime != null ? ContestStatus.Completed :
             StartTime == null ? ContestStatus.NotStarted :
-            StartTime + Duration > DateTime.Now ? ContestStatus.Completed :
+            DateTime.Now > StartTime + Duration ? ContestStatus.Completed :
             ContestStatus.Started;
+
+        public bool CompletedButNoCompleteTime =>
+            Status == ContestStatus.Completed && CompleteTime == null;
 
         public DateTime CreateTime { get; set; }
 

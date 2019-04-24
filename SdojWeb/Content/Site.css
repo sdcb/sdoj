@@ -24,6 +24,9 @@ select.form-control {
 .search-form button {
     margin-bottom: 10px;
 }
+.search-form {
+    margin: 0 -15px 0 -15px;
+}
 .form-tools {
     margin-bottom: 10px;
 }

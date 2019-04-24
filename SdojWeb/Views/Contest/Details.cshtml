@@ -1,0 +1,77 @@
+﻿@using SdojWeb.Models.ContestModels
+@using SdojWeb.Models.DbModels
+@model ContestDetailsModel
+
+@{
+    ViewBag.Title = Model.Name;
+    bool isOwner = ViewBag.IsOwner;
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="clearfix">
+            <h2>@Model.Name</h2>
+            <div class="pull-right">
+                @if (Model.Status == ContestStatus.NotStarted)
+                {
+                    if (isOwner)
+                    {
+                        <form method="post" action="/contest/details/@Model.Id/start">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary">开始</button>
+                        </form>
+                    }
+                }
+                else if (Model.Status == ContestStatus.Started || Model.CompletedButNoCompleteTime)
+                {
+                    if (isOwner)
+                    {
+                        <form method="post" action="/contest/details/@Model.Id/complete" onsubmit="return confirm('确定要提前结束吗？')">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-warning">结束/提前结束</button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <span>已结束</span>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>题号</th>
+                        <th>题目</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Questions)
+                    {
+                        <tr>
+                            <td>@item.Rank</td>
+                            <td>
+                                @if (Model.Status == ContestStatus.NotStarted)
+                                {
+                                    @item.Name
+                                }
+                                else
+                                {
+                                    <a href="/contest/details/@Model.Id/question/@item.Rank">@item.Name</a>
+                                }
+                            </td>
+                            <td>@Html.ActionLink("解答", "Index", "Solution", new { question = item.Name, contest = Model.Name }, null)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        @Html.ActionLink("所有解答", "Index", "Solution", new { contest = Model.Name }, null)
+    </div>
+</div>

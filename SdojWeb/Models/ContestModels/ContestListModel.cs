@@ -22,7 +22,7 @@ namespace SdojWeb.Models.ContestModels
         public ContestStatus Status =>
             CompleteTime != null ? ContestStatus.Completed :
             StartTime == null ? ContestStatus.NotStarted :
-            StartTime + Duration > DateTime.Now ? ContestStatus.Completed :
+            DateTime.Now > StartTime + Duration ? ContestStatus.Completed :
             ContestStatus.Started;
 
         [Display(Name = "创建时间")]

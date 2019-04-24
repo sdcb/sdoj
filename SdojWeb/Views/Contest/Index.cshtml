@@ -30,6 +30,7 @@
             <table class="table table-hover table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
+                        <th>@Html.DisplayNameFor(x => x.Id)</th>
                         <th>@Html.DisplayNameFor(x => x.Name)</th>
                         <th>@Html.DisplayNameFor(x => x.Count)</th>
                         <th>@Html.DisplayNameFor(x => x.Duration)</th>
@@ -42,6 +43,7 @@
                     @foreach (ContestListModel item in Model)
                     {
                         <tr>
+                            <td>@Html.DisplayFor(x => item.Id)</td>
                             <td>
                                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
                             </td>

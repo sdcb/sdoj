@@ -1,55 +1,62 @@
 ﻿@using SdojWeb.Models
 @using System.Web.Mvc.Html
 @model IEnumerable<SolutionSummaryModel>
-<div class="table-responsive">
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(x => x.Language)</th>
-                <th>@Html.DisplayNameFor(x => x.SourceLength)</th>
-                <th>@Html.DisplayNameFor(x => x.State)</th>
-                <th>@Html.DisplayNameFor(x => x.RunTime)</th>
-                <th>@Html.DisplayNameFor(x => x.UsingMemoryMb)</th>
-                <th>@Html.DisplayNameFor(x => x.SubmitTime)</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(x => item.Language)</td>
-                    <td>@Html.DisplayFor(x => item.SourceLength)</td>
-                    <td id="state-@item.Id">
-                        @if (item.State == SolutionState.CompileError)
-                        {
-                            <a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, @item.Id)">
-                                @Html.DisplayFor(x => item.State)
-                            </a>
-                        }
-                        else if (item.State == SolutionState.WrongAnswer)
-                        {
-                            <a href="javascript:void(0);" data-bind="click: showWrongAnswer.bind($data, @item.Id)">
-                                @Html.DisplayFor(x => item.State)
-                            </a>
-                        }
-                        else
-                        {
-                            @Html.DisplayFor(modelItem => item.State)
-                        }
-                    </td>
-                    <td id="runtime-@item.Id">@Html.DisplayFor(x => item.RunTime)</td>
-                    <td id="memory-@item.Id">@Html.DisplayFor(x => item.UsingMemoryMb)</td>
-                    <td>@Html.DisplayFor(x => item.SubmitTime)</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
-                           data-bind="click: loadCode.bind($data, @item.Id)">
-                            <i class="glyphicon glyphicon-file"></i>
-                            源码
-                        </a>
-                    </td>
+                    <th>@Html.DisplayNameFor(x => x.Language)</th>
+                    <th>@Html.DisplayNameFor(x => x.SourceLength)</th>
+                    <th>@Html.DisplayNameFor(x => x.State)</th>
+                    <th>@Html.DisplayNameFor(x => x.RunTime)</th>
+                    <th>@Html.DisplayNameFor(x => x.UsingMemoryMb)</th>
+                    <th>@Html.DisplayNameFor(x => x.SubmitTime)</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.Language)</td>
+                        <td>@Html.DisplayFor(x => item.SourceLength)</td>
+                        <td id="state-@item.Id">
+                            @if (item.State == SolutionState.CompileError)
+                            {
+                                <a href="javascript:void(0);" data-bind="click: showCompilerOutput.bind($data, @item.Id)">
+                                    @Html.DisplayFor(x => item.State)
+                                </a>
+                            }
+                            else if (item.State == SolutionState.WrongAnswer)
+                            {
+                                <a href="javascript:void(0);" data-bind="click: showWrongAnswer.bind($data, @item.Id)">
+                                    @Html.DisplayFor(x => item.State)
+                                </a>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.State)
+                            }
+                        </td>
+                        <td id="runtime-@item.Id">@Html.DisplayFor(x => item.RunTime)</td>
+                        <td id="memory-@item.Id">@Html.DisplayFor(x => item.UsingMemoryMb)</td>
+                        <td>@Html.DisplayFor(x => item.SubmitTime)</td>
+                        <td>
+                            <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#source-code-modal"
+                               data-bind="click: loadCode.bind($data, @item.Id)">
+                                <i class="glyphicon glyphicon-file"></i>
+                                源码
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h2>😊暂无提交</h2>
+}

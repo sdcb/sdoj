@@ -31,39 +31,45 @@
 
 }
 
-<h2>@ViewBag.Title</h2>
-
-<form class="search-form">
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <input name="id" type="number" value="@route["id"]" class="form-control input-sm" placeholder="ID..." />
-    </div>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <select class="form-control input-sm" data-bind="value: onlyMe" name="onlyMe">
-                <option value="">所有解答...</option>
-                <option value="True">仅看我的解答</option>
-            </select>
-        </div>
-    }
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("username", route["username"], new { @class = "form-control input-sm", placeholder = "用户名..." })
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.TextBox("question", route["question"], new { @class = "form-control input-sm", placeholder = "题目名..." })
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.EnumDropDownList("language", (Languages?)route["language"], "语言...", new { @class = "form-control input-sm" })
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @Html.EnumDropDownList("state", (SolutionState?)route["state"], "状态...", new { @class = "form-control input-sm" })
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <button type="submit" class="btn btn-default btn-sm">过滤</button>
-    </div>
-</form>
-
 <div class="row">
+    <div class="col-xs-12">
+        <h2>@ViewBag.Title</h2>
+
+        <form class="search-form">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <input name="id" type="number" value="@route["id"]" class="form-control input-sm" placeholder="ID..." />
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <select class="form-control input-sm" data-bind="value: onlyMe" name="onlyMe">
+                        <option value="">所有解答...</option>
+                        <option value="True">仅看我的解答</option>
+                    </select>
+                </div>
+            }
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                @Html.TextBox("username", route["username"], new { @class = "form-control input-sm", placeholder = "用户名..." })
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                @Html.TextBox("question", route["question"], new { @class = "form-control input-sm", placeholder = "题目名..." })
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                @Html.EnumDropDownList("language", (Languages?)route["language"], "语言...", new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                @Html.EnumDropDownList("state", (SolutionState?)route["state"], "状态...", new { @class = "form-control input-sm" })
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                @Html.TextBox("contest", route["contest"], new { @class = "form-control input-sm", placeholder = "考试名..." })
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <button type="submit" class="btn btn-default btn-sm">过滤</button>
+            </div>
+        </form>
+
+    </div>
+
     <div class="col-xs-12">
         <div class="table-responsive">
             <table class="table table-hover table-striped table-bordered table-condensed">

@@ -436,6 +436,7 @@
     <Content Include="Views\Contest\QuestionSolutions.cshtml" />
     <Content Include="Views\Solution\_SourceModal.cshtml" />
     <Content Include="Views\Solution\_CompilerOutputModal.cshtml" />
+    <Content Include="Views\Contest\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
