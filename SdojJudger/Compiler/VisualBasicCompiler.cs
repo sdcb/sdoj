@@ -1,6 +1,5 @@
 ﻿using System.CodeDom.Compiler;
-using System.IO;
-using Microsoft.VisualBasic;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using SdojJudger.Compiler.Infrastructure;
 
 namespace SdojJudger.Compiler
