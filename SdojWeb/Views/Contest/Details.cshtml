@@ -70,7 +70,7 @@
                                     <a href="/contest/details/@Model.Id/question/@item.Rank">@item.Name</a>
                                 }
                             </td>
-                            <td>@Html.ActionLink("解答", "Index", "Solution", new { question = item.Name, contest = Model.Name }, null)</td>
+                            <td>@Html.ActionLink("解答列表", "Index", "Solution", new { question = item.Name, contest = Model.Name }, null)</td>
                         </tr>
                     }
                 </tbody>
