@@ -22,11 +22,12 @@ namespace SdojWeb.Models.JudgePush
             solution.CompilerOutput = CompilerOutput?.Substring(0, Math.Min(Solution.CompilerOutputLimit, CompilerOutput.Length));
             if (WrongAnswer != null)
             {
-                solution.WrongAnswer = new SolutionWrongAnswer
+                var wrongAnswer = solution.WrongAnswer ?? new SolutionWrongAnswer();
                 {
-                    QuestionDataId = WrongAnswerInputId,
-                    Output = WrongAnswer?.Substring(0, Math.Min(SolutionWrongAnswer.WrongAnswerLimit, WrongAnswer.Length)),
-                };
+                    wrongAnswer.QuestionDataId = WrongAnswerInputId;
+                    wrongAnswer.Output = WrongAnswer?.Substring(0, Math.Min(SolutionWrongAnswer.WrongAnswerLimit, WrongAnswer.Length));
+                }
+                solution.WrongAnswer = wrongAnswer;
             }
             solution.Lock = null;
         }

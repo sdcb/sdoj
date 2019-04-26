@@ -70,7 +70,9 @@ namespace SdojWeb.SignalR
             }
 
             // 锁住，允许操作，然后改变状态。
-            Solution solution = await _db.Solutions.FindAsync(model.SolutionId);
+            Solution solution = await _db.Solutions
+                .Include(x => x.WrongAnswer)
+                .FirstOrDefaultAsync(x => x.Id == model.SolutionId);
             model.UpdateSolution(solution);
 
             // 删除锁，保存数据。
