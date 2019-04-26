@@ -64,10 +64,6 @@ namespace SdojWeb.Controllers
                 return RedirectToAction(nameof(Index)).WithWarning("此考试不存在或你无权限访问。");
             }
             ContestDetailsModel details = await _manager.Get(contestId);
-            if (details.Status == ContestStatus.Started)
-            {
-                return RedirectToAction(nameof(DetailsInQuestion), new { rank = details.Questions?[0].Rank ?? 1 });
-            }
 
             ViewBag.IsOwner = await IsOwner(contestId);
             return View(details);

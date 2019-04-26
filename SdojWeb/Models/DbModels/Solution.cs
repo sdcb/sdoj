@@ -53,7 +53,7 @@ namespace SdojWeb.Models.DbModels
 
         public QuestionData Input { get; set; }
 
-        [Required, MaxLength(WrongAnswerLimit)]
+        [Required(AllowEmptyStrings = true), MaxLength(WrongAnswerLimit)]
         public string Output { get; set; }
 
         public const int WrongAnswerLimit = 1000;

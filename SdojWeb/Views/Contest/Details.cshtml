@@ -28,7 +28,9 @@
                     {
                         <form method="post" action="/contest/details/@Model.Id/complete" onsubmit="return confirm('确定要提前结束吗？')">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-warning">结束/提前结束</button>
+                            <button type="submit" class="btn btn-warning">
+                                @(Model.Status == ContestStatus.Started ? "提前结束" : "设置结束")
+                            </button>
                         </form>
                     }
                 }
