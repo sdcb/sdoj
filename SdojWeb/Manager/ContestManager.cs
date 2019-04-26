@@ -199,7 +199,7 @@ namespace SdojWeb.Manager
 
             var contest = await _db.Contests
                 .Where(x => x.Id == contestId)
-                .Select(x => new { x.CreateUserId, x.Public, UserIds = x.Users.Select(v => v.Id) })
+                .Select(x => new { x.CreateUserId, x.Public, UserIds = x.Users.Select(v => v.User.Id) })
                 .FirstOrDefaultAsync();
             // 未找到该contest -> false
             if (contest == null) return false;

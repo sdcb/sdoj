@@ -21,6 +21,10 @@
                             <button type="submit" class="btn btn-primary">开始</button>
                         </form>
                     }
+                    else
+                    {
+                        <span>考试未开始，由管理员开始考试。</span>
+                    }
                 }
                 else if (Model.Status == ContestStatus.Started || Model.CompletedButNoCompleteTime)
                 {
