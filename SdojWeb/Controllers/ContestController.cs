@@ -137,7 +137,7 @@ namespace SdojWeb.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            List<SolutionSummaryModel> data = await _manager.GetQuestionSolutions(questionId);
+            List<SolutionSummaryModel> data = await _manager.GetQuestionSolutions(contestId, questionId);
             return PartialView(data);
         }
 

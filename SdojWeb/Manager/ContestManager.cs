@@ -146,10 +146,12 @@ namespace SdojWeb.Manager
             return completedButNoCompleteTime;
         }
 
-        public async Task<List<SolutionSummaryModel>> GetQuestionSolutions(int questionId)
+        public async Task<List<SolutionSummaryModel>> GetQuestionSolutions(int contestId, int questionId)
         {
             return await _db.ContestSolutions
-                .Where(x => x.Solution.QuestionId == questionId)
+                .Where(x => 
+                    x.Solution.QuestionId == questionId &&
+                    x.ContestId == contestId)
                 .OrderByDescending(x => x.Id)
                 .Select(x => x.Solution)
                 .ProjectTo<SolutionSummaryModel>()
