@@ -146,6 +146,7 @@ namespace SdojWeb.Controllers
         }
 
         [Route("details/{contestId}/question-{questionId}/submit")]
+        [ValidateInput(false)]
         [HttpPost]
         public async Task<ActionResult> Submit(int contestId, int questionId, SolutionCreateModel model)
         {
