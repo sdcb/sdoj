@@ -41,6 +41,8 @@ namespace SdojWeb.Models.DbModels
         public ICollection<ContestQuestion> Contests { get; set; }
 
         public Process2JudgeCode Process2JudgeCode { get; set; }
+
+        public QuestionFunction FunctionDescription { get; set; }
     }
 
     public enum QuestionTypes : byte

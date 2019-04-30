@@ -200,6 +200,10 @@
     <Compile Include="Infrastructure\Identity\SystemRoles.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Attributes\RenderModelAttribute.cs" />
     <Compile Include="Infrastructure\ModelMetadata\Filters\RenderModelFilter.cs" />
+    <Compile Include="Migrations\201904300225551_Function.cs" />
+    <Compile Include="Migrations\201904300225551_Function.Designer.cs">
+      <DependentUpon>201904300225551_Function.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ContestModels\ContestCreateModel.cs" />
     <Compile Include="Models\ContestModels\ContestDetailsModel.cs" />
     <Compile Include="Models\ContestModels\ContestListModel.cs" />
@@ -238,6 +242,7 @@
     <Compile Include="Models\DbModels\Question.cs" />
     <Compile Include="Models\DbModels\QuestionData.cs" />
     <Compile Include="Models\DbModels\Contest.cs" />
+    <Compile Include="Models\DbModels\QuestionFunction.cs" />
     <Compile Include="Models\DbModels\Solution.cs" />
     <Compile Include="Models\DbModels\SolutionLock.cs" />
     <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
@@ -468,6 +473,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904180929010_Contest.resx">
       <DependentUpon>201904180929010_Contest.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904300225551_Function.resx">
+      <DependentUpon>201904300225551_Function.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

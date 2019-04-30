@@ -46,6 +46,10 @@ namespace SdojWeb.Models
             modelBuilder.Entity<Solution>()
                 .HasOptional(x => x.WrongAnswer)
                 .WithRequired(x => x.Solution);
+
+            modelBuilder.Entity<Question>()
+                .HasOptional(x => x.FunctionDescription)
+                .WithRequired(x => x.Question);
             
             modelBuilder.Entity<User>()
                 .HasMany(x => x.Roles).WithMany(x => x.Users)
@@ -90,6 +94,12 @@ namespace SdojWeb.Models
         public DbSet<ContestQuestion> ContestQuestions { get; set; }
 
         public DbSet<ContestSolution> ContestSolutions { get; set; }
+
+        public DbSet<QuestionFunction> QuestionFunctions { get; set; }
+
+        public DbSet<FunctionData> FunctionDatas { get; set; }
+
+        public DbSet<FunctionParameter> FunctionParameters { get; set; }
 
         public static ApplicationDbContext Create()
         {
