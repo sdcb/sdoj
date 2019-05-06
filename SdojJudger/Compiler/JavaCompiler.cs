@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using SdojJudger.Compiler.Infrastructure;
 
 namespace SdojJudger.Compiler
@@ -10,7 +11,7 @@ namespace SdojJudger.Compiler
         public override CompileResult Compile(string source)
         {
             _filename = GetTempFileNameWithoutExtension();
-            File.WriteAllText(_filename + ".java", source);
+            File.WriteAllText(_filename + ".java", source, new UTF8Encoding(false));
 
             string info = CompileSourceFile(_filename);
             info = info?.Replace(_filename, "Source");
@@ -54,7 +55,7 @@ namespace SdojJudger.Compiler
                 RedirectStandardInput = true, 
                 RedirectStandardOutput = true, 
                 RedirectStandardError = true, 
-                Arguments = filename + ".java"
+                Arguments = $"-encoding utf-8 {filename}.java"
             };
             var ps = Process.Start(pi);
 
