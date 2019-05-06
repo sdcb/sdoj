@@ -40,6 +40,8 @@ namespace SdojWeb.Models.DbModels
 
         public ICollection<ContestQuestion> Contests { get; set; }
 
+        public ICollection<QuestionCodeTemplate> CodeTemplates { get; set; }
+
         public Process2JudgeCode Process2JudgeCode { get; set; }
     }
 

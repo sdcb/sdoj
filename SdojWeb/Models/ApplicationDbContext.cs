@@ -91,6 +91,10 @@ namespace SdojWeb.Models
 
         public DbSet<ContestSolution> ContestSolutions { get; set; }
 
+        public DbSet<CodeTemplate> CodeTemplates { get; set; }
+
+        public DbSet<QuestionCodeTemplate> QuestionCodeTemplates { get; set; }
+
         public static ApplicationDbContext Create()
         {
             var db = new ApplicationDbContext();
