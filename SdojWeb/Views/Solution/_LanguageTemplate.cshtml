@@ -5,6 +5,8 @@ class Program
 {
 	static void Main()
 	{
+        // 输入示例：Console.ReadLine(); // 返回了一行字符串，可通过String.Split()分隔为字符串数组
+        // 输出示例：Console.WriteLine("Hello World");
 		Console.WriteLine("Hello World");
 	}
 }
@@ -15,6 +17,8 @@ class Program
 
 Module Program
     Sub Main()
+        ' 输入示例：Console.ReadLine() ' 返回了一行字符串，可能需要手动分隔
+        ' 输出示例：Console.WriteLine("Hello World");
         Console.WriteLine("Hello World")
     End Sub
 End Module
@@ -27,26 +31,42 @@ using namespace std;
     
 int main()
 {
+    // 输入示例：cin >> a >> b;
+    // 输出示例：cout << a << b;
     cout << "Hello World" << endl;
 }
 </script>
 
 <!-- C -->
-<script type="text/plain" id="language-template-c">#include <stdio>
+<script type="text/plain" id="language-template-c">#include <stdio.h>
 
 int main()
 {
+    // 输入示例：scanf("%d%d", &a, &b);
+    // 输出示例：printf("%s", "Hello World");
     printf("Hello World");
 }
 </script>
 
 <!-- Python -->
-<script type="text/plain" id="language-template-python3">print('Hello World');
+<script type="text/plain" id="language-template-python3">"""
+    输入示例：
+        s = input() # 读一行
+    输出示例：
+        print('Hello World') # 输出Hello World
+"""
+    print('Hello World');
 </script>
 
 <!-- Java -->
 <script type="text/plain" id="language-template-java">public class Program {
     public static void main(String[] args) {
+        // 输入示例：
+        //     java.util.Scanner scanner = new java.util.Scanner(System.in);
+        //     String str = scanner.nextLine(); // 读一行
+        //     int n = scanner.nextInt();       // 读int
+        // 输出示例：
+        //     System.out.println("Hello World");
         System.out.println("Hello World");
     }
 }
