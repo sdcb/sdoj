@@ -8,5 +8,6 @@
         C = 4, 
         Python3 = 5, 
         Java = 6, 
+        JavaScript = 7, 
     }
 }

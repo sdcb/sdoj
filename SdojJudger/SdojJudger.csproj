@@ -131,6 +131,7 @@
     <Compile Include="Compiler\CSharpCompiler.cs" />
     <Compile Include="Compiler\Infrastructure\DotNetCompiler.cs" />
     <Compile Include="Compiler\JavaCompiler.cs" />
+    <Compile Include="Compiler\JavaScriptCompiler.cs" />
     <Compile Include="Compiler\Python3Compiler.cs" />
     <Compile Include="Compiler\VisualBasicCompiler.cs" />
     <Compile Include="Database\Dapper\SqlMapper.cs" />

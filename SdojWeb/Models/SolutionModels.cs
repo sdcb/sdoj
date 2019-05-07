@@ -136,5 +136,6 @@ namespace SdojWeb.Models
         Python3 = 5, 
         [Display(Name = "Java 12")]
         Java = 6, 
+        JavaScript = 7, 
     }
 }

@@ -5,46 +5,33 @@ namespace SdojJudger
     public static class AppSettings
     {
         public static string ServerUrl
-        {
-            get { return ConfigurationManager.AppSettings["serverUrl"]; }
-        }
+            => ConfigurationManager.AppSettings["serverUrl"];
 
         public static string LoginUrl
-        {
-            get { return ServerUrl + "Account/LoginAsJudger"; }
-        }
+            => ServerUrl + "Account/LoginAsJudger";
 
         public const string CookieName = ".AspNet.ApplicationCookie";
 
         public static string UserName
-        {
-            get { return ConfigurationManager.AppSettings["username"]; }
-        }
+            => ConfigurationManager.AppSettings["username"];
 
         public static string Password
-        {
-            get { return ConfigurationManager.AppSettings["password"]; }
-        }
+            => ConfigurationManager.AppSettings["password"];
 
         public static string VcCommandline
-        {
-            get { return ConfigurationManager.AppSettings["VcCommandline"]; }
-        }
+            => ConfigurationManager.AppSettings["VcCommandline"];
 
         public static string GccPath
-        {
-            get { return ConfigurationManager.AppSettings["GccPath"]; }
-        }
+            => ConfigurationManager.AppSettings["GccPath"];
 
         public static string Python3Path
-        {
-            get { return ConfigurationManager.AppSettings["Python3Path"]; }
-        }
+            => ConfigurationManager.AppSettings["Python3Path"];
+
+        public static string NodeExePath 
+            => ConfigurationManager.AppSettings[nameof(NodeExePath)];
 
         public static string JdkBinPath
-        {
-            get { return ConfigurationManager.AppSettings[nameof(JdkBinPath)]; }
-        }
+            => ConfigurationManager.AppSettings[nameof(JdkBinPath)];
 
         public static float JavaGivenMemoryMb 
             => int.Parse(ConfigurationManager.AppSettings[nameof(JavaGivenMemoryMb)]);

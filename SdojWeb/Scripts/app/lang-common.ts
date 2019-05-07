@@ -5,6 +5,7 @@
     C = 4,
     Python3 = 5,
     Java = 6,
+    JavaScript = 7, 
 }
 
 declare var ace: IAceStatic;
@@ -36,6 +37,7 @@ function languageToAceMode(language: Languages) {
         case Languages.Vb: return 'ace/mode/vbscript';
         case Languages.Python3: return 'ace/mode/python';
         case Languages.Java: return 'ace/mode/java';
+        case Languages.JavaScript: return 'ace/mode/javascript';
         default: return 'ace/mode/text';
     }
 }
