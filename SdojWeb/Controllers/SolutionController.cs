@@ -250,13 +250,21 @@ namespace SdojWeb.Controllers
                 .Where(x => x.QuestionId == questionId && x.Language == language)
                 .FirstOrDefaultAsync();
 
-            if (template == null) template = new QuestionCodeTemplate
+            if (template == null)
             {
-                QuestionId = questionId,
-                Language = language
-            };
-            template.Template = code;
-            _db.Entry(template).State = EntityState.Added;
+                template = new QuestionCodeTemplate
+                {
+                    QuestionId = questionId,
+                    Language = language
+                };
+                _db.Entry(template).State = EntityState.Added;
+            }
+            else
+            {
+                template.Template = code;
+                _db.Entry(template).State = EntityState.Modified;
+            }
+            
             await _db.SaveChangesAsync();
             return Json(true);
         }
