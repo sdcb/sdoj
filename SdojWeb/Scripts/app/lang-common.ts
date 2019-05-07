@@ -28,17 +28,6 @@ interface IAceOptions {
     mode: string;
 }
 
-class PerferedLanguageStore {
-    static key = "perferedLanguage";
-    set(language: Languages) {
-        localStorage[PerferedLanguageStore.key] = language;
-    }
-
-    get(): Languages {
-        return parseInt(localStorage[PerferedLanguageStore.key]) || Languages.csharp;
-    }
-}
-
 function languageToAceMode(language: Languages) {
     switch (language) {
         case Languages.csharp: return 'ace/mode/csharp';
@@ -49,16 +38,4 @@ function languageToAceMode(language: Languages) {
         case Languages.java: return 'ace/mode/java';
         default: return 'ace/mode/text';
     }
-}
-
-function getLanguageTemplate(language: Languages) {
-    let languageName = Languages[language];
-    let element = document.getElementById(`language-template-${languageName}`);
-
-    if (!element) {
-        console.warn(`No template for ${languageName}.`);
-        return "";
-    }
-
-    return element.innerText;
 }

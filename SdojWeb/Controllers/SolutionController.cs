@@ -181,10 +181,31 @@ namespace SdojWeb.Controllers
 
         //
         // GET: Solution/Create/id
-        public ActionResult Create(int id, string name)
+        public async Task<ActionResult> Create(int id, string name)
         {
-            var solutionCreateModel = new SolutionCreateModel {QuestionId = id, Name = name};
+            int userId = User.Identity.GetUserId<int>();
+            Languages userLanguage = await _db.Solutions
+                .Where(x => x.CreateUserId == userId)
+                .OrderByDescending(x => x.Id)
+                .Select(x => x.Language)
+                .FirstOrDefaultAsync();
+            var solutionCreateModel = new SolutionCreateModel {QuestionId = id, Name = name, Language = userLanguage};
             return View(solutionCreateModel);
+        }
+
+        public async Task<ActionResult> CodeTemplate(int questionId, Languages language)
+        {
+            string questionTemplate = await _db.QuestionCodeTemplates
+                .Where(x => x.QuestionId == questionId && x.Language == language)
+                .Select(x => x.Template)
+                .FirstOrDefaultAsync();
+            if (questionTemplate != null) return Content(questionTemplate);
+
+            string defaultTemplate = await _db.CodeTemplates
+                .Where(x => x.Language == language)
+                .Select(x => x.Template)
+                .FirstOrDefaultAsync();
+            return Content(defaultTemplate);
         }
 
         // POST: Solution/Create/id

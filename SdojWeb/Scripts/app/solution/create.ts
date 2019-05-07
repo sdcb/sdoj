@@ -21,23 +21,33 @@
             this.languageSelect.val(language.toString());
         }
 
-        setSourceCode(mode: string, text: string) {
+        setCodeMode(mode: string) {
             this.code.session.setMode(mode);
+        }
+
+        setCode(text: string) {
             this.code.setValue(text);
         }
 
         onLanguageChange(onchange: () => void) {
             this.languageSelect.change(() => onchange());
         }
+
+        getQuestionId() {
+            return (<HTMLInputElement>document.getElementById("questionId")).value;
+        }
     }
 
     let dom = new Dom();
-    let store = new PerferedLanguageStore();
 
-    dom.setSelectedLanguage(localStorage.perferedLanguage || Languages.csharp);
     dom.onLanguageChange(() => {
-        localStorage.perferedLanguage = store.get();
-        dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
+        dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
+        $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
+            dom.setCode(template);
+        });
     });
-    dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
+    dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
+    $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
+        dom.setCode(template);
+    });
 }

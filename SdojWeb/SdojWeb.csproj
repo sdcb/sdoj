@@ -435,7 +435,6 @@
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int16.cshtml" />
     <Content Include="Views\Question\Code.cshtml" />
-    <Content Include="Views\Solution\_LanguageTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Code.cshtml" />
     <Content Include="Views\Contest\Index.cshtml" />
     <Content Include="Views\Contest\Create.cshtml" />

@@ -13,8 +13,11 @@
             this.languageSelect.val(language.toString());
         }
 
-        setSourceCode(mode: string, text: string) {
+        setCodeMode(mode: string) {
             this.code.session.setMode(mode);
+        }
+
+        setCode(text: string) {
             this.code.setValue(text);
         }
 
@@ -44,13 +47,16 @@
     }
 
     const dom = new Dom();
-    const store = new PerferedLanguageStore();
-    dom.setSelectedLanguage(localStorage.perferedLanguage || Languages.csharp);
     dom.onLanguageChange(() => {
-        localStorage.perferedLanguage = store.get();
-        dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
+        dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
+        $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
+            dom.setCode(template);
+        });
     });
-    dom.setSourceCode(languageToAceMode(dom.getSelectedLanguage()), getLanguageTemplate(dom.getSelectedLanguage()));
+    dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
+    $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
+        dom.setCode(template);
+    });
 
     export class DetailsModel {
         code = ko.observable<string>();
