@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
+using YamlDotNet.RepresentationModel;
 
 namespace SdojWeb.Models.DbModels
 {
@@ -27,7 +29,21 @@ namespace SdojWeb.Models.DbModels
 
         public static IEnumerable<CodeTemplate> GetDefaultTemplates()
         {
-            throw new NotImplementedException();
+            using (var stream = new StreamReader(
+                typeof(CodeTemplate).Assembly.GetManifestResourceStream("SdojWeb.Content.CodeTemplate.yaml")))
+            {
+                var yaml = new YamlStream();
+                yaml.Load(stream);
+                foreach (string langString in Enum.GetNames(typeof(Languages)))
+                {
+                    string code = yaml.Documents[0].RootNode[langString].ToString();
+                    yield return new CodeTemplate
+                    {
+                        Language = (Languages)Enum.Parse(typeof(Languages), langString), 
+                        Template = code, 
+                    };
+                }
+            }
         }
     }
 }
