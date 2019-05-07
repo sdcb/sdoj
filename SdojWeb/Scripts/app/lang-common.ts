@@ -1,10 +1,10 @@
 ﻿enum Languages {
-    csharp = 1,
-    vb = 2,
-    cpp = 3,
-    c = 4,
-    python3 = 5,
-    java = 6,
+    Csharp = 1,
+    Vb = 2,
+    Cpp = 3,
+    C = 4,
+    Python3 = 5,
+    Java = 6,
 }
 
 declare var ace: IAceStatic;
@@ -30,12 +30,12 @@ interface IAceOptions {
 
 function languageToAceMode(language: Languages) {
     switch (language) {
-        case Languages.csharp: return 'ace/mode/csharp';
-        case Languages.c:
-        case Languages.cpp: return 'ace/mode/c_cpp';
-        case Languages.vb: return 'ace/mode/vbscript';
-        case Languages.python3: return 'ace/mode/python';
-        case Languages.java: return 'ace/mode/java';
+        case Languages.Csharp: return 'ace/mode/csharp';
+        case Languages.C:
+        case Languages.Cpp: return 'ace/mode/c_cpp';
+        case Languages.Vb: return 'ace/mode/vbscript';
+        case Languages.Python3: return 'ace/mode/python';
+        case Languages.Java: return 'ace/mode/java';
         default: return 'ace/mode/text';
     }
 }

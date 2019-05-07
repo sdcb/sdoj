@@ -42,3 +42,7 @@ div.well:not(.markdown) {
 .center-header th {
     text-align: center;
 }
+
+.code {
+    height: 500px;
+}

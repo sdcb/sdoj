@@ -14,9 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.Name - sdoj</title>
     @Styles.Render("~/Content/css")
-    <style>
-        .code {height: 500px;}
-    </style>
 </head>
 <body data-rest-time="@((Model.Duration - (DateTime.Now - Model.StartTime)).Value.TotalSeconds)">
     <div class="navbar navbar-inverse navbar-fixed-top">

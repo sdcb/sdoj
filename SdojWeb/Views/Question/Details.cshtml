@@ -2,8 +2,10 @@
 @model QuestionDetailModel
 @{
     ViewBag.Title = Model.Name;
+    var language = Languages.CSharp;
 }
-
+@Html.Hidden("questionId", Model.Id)
+@Html.AntiForgeryToken()
 <h2 class="text-center">@ViewBag.Title</h2>
 @Html.Partial("_Details", Model)
 <div class="clearfix">
@@ -33,6 +35,10 @@
                 <i class="glyphicon glyphicon-remove"></i>
                 删除
             </button>
+            <button class="btn btn-default" data-toggle="modal" data-target="#set-code-template">
+                <i class="glyphicon glyphicon-adjust"></i>
+                编辑解答模板
+            </button>
         }
         <a class="btn btn-default" href="@Url.Action("Data", new {id=Model.Id})">
             <i class="glyphicon glyphicon-file"></i>
@@ -41,6 +47,31 @@
     </div>
 </div>
 <hr />
+
+<div class="modal fade" tabindex="-1" role="dialog" id="set-code-template">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">编辑解答模板</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group clearfix">
+                    @Html.EnumDropDownListFor(x => language, new { @class = "form-control", id = "language" })
+                </div>
+                <div class="code"></div>
+            </div>
+            <div class="modal-footer">
+                <!-- ko ifnot: isDefaultTemplate -->
+                <button data-bind="click: reset" type="button" class="btn btn-warning">删除</button>
+                <!-- /ko -->
+                <!-- ko if: edited -->
+                <button data-bind="click: save" type="button" class="btn btn-primary">保存</button>
+                <!-- /ko -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 @using (Html.BeginForm("Delete", "Question", FormMethod.Post, new { id = "delete-form" }))
 {
@@ -55,6 +86,10 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/marked")
+    @Scripts.Render("~/bundles/ko")
+    <script src="https://cdn.bootcss.com/ace/1.4.3/ace.js"></script>
+    <script src="~/Scripts/app/lang-common.js"></script>
+    <script src="~/Scripts/app/question/question-details.js"></script>
     <script>
         function deleteMe(id) {
             if (confirm('确定要删除此题目吗？')) {
@@ -77,5 +112,8 @@
             e.html(m);
             e.closest('.well').css({ "padding-bottom": "0" });
         });
+
+        var vm = new question.QuestionDetailsPage();
+        ko.applyBindings(vm);
     </script>
 }

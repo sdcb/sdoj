@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AutoMapper;
@@ -36,23 +35,23 @@ namespace SdojWeb.Controllers
         public ActionResult Index(int? id, bool? onlyMe, string question, string username, Languages? language, SolutionState? state, string contest,
             int? page, string orderBy, bool? asc)
         {
-            int currentUserId = User.Identity.GetUserId<int>(); 
+            int currentUserId = User.Identity.GetUserId<int>();
             var route = new RouteValueDictionary
             {
-                {"id", id }, 
-                {"onlyMe", onlyMe}, 
+                {"id", id },
+                {"onlyMe", onlyMe},
                 {"question", question},
-                {"username", username}, 
-                {"language", language}, 
+                {"username", username},
+                {"language", language},
                 {"state", state},
                 {"contest", contest },
-                {"orderBy", orderBy}, 
+                {"orderBy", orderBy},
                 {"asc", asc}
             };
 
             IQueryable<Solution> query = _db.Solutions
                 .OrderByDescending(x => x.SubmitTime);
-            
+
             if (id != null)
             {
                 query = query.Where(x => x.Id == id.Value);
@@ -142,18 +141,18 @@ namespace SdojWeb.Controllers
                 {
                     QuestionCreateUserId = x.Question.CreateUserId,
                     AuthorId = x.CreateUserId,
-                    Exists = x.WrongAnswer != null, 
-                    WrongAnswerInput = x.WrongAnswer.Input.Input, 
-                    WrongAnswerOutput = x.WrongAnswer.Output, 
+                    Exists = x.WrongAnswer != null,
+                    WrongAnswerInput = x.WrongAnswer.Input.Input,
+                    WrongAnswerOutput = x.WrongAnswer.Output,
                 }).FirstAsync();
 
             if (CheckAccess(model.AuthorId, model.QuestionCreateUserId))
             {
                 return Json(new
                 {
-                    Exists = model.Exists, 
-                    Input = model.WrongAnswerInput, 
-                    Output = model.WrongAnswerOutput, 
+                    Exists = model.Exists,
+                    Input = model.WrongAnswerInput,
+                    Output = model.WrongAnswerOutput,
                 }, JsonRequestBehavior.AllowGet);
             }
 
@@ -183,14 +182,19 @@ namespace SdojWeb.Controllers
         // GET: Solution/Create/id
         public async Task<ActionResult> Create(int id, string name)
         {
-            int userId = User.Identity.GetUserId<int>();
-            Languages userLanguage = await _db.Solutions
-                .Where(x => x.CreateUserId == userId)
-                .OrderByDescending(x => x.Id)
-                .Select(x => x.Language)
-                .FirstOrDefaultAsync();
-            var solutionCreateModel = new SolutionCreateModel {QuestionId = id, Name = name, Language = userLanguage};
+            Languages userLanguage = await GetPerferedLanguage();
+            var solutionCreateModel = new SolutionCreateModel { QuestionId = id, Name = name, Language = userLanguage };
             return View(solutionCreateModel);
+        }
+
+        public async Task<Languages> GetPerferedLanguage()
+        {
+            int userId = User.Identity.GetUserId<int>();
+            return await _db.Solutions
+                            .Where(x => x.CreateUserId == userId)
+                            .OrderByDescending(x => x.Id)
+                            .Select(x => x.Language)
+                            .FirstOrDefaultAsync();
         }
 
         public async Task<ActionResult> CodeTemplate(int questionId, Languages language)
@@ -199,18 +203,64 @@ namespace SdojWeb.Controllers
                 .Where(x => x.QuestionId == questionId && x.Language == language)
                 .Select(x => x.Template)
                 .FirstOrDefaultAsync();
-            if (questionTemplate != null) return Content(questionTemplate);
+            if (questionTemplate != null) return Json(new
+            {
+                isDefault = false,
+                code = questionTemplate
+            });
 
             string defaultTemplate = await _db.CodeTemplates
                 .Where(x => x.Language == language)
                 .Select(x => x.Template)
                 .FirstOrDefaultAsync();
-            return Content(defaultTemplate);
+            return Json(new
+            {
+                isDefault = true,
+                code = defaultTemplate
+            });
         }
 
-        // POST: Solution/Create/id
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetCodeTemplate(int questionId, Languages language)
+        {
+            Question question = _db.Questions.Find(questionId);
+            if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))
+                return RedirectToAction("Index").WithWarning("只有作者才能管理代码模板。");
+
+            QuestionCodeTemplate template = await _db.QuestionCodeTemplates
+                .Where(x => x.QuestionId == questionId && x.Language == language)
+                .FirstOrDefaultAsync();
+
+            if (template == null) return Json(false);
+            _db.Entry(template).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+            return Json(true);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SaveCodeTemplate(int questionId, Languages language, string code)
+        {
+            Question question = _db.Questions.Find(questionId);
+            if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))
+                return RedirectToAction("Index").WithWarning("只有作者才能管理代码模板。");
+
+            QuestionCodeTemplate template = await _db.QuestionCodeTemplates
+                .Where(x => x.QuestionId == questionId && x.Language == language)
+                .FirstOrDefaultAsync();
+
+            if (template == null) template = new QuestionCodeTemplate
+            {
+                QuestionId = questionId,
+                Language = language
+            };
+            template.Template = code;
+            _db.Entry(template).State = EntityState.Added;
+            await _db.SaveChangesAsync();
+            return Json(true);
+        }
+
         [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public async Task<ActionResult> Create(SolutionCreateModel model)
         {
@@ -240,7 +290,7 @@ namespace SdojWeb.Controllers
                 .Where(x => x.Id == id)
                 .Select(x => new
                 {
-                    AuthorId = x.CreateUserId, 
+                    AuthorId = x.CreateUserId,
                     QuestionCreatorId = x.Question.CreateUserId
                 })
                 .FirstAsync();
@@ -276,7 +326,7 @@ namespace SdojWeb.Controllers
             // act.
             await _db.Solutions
                 .Where(x => x.Id == id)
-                .UpdateAsync(s => new Solution {State = SolutionState.Queuing});
+                .UpdateAsync(s => new Solution { State = SolutionState.Queuing });
             await _db.SolutionLocks
                 .Where(x => x.SolutionId == id)
                 .DeleteAsync();

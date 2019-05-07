@@ -43,11 +43,11 @@
     dom.onLanguageChange(() => {
         dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
         $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
-            dom.setCode(template);
+            dom.setCode(template.code);
         });
     });
     dom.setCodeMode(languageToAceMode(dom.getSelectedLanguage()));
     $.post(`/solution/codeTemplate?questionId=${dom.getQuestionId()}&language=${dom.getSelectedLanguage()}`).then(template => {
-        dom.setCode(template);
+        dom.setCode(template.code);
     });
 }
