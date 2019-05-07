@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using SdojJudger.Compiler.Infrastructure;
 
 namespace SdojJudger.Compiler
@@ -19,6 +20,8 @@ namespace SdojJudger.Compiler
                 PathToAssembly = string.Format("{0} {1}.js", AppSettings.NodeExePath, _filename)
             };
         }
+
+        public override Encoding GetEncoding() => new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
         private string _filename;
 

@@ -8,6 +8,7 @@ using SdojJudger.SandboxDll;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SdojJudger.Business
@@ -56,11 +57,11 @@ namespace SdojJudger.Business
             // Judging
             using (compiler)
             {
-                await Judge(datas, asm);
+                await Judge(datas, asm, compiler.GetEncoding());
             }
         }
 
-        private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm)
+        private async Task Judge(IEnumerable<QuestionData> datas, CompileResult asm, Encoding languageEncoding)
         {
             int runTimeMs = 0;
             float peakMemoryMb = 0;
@@ -80,7 +81,7 @@ namespace SdojJudger.Business
                 };
 
                 _log.DebugExt("NativeDll Juding...");
-                var result = Sandbox.Judge(info);
+                var result = Sandbox.Judge(info, languageEncoding);
                 _log.DebugExt("NativeDll Judged...");
 
                 runTimeMs += result.TimeMs;

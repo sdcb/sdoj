@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using log4net;
 using SdojJudger.Models;
@@ -48,6 +49,8 @@ namespace SdojJudger.Compiler.Infrastructure
             // else
             return false;
         }
+
+        public virtual Encoding GetEncoding() => Encoding.Default;
 
         public abstract CompileResult Compile(string source);
 

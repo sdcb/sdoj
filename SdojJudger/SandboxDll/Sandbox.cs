@@ -35,7 +35,7 @@ namespace SdojJudger.SandboxDll
             return result;
         }
 
-        public static Process2JudgeResult Process2Judge(Process2JudgeInfo p2info)
+        public static Process2JudgeResult Process2Judge(Process2JudgeInfo p2info, Encoding languageEncoding)
         {
             // 步骤：
             // 1、启动评测
@@ -106,7 +106,7 @@ namespace SdojJudger.SandboxDll
             var cancelToken = new CancellationTokenSource();
             var transform12 = transformFunc(io1.OutputReadStream, io2.InputWriteStream, cancelToken.Token);
             var transform21 = transformFunc(io2.OutputReadStream, io1.InputWriteStream, cancelToken.Token);
-            var stdErrorTask = ReadToEndFrom(io1.ErrorReadStream);
+            var stdErrorTask = ReadToEndFrom(io1.ErrorReadStream, languageEncoding);
             io2.ErrorReadStream.Dispose();
 
             // 3、等待程序运行完成
@@ -127,7 +127,7 @@ namespace SdojJudger.SandboxDll
             return toReturn;
         }
 
-        public static JudgeResult Judge(JudgeInfo ji)
+        public static JudgeResult Judge(JudgeInfo ji, Encoding languageEncoding)
         {
             var info = new SandboxRunInfo
             {
@@ -148,12 +148,12 @@ namespace SdojJudger.SandboxDll
             ior.ErrorReadStream.Dispose();
             var writeTask = Task.Run(async () =>
             {
-                using (var writer = new StreamWriter(ior.InputWriteStream, Encoding.Default))
+                using (var writer = new StreamWriter(ior.InputWriteStream, languageEncoding))
                 {
                     await writer.WriteAsync(ji.Input);
                 }
             });
-            var readTask = ReadToEndFrom(ior.OutputReadStream);
+            var readTask = ReadToEndFrom(ior.OutputReadStream, languageEncoding);
 
             SandboxRunResult res = EndRun(ior.InstanceHandle);
 
@@ -166,11 +166,11 @@ namespace SdojJudger.SandboxDll
             return jr;
         }
 
-        private static async Task<string> ReadToEndFrom(FileStream stream)
+        private static async Task<string> ReadToEndFrom(FileStream stream, Encoding languageEncoding)
         {
             var buffer = new char[4096];
             var result = new StringBuilder(4096);
-            using (var reader = new StreamReader(stream, Encoding.Default))
+            using (var reader = new StreamReader(stream, languageEncoding))
             {
                 while (true)
                 {

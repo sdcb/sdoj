@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using SdojJudger.SandboxDll;
 using SdojJudger.Runner;
+using System.Text;
 
 namespace SdojJudger.Business
 {
@@ -31,17 +32,17 @@ namespace SdojJudger.Business
 
             // _fullM 里面包含 评测进程 的源代码，因此它是 compiler1；
             // _lockM 里面包含 待评测进程 的源代码，因此它是 compiler2。
-            using (var compiler1 = CompilerProvider.GetCompiler(_fullM.Language))
-            using (var compiler2 = CompilerProvider.GetCompiler(_spush.Language))
+            using (var judgerCompiler = CompilerProvider.GetCompiler(_fullM.Language))
+            using (var judgedCompiler = CompilerProvider.GetCompiler(_spush.Language))
             {
-                CompileResult res1 = compiler1.Compile(_fullM.Code);
+                CompileResult res1 = judgerCompiler.Compile(_fullM.Code);
                 if (res1.HasErrors)
                 {
                     await _client.Update(ClientJudgeModel.CreateCompileError(_spush.Id, res1.Output)); // 评测代码 编译失败，属系统错误
                     return;
                 }
 
-                CompileResult res2 = compiler2.Compile(_lockM.Source);
+                CompileResult res2 = judgedCompiler.Compile(_lockM.Source);
                 if (res2.HasErrors)
                 {
                     await _client.Update(ClientJudgeModel.CreateCompileError(_spush.Id, res2.Output)); // 待评测代码 编译失败，属用户错误
@@ -50,11 +51,11 @@ namespace SdojJudger.Business
 
                 await _client.UpdateInLock(_spush.Id, SolutionState.Judging);
 
-                await Judge(res1, res2);
+                await Judge(res1, res2, judgedCompiler.GetEncoding());
             }
         }
 
-        private async Task Judge(CompileResult res1, CompileResult res2)
+        private async Task Judge(CompileResult res1, CompileResult res2, Encoding languageEncoding)
         {
             int peakRunTimeMs = 0;
             float peakMemoryMb = 0;
@@ -70,7 +71,7 @@ namespace SdojJudger.Business
             for (short times = 0; times < _fullM.RunTimes; ++times)
             {
                 _log.DebugExt($"NativeDll Juding {times + 1} of {_fullM.RunTimes}...");
-                Process2JudgeResult result = Sandbox.Process2Judge(info);
+                Process2JudgeResult result = Sandbox.Process2Judge(info, languageEncoding);
                 _log.DebugExt("NativeDll Judged.");
 
                 peakRunTimeMs = Math.Max(peakRunTimeMs, result.TimeMs);
