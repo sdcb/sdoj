@@ -238,7 +238,7 @@ namespace SdojWeb.Controllers
             return Json(true);
         }
 
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveCodeTemplate(int questionId, Languages language, string code)
         {
