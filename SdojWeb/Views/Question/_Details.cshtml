@@ -16,7 +16,7 @@
                     <th>@Html.DisplayNameFor(x => x.RunTimes)</th>
                 }
                 <th>@Html.DisplayNameFor(model => model.AcceptedCount)</th>
-                <th>通过率</th>
+                <th>@Html.DisplayNameFor(model => model.Difficulty)</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@
                     <td>@Html.DisplayFor(x => x.RunTimes)</td>
                 }
                 <td>@Model.AcceptedCount / @Model.SolutionCount</td>
-                <td>@((1.0 * Model.AcceptedCount / (Model.SolutionCount + Double.Epsilon)).ToString("P2"))</td>
+                <th>@Html.DisplayFor(model => model.Difficulty)</th>
             </tr>
         </tbody>
     </table>

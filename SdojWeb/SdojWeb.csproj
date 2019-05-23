@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201905061423256_CodeTemplate.Designer.cs">
       <DependentUpon>201905061423256_CodeTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905230426046_Difficulty.cs" />
+    <Compile Include="Migrations\201905230426046_Difficulty.Designer.cs">
+      <DependentUpon>201905230426046_Difficulty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ContestModels\ContestCreateModel.cs" />
     <Compile Include="Models\ContestModels\ContestDetailsModel.cs" />
     <Compile Include="Models\ContestModels\ContestListModel.cs" />
@@ -331,6 +335,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="Migrations\201905230426046_Difficulty.resx">
+      <DependentUpon>201905230426046_Difficulty.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\aliyun.pubxml" />
     <None Include="Properties\PublishProfiles\allyun2.pubxml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />

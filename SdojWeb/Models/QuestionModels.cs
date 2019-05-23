@@ -10,6 +10,7 @@ using SdojWeb.Models.DbModels;
 using Microsoft.AspNet.Identity;
 using SdojWeb.Infrastructure.ModelMetadata.Attributes;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SdojWeb.Models
 {
@@ -20,6 +21,9 @@ namespace SdojWeb.Models
 
         [Display(Name = "标题")]
         public string Name { get; set; }
+
+        [Display(Name = "难度", Description = "1-15表示简单，16-25表示中等，26-35表示难。")]
+        public byte Difficulty { get; set; }
 
         [Display(Name = "描述"), DataType("Markdown")]
         public string Description { get; set; }
@@ -71,6 +75,7 @@ namespace SdojWeb.Models
             TimeLimit = 1000;
             MemoryLimitMb = 64.0f;
             RunTimes = 1;
+            Difficulty = 10;
         }
 
         [RenderMode(RenderMode.Neither)]
@@ -78,6 +83,9 @@ namespace SdojWeb.Models
 
         [Display(Name = "标题"), Required, MaxLength(30), Remote("CheckName", "Question", HttpMethod = "POST")]
         public string Name { get; set; }
+
+        [Display(Name = "难度", Description = "1-15表示简单，16-25表示中等，26-35表示难。")]
+        public int Difficulty { get; set; }
 
         [Display(Name = "描述"), Required, MaxLength(4000), DataType("Markdown")]
         public string Description { get; set; }
@@ -138,6 +146,9 @@ namespace SdojWeb.Models
         [Editable(false)]
         public int Id { get; set; }
 
+        [Display(Name = "难度", Description = "1-15表示简单，16-25表示中等，26-35表示难。")]
+        public byte Difficulty { get; set; }
+
         [Display(Name = "内存限制(MB)"), Editable(false)]
         public float MemoryLimitMb { get; set; }
 
@@ -197,6 +208,9 @@ namespace SdojWeb.Models
         [Display(Name = "标题")]
         public string Name { get; set; }
 
+        [Display(Name = "难度")]
+        public string Difficulty { get; set; }
+
         [Display(Name = "作者")]
         public string Creator { get; set; }
 
@@ -230,6 +244,7 @@ namespace SdojWeb.Models
             var currentUserId = 0;
 
             configuration.CreateMap<Question, QuestionSummaryViewModel>()
+                .ForMember(s => s.Difficulty, d => d.MapFrom(x => x.Difficulty <= 15 ? "简单" : x.Difficulty <= 25 ? "中等" : "困难"))
                 .ForMember(s => s.Complished, d => d.MapFrom(x => x.Solutions.Any(s => s.CreateUserId == currentUserId && s.State == SolutionState.Accepted)))
                 .ForMember(s => s.Started, d => d.MapFrom(x => x.Solutions.Any(s => s.CreateUserId == currentUserId)))
                 .ForMember(s => s.Creator, d => d.MapFrom(x => x.CreateUser.UserName))

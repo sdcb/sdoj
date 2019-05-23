@@ -115,7 +115,7 @@ namespace SdojWeb.Controllers
                 asc = false;
             }
 
-            var questions = _questionManager.List(name, creator, type: null, onlyMe:null)
+            var questions = _questionManager.List(name, creator, type: null, onlyMe:null, difficulty: null)
                 .ToSortedPagedList(page, orderBy, asc);
 
             return PartialView("_Question", questions);
@@ -127,7 +127,6 @@ namespace SdojWeb.Controllers
         [SdojAuthorize(EmailConfirmed = true, Roles = SystemRoles.QuestionGroupAdminOrCreator)]
         public async Task<ActionResult> Create(QuestionGroupEditModel questionGroup)
         {
-            var x = ModelState;
             if (ModelState.IsValid)
             {
                 await _manager.Create(questionGroup);
@@ -223,7 +222,7 @@ namespace SdojWeb.Controllers
             };
             ViewData["QuestionRoute"] = route;
 
-            var questions = _questionManager.List(null, null, null, null).ToSortedPagedList(1, "Id", false);
+            var questions = _questionManager.List(null, null, null, null, null).ToSortedPagedList(1, "Id", false);
             ViewData["Question"] = questions;
         }
     }

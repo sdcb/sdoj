@@ -32,7 +32,7 @@ namespace SdojWeb.Controllers
 
         // GET: Questions
         [AllowAnonymous]
-        public ActionResult Index(string name, string creator, QuestionTypes? type, bool? me,
+        public ActionResult Index(string name, string creator, QuestionTypes? type, bool? me, string difficulty,
             int? page, string orderBy, bool? asc)
         {
             if (orderBy == null)
@@ -47,13 +47,14 @@ namespace SdojWeb.Controllers
 
             var route = new RouteValueDictionary
             {
-                {"name", name},
-                {"creator",creator},
-                {"type",type},
-                {"me",me}
+                { "name", name },
+                { "creator", creator },
+                { "type", type },
+                { "me", me },
+                { "difficulty", difficulty },
             };
 
-            var query = _manager.List(name, creator, type, me);
+            var query = _manager.List(name, creator, type, me, difficulty);
             var models = query.ToSortedPagedList(page, orderBy, asc);
             ViewBag.Route = route;
             return View(models);
@@ -111,7 +112,7 @@ namespace SdojWeb.Controllers
         {
             var question = await _db
                 .Questions
-                .ProjectTo<QuestionEditModel>() 
+                .ProjectTo<QuestionEditModel>()
                 .FirstAsync(x => x.Id == id);
 
             if (!User.IsUserOrRole(question.CreateUserId, SystemRoles.QuestionAdmin))

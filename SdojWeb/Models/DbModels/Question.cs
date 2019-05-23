@@ -1,6 +1,7 @@
 ﻿using SdojWeb.Infrastructure.Mapping;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +20,9 @@ namespace SdojWeb.Models.DbModels
 
         [Required, MaxLength(4000)]
         public string Description { get; set; }
+
+        [Required, DefaultValue(10)]
+        public byte Difficulty { get; set; }
 
         [MaxLength(1000)]
         public string InputExplain { get; set; }

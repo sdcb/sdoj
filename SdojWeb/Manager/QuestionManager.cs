@@ -43,7 +43,7 @@ namespace SdojWeb.Manager
             await _db.SaveChangesAsync();
         }
 
-        public IQueryable<QuestionSummaryViewModel> List(string name, string creator, QuestionTypes? type, bool? onlyMe)
+        public IQueryable<QuestionSummaryViewModel> List(string name, string creator, QuestionTypes? type, bool? onlyMe, string difficulty)
         {
             var uid = _user.Identity.GetUserId<int>();
             IQueryable<Question> dbModels = _db.Questions;
@@ -52,6 +52,23 @@ namespace SdojWeb.Manager
             if (onlyMe != null)
             {
                 dbModels = dbModels.Where(x => x.CreateUserId == userId);
+            }
+            if (!string.IsNullOrWhiteSpace(difficulty))
+            {
+                switch (difficulty)
+                {
+                    case "简单":
+                        dbModels = dbModels.Where(x => x.Difficulty <= 15);
+                        break;
+                    case "中等":
+                        dbModels = dbModels.Where(x => x.Difficulty > 15 && x.Difficulty <= 25);
+                        break;
+                    case "困难":
+                        dbModels = dbModels.Where(x => x.Difficulty > 25);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(difficulty));
+                }
             }
 
             var query = dbModels
