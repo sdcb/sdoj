@@ -65,3 +65,18 @@ Java: |
             System.out.println("Hello World");
         }
     }
+
+JavaScript: |
+    'use strict';
+
+    const readline = require('readline');
+    
+    const rl = readline.createInterface({
+        input: process.stdin, 
+        output: process.stdout
+    });
+    
+    rl.on("line", data => {
+        console.log(`Hey ${data}!`);
+        rl.close();
+    });
