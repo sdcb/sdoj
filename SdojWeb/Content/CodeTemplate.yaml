@@ -69,14 +69,28 @@ Java: |
 JavaScript: |
     'use strict';
 
-    const readline = require('readline');
-    
+    const readline = require("readline");
     const rl = readline.createInterface({
-        input: process.stdin, 
-        output: process.stdout
+        input: process.stdin,
+        output: process.stdout,
+        terminal: false
     });
-    
-    rl.on("line", data => {
-        console.log(`Hey ${data}!`);
-        rl.close();
-    });
+
+    function readlineAsync() {
+        return new Promise(r => {
+            rl.on("line", onData);
+
+            function onData(s) {
+                r(s);
+                rl.off("line", onData);
+            }
+        });
+    }
+
+    main().then(() => rl.close());
+
+    // 请在此处写代码
+    async function main() {
+        // 示例输入：const input = await readlineAsync();
+        // 示例输出：console.log(`Hey ${input}!`);
+    }
