@@ -8,7 +8,7 @@ Demo website: https://oj.starworks.cc
 ███████╗██║  ██║██║   ██║     ██║
 ╚════██║██║  ██║██║   ██║██   ██║
 ███████║██████╔╝╚██████╔╝╚█████╔╝
-╚══════╝╚═════╝  ╚═════╝  ╚════╝ 
+╚══════╝╚═════╝  ╚═════╝  ╚════╝  (by Flysha.Zhou in Shareworks)
 ```
 
 ## Programming Language support
