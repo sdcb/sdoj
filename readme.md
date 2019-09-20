@@ -24,9 +24,9 @@ Demo website: https://oj.starworks.cc
 
 ## Technicial frameworks
 * Website/backend: `ASP.NET MVC/Razor`
-* Server push tool: `SignalR`
+* Server push tool: `SignalR/WebSocket/Long Pulling`
 * Frontend framework: `knockoutjs/jQuery/bootstrap 3`
-* Database: `SQL Server 2017/Entity Framework 6`
+* Database/DAL: `SQL Server 2017/Entity Framework 6`
 
 ## Running structure
 ```
@@ -197,3 +197,12 @@ This project should only transfered in our company. Without author or our compan
       printf("Hello World");
   }
   ```
+
+# Known other OJs
+| Platform | Type        | Website                              | Juding           |
+| -------- | ----------- | ------------------------------------ | ---------------- |
+| **sdoj** | -           | https://code.shareworks.cn/sdcb/sdoj | **Server Push**  |
+| Hustoj   | Open Source | https://github.com/zhblue/hustoj     | DB Short Pulling |
+| Leetcode | Commercial  | https://leetcode.com                 | Queue            |
+| POJ      | Commercial  | https://poj.org                      | Short pulling    |
+| 51nod    | Commercial  | https://www.51nod.com/               | Short pulling    |
