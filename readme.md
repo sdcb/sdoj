@@ -55,11 +55,11 @@ Demo website: https://oj.starworks.cc
           |  C#/Visual Basic   |        |         |  C#/Visual Basic   |
           +---------+----------+        |         +---------+----------+
                                        /|\                                 
-                +---------------------/ | \---------------------+
-                |                       |                       |
-      +---------+----------+  +---------+----------+  +---------+----------+
-      |  Node.js Compiler  |  |    Java Compiler   |  |   Python Compiler  |
-      +---------+----------+  +---------+----------+  +---------+----------+
+              +-----------------------/ | \-----------------------+
+              |                         |                         |
+    +---------+----------+    +---------+----------+    +---------+----------+
+    |  Node.js Compiler  |    |    Java Compiler   |    |   Python Compiler  |
+    +---------+----------+    +---------+----------+    +---------+----------+
 ```
 
 
@@ -87,4 +87,113 @@ This project should only transfered in our company. Without author or our compan
 * Your answer will be judged automatically online shortly.
 
 ## Programming language template
+* C#
+  ```csharp
+  using System;
 
+  class Program
+  {
+      static void Main()
+      {
+          // 输入示例：Console.ReadLine(); // 返回了一行字符串，可通过String.Split()分隔为字符串数组
+          // 输出示例：Console.WriteLine("Hello World");
+          Console.WriteLine("Hello World");
+      }
+  }
+  ```
+
+* Python 3
+  ```python
+  """
+    输入示例：
+        s = input() # 读一行
+    输出示例：
+        print('Hello World') # 输出Hello World
+  """
+  print('Hello World');
+  ```
+
+* Java
+  ```java
+  public class Program {
+      public static void main(String[] args) {
+          // 输入示例：
+          //     java.util.Scanner scanner = new java.util.Scanner(System.in);
+          //     String str = scanner.nextLine(); // 读一行
+          //     int n = scanner.nextInt();       // 读int
+          // 输出示例：
+          //     System.out.println("Hello World");
+          System.out.println("Hello World");
+      }
+  }
+  ```
+
+* JavaScript/Node.js
+  ```js
+  'use strict';
+  
+  const readline = require("readline");
+  const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      terminal: false
+  });
+  
+  function readlineAsync() {
+      return new Promise(r => {
+          rl.on("line", onData);
+  
+          function onData(s) {
+              r(s);
+              rl.off("line", onData);
+          }
+      });
+  }
+  
+  main().then(() => rl.close());
+  
+  // 请在此处写代码
+  async function main() {
+      // 示例输入：const input = await readlineAsync();
+      // 示例输出：console.log(`Hey ${input}!`);
+  }
+  ```
+
+* Visual Basic
+  ```vb
+  Imports System
+
+  Module Program
+      Sub Main()
+          ' 输入示例：Console.ReadLine() ' 返回了一行字符串，可能需要手动分隔
+          ' 输出示例：Console.WriteLine("Hello World");
+          Console.WriteLine("Hello World")
+      End Sub
+  End Module
+  ```
+
+* C++
+  ```cpp
+  #include <iostream>
+
+  using namespace std;
+  
+  int main()
+  {
+      // 输入示例：cin >> a >> b;
+      // 输出示例：cout << a << b;
+      cout << "Hello World" << endl;
+  }
+  ```
+
+* C
+  ```c
+  #include <stdio.h>
+  
+  int main()
+  {
+      // 输入示例：scanf("%d%d", &a, &b);
+      // 输出示例：printf("%s", "Hello World");
+      printf("Hello World");
+  }
+  ```
