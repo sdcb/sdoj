@@ -198,6 +198,14 @@ This project should only transfered in our company. Without author or our compan
   }
   ```
 
+# Contributing
+Sdoj can be built with your contributions. Here are some ways you can contribute:
+* Submit Issues in sdoj.
+* Submit Fixes and MRs.
+
+## Contributors
+* 周杰 (Flysha.Zhou)[flysha.zhou@starlight-sms.com] Full Stack Developer
+
 # Known other OJs
 | Platform | Type        | Website                              | Juding           |
 | -------- | ----------- | ------------------------------------ | ---------------- |
