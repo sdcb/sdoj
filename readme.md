@@ -45,14 +45,14 @@ Demo website: https://oj.starworks.cc
                               | sdoj judger agent  |
     +---------+-----------+   +---------+----------+      
     | Sandbox:            |             |        
-    | Ensure all process  |<------------| (Compiler is runing on out of process)
+    | Ensure all process  |<------------| (Compiler is runing out of process)
     | run in safe-sandbox |             |
     +---------+-----------+            /|\ 
                     +-----------------/ | \-----------------+
                     |                   |                   |
           +---------+----------+        |         +---------+----------+
           |   .NET Compiler    |        |         |   C/C++ Compiler   |
-          |  C#/Visual Basic   |        |         |  C#/Visual Basic   |
+          |  C#/Visual Basic   |        |         |  MSVC C++/MSVC C   |
           +---------+----------+        |         +---------+----------+
                                        /|\                                 
               +-----------------------/ | \-----------------------+
